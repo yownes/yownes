@@ -1,7 +1,7 @@
 {
   "name": "@yownes/api",
   "description": "Communicate with the Yownes plugin installed on the server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "build/index.js",
   "author": {
     "email": "jesus@estudioyobo.com",
@@ -16,8 +16,8 @@
     "react": "^17.0.2"
   },
   "files": [
-    "src/index.ts",
-    "src"
+    "src",
+    "src/index.ts"
   ],
   "scripts": {
     "build": "tsc"
