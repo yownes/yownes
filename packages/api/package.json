@@ -16,8 +16,7 @@
     "react": "^17.0.2"
   },
   "files": [
-    "src",
-    "src/index.ts"
+    "build/**/*"
   ],
   "scripts": {
     "build": "tsc"
