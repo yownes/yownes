@@ -1,0 +1,20 @@
+{
+  "name": "@yownes/api",
+  "version": "1.0.0",
+  "description": "Communicate with the Yownes plugin installed on the server",
+  "main": "build/index.js",
+  "types": "build/index.d.js",
+  "author": "Jesus Gallego <jesus@estudioyobo.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.4.15",
+    "graphql": "^15.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.26",
+    "react": "^17.0.2"
+  }
+}
