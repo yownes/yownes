@@ -1,15 +1,22 @@
 {
   "name": "yownes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
-  "license": "MIT",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "devDependencies": {
+    "bumped": "^0.14.2",
+    "bumped-changelog": "^0.4.1",
+    "bumped-finepack": "^0.4.1",
+    "bumped-terminal": "^0.8.1",
     "eslint": "^7.32.0",
     "prettier": "^2.4.1",
     "typescript": "^4.4.3"
-  }
+  },
+  "scripts": {
+    "release": "bumped release"
+  },
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ]
 }
