@@ -12,6 +12,7 @@ import {
   ORDER,
   ORDERS,
   PAYMENT_METHOD_LIST,
+  PRODUCT,
   PRODUCTS,
   PROFILE,
   TOP_SALES,
@@ -28,6 +29,7 @@ import { Home } from "../types/Home";
 import { Order, OrderVariables } from "../types/Order";
 import { Orders } from "../types/Orders";
 import { PaymentMethodList } from "../types/PaymentMethodList";
+import { Product, ProductVariables } from "../types/Product";
 import { Products, ProductsVariables } from "../types/Products";
 import { Profile } from "../types/Profile";
 import { TopSales } from "../types/TopSales";
@@ -84,4 +86,9 @@ export function useGetAbout() {
 }
 export function useGetHome() {
   return useQuery<Home>(HOME);
+}
+export function useGetProduct(id: string) {
+  return useQuery<Product, ProductVariables>(PRODUCT, {
+    variables: { id },
+  });
 }

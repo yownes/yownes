@@ -4,6 +4,8 @@ import {
   ADD_ADDRESS,
   ADD_DISCOUNT,
   ADD_PAYMENT_METHOD,
+  ADD_TO_CART,
+  ADD_TO_FAVOURITE,
   CONFIRM_ORDER,
   CREATE_PAYMENT_INTENT,
   DELETE_ADDRESS,
@@ -13,6 +15,7 @@ import {
   LOGOUT,
   REGISTER,
   REMOVE_DISCOUNT,
+  REMOVE_FAVOURITE,
   REMOVE_FROM_CART,
   SET_DELIVERY_OPTION,
   UPDATE_CART,
@@ -28,6 +31,11 @@ import {
   AddPaymentMethodVariables,
   AddPaymentMethod_accountAddPaymentMethod,
 } from "../types/AddPaymentMethod";
+import { AddToCart, AddToCartVariables } from "../types/AddToCart";
+import {
+  AddToFavourite,
+  AddToFavouriteVariables,
+} from "../types/AddToFavourite";
 import { ConfirmOrder, ConfirmOrderVariables } from "../types/ConfirmOrder";
 import {
   CreatePaymentIntent,
@@ -45,11 +53,16 @@ import {
 } from "../types/EditAddress";
 import { Login, LoginVariables } from "../types/Login";
 import { Logout } from "../types/Logout";
+import { Product } from "../types/Product";
 import { Register, RegisterVariables } from "../types/Register";
 import {
   RemoveDiscount,
   RemoveDiscountVariables,
 } from "../types/RemoveDiscount";
+import {
+  RemoveFavourite,
+  RemoveFavouriteVariables,
+} from "../types/RemoveFavourite";
 import {
   RemoveFromCart,
   RemoveFromCartVariables,
@@ -215,6 +228,9 @@ export function useConfirmOrder() {
 export function useRemoveCart() {
   return useMutation<RemoveFromCart, RemoveFromCartVariables>(REMOVE_FROM_CART);
 }
+export function useAddToCart() {
+  return useMutation<AddToCart, AddToCartVariables>(ADD_TO_CART);
+}
 export function useUpdateCart() {
   return useMutation<UpdateCart, UpdateCartVariables>(UPDATE_CART);
 }
@@ -237,4 +253,53 @@ export function useLogout() {
 }
 export function useRegister() {
   return useMutation<Register, RegisterVariables>(REGISTER);
+}
+
+export function useAddToFavourite(id: string, data?: Product) {
+  return useMutation<AddToFavourite, AddToFavouriteVariables>(
+    ADD_TO_FAVOURITE,
+    {
+      variables: { id: parseInt(id, 10) },
+      update(cache, { data: addData }) {
+        if (addData?.addToWishlist) {
+          cache.modify({
+            fields: {
+              wishlist(existing: Reference[], { toReference }) {
+                return [...existing, toReference({ ...data?.product })];
+              },
+            },
+          });
+        }
+      },
+    }
+  );
+}
+export function useRemoveFavourite(id: string, data?: Product) {
+  return useMutation<RemoveFavourite, RemoveFavouriteVariables>(
+    REMOVE_FAVOURITE,
+    {
+      variables: { id },
+      update(cache, { data: removeData }) {
+        if (removeData?.removeWishlist) {
+          cache.modify({
+            fields: {
+              wishlist(existing: Reference[], { readField }) {
+                return existing.filter(
+                  (productRef) => id !== readField("id", productRef)
+                );
+              },
+            },
+          });
+          cache.modify({
+            id: cache.identify({ ...data?.product }),
+            fields: {
+              inWishlist() {
+                return false;
+              },
+            },
+          });
+        }
+      },
+    }
+  );
 }
