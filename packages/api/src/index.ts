@@ -1,3 +1,4 @@
+export { ApiProvider } from "./provider/ApiProvider";
 export * from "./actions/mutationActions";
 export * from "./actions/queryActions";
 
