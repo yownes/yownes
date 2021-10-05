@@ -28,7 +28,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "yarn test && yarn build"
   },
   "license": "MIT",
   "types": "build/index.d.js"
