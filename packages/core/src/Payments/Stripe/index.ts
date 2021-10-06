@@ -79,8 +79,9 @@ export async function useHandlePayment({
       }
     }
   }
-  return [
+  return {
     handlePayment,
-    { loading: loading || loadingConfirm || loadingOrder },
-  ];
+    loading: loading || loadingConfirm || loadingOrder,
+    finishCheckout,
+  };
 }
