@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "declaration": true,
+    "outDir": "./build",
+    "strict": true,
+    "jsx": "react"
+  },
+
+  "include": ["src"],
+  "exclude": ["node_modules", "examples", "__tests__"]
+}

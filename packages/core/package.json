@@ -1,0 +1,32 @@
+{
+  "name": "@yownes/core",
+  "description": "App template utilities",
+  "version": "1.1.1",
+  "main": "build/index.js",
+  "author": {
+    "email": "jesus@estudioyobo.com",
+    "name": "Jesus Gallego"
+  },
+  "dependencies": {
+    "@yownes/api": "^1.1.1",
+    "graphql": "^15.6.0",
+    "react": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "@types/react": "^17.0.26",
+    "jest": "^27.2.4",
+    "react": "^17.0.2",
+    "ts-jest": "^27.0.5"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "yarn build",
+    "test": "jest"
+  },
+  "license": "MIT",
+  "types": "build/index.d.js"
+}
