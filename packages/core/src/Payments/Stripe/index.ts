@@ -36,7 +36,7 @@ interface UseHandlePaymentArgs {
   paymentAddress?: AddressFragment;
   onOrderConfirmed?: () => void;
 }
-export async function useHandlePayment({
+export function useHandlePayment({
   paymentMethodId,
   address,
   paymentAddress,
