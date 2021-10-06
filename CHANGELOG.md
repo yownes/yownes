@@ -1,3 +1,13 @@
+## [1.3.1](https://github.com/yownes/yownes/compare/1.3.0...1.3.1) (2021-10-06)
+
+
+### Bug Fixes
+
+* :bug: added core package.json to bumped files ([f0f4c49](https://github.com/yownes/yownes/commit/f0f4c49cbf0bc04904aa82fd877afa495ae543f3))
+* **core:** :bug: changed useHandlePayment return ([c5705a3](https://github.com/yownes/yownes/commit/c5705a39951181d8f94daa999b6f7392927d1772))
+
+
+
 # [1.3.0](https://github.com/yownes/yownes/compare/1.2.0...1.3.0) (2021-10-06)
 
 
