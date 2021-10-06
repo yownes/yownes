@@ -6,7 +6,8 @@
     "declaration": true,
     "outDir": "./build",
     "strict": true,
-    "jsx": "react"
+    "jsx": "react",
+    "skipLibCheck": true
   },
 
   "include": ["src"],
