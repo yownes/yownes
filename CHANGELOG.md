@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/yownes/yownes/compare/1.1.1...1.2.0) (2021-10-06)
+
+
+### Features
+
+* **core:** :tada: core package ([86b5c7e](https://github.com/yownes/yownes/commit/86b5c7e9642b3ccb4fa6c1928db9993250df72c1))
+
+
+
 ## 1.1.1 (2021-10-05)
 
 
