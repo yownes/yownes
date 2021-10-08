@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/yownes/yownes/compare/1.4.1...1.5.0) (2021-10-08)
+
+
+### Features
+
+* **api:** :sparkles: export NetworkStatus ([352927e](https://github.com/yownes/yownes/commit/352927e8c8e3acc04648d190ac8e4e04a6544657))
+
+
+
 ## [1.4.1](https://github.com/yownes/yownes/compare/1.4.0...1.4.1) (2021-10-08)
 
 
