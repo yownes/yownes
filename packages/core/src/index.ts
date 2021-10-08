@@ -3,3 +3,4 @@ export * from "./Checkout/CheckoutContext";
 
 export * from "./Payments/Apple";
 export * from "./Payments/Stripe";
+export * from "./Payments/PaymentsProvider";
