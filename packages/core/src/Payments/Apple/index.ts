@@ -15,7 +15,7 @@ export function cartToApplePay(cart: CartFragment): ApplePay.PresentParams {
 }
 
 export function useHandleApplePayment(
-  cart: CartFragment,
+  cart?: CartFragment | null,
   onSuccess?: () => void
 ) {
   const { presentApplePay, confirmApplePayPayment, isApplePaySupported } =
