@@ -1,7 +1,7 @@
 {
   "name": "@yownes/core",
   "description": "App template utilities",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "main": "build/index.js",
   "author": {
     "email": "jesus@estudioyobo.com",

@@ -1,3 +1,18 @@
+# [1.4.0](https://github.com/yownes/yownes/compare/1.3.2...1.4.0) (2021-10-08)
+
+
+### Bug Fixes
+
+* **core:** :label: updete useCreateCard return type ([3d5bb4a](https://github.com/yownes/yownes/commit/3d5bb4a6b8fa52b5da501f07394e8e2a50873e0a))
+
+
+### Features
+
+* **core:** :sparkles: PaymentsProvider ([7dfe911](https://github.com/yownes/yownes/commit/7dfe91172ba6b2fc8642a34ae908a4bcdf9652f2))
+* **core:** :sparkles: useHandleApplePayment utility hook ([a662952](https://github.com/yownes/yownes/commit/a6629529b9e48022fb1dd1454d968b3e845815b4))
+
+
+
 ## [1.3.2](https://github.com/yownes/yownes/compare/1.3.1...1.3.2) (2021-10-06)
 
 
