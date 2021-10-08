@@ -17,7 +17,9 @@ type UseCreateCardCallback =
   | ((data?: AddPaymentMethod_accountAddPaymentMethod | undefined) => void)
   | undefined;
 
-export function useCreateCard(onSuccess: UseCreateCardCallback) {
+export function useCreateCard(
+  onSuccess: UseCreateCardCallback
+): [() => Promise<void>, { loading: boolean }] {
   const { createPaymentMethod } = useStripe();
   const [assignPaymentMethod, { loading }] = useAddPaymentMethod({ onSuccess });
   async function create() {
