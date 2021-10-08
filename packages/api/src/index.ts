@@ -1,3 +1,5 @@
+export { NetworkStatus } from "@apollo/client";
+
 export { ApiProvider } from "./provider/ApiProvider";
 export * from "./actions/mutationActions";
 export * from "./actions/queryActions";
