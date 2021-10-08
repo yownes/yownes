@@ -1,3 +1,12 @@
+## [1.4.1](https://github.com/yownes/yownes/compare/1.4.0...1.4.1) (2021-10-08)
+
+
+### Bug Fixes
+
+* **core:** :label: update types ([6098eb9](https://github.com/yownes/yownes/commit/6098eb990fa19ec7c7fcfb0f20222470f93c12c9))
+
+
+
 # [1.4.0](https://github.com/yownes/yownes/compare/1.3.2...1.4.0) (2021-10-08)
 
 
