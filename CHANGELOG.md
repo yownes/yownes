@@ -1,3 +1,12 @@
+## [1.5.1](https://github.com/yownes/yownes/compare/1.5.0...1.5.1) (2021-10-14)
+
+
+### Bug Fixes
+
+* **api:** :label: type update ([b1b005a](https://github.com/yownes/yownes/commit/b1b005a2dedf74680601ef50812478590f72e627))
+
+
+
 # [1.5.0](https://github.com/yownes/yownes/compare/1.4.1...1.5.0) (2021-10-08)
 
 

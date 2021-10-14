@@ -1,7 +1,7 @@
 {
   "name": "@yownes/api",
   "description": "Communicate with the Yownes plugin installed on the server",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "main": "build/index.js",
   "author": {
     "email": "jesus@estudioyobo.com",
@@ -30,9 +30,9 @@
   ],
   "scripts": {
     "build": "tsc",
+    "gen:types": "apollo client:codegen --target typescript --outputFlat ./src/types",
     "prepublishOnly": "yarn test && yarn build",
-    "test": "jest",
-    "gen:types": "apollo client:codegen --target typescript --outputFlat ./src/types"
+    "test": "jest"
   },
   "license": "MIT",
   "types": "build/index.d.js"
