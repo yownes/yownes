@@ -33,13 +33,13 @@ import { Product, ProductVariables } from "../types/Product";
 import { Products, ProductsVariables } from "../types/Products";
 import { Profile } from "../types/Profile";
 import { TopSales } from "../types/TopSales";
-import { ZonesList } from "../types/ZonesList";
+import { ZonesList, ZonesListVariables } from "../types/ZonesList";
 
 export function useGetCountries() {
   return useQuery<CountriesList>(COUNTRIES_LIST);
 }
-export function useGetZones(countryId: string) {
-  return useQuery<ZonesList>(ZONES_LIST, {
+export function useGetZones(countryId: ZonesListVariables["countryId"]) {
+  return useQuery<ZonesList, ZonesListVariables>(ZONES_LIST, {
     variables: { countryId },
   });
 }
