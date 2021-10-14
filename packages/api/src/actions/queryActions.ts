@@ -87,7 +87,7 @@ export function useGetAbout() {
 export function useGetHome() {
   return useQuery<Home>(HOME);
 }
-export function useGetProduct(id: string) {
+export function useGetProduct(id: ProductVariables["id"]) {
   return useQuery<Product, ProductVariables>(PRODUCT, {
     variables: { id },
   });
