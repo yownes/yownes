@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.15",
-    "expo-secure-store": "^10.2.0",
+    "expo-secure-store": "11.0.0",
     "graphql": "^15.6.0",
     "react": "^17.0.2"
   },
