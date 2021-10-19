@@ -1,7 +1,7 @@
 {
   "name": "@yownes/api",
   "description": "Communicate with the Yownes plugin installed on the server",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "main": "build/index.js",
   "author": {
     "email": "jesus@estudioyobo.com",
