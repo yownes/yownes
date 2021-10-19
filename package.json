@@ -1,6 +1,6 @@
 {
   "name": "yownes",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "main": "index.js",
   "devDependencies": {
     "bumped": "^0.14.2",
