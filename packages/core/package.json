@@ -1,7 +1,7 @@
 {
   "name": "@yownes/core",
   "description": "App template utilities",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "main": "build/index.js",
   "author": {
     "email": "jesus@estudioyobo.com",
@@ -22,7 +22,8 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "yarn build",
-    "test": "jest"
+    "test": "jest --passWithNoTests",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "license": "MIT",
   "peerDependencies": {
