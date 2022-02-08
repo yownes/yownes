@@ -20,7 +20,8 @@
   "license": "MIT",
   "packageManager": "yarn@1.22.10",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "dependencies": {
     "@changesets/cli": "^2.20.0"
