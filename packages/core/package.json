@@ -8,8 +8,7 @@
     "name": "Jesus Gallego"
   },
   "dependencies": {
-    "@stripe/stripe-react-native": "^0.2.2",
-    "@yownes/api": "^1.5.3"
+    "@stripe/stripe-react-native": "^0.2.2"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
