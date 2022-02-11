@@ -7,6 +7,13 @@
     "test": {
       "outputs": ["coverage/**"],
       "dependsOn": []
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "clean": {
+      "outputs": []
     }
   }
 }

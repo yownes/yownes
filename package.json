@@ -9,8 +9,9 @@
     "typescript": "^4.4.3"
   },
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --parallel",
     "test": "turbo run test",
+    "dev": "turbo run dev",
     "clean": "turbo run clean && rm -rf node_modules",
     "change": "changeset add",
     "version": "changeset version",
@@ -18,11 +19,31 @@
   },
   "private": true,
   "license": "MIT",
-  "packageManager": "yarn@1.22.10",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
+  "packageManager": "yarn@1.22.17",
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "apps/*"
+    ],
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**",
+      "**/@react-native-*",
+      "**/@react-native-*/**",
+      "**/react-native-*",
+      "**/react-native-*/**",
+      "**/*react-navigation/native*",
+      "**/*react-navigation/native*/**",
+      "**/expo",
+      "**/expo/**",
+      "**/@expo",
+      "**/@expo/**",
+      "**/expo-*",
+      "**/expo-*/**",
+      "**/metro-*",
+      "**/metro-*/**"
+    ]
+  },
   "dependencies": {
     "@changesets/cli": "^2.20.0"
   }

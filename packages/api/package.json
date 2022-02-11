@@ -8,8 +8,8 @@
     "name": "Jesus Gallego"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.15",
-    "expo-secure-store": "11.0.0",
+    "@apollo/client": "^3.5.8",
+    "expo-secure-store": "^11.1.1",
     "graphql": "^15.6.0",
     "react": "^17.0.2"
   },
@@ -18,8 +18,7 @@
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.15.0",
     "@types/jest": "^27.0.2",
-    "@types/react": "^17.0.26",
-    "apollo": "^2.33.6",
+    "@types/react": "^17.0.39",
     "dotenv": "^10.0.0",
     "jest": "^27.2.4",
     "react": "^17.0.2",
@@ -33,7 +32,7 @@
     "gen:types": "apollo client:codegen --target typescript --outputFlat ./src/types",
     "prepublishOnly": "yarn test && yarn build",
     "test": "jest",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build"
   },
   "license": "MIT",
   "types": "build/index.d.js"

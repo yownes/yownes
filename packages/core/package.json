@@ -8,7 +8,8 @@
     "name": "Jesus Gallego"
   },
   "dependencies": {
-    "@stripe/stripe-react-native": "^0.2.2"
+    "@stripe/stripe-react-native": "^0.2.2",
+    "@yownes/api": "*"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
@@ -23,7 +24,7 @@
     "build": "tsc",
     "prepublishOnly": "yarn build",
     "test": "jest --passWithNoTests",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build"
   },
   "license": "MIT",
   "peerDependencies": {

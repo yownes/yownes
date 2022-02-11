@@ -28,11 +28,11 @@ const config = {
     favicon: "./assets/favicon.png",
   },
   experiments: {
-    turboModules: true,
+    // turboModules: true,
   },
   plugins: [
     [
-      "@stripe/stripe-react-native",
+      "@yownes/core",
       {
         merchantIdentifier: "merchant.com.yownes.test",
         enableGooglePay: true,
