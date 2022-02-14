@@ -6,8 +6,12 @@ import { Slider, ProductCard } from "../molecules";
 
 const TopSalesProducts = () => {
   const { loading, data } = useGetTopSales();
-  if (loading) return <Loading />;
-  if (!data) return null;
+  if (loading) {
+    return <Loading />;
+  }
+  if (!data) {
+    return null;
+  }
   return (
     <Box>
       <Text variant="header3" paddingBottom="m">

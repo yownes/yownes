@@ -3,7 +3,7 @@ import React from "react";
 import { Box, Button } from "../../components/atoms";
 import { Success } from "../../components/images";
 import { Placeholder } from "../../components/molecules";
-import { PaymentConfirmedProps } from "../../navigation/Cart";
+import type { PaymentConfirmedProps } from "../../navigation/Cart";
 
 const PaymentConfirmed = ({ navigation }: PaymentConfirmedProps) => {
   return (

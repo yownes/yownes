@@ -3,7 +3,7 @@ import { Image, ScrollView } from "react-native";
 import { useGetOrder } from "@yownes/api";
 
 import { Box, Card, Text } from "../../components/atoms";
-import { OrderProps } from "../../navigation/Profile";
+import type { OrderProps } from "../../navigation/Profile";
 
 const Order = ({ route }: OrderProps) => {
   const { data } = useGetOrder(route.params.id);

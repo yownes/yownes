@@ -11,7 +11,7 @@ import {
   Loading,
   Text,
 } from "../../components/atoms";
-import { CartProps } from "../../navigation/Cart";
+import type { CartProps } from "../../navigation/Cart";
 
 import Summary from "./Components/Summary";
 import Row from "./Components/Row";
@@ -20,10 +20,8 @@ import CartPlaceholder from "./Components/CartPlaceholder";
 const Cart = ({ navigation }: CartProps) => {
   const { loading, data, refetch, networkStatus } = useGetCart();
   const [code, setCode] = useState<string>();
-  const [
-    addDiscount,
-    { data: dataDiscount, loading: dataLoading },
-  ] = useAddDiscount();
+  const [addDiscount, { data: dataDiscount, loading: dataLoading }] =
+    useAddDiscount();
   const { isAuthenticated } = useAuth();
   const isEmpty = (data?.cart?.products?.length ?? 0) === 0;
 

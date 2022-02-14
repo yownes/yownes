@@ -1,15 +1,16 @@
-import React, { Children, ReactNode, useEffect, useState } from "react";
-import { Dimensions } from "react-native";
+import type { ReactNode } from "react";
+import React, { Children } from "react";
+import { Dimensions, ScrollView } from "react-native";
 import Animated, {
   Extrapolate,
   interpolate,
-  useAnimatedRef,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
+import useMeasure from "../../lib/hooks/useMeasure";
 import { Box, Dot } from "../atoms";
 
 interface SliderProps {
@@ -83,30 +84,7 @@ const Slider = ({ children }: SliderProps) => {
       translationX.value = contentOffset.x;
     },
   });
-  const aref = useAnimatedRef<Animated.ScrollView>();
-  const [measured, setMeasured] = useState(width);
-  useEffect(() => {
-    new Promise<{
-      width: number;
-      height: number;
-      x: number;
-      y: number;
-      pageX: number;
-      pageY: number;
-    }>((resolve, reject) => {
-      if (aref?.current) {
-        aref.current.measure((x, y, width, height, pageX, pageY) => {
-          resolve({ x, y, width, height, pageX, pageY });
-        });
-      } else {
-        reject(new Error("measure: animated ref not ready"));
-      }
-    })
-      .then((m) => {
-        setMeasured(m.width);
-      })
-      .catch((e) => {});
-  }, [aref, measured]);
+  const [aref, measured] = useMeasure<Animated.ScrollView>(width);
   return (
     <>
       <Animated.ScrollView

@@ -5,7 +5,7 @@ import { useRegister } from "@yownes/api";
 
 import { Box, Button, Text } from "../../components/atoms";
 import { InputWithErrors } from "../../components/molecules";
-import { RegisterProps } from "../../navigation/Profile";
+import type { RegisterProps } from "../../navigation/Profile";
 import RegisterImage from "../../components/images/Register";
 
 interface RegisterState {

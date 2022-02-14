@@ -1,7 +1,8 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
-import { useGetPaymentMethods, PaymentMethodFragment } from "@yownes/api";
+import type { PaymentMethodFragment } from "@yownes/api";
+import { useGetPaymentMethods } from "@yownes/api";
 
 import { Box, Button, Text } from "../atoms";
 import { CreditCard, Placeholder, Slider } from "../molecules";

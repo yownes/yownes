@@ -1,7 +1,7 @@
 import React from "react";
 
 import AddPaymentMethodComponent from "../../components/organisms/AddPaymentMethod";
-import { AddPaymentMethodProps } from "../../navigation/Profile";
+import type { AddPaymentMethodProps } from "../../navigation/Profile";
 
 const AddPaymentMethod = ({ navigation }: AddPaymentMethodProps) => {
   return (

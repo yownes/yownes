@@ -1,7 +1,7 @@
-import { StackScreenProps } from "@react-navigation/stack";
+import type { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
-import { AddressFragment, PaymentMethodFragment } from "@yownes/api";
+import type { AddressFragment, PaymentMethodFragment } from "@yownes/api";
 import { useAuth } from "@yownes/core";
 
 import AddDirection from "../pages/Profile/AddDirection";
@@ -76,9 +76,8 @@ const ProfileNavigation = () => {
             cardStyle: { backgroundColor: "transparent" },
           }}
           sharedElements={(route) => {
-            const {
-              pm,
-            } = route.params as PaymentMethodProps["route"]["params"];
+            const { pm } =
+              route.params as PaymentMethodProps["route"]["params"];
             return [`card.${pm.id}`];
           }}
         />

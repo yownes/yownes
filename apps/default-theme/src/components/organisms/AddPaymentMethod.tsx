@@ -1,5 +1,5 @@
 import React from "react";
-import { AddPaymentMethod_accountAddPaymentMethod } from "@yownes/api";
+import type { AddPaymentMethod_accountAddPaymentMethod } from "@yownes/api";
 import { useCreateCard, CardField } from "@yownes/core";
 
 import { Button, Box, Card } from "../atoms";

@@ -9,7 +9,7 @@ import {
   PaymentSelect,
   ShippingSelect,
 } from "../../components/organisms";
-import { CheckoutProps } from "../../navigation/Cart";
+import type { CheckoutProps } from "../../navigation/Cart";
 
 import Summary from "./Components/Summary";
 

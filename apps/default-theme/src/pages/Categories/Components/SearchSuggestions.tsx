@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList } from "react-native";
-import { BasicProduct } from "@yownes/api";
+import type { BasicProduct } from "@yownes/api";
 
 import { Box, Card } from "../../../components/atoms";
 import filterNulls from "../../../lib/filterNulls";

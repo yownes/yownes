@@ -1,16 +1,14 @@
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps } from "@react-navigation/native";
-import {
-  createStackNavigator,
-  StackScreenProps,
-} from "@react-navigation/stack";
+import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import type { CompositeScreenProps } from "@react-navigation/native";
+import type { StackScreenProps } from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import Cart from "../pages/Cart/Cart";
 import Checkout from "../pages/Cart/Checkout";
 import PaymentConfirmed from "../pages/Cart/PaymentConfirmed";
 
-import { TabsParamList } from "./Root";
+import type { TabsParamList } from "./Root";
 
 export type CartStackParamList = {
   Cart: undefined;

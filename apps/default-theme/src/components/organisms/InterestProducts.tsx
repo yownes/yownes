@@ -6,8 +6,12 @@ import { HorizontalScrollProducts } from "../molecules";
 
 const InterestProducts = () => {
   const { loading, data } = useGetTopSales();
-  if (loading) return <Loading />;
-  if (!data) return null;
+  if (loading) {
+    return <Loading />;
+  }
+  if (!data) {
+    return null;
+  }
   return (
     <HorizontalScrollProducts
       products={data.bestSells}

@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { useGetAddresses, AddressList_accountAddressList } from "@yownes/api";
+import type { AddressList_accountAddressList } from "@yownes/api";
+import { useGetAddresses } from "@yownes/api";
 
 import { Box, Button, Text } from "../atoms";
 import { Address, Placeholder, Slider } from "../molecules";

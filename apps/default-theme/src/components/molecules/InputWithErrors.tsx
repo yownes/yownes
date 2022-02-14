@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInputProps } from "react-native";
+import type { TextInputProps } from "react-native";
 
 import { useTheme } from "../../lib/theme";
 import { Input, Text } from "../atoms";

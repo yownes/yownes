@@ -1,12 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
-import { StackScreenProps } from "@react-navigation/stack";
-import { Categories_categoriesList_content_categories } from "@yownes/api";
-import {
-  NavigatorScreenParams,
-  useNavigation as useNativeNavigation,
-} from "@react-navigation/native";
+import type { StackScreenProps } from "@react-navigation/stack";
+import type { Categories_categoriesList_content_categories } from "@yownes/api";
+import type { NavigatorScreenParams } from "@react-navigation/native";
+import { useNavigation as useNativeNavigation } from "@react-navigation/native";
 
 import Categories from "../pages/Categories/Categories";
 import ProductsPage from "../pages/Products/Products";
@@ -22,10 +20,14 @@ import {
 } from "../components/icons";
 import { useTheme } from "../lib/theme";
 
-import Profile, { ProfileStackParamList } from "./Profile";
-import Home, { HomeStackParamList } from "./Home";
-import Cart, { CartStackParamList } from "./Cart";
-import Product, { ProductStackParamList } from "./Product";
+import type { ProfileStackParamList } from "./Profile";
+import Profile from "./Profile";
+import type { HomeStackParamList } from "./Home";
+import Home from "./Home";
+import type { CartStackParamList } from "./Cart";
+import Cart from "./Cart";
+import type { ProductStackParamList } from "./Product";
+import Product from "./Product";
 
 export type TabsParamList = {
   Home: NavigatorScreenParams<HomeStackParamList>;

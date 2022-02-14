@@ -12,7 +12,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import {
+import type {
   Categories_categoriesList_content,
   Categories_categoriesList_content_categories,
 } from "@yownes/api";

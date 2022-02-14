@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AddDirectionProps } from "../../navigation/Profile";
+import type { AddDirectionProps } from "../../navigation/Profile";
 import { AddDirection as AddDirectionComponent } from "../../components/organisms";
 
 const AddDirection = ({ route, navigation }: AddDirectionProps) => {

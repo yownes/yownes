@@ -5,7 +5,7 @@ import { useGetHome } from "@yownes/api";
 
 import { Box, Button, Loading } from "../components/atoms";
 import { HorizontalScrollProducts, HomeSlide } from "../components/molecules";
-import { HomeProps } from "../navigation/Home";
+import type { HomeProps } from "../navigation/Home";
 
 const { width } = Dimensions.get("window");
 

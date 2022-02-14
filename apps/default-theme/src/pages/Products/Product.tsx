@@ -20,7 +20,7 @@ import { Box, Button, Tag, Text, HtmlText } from "../../components/atoms";
 import { Favourite, FavouriteOutlined } from "../../components/icons";
 import { Quantity } from "../../components/molecules";
 import { useTheme } from "../../lib/theme";
-import { ProductProps } from "../../navigation/Product";
+import type { ProductProps } from "../../navigation/Product";
 
 const { height, width } = Dimensions.get("screen");
 

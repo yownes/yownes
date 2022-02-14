@@ -1,16 +1,15 @@
 import React from "react";
 import { Dimensions } from "react-native";
-import {
-  PinchGestureHandler,
-  PinchGestureHandlerGestureEvent,
-} from "react-native-gesture-handler";
+import type { PinchGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import { PinchGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useVector, Vector, transformOrigin } from "react-native-redash";
+import type { Vector } from "react-native-redash";
+import { useVector, transformOrigin } from "react-native-redash";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -26,8 +25,8 @@ interface ZoomImageProps {
 const ZoomImage = ({ image }: ZoomImageProps) => {
   const focal = useVector(0, 0);
   const imageScale = useSharedValue(1);
-  const onPinchGestureEvent = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>(
-    {
+  const onPinchGestureEvent =
+    useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
       onActive: ({ focalX, focalY, scale }) => {
         focal.x.value = focalX - CENTER.x;
         focal.y.value = focalY - CENTER.y;
@@ -36,8 +35,7 @@ const ZoomImage = ({ image }: ZoomImageProps) => {
       onEnd() {
         imageScale.value = withTiming(1);
       },
-    }
-  );
+    });
   const style = useAnimatedStyle(() => {
     return {
       transform: transformOrigin({ x: focal.x.value, y: focal.y.value }, [

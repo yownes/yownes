@@ -14,12 +14,8 @@ import Directions from "./Directions";
 const ShippingSelect = () => {
   const ref = useRef<BottomSheetModal>(null);
   const [change, setChange] = useState<"SHIPPING" | "PAYMENT">();
-  const {
-    setAddress,
-    address,
-    paymentAddress,
-    setPaymentAddress,
-  } = useCheckout();
+  const { setAddress, address, paymentAddress, setPaymentAddress } =
+    useCheckout();
   const { data } = useGetAddresses();
   useEffect(() => {
     const list = data?.accountAddressList?.filter(filterNulls);

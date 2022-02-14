@@ -1,4 +1,4 @@
-import { Theme } from "../../lib/theme";
+import type { Theme } from "../../lib/theme";
 
 export interface IconProps {
   size?: number;

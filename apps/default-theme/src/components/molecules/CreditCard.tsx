@@ -1,5 +1,5 @@
 import React from "react";
-import { PaymentMethodFragment } from "@yownes/api";
+import type { PaymentMethodFragment } from "@yownes/api";
 
 import { Card, Text } from "../atoms";
 

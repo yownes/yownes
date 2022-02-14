@@ -12,14 +12,11 @@ import {
   BottomSheetModalProvider,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
-import {
-  useGetProducts,
-  Products_productsList_content,
-  NetworkStatus,
-} from "@yownes/api";
+import type { Products_productsList_content } from "@yownes/api";
+import { useGetProducts, NetworkStatus } from "@yownes/api";
 
 import { Box, Loading } from "../../components/atoms";
-import { ProductsProps } from "../../navigation/Root";
+import type { ProductsProps } from "../../navigation/Root";
 import { ProductCard, VerticalProductCard } from "../../components/molecules";
 import { useTheme } from "../../lib/theme";
 

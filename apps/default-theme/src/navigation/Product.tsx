@@ -1,14 +1,14 @@
 import React from "react";
-import { StackScreenProps } from "@react-navigation/stack";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import type { StackScreenProps } from "@react-navigation/stack";
+import type { CompositeScreenProps } from "@react-navigation/native";
+import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
-import { Product_product } from "@yownes/api";
+import type { Product_product } from "@yownes/api";
 
 import Images from "../pages/Products/Images";
 import Product from "../pages/Products/Product";
 
-import { TabsParamList } from "./Root";
+import type { TabsParamList } from "./Root";
 
 export type ProductStackParamList = {
   Product: { id: string; index?: number };
@@ -41,10 +41,8 @@ const ProductNavigator = () => (
         cardStyle: { backgroundColor: "transparent" },
       }}
       sharedElements={(route) => {
-        const {
-          index,
-          product,
-        } = route.params as ImagesProps["route"]["params"];
+        const { index, product } =
+          route.params as ImagesProps["route"]["params"];
         return [`image.${index}.${product.id}`];
       }}
     />

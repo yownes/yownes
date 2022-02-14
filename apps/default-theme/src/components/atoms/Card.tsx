@@ -1,17 +1,19 @@
-import { ReactNode } from "react";
-import {
-  createRestyleComponent,
-  createVariant,
+import type { ReactNode } from "react";
+import type {
   LayoutProps,
-  spacing,
-  layout,
-  backgroundColor,
   SpacingProps,
   VariantProps,
   BackgroundColorProps,
 } from "@shopify/restyle";
+import {
+  createRestyleComponent,
+  createVariant,
+  spacing,
+  layout,
+  backgroundColor,
+} from "@shopify/restyle";
 
-import { Theme } from "../../lib/theme";
+import type { Theme } from "../../lib/theme";
 
 type Props = SpacingProps<Theme> &
   LayoutProps<Theme> &

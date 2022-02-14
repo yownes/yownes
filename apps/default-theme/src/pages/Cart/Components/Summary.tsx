@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { useRemoveDiscount, Cart_cart } from "@yownes/api";
+import type { Cart_cart } from "@yownes/api";
+import { useRemoveDiscount } from "@yownes/api";
 
 import { Box, Card, Text } from "../../../components/atoms";
 
@@ -10,7 +11,9 @@ interface SummaryProps {
 
 const Summary = ({ cart }: SummaryProps) => {
   const [removeDiscount] = useRemoveDiscount();
-  if (!cart) return null;
+  if (!cart) {
+    return null;
+  }
   return (
     <Card padding="l">
       <Text variant="header3" paddingBottom="m">

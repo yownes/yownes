@@ -1,7 +1,0 @@
-{
-  "extends": "react-native-wcandillon",
-  "rules": {
-    "camelcase": 0,
-    "no-nested-ternary": 0
-  }
-}

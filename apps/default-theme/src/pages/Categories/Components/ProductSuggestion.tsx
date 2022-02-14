@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
-import { BasicProduct } from "@yownes/api";
+import type { BasicProduct } from "@yownes/api";
 
 import { useNavigation } from "../../../navigation/Root";
 import { Box, Card, Text } from "../../../components/atoms";

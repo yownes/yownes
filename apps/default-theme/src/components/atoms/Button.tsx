@@ -1,17 +1,11 @@
-import {
-  ColorProps,
-  createBox,
-  useResponsiveProp,
-  useTheme,
-} from "@shopify/restyle";
-import React, { ReactNode } from "react";
-import {
-  ActivityIndicator,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from "react-native";
+import type { ColorProps } from "@shopify/restyle";
+import { createBox, useResponsiveProp, useTheme } from "@shopify/restyle";
+import type { ReactNode } from "react";
+import React from "react";
+import type { TouchableOpacityProps } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 
-import { Theme } from "../../lib/theme";
+import type { Theme } from "../../lib/theme";
 
 import Text from "./Text";
 

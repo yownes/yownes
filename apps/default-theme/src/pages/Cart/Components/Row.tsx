@@ -1,10 +1,9 @@
 import React, { useCallback } from "react";
 import { Dimensions, Image, StyleSheet, TouchableOpacity } from "react-native";
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from "react-native-gesture-handler";
-import { useRemoveCart, useUpdateCart, Cart_cart_products } from "@yownes/api";
+import type { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import { PanGestureHandler } from "react-native-gesture-handler";
+import type { Cart_cart_products } from "@yownes/api";
+import { useRemoveCart, useUpdateCart } from "@yownes/api";
 import Animated, {
   runOnJS,
   useAnimatedGestureHandler,

@@ -21,7 +21,7 @@ import {
   CreditCard,
   SelectProvider,
 } from "../../components/molecules";
-import { PaymentMethodProps } from "../../navigation/Profile";
+import type { PaymentMethodProps } from "../../navigation/Profile";
 
 const { height } = Dimensions.get("screen");
 

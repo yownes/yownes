@@ -8,7 +8,7 @@ import { useAuth } from "@yownes/core";
 import { Box, Button, Text } from "../../components/atoms";
 import { InputWithErrors } from "../../components/molecules";
 import LoginImage from "../../components/images/Login";
-import { LoginProps } from "../../navigation/Profile";
+import type { LoginProps } from "../../navigation/Profile";
 
 interface LoginState {
   mail: string;

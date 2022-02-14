@@ -2,7 +2,8 @@
 import React from "react";
 import Svg, { Path } from "react-native-svg";
 
-import { Theme, useTheme } from "../../lib/theme";
+import type { Theme } from "../../lib/theme";
+import { useTheme } from "../../lib/theme";
 
 interface StarProps {
   width?: number;

@@ -3,7 +3,7 @@
   "version": "1.5.4",
   "main": "index.js",
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "@yownes/eslint-config": "*",
     "prettier": "^2.4.1",
     "turbo": "^1.1.2",
     "typescript": "^4.4.3"
@@ -12,6 +12,7 @@
     "build": "turbo run build --parallel",
     "test": "turbo run test",
     "dev": "turbo run dev",
+    "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
     "change": "changeset add",
     "version": "changeset version",
@@ -28,12 +29,6 @@
     "nohoist": [
       "**/react-native",
       "**/react-native/**",
-      "**/@react-native-*",
-      "**/@react-native-*/**",
-      "**/react-native-*",
-      "**/react-native-*/**",
-      "**/*react-navigation/native*",
-      "**/*react-navigation/native*/**",
       "**/expo",
       "**/expo/**",
       "**/@expo",

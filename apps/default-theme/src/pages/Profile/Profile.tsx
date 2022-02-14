@@ -4,7 +4,7 @@ import { useLogout } from "@yownes/api";
 import { useAuth } from "@yownes/core";
 
 import { Box, Button, Card, Text } from "../../components/atoms";
-import { ProfileProps } from "../../navigation/Profile";
+import type { ProfileProps } from "../../navigation/Profile";
 import { FavouriteOutlined, Shipment } from "../../components/icons";
 import Directions from "../../components/organisms/Directions";
 import Payments from "../../components/organisms/Payments";

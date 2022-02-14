@@ -4,7 +4,7 @@ import { useGetOrders } from "@yownes/api";
 
 import { Box } from "../../components/atoms";
 import { Order } from "../../components/molecules";
-import { OrdersProps } from "../../navigation/Profile";
+import type { OrdersProps } from "../../navigation/Profile";
 import { useTheme } from "../../lib/theme";
 import filterNulls from "../../lib/filterNulls";
 

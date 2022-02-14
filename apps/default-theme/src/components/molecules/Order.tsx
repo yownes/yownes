@@ -1,5 +1,5 @@
 import React from "react";
-import { Orders_orders } from "@yownes/api";
+import type { Orders_orders } from "@yownes/api";
 
 import { Box, Card, Tag, Text } from "../atoms";
 

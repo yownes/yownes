@@ -1,7 +1,5 @@
-import {
-  createStackNavigator,
-  StackScreenProps,
-} from "@react-navigation/stack";
+import type { StackScreenProps } from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import About from "../pages/About";

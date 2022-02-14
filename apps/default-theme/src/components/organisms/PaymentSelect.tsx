@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView } from "react-native";
+import type { ScrollView } from "react-native";
+import { Alert } from "react-native";
 import {
   useGetPaymentMethods,
   CartFragment,

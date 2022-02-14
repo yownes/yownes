@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
-import { Products_productsList_facets } from "@yownes/api";
+import type { Products_productsList_facets } from "@yownes/api";
 
 import { Box, Tag, Text } from "../../../components/atoms";
 

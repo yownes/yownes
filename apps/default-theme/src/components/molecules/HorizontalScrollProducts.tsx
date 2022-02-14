@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView } from "react-native";
-import { BasicProduct } from "@yownes/api";
+import type { BasicProduct } from "@yownes/api";
 
 import { useTheme } from "../../lib/theme";
 import filterNulls from "../../lib/filterNulls";

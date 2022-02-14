@@ -8,7 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { PaymentMethodList_accountPaymentMethodList } from "@yownes/api";
+import type { PaymentMethodList_accountPaymentMethodList } from "@yownes/api";
 import { useCheckout } from "@yownes/core";
 
 import { Box, Text } from "../atoms";

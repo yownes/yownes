@@ -1,5 +1,5 @@
 import React from "react";
-import { AddressFragment } from "@yownes/api";
+import type { AddressFragment } from "@yownes/api";
 
 import { Box, Card, Text } from "../atoms";
 import { Stamp } from "../icons";

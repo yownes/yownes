@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { Products_productsList_sortOrders } from "@yownes/api";
+import type { Products_productsList_sortOrders } from "@yownes/api";
 
 import { Box, Text } from "../../../components/atoms";
 import filterNulls from "../../../lib/filterNulls";

@@ -4,7 +4,7 @@ import Svg, { Path } from "react-native-svg";
 
 import { useTheme } from "../../lib/theme";
 
-import { IconProps } from "./types";
+import type { IconProps } from "./types";
 
 function Trash({ size, color }: IconProps) {
   const theme = useTheme();

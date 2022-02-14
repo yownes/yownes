@@ -14,6 +14,9 @@
     },
     "clean": {
       "outputs": []
+    },
+    "lint": {
+      "outputs": []
     }
   }
 }

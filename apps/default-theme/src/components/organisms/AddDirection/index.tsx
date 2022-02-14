@@ -1,13 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button as NativeButton } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import {
-  useAddAddress,
-  useDeleteAddress,
-  useEditAddress,
+import type {
   AddAddress_accountAddAddress,
   AccountAddressInput,
 } from "@yownes/api";
+import { useAddAddress, useDeleteAddress, useEditAddress } from "@yownes/api";
 
 import { useNavigation } from "../../../navigation/Root";
 import { Box, Text, Switch, Button } from "../../atoms";
