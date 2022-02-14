@@ -32,17 +32,15 @@ function untilMeasured(ref: RefObject<Reanimated.View>) {
   return new Promise<NonNullable<BoundsOrNull>>(async (resolve) => {
     let bounds;
     for (let i = 0; i < 100; i++) {
-      console.log("measuring");
-      bounds = await new Promise<BoundsOrNull>((resolve) => {
-        ReanimatedUtils.runOnUI(measureOrNull)(ref, resolve);
+      bounds = await new Promise<BoundsOrNull>((res) => {
+        ReanimatedUtils.runOnUI(measureOrNull)(ref, res);
       });
 
       if (bounds) {
-        console.log(`Took ${i} attempts to measure`);
         resolve(bounds);
         return;
       } else {
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((res) => setTimeout(res, 0));
       }
     }
 
