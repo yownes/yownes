@@ -1,5 +1,5 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, Image, Pressable, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SharedElement } from "react-navigation-shared-element";
@@ -39,6 +39,13 @@ const Product = ({ route, navigation }: ProductProps) => {
   const [options, setOptions] = useState<
     Record<string, string | null | undefined>
   >({});
+  useEffect(() => {
+    if (data) {
+      navigation.setOptions({
+        title: data?.product?.name ?? "",
+      });
+    }
+  }, [data, navigation]);
   useFocusEffect(() => {
     if (navigation.isFocused()) {
       setOpacity(1);
