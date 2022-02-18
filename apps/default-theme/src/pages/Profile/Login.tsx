@@ -6,7 +6,7 @@ import { useLogin } from "@yownes/api";
 import { useAuth } from "@yownes/core";
 
 import { Box, Button, Text } from "../../components/atoms";
-import { InputWithErrors } from "../../components/molecules";
+import { FormFields, InputWithErrors } from "../../components/molecules";
 import LoginImage from "../../components/images/Login";
 import type { LoginProps } from "../../navigation/Profile";
 
@@ -21,7 +21,11 @@ const intialState: LoginState = {
 };
 
 const Login = ({ navigation }: LoginProps) => {
-  const { control, handleSubmit, errors } = useForm<LoginState>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginState>({
     defaultValues: intialState,
   });
   const Auth = useAuth();
@@ -50,37 +54,22 @@ const Login = ({ navigation }: LoginProps) => {
             Inicio sesión
           </Text>
           {error && <Text color="danger">{error.message}</Text>}
-          <Box paddingBottom="l">
-            <Controller
-              control={control}
-              name="mail"
-              render={({ onChange, onBlur, value }) => (
-                <InputWithErrors
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  keyboardType="email-address"
-                  placeholder="Email"
-                  error={errors.mail?.message}
-                />
-              )}
-              rules={{ required: "Este campo es obligatorio" }}
-            />
-          </Box>
-          <Controller
+          <FormFields
             control={control}
-            name="password"
-            render={({ onChange, onBlur, value }) => (
-              <InputWithErrors
-                secureTextEntry
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Contraseña"
-                error={errors.password?.message}
-              />
-            )}
-            rules={{ required: "Este campo es obligatorio" }}
+            fields={[
+              {
+                key: "mail",
+                name: "Email",
+                required: true,
+                keyboardType: "email-address",
+              },
+              {
+                key: "password",
+                name: "Contraseña",
+                required: true,
+                keyboardType: "password",
+              },
+            ]}
           />
           <TouchableOpacity
             style={{ paddingVertical: 10 }}

@@ -2,6 +2,7 @@ export { default as Address } from "./Address";
 export { default as Category } from "./Category";
 export { default as Confirm } from "./Confirm";
 export { default as CreditCard, CREDIT_CARD_HEIGHT } from "./CreditCard";
+export { default as FormFields } from "./FormFields";
 export { default as HomeSlide } from "./HomeSlide";
 export { default as HorizontalScrollProducts } from "./HorizontalScrollProducts";
 export { default as InputWithErrors } from "./InputWithErrors";

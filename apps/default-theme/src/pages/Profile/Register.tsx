@@ -4,7 +4,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useRegister } from "@yownes/api";
 
 import { Box, Button, Text } from "../../components/atoms";
-import { InputWithErrors } from "../../components/molecules";
+import { FormFields, InputWithErrors } from "../../components/molecules";
 import type { RegisterProps } from "../../navigation/Profile";
 import RegisterImage from "../../components/images/Register";
 
@@ -25,7 +25,7 @@ const intialState: RegisterState = {
 };
 
 const Register = ({ navigation }: RegisterProps) => {
-  const { control, handleSubmit, errors } = useForm<RegisterState>({
+  const { control, handleSubmit } = useForm<RegisterState>({
     defaultValues: intialState,
   });
   const [register, { error }] = useRegister();
@@ -54,92 +54,38 @@ const Register = ({ navigation }: RegisterProps) => {
             Registro
           </Text>
           {error && <Text color="danger">{error.message}</Text>}
-          <Box paddingBottom="l">
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ onChange, onBlur, value }) => (
-                <InputWithErrors
-                  error={errors.firstName?.message}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Nombre"
-                />
-              )}
-              rules={{ required: "Este campo es obligatorio" }}
-            />
-          </Box>
-          <Box paddingBottom="l">
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ onChange, onBlur, value }) => (
-                <InputWithErrors
-                  error={errors.lastName?.message}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Apellidos"
-                />
-              )}
-              rules={{ required: "Este campo es obligatorio" }}
-            />
-          </Box>
-          <Box paddingBottom="l">
-            <Controller
-              control={control}
-              name="mail"
-              render={({ onChange, onBlur, value }) => (
-                <InputWithErrors
-                  error={errors.mail?.message}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  keyboardType="email-address"
-                  placeholder="Email"
-                />
-              )}
-              rules={{ required: "Este campo es obligatorio" }}
-            />
-          </Box>
-          <Box paddingBottom="l">
-            <Controller
-              control={control}
-              name="password"
-              render={({ onChange, onBlur, value }) => (
-                <InputWithErrors
-                  error={errors.password?.message}
-                  secureTextEntry
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Contraseña"
-                />
-              )}
-              rules={{
-                required: "Este campo es obligatorio",
-                minLength: {
-                  value: 8,
-                  message: "La contraseña debe tener al menos 8 caracteres",
-                },
-              }}
-            />
-          </Box>
-          <Controller
+          <FormFields
             control={control}
-            name="confirmPassword"
-            render={({ onChange, onBlur, value }) => (
-              <InputWithErrors
-                error={errors.confirmPassword?.message}
-                secureTextEntry
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Confirmar contraseña"
-              />
-            )}
-            rules={{ required: "Este campo es obligatorio" }}
+            fields={[
+              {
+                key: "firstName",
+                required: true,
+                name: "Nombre",
+              },
+              {
+                key: "lastName",
+                required: true,
+                name: "Apellidos",
+              },
+              {
+                key: "mail",
+                required: true,
+                name: "Email",
+                keyboardType: "email-address",
+              },
+              {
+                key: "password",
+                required: true,
+                name: "Contraseña",
+                keyboardType: "password",
+              },
+              {
+                key: "confirmPassword",
+                required: true,
+                name: "Apellidos",
+                keyboardType: "password",
+              },
+            ]}
           />
           <Button
             marginTop="l"

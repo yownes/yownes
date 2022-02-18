@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button as NativeButton } from "react-native";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import type {
   AddAddress_accountAddAddress,
   AccountAddressInput,
@@ -9,7 +9,7 @@ import { useAddAddress, useDeleteAddress, useEditAddress } from "@yownes/api";
 
 import { useNavigation } from "../../../navigation/Root";
 import { Box, Text, Switch, Button } from "../../atoms";
-import { Confirm, InputWithErrors, SelectProvider } from "../../molecules";
+import { Confirm, FormFields, SelectProvider } from "../../molecules";
 
 import ListZones from "./ListZones";
 import ListCountries from "./ListCountries";
@@ -36,11 +36,9 @@ const AddDirection = ({ address, onSuccess }: AddDirectionProps) => {
   const [addAddress] = useAddAddress({ onSuccess });
   const [editAddress] = useEditAddress({ onSuccess });
   const [deleteAddress] = useDeleteAddress({ onSuccess });
-  const { control, handleSubmit, errors, watch } = useForm<AccountAddressInput>(
-    {
-      defaultValues: address || initialState,
-    }
-  );
+  const { control, handleSubmit, watch } = useForm<AccountAddressInput>({
+    defaultValues: address || initialState,
+  });
   const onSubmit = useCallback(
     (data: AccountAddressInput) => {
       if (address) {
@@ -70,138 +68,31 @@ const AddDirection = ({ address, onSuccess }: AddDirectionProps) => {
   return (
     <SelectProvider>
       <Box padding="m" flex={1}>
-        <Box marginBottom="m">
-          <Controller
-            control={control}
-            name="firstName"
-            render={({ onChange, value, onBlur }) => (
-              <InputWithErrors
-                placeholder="Nombre (*)"
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value || ""}
-                error={errors.firstName?.message}
-              />
-            )}
-            rules={{ required: "Este campo es obligatorio" }}
-          />
-        </Box>
-        <Box marginBottom="m">
-          <Controller
-            control={control}
-            name="lastName"
-            render={({ onChange, value, onBlur }) => (
-              <InputWithErrors
-                placeholder="Apellidos (*)"
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value || ""}
-                error={errors.lastName?.message}
-              />
-            )}
-            rules={{ required: "Este campo es obligatorio" }}
-          />
-        </Box>
-        <Box marginBottom="m">
-          <Controller
-            control={control}
-            name="address1"
-            render={({ onChange, value, onBlur }) => (
-              <InputWithErrors
-                placeholder="Dirección (*)"
-                onChangeText={onChange}
-                value={value || ""}
-                onBlur={onBlur}
-                error={errors.address1?.message}
-              />
-            )}
-            rules={{ required: "Este campo es obligatorio" }}
-          />
-        </Box>
-        <Box marginBottom="m">
-          <Controller
-            control={control}
-            name="address2"
-            render={({ onChange, value, onBlur }) => (
-              <InputWithErrors
-                placeholder="Dirección 2"
-                onChangeText={onChange}
-                value={value || ""}
-                onBlur={onBlur}
-                error={errors.address2?.message}
-              />
-            )}
-          />
-        </Box>
-        <Box marginBottom="m">
-          <Controller
-            control={control}
-            name="countryId"
-            render={({ onChange, value }) => (
-              <>
-                <ListCountries defaultValue={value} onSelect={onChange} />
-                {Boolean(errors.countryId?.message) && (
-                  <Text color="danger">{errors.countryId?.message}</Text>
-                )}
-              </>
-            )}
-            rules={{ required: "Este campo es obligatorio" }}
-          />
-        </Box>
-        <Box marginBottom="m">
-          <Controller
-            control={control}
-            name="zoneId"
-            render={({ onChange, value }) => {
-              return (
-                <>
-                  <ListZones
-                    countryId={countryId}
-                    defaultValue={value}
-                    onSelect={onChange}
-                  />
-                  {Boolean(errors.zoneId?.message) && (
-                    <Text color="danger">{errors.zoneId?.message}</Text>
-                  )}
-                </>
-              );
-            }}
-            rules={{ required: "Este campo es obligatorio" }}
-          />
-        </Box>
-        <Box marginBottom="m">
-          <Controller
-            control={control}
-            name="city"
-            render={({ onChange, value, onBlur }) => (
-              <InputWithErrors
-                placeholder="Ciudad (*)"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value || ""}
-                error={errors.city?.message}
-              />
-            )}
-            rules={{ required: "Este campo es obligatorio" }}
-          />
-        </Box>
-        <Box marginBottom="xl">
-          <Controller
-            control={control}
-            name="zipcode"
-            render={({ onChange, value, onBlur }) => (
-              <InputWithErrors
-                placeholder="Código postal (*)"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value || ""}
-                error={errors.zipcode?.message}
-              />
-            )}
-            rules={{ required: "Este campo es obligatorio" }}
-          />
-        </Box>
-        <Box flexDirection="row" justifyContent="space-between">
+        <FormFields
+          control={control}
+          fields={[
+            { name: "Nombre", key: "firstName", required: true },
+            { name: "Apellidos", key: "lastName", required: true },
+            { name: "Dirección", key: "address1", required: true },
+            { name: "Dirección 2", key: "address2" },
+            {
+              name: "Dirección 2",
+              key: "countryId",
+              List: ListCountries,
+              required: true,
+            },
+            {
+              name: "País",
+              key: "zoneId",
+              List: ListZones,
+              required: true,
+              props: { countryId },
+            },
+            { name: "Ciudad", key: "city", required: true },
+            { name: "Código Postal", key: "zipcode", required: true },
+          ]}
+        />
+        <Box marginTop="m" flexDirection="row" justifyContent="space-between">
           <Box flex={1}>
             <Text>Establecer como dirección de entrega predeterminada</Text>
           </Box>
