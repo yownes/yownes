@@ -9,7 +9,7 @@
 
 export interface Product_product_images {
   __typename: "productImage";
-  image: string | null;
+  imageBig: string | null;
 }
 
 export interface Product_product_attributes {

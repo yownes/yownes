@@ -137,7 +137,7 @@ export const PRODUCT = gql`
       name
       image
       images {
-        image
+        imageBig
       }
       shortDescription
       description

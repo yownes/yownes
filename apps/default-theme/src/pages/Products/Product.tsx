@@ -53,7 +53,7 @@ const Product = ({ route, navigation }: ProductProps) => {
   });
   const IMAGES: string[] = [
     data?.product?.image,
-    ...(data?.product?.images?.map((img) => img?.image) ?? []),
+    ...(data?.product?.images?.map((img) => img?.imageBig) ?? []),
   ]
     .filter(
       (str: string | null | undefined) => str !== null && str !== undefined
