@@ -33,7 +33,7 @@ function FormFields<T>({ fields, control }: FormFieldsProps<T>) {
             control={control}
             name={key}
             render={({ field, formState }) => {
-              const error = formState.errors[idx] as FieldError;
+              const error = formState.errors[key] as FieldError;
               return List ? (
                 <>
                   <List
