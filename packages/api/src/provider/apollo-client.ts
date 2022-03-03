@@ -1,9 +1,9 @@
+import type { Reference } from "@apollo/client";
 import {
   ApolloClient,
   InMemoryCache,
   HttpLink,
   ApolloLink,
-  Reference,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 

@@ -18,22 +18,22 @@ import {
   TOP_SALES,
   ZONES_LIST,
 } from "../definitions/queries";
-import { About } from "../types/About";
-import { AddressList } from "../types/AddressList";
-import { CarrierList } from "../types/CarrierList";
-import { Cart } from "../types/Cart";
-import { Categories } from "../types/Categories";
-import { CountriesList } from "../types/CountriesList";
-import { Favourites } from "../types/Favourites";
-import { Home } from "../types/Home";
-import { Order, OrderVariables } from "../types/Order";
-import { Orders } from "../types/Orders";
-import { PaymentMethodList } from "../types/PaymentMethodList";
-import { Product, ProductVariables } from "../types/Product";
-import { Products, ProductsVariables } from "../types/Products";
-import { Profile } from "../types/Profile";
-import { TopSales } from "../types/TopSales";
-import { ZonesList, ZonesListVariables } from "../types/ZonesList";
+import type { About } from "../types/About";
+import type { AddressList } from "../types/AddressList";
+import type { CarrierList } from "../types/CarrierList";
+import type { Cart } from "../types/Cart";
+import type { Categories } from "../types/Categories";
+import type { CountriesList } from "../types/CountriesList";
+import type { Favourites } from "../types/Favourites";
+import type { Home } from "../types/Home";
+import type { Order, OrderVariables } from "../types/Order";
+import type { Orders } from "../types/Orders";
+import type { PaymentMethodList } from "../types/PaymentMethodList";
+import type { Product, ProductVariables } from "../types/Product";
+import type { Products, ProductsVariables } from "../types/Products";
+import type { Profile } from "../types/Profile";
+import type { TopSales } from "../types/TopSales";
+import type { ZonesList, ZonesListVariables } from "../types/ZonesList";
 
 export function useGetCountries() {
   return useQuery<CountriesList>(COUNTRIES_LIST);

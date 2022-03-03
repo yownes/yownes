@@ -1,4 +1,5 @@
-import { Reference, useMutation } from "@apollo/client";
+import type { Reference } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 
 import {
   ADD_ADDRESS,
@@ -20,58 +21,64 @@ import {
   SET_DELIVERY_OPTION,
   UPDATE_CART,
 } from "../definitions/mutations";
-import {
+import type {
   AddAddress,
   AddAddressVariables,
   AddAddress_accountAddAddress,
 } from "../types/AddAddress";
-import { AddDiscount, AddDiscountVariables } from "../types/AddDiscount";
-import {
+import type { AddDiscount, AddDiscountVariables } from "../types/AddDiscount";
+import type {
   AddPaymentMethod,
   AddPaymentMethodVariables,
   AddPaymentMethod_accountAddPaymentMethod,
 } from "../types/AddPaymentMethod";
-import { AddToCart, AddToCartVariables } from "../types/AddToCart";
-import {
+import type { AddToCart, AddToCartVariables } from "../types/AddToCart";
+import type {
   AddToFavourite,
   AddToFavouriteVariables,
 } from "../types/AddToFavourite";
-import { ConfirmOrder, ConfirmOrderVariables } from "../types/ConfirmOrder";
-import {
+import type {
+  ConfirmOrder,
+  ConfirmOrderVariables,
+} from "../types/ConfirmOrder";
+import type {
   CreatePaymentIntent,
   CreatePaymentIntentVariables,
 } from "../types/CreatePaymentIntent";
-import { DeleteAddress, DeleteAddressVariables } from "../types/DeleteAddress";
-import {
+import type {
+  DeleteAddress,
+  DeleteAddressVariables,
+} from "../types/DeleteAddress";
+import type {
   DeletePaymentMethod,
   DeletePaymentMethodVariables,
 } from "../types/DeletePaymentMethod";
-import {
+import type {
   EditAddress,
   EditAddressVariables,
   EditAddress_accountEditAddress,
 } from "../types/EditAddress";
-import { Login, LoginVariables } from "../types/Login";
-import { Logout } from "../types/Logout";
-import { Product } from "../types/Product";
-import { Register, RegisterVariables } from "../types/Register";
-import {
+import type { Login, LoginVariables } from "../types/Login";
+import type { Logout } from "../types/Logout";
+import type { Product } from "../types/Product";
+import type { Register, RegisterVariables } from "../types/Register";
+import type {
   RemoveDiscount,
   RemoveDiscountVariables,
 } from "../types/RemoveDiscount";
-import {
+import type {
   RemoveFavourite,
   RemoveFavouriteVariables,
 } from "../types/RemoveFavourite";
-import {
+import type {
   RemoveFromCart,
   RemoveFromCartVariables,
 } from "../types/RemoveFromCart";
-import {
+import type {
   SetDeliveryOption,
   SetDeliveryOptionVariables,
 } from "../types/SetDeliveryOption";
-import { UpdateCart, UpdateCartVariables } from "../types/UpdateCart";
+import type { UpdateCart, UpdateCartVariables } from "../types/UpdateCart";
 
 interface MutationParams<T> {
   onSuccess?: (data?: T) => void;

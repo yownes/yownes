@@ -32,6 +32,7 @@
     "gen:types": "apollo client:codegen --target typescript --outputFlat ./src/types",
     "prepublishOnly": "yarn test && yarn build",
     "test": "jest",
+    "lint": "eslint --ext .ts,.tsx . --max-warnings 0 --fix",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build"
   },
   "license": "MIT",
