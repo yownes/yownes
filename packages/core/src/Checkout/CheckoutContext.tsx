@@ -1,10 +1,11 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
-import {
-  useGetCart,
+import type { ReactNode } from "react";
+import React, { createContext, useContext, useState } from "react";
+import type {
   AddressFragment,
   CartFragment,
   PaymentMethodFragment,
 } from "@yownes/api";
+import { useGetCart } from "@yownes/api";
 
 interface CheckoutContextProps {
   cart?: CartFragment | null;

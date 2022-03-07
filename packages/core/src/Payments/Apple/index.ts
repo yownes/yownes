@@ -1,4 +1,5 @@
-import { CartFragment, useCreatePaymentIntent } from "@yownes/api";
+import type { CartFragment } from "@yownes/api";
+import { useCreatePaymentIntent } from "@yownes/api";
 import type { ApplePay } from "@stripe/stripe-react-native";
 import { useApplePay } from "@stripe/stripe-react-native";
 

@@ -3,9 +3,11 @@ import {
   PaymentIntents,
   useConfirmPayment,
 } from "@stripe/stripe-react-native";
-import {
+import type {
   AddPaymentMethod_accountAddPaymentMethod,
   AddressFragment,
+} from "@yownes/api";
+import {
   useAddPaymentMethod,
   useConfirmOrder,
   useCreatePaymentIntent,

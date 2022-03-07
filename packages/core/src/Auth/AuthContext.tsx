@@ -1,11 +1,7 @@
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { useProfile, Profile_accountCheckLogged_customer } from "@yownes/api";
+import type { ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import type { Profile_accountCheckLogged_customer } from "@yownes/api";
+import { useProfile } from "@yownes/api";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
