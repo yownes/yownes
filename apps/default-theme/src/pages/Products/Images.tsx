@@ -1,6 +1,6 @@
 import React from "react";
 import { Dimensions } from "react-native";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
   interpolate,
@@ -22,16 +22,16 @@ const { width, height } = Dimensions.get("screen");
 
 const Images = ({ route, navigation }: ImagesProps) => {
   const { product, index } = route.params;
-  const isGestureActive = useSharedValue(false);
   const scrollPosition = useSharedValue(width * index);
   const translation = useVector();
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart: () => (isGestureActive.value = true),
-    onActive: ({ translationX, translationY }) => {
+  const gesture = Gesture.Pan()
+    .onChange(({ translationX, translationY }) => {
+      "worklet";
       translation.x.value = translationX;
       translation.y.value = translationY;
-    },
-    onEnd: ({ translationY, velocityY }) => {
+    })
+    .onEnd(({ translationY, velocityY }) => {
+      "worklet";
       const snapBack =
         snapPoint(translationY, velocityY, [0, height]) === height;
 
@@ -44,12 +44,10 @@ const Images = ({ route, navigation }: ImagesProps) => {
           },
         });
       } else {
-        isGestureActive.value = false;
         translation.x.value = withSpring(0);
         translation.y.value = withSpring(0);
       }
-    },
-  });
+    });
   const style = useAnimatedStyle(() => {
     const scale = interpolate(
       translation.y.value,
@@ -80,7 +78,7 @@ const Images = ({ route, navigation }: ImagesProps) => {
     )
     .map((img) => img as string);
   return (
-    <PanGestureHandler onGestureEvent={onGestureEvent}>
+    <GestureDetector gesture={gesture}>
       <Animated.View style={style}>
         <Animated.ScrollView
           contentOffset={{ x: width * index, y: 0 }}
@@ -97,7 +95,7 @@ const Images = ({ route, navigation }: ImagesProps) => {
           ))}
         </Animated.ScrollView>
       </Animated.View>
-    </PanGestureHandler>
+    </GestureDetector>
   );
 };
 

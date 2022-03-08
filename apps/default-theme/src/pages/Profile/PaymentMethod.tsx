@@ -1,13 +1,11 @@
 import React from "react";
 import { Dimensions } from "react-native";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
   interpolate,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
-  useSharedValue,
   withSpring,
 } from "react-native-reanimated";
 import { snapPoint, useVector } from "react-native-redash";
@@ -28,26 +26,23 @@ const { height } = Dimensions.get("screen");
 const PaymentMethod = ({ route, navigation }: PaymentMethodProps) => {
   const [deletePaymentMethod, { loading }] = useDeletePaymentMethod();
   const translation = useVector();
-  const isGestureActive = useSharedValue(false);
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart: () => (isGestureActive.value = true),
-    onActive: ({ translationX, translationY }) => {
+  const gesture = Gesture.Pan()
+    .onChange(({ translationX, translationY }) => {
+      "worklet";
       translation.x.value = translationX;
       translation.y.value = translationY;
-    },
-    onEnd: ({ translationY, velocityY }) => {
+    })
+    .onEnd(({ translationY, velocityY }) => {
       const snapBack =
         snapPoint(translationY, velocityY, [0, height]) === height;
 
       if (snapBack) {
         runOnJS(navigation.navigate)({ name: "Profile", params: {} });
       } else {
-        isGestureActive.value = false;
         translation.x.value = withSpring(0);
         translation.y.value = withSpring(0);
       }
-    },
-  });
+    });
   const style = useAnimatedStyle(() => {
     const scale = interpolate(
       translation.y.value,
@@ -91,7 +86,7 @@ const PaymentMethod = ({ route, navigation }: PaymentMethodProps) => {
   });
   return (
     <SelectProvider>
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
+      <GestureDetector gesture={gesture}>
         <Animated.View style={style}>
           <SafeAreaView>
             <Box padding="m">
@@ -121,7 +116,7 @@ const PaymentMethod = ({ route, navigation }: PaymentMethodProps) => {
             </Box>
           </SafeAreaView>
         </Animated.View>
-      </PanGestureHandler>
+      </GestureDetector>
     </SelectProvider>
   );
 };
