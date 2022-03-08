@@ -1,0 +1,9 @@
+.app_deleted td {
+  background-color: #f8f8f8;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.table {
+  min-width: 800px;
+}

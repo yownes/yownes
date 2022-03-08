@@ -1,0 +1,1691 @@
+{
+  "countries": {
+    "AF": {
+      "en": "Afghanistan",
+      "es": "Afganistán",
+      "fr": "Afghanistan",
+      "ca": "Afganistan",
+      "de": "Afghanistan"
+    },
+    "AL": {
+      "en": "Albania",
+      "es": "Albania",
+      "fr": "Albanie",
+      "ca": "Albània",
+      "de": "Albanien"
+    },
+    "DZ": {
+      "en": "Algeria",
+      "es": "Argelia",
+      "fr": "Algérie",
+      "ca": "Algèria",
+      "de": "Algerien"
+    },
+    "AS": {
+      "en": "American Samoa",
+      "es": "Samoa Americana",
+      "fr": "Samoa américaines",
+      "ca": "Samoa Nord-americana",
+      "de": "Amerikanisch-Samoa"
+    },
+    "AD": {
+      "en": "Andorra",
+      "es": "Andorra",
+      "fr": "Andorre",
+      "ca": "Andorra",
+      "de": "Andorra"
+    },
+    "AO": {
+      "en": "Angola",
+      "es": "Angola",
+      "fr": "Angola",
+      "ca": "Angola",
+      "de": "Angola"
+    },
+    "AI": {
+      "en": "Anguilla",
+      "es": "Anguila",
+      "fr": "Anguilla",
+      "ca": "Anguilla",
+      "de": "Anguilla"
+    },
+    "AQ": {
+      "en": "Antarctica",
+      "es": "Antártida",
+      "fr": "Antarctique",
+      "ca": "Antàrtida",
+      "de": "Antarktika"
+    },
+    "AG": {
+      "en": "Antigua And Barbuda",
+      "es": "Antigua y Barbuda",
+      "fr": "Antigua-et-Barbuda",
+      "ca": "Antigua i Barbuda",
+      "de": "Antigua und Barbuda"
+    },
+    "AR": {
+      "en": "Argentina",
+      "es": "Argentina",
+      "fr": "Argentine",
+      "ca": "Argentina",
+      "de": "Argentinien"
+    },
+    "AM": {
+      "en": "Armenia",
+      "es": "Armenia",
+      "fr": "Arménie",
+      "ca": "Armènia",
+      "de": "Armenien"
+    },
+    "AW": {
+      "en": "Aruba",
+      "es": "Aruba",
+      "fr": "Aruba",
+      "ca": "Aruba",
+      "de": "Aruba"
+    },
+    "AU": {
+      "en": "Australia",
+      "es": "Australia",
+      "fr": "Australie",
+      "ca": "Austràlia",
+      "de": "Australien"
+    },
+    "AT": {
+      "en": "Austria",
+      "es": "Austria",
+      "fr": "Autriche",
+      "ca": "Àustria",
+      "de": "Österreich"
+    },
+    "AZ": {
+      "en": "Azerbaijan",
+      "es": "Azerbaiyán",
+      "fr": "Azerbaïdjan",
+      "ca": "Azerbaidjan",
+      "de": "Aserbaidschan"
+    },
+    "BS": {
+      "en": "Bahamas",
+      "es": "Bahamas",
+      "fr": "Bahamas",
+      "ca": "Bahames",
+      "de": "Bahamas"
+    },
+    "BH": {
+      "en": "Bahrain",
+      "es": "Baréin",
+      "fr": "Bahreïn",
+      "ca": "Bahrain",
+      "de": "Bahrain"
+    },
+    "BD": {
+      "en": "Bangladesh",
+      "es": "Bangladés",
+      "fr": "Bangladesh",
+      "ca": "Bangla Desh",
+      "de": "Bangladesch"
+    },
+    "BB": {
+      "en": "Barbados",
+      "es": "Barbados",
+      "fr": "Barbade",
+      "ca": "Barbados",
+      "de": "Barbados"
+    },
+    "BY": {
+      "en": "Belarus",
+      "es": "Bielorrusia",
+      "fr": "Biélorussie",
+      "ca": "Bielorússia",
+      "de": "Weißrussland"
+    },
+    "BE": {
+      "en": "Belgium",
+      "es": "Bélgica",
+      "fr": "Belgique",
+      "ca": "Bèlgica",
+      "de": "Belgien"
+    },
+    "BZ": {
+      "en": "Belize",
+      "es": "Belice",
+      "fr": "Belize",
+      "ca": "Belize",
+      "de": "Belize"
+    },
+    "BJ": {
+      "en": "Benin",
+      "es": "Benín",
+      "fr": "Bénin",
+      "ca": "Benín",
+      "de": "Benin"
+    },
+    "BM": {
+      "en": "Bermuda",
+      "es": "Bermuda",
+      "fr": "Bermudes",
+      "ca": "Bermudes",
+      "de": "Bermuda"
+    },
+    "BT": {
+      "en": "Bhutan",
+      "es": "Bután",
+      "fr": "Bhoutan",
+      "ca": "Bhutan",
+      "de": "Bhutan"
+    },
+    "BO": {
+      "en": "Bolivia",
+      "es": "Bolivia",
+      "fr": "Bolivie",
+      "ca": "Bolívia",
+      "de": "Bolivien"
+    },
+    "BA": {
+      "en": "Bosnia And Herzegovina",
+      "es": "Bosnia-Herzegovina",
+      "fr": "Bosnie-Herzégovine",
+      "ca": "Bòsnia i Hercegovina",
+      "de": "Bosnien und Herzegowina"
+    },
+    "BW": {
+      "en": "Botswana",
+      "es": "Botsuana",
+      "fr": "Botswana",
+      "ca": "Botswana",
+      "de": "Botswana"
+    },
+    "BV": {
+      "en": "Bouvet Island",
+      "es": "Isla Bouvet",
+      "fr": "Île Bouvet",
+      "ca": "Bouvet",
+      "de": "Bouvetinsel"
+    },
+    "BR": {
+      "en": "Brazil",
+      "es": "Brasil",
+      "fr": "Brésil",
+      "ca": "Brasil",
+      "de": "Brasilien"
+    },
+    "IO": {
+      "en": "British Indian Ocean Territory",
+      "es": "Territorio Británico del Océano Índico",
+      "fr": "Territoire britannique de l'océan Indien",
+      "ca": "Territori Britànic de l'Oceà Índic",
+      "de": "Britisches Territorium im Indischen Ozean"
+    },
+    "BN": {
+      "en": "Brunei",
+      "es": "Brunéi",
+      "fr": "Brunei",
+      "ca": "Brunei",
+      "de": "Brunei"
+    },
+    "BG": {
+      "en": "Bulgaria",
+      "es": "Bulgaria",
+      "fr": "Bulgarie",
+      "ca": "Bulgària",
+      "de": "Bulgarien"
+    },
+    "BF": {
+      "en": "Burkina Faso",
+      "es": "Burkina Faso",
+      "fr": "Burkina Faso",
+      "ca": "Burkina Faso",
+      "de": "Burkina Faso"
+    },
+    "BI": {
+      "en": "Burundi",
+      "es": "Burundi",
+      "fr": "Burundi",
+      "ca": "Burundi",
+      "de": "Burundi"
+    },
+    "KH": {
+      "en": "Cambodia",
+      "es": "Camboya",
+      "fr": "Cambodge",
+      "ca": "Cambodja",
+      "de": "Kambodscha"
+    },
+    "CM": {
+      "en": "Cameroon",
+      "es": "Camerún",
+      "fr": "Cameroun",
+      "ca": "Camerun",
+      "de": "Kamerun"
+    },
+    "CA": {
+      "en": "Canada",
+      "es": "Canadá",
+      "fr": "Canada",
+      "ca": "Canadà",
+      "de": "Kanada"
+    },
+    "CV": {
+      "en": "Cape Verde",
+      "es": "Cabo Verde",
+      "fr": "Cap-Vert",
+      "ca": "Cap Verd",
+      "de": "Kap Verde"
+    },
+    "KY": {
+      "en": "Cayman Islands",
+      "es": "Islas Caimán",
+      "fr": "Îles Caïmans",
+      "ca": "Illes Caiman",
+      "de": "Cayman Islands"
+    },
+    "CF": {
+      "en": "Central African Republic",
+      "es": "República Centroafricana",
+      "fr": "République centrafricaine",
+      "ca": "República Centreafricana",
+      "de": "Zentralafrikanische Republik"
+    },
+    "TD": {
+      "en": "Chad",
+      "es": "Chad",
+      "fr": "Tchad",
+      "ca": "Txad",
+      "de": "Tschad"
+    },
+    "CL": {
+      "en": "Chile",
+      "es": "Chile",
+      "fr": "Chili",
+      "ca": "Xile",
+      "de": "Chile"
+    },
+    "CN": {
+      "en": "China",
+      "es": "República Popular China",
+      "fr": "République populaire de Chine",
+      "ca": "República Popular de la Xina",
+      "de": "Volksrepublik China"
+    },
+    "CX": {
+      "en": "Christmas Island",
+      "es": "Isla de Navidad",
+      "fr": "Île Christmas",
+      "ca": "Illa Christmas",
+      "de": "Weihnachtsinsel"
+    },
+    "CC": {
+      "en": "Cocos (keeling) Islands",
+      "es": "Islas Cocos",
+      "fr": "Îles Cocos",
+      "ca": "Illes Cocos",
+      "de": "Kokosinseln"
+    },
+    "CO": {
+      "en": "Colombia",
+      "es": "Colombia",
+      "fr": "Colombie",
+      "ca": "Colòmbia",
+      "de": "Kolumbien"
+    },
+    "KM": {
+      "en": "Comoros",
+      "es": "Comoras",
+      "fr": "Comores",
+      "ca": "Comores",
+      "de": "Komoren"
+    },
+    "CG": {
+      "en": "Congo",
+      "es": "República del Congo",
+      "fr": "République du Congo",
+      "ca": "República del Congo",
+      "de": "Republik Kongo"
+    },
+    "CD": {
+      "en": "Congo, The Democratic Republic Of The",
+      "es": "República Democrática del Congo",
+      "fr": "République démocratique du Congo",
+      "ca": "República Democràtica del Congo",
+      "de": "Demokratische Republik Kongo"
+    },
+    "CK": {
+      "en": "Cook Islands",
+      "es": "Islas Cook",
+      "fr": "Îles Cook",
+      "ca": "Illes Cook",
+      "de": "Cookinseln"
+    },
+    "CR": {
+      "en": "Costa Rica",
+      "es": "Costa Rica",
+      "fr": "Costa Rica",
+      "ca": "Costa Rica",
+      "de": "Costa Rica"
+    },
+    "CI": {
+      "en": "Cote D'ivoire",
+      "es": "Costa de Marfil",
+      "fr": "Côte d'Ivoire",
+      "ca": "Costa d'Ivori",
+      "de": "Elfenbeinküste"
+    },
+    "HR": {
+      "en": "Croatia",
+      "es": "Croacia",
+      "fr": "Croatie",
+      "ca": "Croàcia",
+      "de": "Kroatien"
+    },
+    "CU": {
+      "en": "Cuba",
+      "es": "Cuba",
+      "fr": "Cuba",
+      "ca": "Cuba",
+      "de": "Kuba"
+    },
+    "CY": {
+      "en": "Cyprus",
+      "es": "Chipre",
+      "fr": "Chypre",
+      "ca": "Xipre",
+      "de": "Republik Zypern"
+    },
+    "CZ": {
+      "en": "Czech Republic",
+      "es": "República Checa",
+      "fr": "République tchèque",
+      "ca": "República Txeca",
+      "de": "Tschechien"
+    },
+    "DK": {
+      "en": "Denmark",
+      "es": "Dinamarca",
+      "fr": "Danemark",
+      "ca": "Dinamarca",
+      "de": "Dänemark"
+    },
+    "DJ": {
+      "en": "Djibouti",
+      "es": "Djibouti",
+      "fr": "Djibouti",
+      "ca": "Djibouti",
+      "de": "Dschibuti"
+    },
+    "DM": {
+      "en": "Dominica",
+      "es": "Dominica",
+      "fr": "Dominique",
+      "ca": "Dominica",
+      "de": "Dominica"
+    },
+    "DO": {
+      "en": "Dominican Republic",
+      "es": "República Dominicana",
+      "fr": "République dominicaine",
+      "ca": "República Dominicana",
+      "de": "Dominikanische Republik"
+    },
+    "TP": {
+      "en": "East Timor",
+      "es": "Timor Oriental",
+      "fr": "Timor oriental",
+      "ca": "Timor Oriental",
+      "de": "Osttimor"
+    },
+    "EC": {
+      "en": "Ecuador",
+      "es": "Ecuador",
+      "fr": "Équateur",
+      "ca": "Equador",
+      "de": "Ecuador"
+    },
+    "EG": {
+      "en": "Egypt",
+      "es": "Egipto",
+      "fr": "Égypte",
+      "ca": "Egipte",
+      "de": "Ägypten"
+    },
+    "SV": {
+      "en": "El Salvador",
+      "es": "El Salvador",
+      "fr": "Salvador",
+      "ca": "El Salvador",
+      "de": "El Salvador"
+    },
+    "GQ": {
+      "en": "Equatorial Guinea",
+      "es": "Guinea Ecuatorial",
+      "fr": "Guinée équatoriale",
+      "ca": "Guinea Equatorial",
+      "de": "Äquatorialguinea"
+    },
+    "ER": {
+      "en": "Eritrea",
+      "es": "Eritrea",
+      "fr": "Érythrée",
+      "ca": "Eritrea",
+      "de": "Eritrea"
+    },
+    "EE": {
+      "en": "Estonia",
+      "es": "Estonia",
+      "fr": "Estonie",
+      "ca": "Estònia",
+      "de": "Estland"
+    },
+    "ET": {
+      "en": "Ethiopia",
+      "es": "Etiopía",
+      "fr": "Éthiopie",
+      "ca": "Etiòpia",
+      "de": "Äthiopien"
+    },
+    "FK": {
+      "en": "Falkland Islands (malvinas)",
+      "es": "Islas Malvinas",
+      "fr": "Îles Malouines",
+      "ca": "Illes Malvines",
+      "de": "Falklandinseln"
+    },
+    "FO": {
+      "en": "Faroe Islands",
+      "es": "Islas Feroe",
+      "fr": "Îles Féroé",
+      "ca": "Illes Fèroe",
+      "de": "Färöer"
+    },
+    "FJ": {
+      "en": "Fiji",
+      "es": "Fiyi",
+      "fr": "Fidji",
+      "ca": "Fiji",
+      "de": "Fidschi"
+    },
+    "FI": {
+      "en": "Finland",
+      "es": "Finlandia",
+      "fr": "Finlande",
+      "ca": "Finlàndia",
+      "de": "Finnland"
+    },
+    "FR": {
+      "en": "France",
+      "es": "Francia",
+      "fr": "France",
+      "ca": "França",
+      "de": "Frankreich"
+    },
+    "GF": {
+      "en": "French Guiana",
+      "es": "Guayana Francesa",
+      "fr": "Guyane",
+      "ca": "Guaiana Francesa",
+      "de": "Französisch-Guayana"
+    },
+    "PF": {
+      "en": "French Polynesia",
+      "es": "Polinesia Francesa",
+      "fr": "Polynésie française",
+      "ca": "Polinèsia Francesa",
+      "de": "Französisch-Polynesien"
+    },
+    "TF": {
+      "en": "French Southern Territories",
+      "es": "Tierras Australes y Antárticas Francesas",
+      "fr": "Terres australes et antarctiques françaises",
+      "ca": "Terres Australs i Antàrtiques Franceses",
+      "de": "Französische Süd- und Antarktisgebiete"
+    },
+    "GA": {
+      "en": "Gabon",
+      "es": "Gabón",
+      "fr": "Gabon",
+      "ca": "Gabon",
+      "de": "Gabun"
+    },
+    "GM": {
+      "en": "Gambia",
+      "es": "Gambia",
+      "fr": "Gambie",
+      "ca": "Gàmbia",
+      "de": "Gambia"
+    },
+    "GE": {
+      "en": "Georgia",
+      "es": "Georgia",
+      "fr": "Géorgie",
+      "ca": "Geòrgia",
+      "de": "Georgien"
+    },
+    "DE": {
+      "en": "Germany",
+      "es": "Alemania",
+      "fr": "Allemagne",
+      "ca": "Alemanya",
+      "de": "Deutschland"
+    },
+    "GH": {
+      "en": "Ghana",
+      "es": "Ghana",
+      "fr": "Ghana",
+      "ca": "Ghana",
+      "de": "Ghana"
+    },
+    "GI": {
+      "en": "Gibraltar",
+      "es": "Gibraltar",
+      "fr": "Gibraltar",
+      "ca": "Gibraltar",
+      "de": "Gibraltar"
+    },
+    "GR": {
+      "en": "Greece",
+      "es": "Grecia",
+      "fr": "Grèce",
+      "ca": "Grècia",
+      "de": "Griechenland"
+    },
+    "GL": {
+      "en": "Greenland",
+      "es": "Groenlandia",
+      "fr": "Groenland",
+      "ca": "Grenlàndia",
+      "de": "Grönland"
+    },
+    "GD": {
+      "en": "Grenada",
+      "es": "Granada",
+      "fr": "Grenade",
+      "ca": "Grenada",
+      "de": "Grenada"
+    },
+    "GP": {
+      "en": "Guadeloupe",
+      "es": "Guadalupe",
+      "fr": "Guadeloupe",
+      "ca": "Guadalupe",
+      "de": "Guadeloupe"
+    },
+    "GU": {
+      "en": "Guam",
+      "es": "Guam",
+      "fr": "Guam",
+      "ca": "Guam",
+      "de": "Guam"
+    },
+    "GT": {
+      "en": "Guatemala",
+      "es": "Guatemala",
+      "fr": "Guatemala",
+      "ca": "Guatemala",
+      "de": "Guatemala"
+    },
+    "GN": {
+      "en": "Guinea",
+      "es": "Guinea",
+      "fr": "Guinée",
+      "ca": "República de Guinea",
+      "de": "Guinea"
+    },
+    "GW": {
+      "en": "Guinea-bissau",
+      "es": "Guinea-Bisáu",
+      "fr": "Guinée-Bissau",
+      "ca": "Guinea Bissau",
+      "de": "Guinea-Bissau"
+    },
+    "GY": {
+      "en": "Guyana",
+      "es": "Guyana",
+      "fr": "Guyana",
+      "ca": "Guyana",
+      "de": "Guyana"
+    },
+    "HT": {
+      "en": "Haiti",
+      "es": "Haití",
+      "fr": "Haïti",
+      "ca": "Haití",
+      "de": "Haiti"
+    },
+    "HM": {
+      "en": "Heard Island And Mcdonald Islands",
+      "es": "Islas Heard y McDonald",
+      "fr": "Îles Heard-et-MacDonald",
+      "ca": "Illes Heard i McDonald",
+      "de": "Heard und McDonaldinseln"
+    },
+    "VA": {
+      "en": "Holy See (vatican City State)",
+      "es": "Ciudad del Vaticano",
+      "fr": "Vatican",
+      "ca": "Ciutat del Vaticà",
+      "de": "Vatikanstadt"
+    },
+    "HN": {
+      "en": "Honduras",
+      "es": "Honduras",
+      "fr": "Honduras",
+      "ca": "Hondures",
+      "de": "Honduras"
+    },
+    "HK": {
+      "en": "Hong Kong",
+      "es": "Hong Kong",
+      "fr": "Hong Kong",
+      "ca": "Hong Kong",
+      "de": "Hongkong"
+    },
+    "HU": {
+      "en": "Hungary",
+      "es": "Hungría",
+      "fr": "Hongrie",
+      "ca": "Hongria",
+      "de": "Ungarn"
+    },
+    "IS": {
+      "en": "Iceland",
+      "es": "Islandia",
+      "fr": "Islande",
+      "ca": "Islàndia",
+      "de": "Island"
+    },
+    "IN": {
+      "en": "India",
+      "es": "India",
+      "fr": "Inde",
+      "ca": "Índia",
+      "de": "Indien"
+    },
+    "ID": {
+      "en": "Indonesia",
+      "es": "Indonesia",
+      "fr": "Indonésie",
+      "ca": "Indonèsia",
+      "de": "Indonesien"
+    },
+    "IR": {
+      "en": "Iran, Islamic Republic Of",
+      "es": "Irán",
+      "fr": "Iran",
+      "ca": "Iran",
+      "de": "Iran"
+    },
+    "IQ": {
+      "en": "Iraq",
+      "es": "Irak",
+      "fr": "Irak",
+      "ca": "Iraq",
+      "de": "Irak"
+    },
+    "IE": {
+      "en": "Ireland",
+      "es": "Irlanda",
+      "fr": "Irlande",
+      "ca": "República d'Irlanda",
+      "de": "Irland"
+    },
+    "IL": {
+      "en": "Israel",
+      "es": "Israel",
+      "fr": "Israël",
+      "ca": "Israel",
+      "de": "Israel"
+    },
+    "IT": {
+      "en": "Italy",
+      "es": "Italia",
+      "fr": "Italie",
+      "ca": "Itàlia",
+      "de": "Italien"
+    },
+    "JM": {
+      "en": "Jamaica",
+      "es": "Jamaica",
+      "fr": "Jamaïque",
+      "ca": "Jamaica",
+      "de": "Jamaika"
+    },
+    "JP": {
+      "en": "Japan",
+      "es": "Japón",
+      "fr": "Japon",
+      "ca": "Japó",
+      "de": "Japan"
+    },
+    "JO": {
+      "en": "Jordan",
+      "es": "Jordania",
+      "fr": "Jordanie",
+      "ca": "Jordània",
+      "de": "Jordanien"
+    },
+    "KZ": {
+      "en": "Kazakstan",
+      "es": "Kazajistán",
+      "fr": "Kazakhstan",
+      "ca": "Kazakhstan",
+      "de": "Kasachstan"
+    },
+    "KE": {
+      "en": "Kenya",
+      "es": "Kenia",
+      "fr": "Kenya",
+      "ca": "Kenya",
+      "de": "Kenia"
+    },
+    "KI": {
+      "en": "Kiribati",
+      "es": "Kiribati",
+      "fr": "Kiribati",
+      "ca": "Kiribati",
+      "de": "Kiribati"
+    },
+    "KP": {
+      "en": "Korea, Democratic People's Republic Of",
+      "es": "Corea del Norte",
+      "fr": "Corée du Nord",
+      "ca": "Corea del Nord",
+      "de": "Nordkorea"
+    },
+    "KR": {
+      "en": "Korea, Republic Of",
+      "es": "Corea del Sur",
+      "fr": "Corée du Sud",
+      "ca": "Corea del Sud",
+      "de": "Südkorea"
+    },
+    "KV": {
+      "en": "Kosovo",
+      "es": "Kosovo",
+      "fr": "Kosovo",
+      "ca": "Kosovo",
+      "de": "Kosovo"
+    },
+    "KW": {
+      "en": "Kuwait",
+      "es": "Kuwait",
+      "fr": "Koweït",
+      "ca": "Kuwait",
+      "de": "Kuwait"
+    },
+    "KG": {
+      "en": "Kyrgyzstan",
+      "es": "Kirguistán",
+      "fr": "Kirghizistan",
+      "ca": "Kirguizistan",
+      "de": "Kirgisistan"
+    },
+    "LA": {
+      "en": "Lao People's Democratic Republic",
+      "es": "Laos",
+      "fr": "Laos",
+      "ca": "Laos",
+      "de": "Laos"
+    },
+    "LV": {
+      "en": "Latvia",
+      "es": "Letonia",
+      "fr": "Lettonie",
+      "ca": "Letònia",
+      "de": "Lettland"
+    },
+    "LB": {
+      "en": "Lebanon",
+      "es": "Líbano",
+      "fr": "Liban",
+      "ca": "Líban",
+      "de": "Libanon"
+    },
+    "LS": {
+      "en": "Lesotho",
+      "es": "Lesoto",
+      "fr": "Lesotho",
+      "ca": "Lesotho",
+      "de": "Lesotho"
+    },
+    "LR": {
+      "en": "Liberia",
+      "es": "Liberia",
+      "fr": "Liberia",
+      "ca": "Libèria",
+      "de": "Liberia"
+    },
+    "LY": {
+      "en": "Libyan Arab Jamahiriya",
+      "es": "Libia",
+      "fr": "Libye",
+      "ca": "Líbia",
+      "de": "Libyen"
+    },
+    "LI": {
+      "en": "Liechtenstein",
+      "es": "Liechtenstein",
+      "fr": "Liechtenstein",
+      "ca": "Liechtenstein",
+      "de": "Liechtenstein"
+    },
+    "LT": {
+      "en": "Lithuania",
+      "es": "Lituania",
+      "fr": "Lituanie",
+      "ca": "Lituània",
+      "de": "Litauen"
+    },
+    "LU": {
+      "en": "Luxembourg",
+      "es": "Luxemburgo",
+      "fr": "Luxembourg",
+      "ca": "Luxemburg",
+      "de": "Luxemburg"
+    },
+    "MO": {
+      "en": "Macau",
+      "es": "Macao",
+      "fr": "Macao",
+      "ca": "Macau",
+      "de": "Macao"
+    },
+    "MK": {
+      "en": "Macedonia, The Former Yugoslav Republic Of",
+      "es": "República de Macedonia",
+      "fr": "Macédoine",
+      "ca": "República de Macedònia",
+      "de": "Mazedonien"
+    },
+    "MG": {
+      "en": "Madagascar",
+      "es": "Madagascar",
+      "fr": "Madagascar",
+      "ca": "Madagascar",
+      "de": "Madagaskar"
+    },
+    "MW": {
+      "en": "Malawi",
+      "es": "Malaui",
+      "fr": "Malawi",
+      "ca": "Malawi",
+      "de": "Malawi"
+    },
+    "MY": {
+      "en": "Malaysia",
+      "es": "Malasia",
+      "fr": "Malaisie",
+      "ca": "Malàisia",
+      "de": "Malaysia"
+    },
+    "MV": {
+      "en": "Maldives",
+      "es": "Maldivas",
+      "fr": "Maldives",
+      "ca": "Maldives",
+      "de": "Malediven"
+    },
+    "ML": {
+      "en": "Mali",
+      "es": "Malí",
+      "fr": "Mali",
+      "ca": "Mali",
+      "de": "Mali"
+    },
+    "MT": {
+      "en": "Malta",
+      "es": "Malta",
+      "fr": "Mali",
+      "ca": "Mali",
+      "de": "Mali"
+    },
+    "MH": {
+      "en": "Marshall Islands",
+      "es": "Islas Marshall",
+      "fr": "Îles Marshall",
+      "ca": "Illes Marshall",
+      "de": "Marshallinseln"
+    },
+    "MQ": {
+      "en": "Martinique",
+      "es": "Maritinica",
+      "fr": "Martinique",
+      "ca": "Martinica",
+      "de": "Martinique"
+    },
+    "MR": {
+      "en": "Mauritania",
+      "es": "Mauritania",
+      "fr": "Martinique",
+      "ca": "Martinica",
+      "de": "Martinique"
+    },
+    "MU": {
+      "en": "Mauritius",
+      "es": "Mauricio",
+      "fr": "Maurice",
+      "ca": "Maurici",
+      "de": "Mauritius"
+    },
+    "YT": {
+      "en": "Mayotte",
+      "es": "Mayotte",
+      "fr": "Mayotte",
+      "ca": "Mayotte",
+      "de": "Mayotte"
+    },
+    "MX": {
+      "en": "Mexico",
+      "es": "México",
+      "fr": "Mexique",
+      "ca": "Mèxic",
+      "de": "Mexiko"
+    },
+    "FM": {
+      "en": "Micronesia, Federated States Of",
+      "es": "Micronesia",
+      "fr": "Micronésie",
+      "ca": "Micronèsia",
+      "de": "Mikronesien"
+    },
+    "MD": {
+      "en": "Moldova, Republic Of",
+      "es": "Moldavia",
+      "fr": "Moldavie",
+      "ca": "República de Moldàvia",
+      "de": "Moldawien"
+    },
+    "MC": {
+      "en": "Monaco",
+      "es": "Mónaco",
+      "fr": "Monaco",
+      "ca": "Mònaco",
+      "de": "Mònaco"
+    },
+    "MN": {
+      "en": "Mongolia",
+      "es": "Mongolia",
+      "fr": "Mongolie",
+      "ca": "Mongòlia",
+      "de": "Mongolei"
+    },
+    "MS": {
+      "en": "Montserrat",
+      "es": "Montserrat",
+      "fr": "Montserrat",
+      "ca": "Illa de Montserrat",
+      "de": "Montserrat"
+    },
+    "ME": {
+      "en": "Montenegro",
+      "es": "Montenegro",
+      "fr": "Montenegro",
+      "ca": "Montenegro",
+      "de": "Montenegro"
+    },
+    "MA": {
+      "en": "Morocco",
+      "es": "Marruecos",
+      "fr": "Maroc",
+      "ca": "Marroc",
+      "de": "Marokko"
+    },
+    "MZ": {
+      "en": "Mozambique",
+      "es": "Mozambique",
+      "fr": "Mozambique",
+      "ca": "Moçambic",
+      "de": "Mosambik"
+    },
+    "MM": {
+      "en": "Myanmar",
+      "es": "Birmania",
+      "fr": "Birmanie",
+      "ca": "Myanmar",
+      "de": "Myanmar"
+    },
+    "NA": {
+      "en": "Namibia",
+      "es": "Namibia",
+      "fr": "Namibie",
+      "ca": "Namíbia",
+      "de": "Namibia"
+    },
+    "NR": {
+      "en": "Nauru",
+      "es": "Nauru",
+      "fr": "Nauru",
+      "ca": "Nauru",
+      "de": "Nauru"
+    },
+    "NP": {
+      "en": "Nepal",
+      "es": "Nepal",
+      "fr": "Népal",
+      "ca": "Nepal",
+      "de": "Nepal"
+    },
+    "NL": {
+      "en": "Netherlands",
+      "es": "Países Bajos",
+      "fr": "Pays-Bas",
+      "ca": "Països Baixos",
+      "de": "Niederlande"
+    },
+    "AN": {
+      "en": "Netherlands Antilles",
+      "es": "Antillas Neerlandesas",
+      "fr": "Antilles néerlandaises",
+      "ca": "Antilles Neerlandeses",
+      "de": "Niederländische Antillen"
+    },
+    "NC": {
+      "en": "New Caledonia",
+      "es": "Nueva Caledonia",
+      "fr": "Nouvelle-Calédonie",
+      "ca": "Nova Caledònia",
+      "de": "Neukaledonien"
+    },
+    "NZ": {
+      "en": "New Zealand",
+      "es": "Nueva Zelanda",
+      "fr": "Nouvelle-Zélande",
+      "ca": "Nova Zelanda",
+      "de": "Neuseeland"
+    },
+    "NI": {
+      "en": "Nicaragua",
+      "es": "Nicaragua",
+      "fr": "Nicaragua",
+      "ca": "Nicaragua",
+      "de": "Nicaragua"
+    },
+    "NE": {
+      "en": "Niger",
+      "es": "Níger",
+      "fr": "Niger",
+      "ca": "Níger",
+      "de": "Niger"
+    },
+    "NG": {
+      "en": "Nigeria",
+      "es": "Nigeria",
+      "fr": "Nigeria",
+      "ca": "Nigèria",
+      "de": "Nigeria"
+    },
+    "NU": {
+      "en": "Niue",
+      "es": "Niue",
+      "fr": "Niue",
+      "ca": "Niue",
+      "de": "Niue"
+    },
+    "NF": {
+      "en": "Norfolk Island",
+      "es": "Isla Norfolk",
+      "fr": "Île Norfolk",
+      "ca": "Illa Norfolk",
+      "de": "Norfolkinsel"
+    },
+    "MP": {
+      "en": "Northern Mariana Islands",
+      "es": "Islas Marianas",
+      "fr": "Îles Mariannes",
+      "ca": "Illes Mariannes",
+      "de": "Marianen"
+    },
+    "NO": {
+      "en": "Norway",
+      "es": "Noruega",
+      "fr": "Norvège",
+      "ca": "Noruega",
+      "de": "Norwegen"
+    },
+    "OM": {
+      "en": "Oman",
+      "es": "Omán",
+      "fr": "Oman",
+      "ca": "Oman",
+      "de": "Oman"
+    },
+    "PK": {
+      "en": "Pakistan",
+      "es": "Pakistán",
+      "fr": "Pakistan",
+      "ca": "Pakistan",
+      "de": "Pakistan"
+    },
+    "PW": {
+      "en": "Palau",
+      "es": "Palaos",
+      "fr": "Palaos",
+      "ca": "República de Palau",
+      "de": "Palau"
+    },
+    "PS": {
+      "en": "Palestinian Territory, Occupied",
+      "es": "Territorios Palestinos",
+      "fr": "Territoires palestiniens occupés",
+      "ca": "Territoris Palestins",
+      "de": "Palästinensische Autonomiegebiete"
+    },
+    "PA": {
+      "en": "Panama",
+      "es": "Panamá",
+      "fr": "Panama",
+      "ca": "Panamà",
+      "de": "Panama"
+    },
+    "PG": {
+      "en": "Papua New Guinea",
+      "es": "Papúa Nueva Guinea",
+      "fr": "Papouasie-Nouvelle-Guinée",
+      "ca": "Papua Nova Guinea",
+      "de": "Papua-Neuguinea"
+    },
+    "PY": {
+      "en": "Paraguay",
+      "es": "Paraguay",
+      "fr": "Paraguay",
+      "ca": "Paraguai",
+      "de": "Paraguay"
+    },
+    "PE": {
+      "en": "Peru",
+      "es": "Perú",
+      "fr": "Pérou",
+      "ca": "Perú",
+      "de": "Peru"
+    },
+    "PH": {
+      "en": "Philippines",
+      "es": "Filipinas",
+      "fr": "Philippines",
+      "ca": "Filipines",
+      "de": "Philippinen"
+    },
+    "PN": {
+      "en": "Pitcairn",
+      "es": "Islas Pitcairn",
+      "fr": "Îles Pitcairn",
+      "ca": "Illes Pitcairn",
+      "de": "Pitcairninseln"
+    },
+    "PL": {
+      "en": "Poland",
+      "es": "Polonia",
+      "fr": "Pologne",
+      "ca": "Polònia",
+      "de": "Polen"
+    },
+    "PT": {
+      "en": "Portugal",
+      "es": "Portugal",
+      "fr": "Portugal",
+      "ca": "Portugal",
+      "de": "Portugal"
+    },
+    "PR": {
+      "en": "Puerto Rico",
+      "es": "Puerto Rico",
+      "fr": "Porto Rico",
+      "ca": "Puerto Rico",
+      "de": "Puerto Rico"
+    },
+    "QA": {
+      "en": "Qatar",
+      "es": "Catar",
+      "fr": "Qatar",
+      "ca": "Qatar",
+      "de": "Katar"
+    },
+    "RE": {
+      "en": "Reunion",
+      "es": "Reunión",
+      "fr": "La Réunion",
+      "ca": "Illa de la Reunió",
+      "de": "Réunion"
+    },
+    "RO": {
+      "en": "Romania",
+      "es": "Rumania",
+      "fr": "Roumanie",
+      "ca": "Romania",
+      "de": "Rumänien"
+    },
+    "RU": {
+      "en": "Russian Federation",
+      "es": "Rusia",
+      "fr": "Russie",
+      "ca": "Rússia",
+      "de": "Russland"
+    },
+    "RW": {
+      "en": "Rwanda",
+      "es": "Ruanda",
+      "fr": "Rwanda",
+      "ca": "Rwanda",
+      "de": "Ruanda"
+    },
+    "SH": {
+      "en": "Saint Helena",
+      "es": "Isla Santa Elena",
+      "fr": "Sainte-Hélène",
+      "ca": "Santa Helena",
+      "de": "St. Helena"
+    },
+    "KN": {
+      "en": "Saint Kitts And Nevis",
+      "es": "San Cristóbal y Nieves",
+      "fr": "Saint-Christophe-et-Niévès",
+      "ca": "Saint Christopher i Nevis",
+      "de": "St. Kitts und Nevis"
+    },
+    "LC": {
+      "en": "Saint Lucia",
+      "es": "Santa Lucía",
+      "fr": "Sainte-Lucie",
+      "ca": "Saint Lucia",
+      "de": "St. Lucia"
+    },
+    "PM": {
+      "en": "Saint Pierre And Miquelon",
+      "es": "San Pedro y Miquelón",
+      "fr": "Saint-Pierre-et-Miquelon",
+      "ca": "Saint-Pierre i Miquelon",
+      "de": "Saint-Pierre und Miquelon"
+    },
+    "VC": {
+      "en": "Saint Vincent And The Grenadines",
+      "es": "San Vicente y las Granadinas",
+      "fr": "Saint-Vincent-et-les-Grenadines",
+      "ca": "Saint Vincent i les Grenadines",
+      "de": "St. Vincent und die Grenadinen"
+    },
+    "WS": {
+      "en": "Samoa",
+      "es": "Samoa",
+      "fr": "Samoa",
+      "ca": "Samoa",
+      "de": "Samoa"
+    },
+    "SM": {
+      "en": "San Marino",
+      "es": "San Marino",
+      "fr": "Saint-Marin",
+      "ca": "San Marino",
+      "de": "San Marino"
+    },
+    "ST": {
+      "en": "Sao Tome And Principe",
+      "es": "Santo Tomé y Príncipe",
+      "fr": "Sao Tomé-et-Principe",
+      "ca": "São Tomé i Príncipe",
+      "de": "São Tomé und Príncipe"
+    },
+    "SA": {
+      "en": "Saudi Arabia",
+      "es": "Arabia Saudita",
+      "fr": "Arabie saoudite",
+      "ca": "Aràbia Saudita",
+      "de": "Saudi-Arabien"
+    },
+    "SN": {
+      "en": "Senegal",
+      "es": "Senegal",
+      "fr": "Sénégal",
+      "ca": "Senegal",
+      "de": "Senegal"
+    },
+    "RS": {
+      "en": "Serbia",
+      "es": "Serbia",
+      "fr": "Serbie",
+      "ca": "Sèrbia",
+      "de": "Serbien"
+    },
+    "SC": {
+      "en": "Seychelles",
+      "es": "Seychelles",
+      "fr": "Seychelles",
+      "ca": "Seychelles",
+      "de": "Seychellen"
+    },
+    "SL": {
+      "en": "Sierra Leone",
+      "es": "Sierra Leona",
+      "fr": "Sierra Leone",
+      "ca": "Sierra Leone",
+      "de": "Sierra Leone"
+    },
+    "SG": {
+      "en": "Singapore",
+      "es": "Singapur",
+      "fr": "Singapour",
+      "ca": "Singapur",
+      "de": "Singapur"
+    },
+    "SK": {
+      "en": "Slovakia",
+      "es": "Eslovaquia",
+      "fr": "Slovaquie",
+      "ca": "Eslovàquia",
+      "de": "Slowakei"
+    },
+    "SI": {
+      "en": "Slovenia",
+      "es": "Eslovenia",
+      "fr": "Slovénie",
+      "ca": "Eslovènia",
+      "de": "Slowenien"
+    },
+    "SB": {
+      "en": "Solomon Islands",
+      "es": "Islas Salomón",
+      "fr": "Salomon",
+      "ca": "Salomó",
+      "de": "Salomonen"
+    },
+    "SO": {
+      "en": "Somalia",
+      "es": "Somalia",
+      "fr": "Somalie",
+      "ca": "Somàlia",
+      "de": "Somalia"
+    },
+    "ZA": {
+      "en": "South Africa",
+      "es": "Sudáfrica",
+      "fr": "Afrique du Sud",
+      "ca": "Sud-àfrica",
+      "de": "Südafrika"
+    },
+    "GS": {
+      "en": "South Georgia And The South Sandwich Islands",
+      "es": "Islas Georgias del Sur y Sandwich del Sur",
+      "fr": "Géorgie du Sud-et-les Îles Sandwich du Sud",
+      "ca": "Illes Geòrgia del Sud i Sandwich del Sud",
+      "de": "Südgeorgien und die Südlichen Sandwichinseln"
+    },
+    "ES": {
+      "en": "Spain",
+      "es": "España",
+      "fr": "Espagne",
+      "ca": "Espanya",
+      "de": "Spanien"
+    },
+    "LK": {
+      "en": "Sri Lanka",
+      "es": "Sri Lanka",
+      "fr": "Sri Lanka",
+      "ca": "Sri Lanka",
+      "de": "Sri Lanka"
+    },
+    "SD": {
+      "en": "Sudan",
+      "es": "Sudán",
+      "fr": "Soudan",
+      "ca": "Sudan",
+      "de": "Sudan"
+    },
+    "SR": {
+      "en": "Surien",
+      "es": "Suria",
+      "fr": "Súria",
+      "ca": "Súria",
+      "de": "Surien"
+    },
+    "SJ": {
+      "en": "Svalbard And Jan Mayen",
+      "es": "Svalbard y Jan Mayen",
+      "fr": "Svalbard et Jan Mayen",
+      "ca": "Svalbard i Jan Mayen",
+      "de": "Svalbard Und Jan Mayen"
+    },
+    "SZ": {
+      "en": "Swaziland",
+      "es": "Swaziland",
+      "fr": "Swaziland",
+      "ca": "Swazilàndia",
+      "de": "Swasiland"
+    },
+    "SE": {
+      "en": "Sweden",
+      "es": "Suecia",
+      "fr": "Suède",
+      "ca": "Suècia",
+      "de": "Schweden"
+    },
+    "CH": {
+      "en": "Switzerland",
+      "es": "Suiza",
+      "fr": "Suisse",
+      "ca": "Suïssa",
+      "de": "Schweiz"
+    },
+    "SY": {
+      "en": "Syrian Arab Republic",
+      "es": "Syria",
+      "fr": "Syrie",
+      "ca": "República Àrab Siriana",
+      "de": "Syrien"
+    },
+    "TW": {
+      "en": "Taiwan, Province Of China",
+      "es": "Taiwan",
+      "fr": "République de Chine (Taïwan)",
+      "ca": "República de la Xina",
+      "de": "Republik China"
+    },
+    "TJ": {
+      "en": "Tajikistan",
+      "es": "Tayikistán",
+      "fr": "Tajikistan",
+      "ca": "Tadjikistan",
+      "de": "Tadschikistan"
+    },
+    "TZ": {
+      "en": "Tanzania, United Republic Of",
+      "es": "Tanzania",
+      "fr": "Tanzanie",
+      "ca": "Tanzània",
+      "de": "Tanzania"
+    },
+    "TH": {
+      "en": "Thailand",
+      "es": "Tailandia",
+      "fr": "Thaïlande",
+      "ca": "Tailàndia",
+      "de": "Thailand"
+    },
+    "TG": {
+      "en": "Togo",
+      "es": "Togo",
+      "fr": "Togo",
+      "ca": "Togo",
+      "de": "Togo"
+    },
+    "TK": {
+      "en": "Tokelau",
+      "es": "Tokelau",
+      "fr": "Tokelau",
+      "ca": "Tokelau",
+      "de": "Tokelau"
+    },
+    "TO": {
+      "en": "Tonga",
+      "es": "Tonga",
+      "fr": "Tonga",
+      "ca": "Tonga",
+      "de": "Tonga"
+    },
+    "TT": {
+      "en": "Trinidad And Tobago",
+      "es": "Trinidad y Tobago",
+      "fr": "Trinité-et-Tobago",
+      "ca": "Trinitat i Tobago",
+      "de": "Trinidad und Tobago"
+    },
+    "TN": {
+      "en": "Tunisia",
+      "es": "Túnez",
+      "fr": "Tunisie",
+      "ca": "Tunísia",
+      "de": "Tunesien"
+    },
+    "TR": {
+      "en": "Turkey",
+      "es": "Turquía",
+      "fr": "Turquie",
+      "ca": "Turquia",
+      "de": "Türkei"
+    },
+    "TM": {
+      "en": "Turkmenistan",
+      "es": "Turkmenistán",
+      "fr": "Turkménistan",
+      "ca": "Turkmenistan",
+      "de": "Turkmenistan"
+    },
+    "TC": {
+      "en": "Turks And Caicos Islands",
+      "es": "Islas Turcas y Caicos",
+      "fr": "Îles Turques-et-Caïques",
+      "ca": "Illes Turks i Caicos",
+      "de": "Turks- und Caicosinseln"
+    },
+    "TV": {
+      "en": "Tuvalu",
+      "es": "Tuvalu",
+      "fr": "Tuvalu",
+      "ca": "Tuvalu",
+      "de": "Tuvalu"
+    },
+    "UG": {
+      "en": "Uganda",
+      "es": "Uganda",
+      "fr": "Ouganda",
+      "ca": "Uganda",
+      "de": "Uganda"
+    },
+    "UA": {
+      "en": "Ukraine",
+      "es": "Ucrania",
+      "fr": "Ukraine",
+      "ca": "Ucraïna",
+      "de": "Ukraine"
+    },
+    "AE": {
+      "en": "United Arab Emirates",
+      "es": "Emiratos Árabes Unidos",
+      "fr": "Émirats arabes unis",
+      "ca": "Emirats Àrabs Units",
+      "de": "Vereinigte Arabische Emirate"
+    },
+    "GB": {
+      "en": "United Kingdom",
+      "es": "Reino Unido",
+      "fr": "Royaume-Uni",
+      "ca": "Regne Unit",
+      "de": "Vereinigtes Königreich"
+    },
+    "US": {
+      "en": "United States",
+      "es": "Estados Unidos",
+      "fr": "États-Unis",
+      "ca": "Estats Units d'Amèrica",
+      "de": "Vereinigte Staaten"
+    },
+    "UM": {
+      "en": "United States Minor Outlying Islands",
+      "es": "Islas Ultramarinas Menores de Estados Unidos",
+      "fr": "Îles mineures éloignées des États-Unis",
+      "ca": "Illes Perifèriques Menors dels EUA",
+      "de": "United States Minor Outlying Islands"
+    },
+    "UY": {
+      "en": "Uruguay",
+      "es": "Uruguay",
+      "fr": "Uruguay",
+      "ca": "Uruguai",
+      "de": "Uruguay"
+    },
+    "UZ": {
+      "en": "Uzbekistan",
+      "es": "Uzbekistán",
+      "fr": "Ouzbékistan",
+      "ca": "Uzbekistan",
+      "de": "Usbekistan"
+    },
+    "VU": {
+      "en": "Vanuatu",
+      "es": "Vanuatu",
+      "fr": "Vanuatu",
+      "ca": "Vanuatu",
+      "de": "Vanuatu"
+    },
+    "VE": {
+      "en": "Venezuela",
+      "es": "Venezuela",
+      "fr": "Venezuela",
+      "ca": "Veneçuela",
+      "de": "Venezuela"
+    },
+    "VN": {
+      "en": "Viet Nam",
+      "es": "Vietnam",
+      "fr": "Viêt Nam",
+      "ca": "Vietnam",
+      "de": "Vietnam"
+    },
+    "VG": {
+      "en": "Virgin Islands, British",
+      "es": "Islas Vírgenes Británicas",
+      "fr": "Îles Vierges britanniques",
+      "ca": "Illes Verges Britàniques",
+      "de": "Britische Jungferninseln"
+    },
+    "VI": {
+      "en": "Virgin Islands, U.s.",
+      "es": "Islas Vírgenes de los Estados Unidos",
+      "fr": "Îles Vierges des États-Unis",
+      "ca": "Illes Verges Nord-americanes",
+      "de": "Amerikanische Jungferninseln"
+    },
+    "WF": {
+      "en": "Wallis And Futuna",
+      "es": "Wallis y Futuna",
+      "fr": "Wallis-et-Futuna",
+      "ca": "Wallis i Futuna",
+      "de": "Wallis und Futuna"
+    },
+    "EH": {
+      "en": "Western Sahara",
+      "es": "Sahara Occidental",
+      "fr": "Sahara occidental",
+      "ca": "Sàhara Occidental",
+      "de": "Westsahara"
+    },
+    "YE": {
+      "en": "Yemen",
+      "es": "Yemen",
+      "fr": "Yémen",
+      "ca": "Iemen",
+      "de": "Jemen"
+    },
+    "ZM": {
+      "en": "Zambia",
+      "es": "Zambia",
+      "fr": "Zambie",
+      "ca": "Zàmbia",
+      "de": "Sambia"
+    },
+    "ZW": {
+      "en": "Zimbabwe",
+      "es": "Zimbabue",
+      "fr": "Zimbabwe",
+      "ca": "Zimbabwe",
+      "de": "Simbabwe"
+    }
+  }
+}

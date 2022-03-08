@@ -1,0 +1,22 @@
+.editing {
+  margin: 0;
+}
+
+.fullWidth {
+  width: "100%";
+}
+
+.inactive td:not(:last-child) {
+  background-color: #f8f8f8;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.inactive td:last-child {
+  background-color: #f8f8f8;
+  font-style: italic;
+}
+
+.new {
+  margin-bottom: 15px;
+}

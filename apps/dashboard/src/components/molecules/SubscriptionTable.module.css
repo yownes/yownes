@@ -1,0 +1,13 @@
+.collapse {
+  flex: 1;
+  margin-top: 16px !important;
+}
+
+.description,
+.features {
+  padding-left: 15px;
+}
+
+.expandedRow {
+  background-color: #ededed !important;
+}

@@ -1,0 +1,26 @@
+.alertButton {
+  margin-left: 20;
+}
+
+.header {
+  margin-bottom: 20px !important;
+}
+
+.padding {
+  padding: 16px 15px 0px 7.5px;
+}
+
+.paddingTop {
+  padding-top: 16px;
+}
+
+.renewalAlert {
+  margin: 0px 15px 18px 7.5px;
+}
+
+.tag {
+  font-family: "Ubuntu";
+  font-weight: 400;
+  margin-left: 15px;
+  vertical-align: text-bottom;
+}

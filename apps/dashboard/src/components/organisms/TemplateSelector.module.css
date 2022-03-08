@@ -1,0 +1,20 @@
+.container {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  background: linear-gradient(90deg, transparent 0%, white 100%);
+  z-index: 30;
+}
+
+.arrow {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  left: 50%;
+}

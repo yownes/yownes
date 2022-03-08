@@ -1,0 +1,15 @@
+.centerText {
+  text-align: center;
+}
+
+.rightAlign {
+  text-align: right;
+  display: inline-block;
+  width: 100%;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}

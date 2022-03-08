@@ -1,0 +1,19 @@
+.container {
+   margin-bottom: 2rem;
+ }
+
+ .title {
+   display: flex;
+   justify-content: space-between;
+ }
+
+.action {
+  border: none;
+  background: none;
+  padding: .3rem;
+  cursor: pointer;
+}
+
+.action:hover {
+  opacity: 0.3;
+}

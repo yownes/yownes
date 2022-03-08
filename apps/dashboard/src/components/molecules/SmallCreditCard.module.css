@@ -1,0 +1,115 @@
+.creditcard {
+  display: inline-flex;
+  font-family: "Source Code Pro", monospace;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.cardnumbercontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 20px;
+  text-align: left;
+}
+
+.cardnumbertitle {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.cardnumber {
+  display: flex;
+  align-self: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#ccsingle {
+  display: flex;
+}
+
+#ccsingle svg {
+  width: 75px;
+  max-height: 45px;
+}
+
+.dark {
+  color: #232323 !important;
+}
+
+.light {
+  color: #ffffff !important;
+}
+
+.lightblue {
+  background-color: #03a9f4;
+}
+
+.lightbluedark {
+  background-color: #0288d1;
+}
+
+.red {
+  background-color: #ef5350;
+}
+
+.reddark {
+  background-color: #d32f2f;
+}
+
+.purple {
+  background-color: #ab47bc;
+}
+
+.purpledark {
+  background-color: #7b1fa2;
+}
+
+.cyan {
+  background-color: #26c6da;
+}
+
+.cyandark {
+  background-color: #0097a7;
+}
+
+.green {
+  background-color: #66bb6a;
+}
+
+.greendark {
+  background-color: #388e3c;
+}
+
+.lime {
+  background-color: #d4e157;
+}
+
+.limedark {
+  background-color: #afb42b;
+}
+
+.yellow {
+  background-color: #ffeb3b;
+}
+
+.yellowdark {
+  background-color: #f9a825;
+}
+
+.orange {
+  background-color: #ff9800;
+}
+
+.orangedark {
+  background-color: #ef6c00;
+}
+
+.grey {
+  background-color: #bdbdbd;
+}
+
+.greydark {
+  background-color: #616161;
+}

@@ -1,0 +1,36 @@
+import React from "react";
+import { Typography } from "antd";
+import { CreditCardOutlined } from "@ant-design/icons";
+
+import { MastercardIcon, VisaIcon } from "../atoms";
+
+const { Text } = Typography;
+
+interface Last4CardProps {
+  data: string;
+}
+
+interface ICard {
+  brand: string;
+  last4: string;
+}
+
+const Last4Card = ({ data }: Last4CardProps) => {
+  if (!data) return null;
+  const card: ICard = JSON.parse(data.replace(/'/g, '"'));
+  return (
+    <span style={{ marginRight: 10 }}>
+      {card.brand === "mastercard" ? (
+        <MastercardIcon />
+      ) : card.brand === "visa" ? (
+        <VisaIcon />
+      ) : (
+        <CreditCardOutlined style={{ color: "#808080", marginBottom: 2 }} />
+      )}
+      <Text style={{ marginLeft: 5, marginRight: 3 }}>{" **** "}</Text>
+      {card.last4}
+    </span>
+  );
+};
+
+export default Last4Card;

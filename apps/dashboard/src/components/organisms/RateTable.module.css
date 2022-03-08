@@ -1,0 +1,17 @@
+.table {
+  width: 100%;
+  /* min-width: 1000px; */
+  table-layout: fixed;
+  overflow-x: scroll;
+}
+.table tr th {
+  padding: 0;
+}
+
+.table th {
+  padding: 0 1rem 2rem;
+}
+
+.switch {
+  padding-left: 1rem;
+}

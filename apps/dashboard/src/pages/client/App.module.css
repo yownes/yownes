@@ -1,0 +1,8 @@
+.card {
+  height: 100%;
+  min-width: 375px;
+}
+
+.minSize {
+  min-width: 375px;
+}

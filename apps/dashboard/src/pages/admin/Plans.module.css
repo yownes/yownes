@@ -1,0 +1,18 @@
+.inactive {
+  background-color: #f8f8f8;
+  cursor: pointer;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.new {
+  margin-bottom: 15px;
+}
+
+.row {
+  cursor: pointer;
+}
+
+.table {
+  min-width: 750px;
+}

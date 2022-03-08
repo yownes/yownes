@@ -1,0 +1,21 @@
+.upload {
+  width: 100px;
+  padding: 5px;
+  height: 100px;
+  background: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  border: dashed #d7d7d7 2px;
+  cursor: pointer;
+}
+
+.uploadLarge {
+  width: 150px;
+  height: 200px;
+}
+
+.upload:hover {
+  border-color: #a8a8a8;
+}

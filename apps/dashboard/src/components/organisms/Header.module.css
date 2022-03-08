@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding: 0 2rem;
+}
+
+.icon {
+  font-size: 20px !important;
+  margin-right: 4px;
+}
+
+.title {
+  color: #232323 !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+}
+
+#titleIcon {
+  color: #328f5e;
+  margin-right: 6px;
+}

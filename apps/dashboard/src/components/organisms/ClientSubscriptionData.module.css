@@ -1,0 +1,24 @@
+.button {
+  font-family: "Ubuntu";
+}
+
+.header {
+  margin-bottom: 20px !important;
+}
+
+.headerContainer {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.renewalAlert {
+  margin: 0px 15px 18px 7.5px;
+}
+
+.tag {
+  font-family: "Ubuntu";
+  font-weight: 400;
+  margin-left: 15px;
+  vertical-align: text-bottom;
+}
