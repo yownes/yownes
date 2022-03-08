@@ -8,7 +8,7 @@
     "name": "Jesus Gallego"
   },
   "dependencies": {
-    "@stripe/stripe-react-native": "^0.2.2",
+    "@stripe/stripe-react-native": "0.2.3",
     "@yownes/api": "*"
   },
   "devDependencies": {
@@ -24,6 +24,7 @@
     "build": "tsc",
     "prepublishOnly": "yarn build",
     "test": "jest --passWithNoTests",
+    "lint": "eslint --ext .ts,.tsx . --max-warnings 0 --fix",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build"
   },
   "license": "MIT",

@@ -1,4 +1,5 @@
-import { CartFragment, useCreatePaymentIntent } from "@yownes/api";
+import type { CartFragment } from "@yownes/api";
+import { useCreatePaymentIntent } from "@yownes/api";
 import { useGooglePay } from "@stripe/stripe-react-native";
 
 export { GooglePayButton } from "@stripe/stripe-react-native";
@@ -17,6 +18,11 @@ export function useHandleGooglePayment(
         currencyCode: "EUR",
         clientSecret: intentData?.createPaymentIntent?.clientSecret,
       });
+      if (error) {
+        console.log({ googleError: error });
+      } else {
+        onSuccess?.();
+      }
     }
   }
 
