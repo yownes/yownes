@@ -1,13 +1,13 @@
 import React from "react";
 import { Card, Col, Row } from "antd";
 
-import { ChangePassword, PersonalData } from "../../components/organisms";
+import { AdminData, ChangePassword } from "../../components/organisms";
 
 const Profile = () => {
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        <PersonalData />
+        <AdminData />
       </Col>
       <Col span={24}>
         <Card>

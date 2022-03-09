@@ -83,9 +83,6 @@ export interface App_app {
 }
 
 export interface App {
-  /**
-   * The ID of the object
-   */
   app: App_app | null;
 }
 

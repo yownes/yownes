@@ -32,7 +32,7 @@ message.config({ maxCount: 1 });
 const { Option } = Select;
 
 interface ICreditCard {
-  brand: "visa" | "maestro" | "mastercard";
+  brand: "visa" | "maestro" | "mastercard" | "amex";
   checks: {
     address_line1_check?: string;
     address_postal_code_check?: string;
@@ -183,23 +183,9 @@ const EditCreditCard = ({
             id: payment.id,
             paymentMethodId: payment.stripeId!!,
             payment: {
-              billingDetails: {
-                name: values.name,
-                email: values.email,
-                phone: values.phone,
-                address: {
-                  line1: values.direction,
-                  city: values.city,
-                  country: values.country,
-                  state: values.state,
-                },
-              },
               card: {
                 expMonth: values.month,
                 expYear: values.year,
-              },
-              metadata: {
-                documentId: values.documentId,
               },
             },
           },
