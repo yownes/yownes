@@ -250,6 +250,15 @@ export const DELETE_CLIENT = gql`
   }
 `;
 
+export const UPDATE_CUSTOMER = gql`
+  mutation UpdateCustomer($customer: CustomerInput!, $userId: ID!) {
+    updateCustomer(customer: $customer, userId: $userId) {
+      ok
+      error
+    }
+  }
+`;
+
 /**
  * PAYMENTS
  */

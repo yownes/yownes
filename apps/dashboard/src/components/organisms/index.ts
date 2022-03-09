@@ -1,3 +1,4 @@
+export { default as AdminData } from "./AdminData";
 export { default as AdminHeader } from "./AdminHeader";
 export { default as AppPayment } from "./AppPayment";
 export { default as AppPreview } from "./AppPreview";

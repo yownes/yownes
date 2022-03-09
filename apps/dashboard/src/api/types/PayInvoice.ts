@@ -40,7 +40,7 @@ export interface PayInvoice_payInvoice_invoice_charges_edges_node {
   /**
    * Amount charged (as decimal).
    */
-  amount: number;
+  amount: any;
   /**
    * The datetime this object was created in stripe.
    */
@@ -130,7 +130,7 @@ export interface PayInvoice_payInvoice_invoice_invoiceitems_edges_node {
   /**
    * Amount invoiced (as decimal).
    */
-  amount: number;
+  amount: any;
   /**
    * Three-letter ISO currency code
    */
@@ -227,15 +227,15 @@ export interface PayInvoice_payInvoice_invoice {
   /**
    * Final amount due (as decimal) at this time for this invoice. If the invoice's total is smaller than the minimum charge amount, for example, or if there is account credit that can be applied to the invoice, the amount_due may be 0. If there is a positive starting_balance for the invoice (the customer owes money), the amount_due will also take that into account. The charge that gets generated for the invoice will be for the amount specified in amount_due.
    */
-  amountDue: number;
+  amountDue: any;
   /**
    * The amount, (as decimal), that was paid.
    */
-  amountPaid: number | null;
+  amountPaid: any | null;
   /**
    * The amount remaining, (as decimal), that is due.
    */
-  amountRemaining: number | null;
+  amountRemaining: any | null;
   /**
    * Indicates the reason why the invoice was created. subscription_cycle indicates an invoice created by a subscription advancing into a new period. subscription_create indicates an invoice created due to creating a subscription. subscription_update indicates an invoice created due to updating a subscription. subscription is set for all old invoices to indicate either a change to a subscription or a period advancement. manual is set for all invoices unrelated to a subscription (for example: created via the invoice editor). The upcoming value is reserved for simulated invoices per the upcoming invoice endpoint. subscription_threshold indicates an invoice created due to a billing threshold being reached.
    */
@@ -296,16 +296,16 @@ export interface PayInvoice_payInvoice_invoice {
   /**
    * Total (as decimal) of all subscriptions, invoice items, and prorations on the invoice before any discount or tax is applied.
    */
-  subtotal: number;
+  subtotal: any;
   /**
    * The amount (as decimal) of tax included in the total, calculated from ``tax_percent`` and the subtotal. If no ``tax_percent`` is defined, this value will be null.
    */
-  tax: number | null;
+  tax: any | null;
   /**
    * This percentage of the subtotal has been added to the total amount of the invoice, including invoice line items and discounts. This field is inherited from the subscription's ``tax_percent`` field, but can be changed before the invoice is paid. This field defaults to null.
    */
-  taxPercent: number | null;
-  total: number;
+  taxPercent: any | null;
+  total: any;
 }
 
 export interface PayInvoice_payInvoice {

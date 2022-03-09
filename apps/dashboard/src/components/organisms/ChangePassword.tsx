@@ -39,6 +39,12 @@ const ChangePassword = () => {
       />
       <Form
         form={form}
+        labelCol={{
+          xs: { span: 24 },
+          sm: { span: 9 },
+          md: { span: 7 },
+          lg: { span: 5 },
+        }}
         onFinish={(values) => {
           passwordChange({
             variables: {
