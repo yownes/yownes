@@ -161,9 +161,6 @@ const EditCreditCard = ({
             id: payment.id,
             paymentMethodId: payment.stripeId!!,
             payment: {
-              billingDetails: {
-                name: values.name,
-              },
               card: {
                 expMonth: values.month,
                 expYear: values.year,

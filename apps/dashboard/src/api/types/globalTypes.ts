@@ -135,7 +135,6 @@ export interface PaymentCardInput {
 }
 
 export interface PaymentInput {
-  billingDetails?: PaymentBillingDetailsInput | null;
   card?: PaymentCardInput | null;
 }
 
