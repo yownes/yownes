@@ -105,6 +105,13 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
     isActive
     isStaff
     dateJoined
+    customer {
+      id
+      address
+      name
+      phone
+      metadata
+    }
     subscription {
       id
       cancelAt
@@ -115,8 +122,12 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
       currentPeriodStart
       customer {
         id
+        address
         balance
         currency
+        name
+        phone
+        metadata
       }
       endedAt
       invoices {

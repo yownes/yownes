@@ -8,7 +8,7 @@ interface SmallCreditCardProps {
 }
 
 interface ICreditCardStripe {
-  brand: "visa" | "maestro" | "mastercard";
+  brand: "visa" | "maestro" | "mastercard" | "amex";
   checks: {
     address_line1_check?: string;
     address_postal_code_check?: string;

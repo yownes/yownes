@@ -29,6 +29,8 @@
   "country": "País",
   "documentId": "DNI - NIF",
   "phone": "Teléfono",
+  "savingChanges": "Guardando los cambios",
+  "updateCustomerSuccessful": "Datos personales guardados con éxito",
   "expiration": "Expira",
   "logo": "Logo",
   "deleteLogo": "Eliminar logo",
