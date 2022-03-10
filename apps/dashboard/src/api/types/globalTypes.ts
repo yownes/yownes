@@ -125,12 +125,17 @@ export interface FeatureInput {
   name?: string | null;
 }
 
+export interface PaymentBillingDetailsInput {
+  name?: string | null;
+}
+
 export interface PaymentCardInput {
   expMonth?: string | null;
   expYear?: string | null;
 }
 
 export interface PaymentInput {
+  billingDetails?: PaymentBillingDetailsInput | null;
   card?: PaymentCardInput | null;
 }
 

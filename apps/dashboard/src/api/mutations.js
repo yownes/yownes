@@ -255,6 +255,13 @@ export const UPDATE_CUSTOMER = gql`
     updateCustomer(customer: $customer, userId: $userId) {
       ok
       error
+      customer {
+        id
+        address
+        name
+        phone
+        metadata
+      }
     }
   }
 `;
