@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Form, Input, Select, Space } from "antd";
+import { Button, Checkbox, Form, Input, Space } from "antd";
 import { FormInstance } from "antd/lib/form";
 import {
   CardElement,
@@ -11,18 +11,6 @@ import { loadStripe, PaymentMethod, StripeError } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 
 import { CardSection, Errors } from "../molecules";
-
-import * as Countries from "../../data/countries.json";
-
-const { Option } = Select;
-
-enum Language {
-  en = "en",
-  es = "es",
-  fr = "fr",
-  ca = "ca",
-  de = "de",
-}
 
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 
@@ -48,9 +36,7 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
   const [isDefault, setIsDefault] = useState(true);
   const stripe = useStripe();
   const elements = useElements();
-  const { t, i18n } = useTranslation(["translation", "client"]);
-  const country = i18n.language.split("-")[0] as Language;
-  const language = Language[country] ?? "es";
+  const { t } = useTranslation(["translation", "client"]);
 
   return (
     <Form
@@ -71,17 +57,8 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
           type: "card",
           card: cardElement,
           billing_details: {
-            address: {
-              city: values.city,
-              country: values.country,
-              line1: values.direction,
-              state: values.state,
-            },
-            email: values.email,
             name: values.name,
-            phone: values.phone ?? null,
           },
-          metadata: { document_id: values.documentId },
         });
         if (error) {
           setCreating(false);
@@ -92,51 +69,13 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
         }
       }}
     >
-      <Form.Item name="name" rules={[{ required: true }]} label={t("fullName")}>
+      <Form.Item
+        name="name"
+        rules={[{ required: true }]}
+        label={t("fullName")}
+        labelCol={{ span: 24 }}
+      >
         <Input autoFocus placeholder={t("fullName")} />
-      </Form.Item>
-      <Form.Item name="email" rules={[{ required: true }]} label={t("email")}>
-        <Input placeholder={t("email")} type="email" />
-      </Form.Item>
-      <Form.Item
-        name="direction"
-        rules={[{ required: true }]}
-        label={t("location")}
-      >
-        <Input placeholder={t("location")} />
-      </Form.Item>
-      <Form.Item
-        name="country"
-        rules={[{ required: true }]}
-        label={t("country")}
-      >
-        <Select
-          optionFilterProp="children"
-          placeholder={t("country")}
-          showSearch
-        >
-          {Object.entries(Countries.countries).map(([key, value]) => (
-            <Option key={key} value={key}>
-              {value[language] ?? value.es}
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="state"
-        rules={[{ required: true }]}
-        label={t("province")}
-      >
-        <Input placeholder={t("province")} />
-      </Form.Item>
-      <Form.Item name="city" rules={[{ required: true }]} label={t("city")}>
-        <Input placeholder={t("city")} />
-      </Form.Item>
-      <Form.Item name="phone" label={t("phone")}>
-        <Input placeholder={t("phone")} />
-      </Form.Item>
-      <Form.Item name="documentId" label={t("documentId")}>
-        <Input placeholder={t("documentId")} />
       </Form.Item>
       <Form.Item
         name="card"

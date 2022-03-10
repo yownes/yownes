@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Select,
-  Space,
-} from "antd";
+import { Button, Form, Input, InputNumber, message, Space } from "antd";
 import { FormInstance } from "antd/lib/form";
 import { useMutation } from "@apollo/client";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
@@ -26,10 +17,7 @@ import {
 
 import { Errors, SmallCreditCard } from "../molecules";
 
-import * as Countries from "../../data/countries.json";
-
 message.config({ maxCount: 1 });
-const { Option } = Select;
 
 interface ICreditCard {
   brand: "visa" | "maestro" | "mastercard" | "amex";
@@ -60,14 +48,6 @@ interface IMetadata {
   document_id?: string;
 }
 
-enum Language {
-  en = "en",
-  es = "es",
-  fr = "fr",
-  ca = "ca",
-  de = "de",
-}
-
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 
 interface EditCreditCardProps {
@@ -96,9 +76,7 @@ const EditCreditCard = ({
   const [isUpdated, setIsUpdated] = useState(false); // eslint-disable-next-line
   const [errs, setErrs] = useState("");
   const stripe = useStripe();
-  const { t, i18n } = useTranslation(["translation", "client"]);
-  const country = i18n.language.split("-")[0] as Language;
-  const language = Language[country] ?? "es";
+  const { t } = useTranslation(["translation", "client"]);
 
   const normalizedBilling = payment.billingDetails
     ?.replace(/None/g, "null")
@@ -164,13 +142,6 @@ const EditCreditCard = ({
         month: cardData.exp_month,
         year: cardData.exp_year,
         name: billingData?.name,
-        email: billingData?.email,
-        direction: billingData?.address?.line1,
-        country: billingData?.address?.country,
-        state: billingData?.address?.state,
-        city: billingData?.address?.city,
-        phone: billingData?.phone,
-        documentId: metadataData.document_id,
       }}
       validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
       onFinish={async (values) => {
@@ -183,6 +154,9 @@ const EditCreditCard = ({
             id: payment.id,
             paymentMethodId: payment.stripeId!!,
             payment: {
+              billingDetails: {
+                name: values.name,
+              },
               card: {
                 expMonth: values.month,
                 expYear: values.year,
@@ -203,7 +177,16 @@ const EditCreditCard = ({
       onFocus={() => setErrs("")}
     >
       <SmallCreditCard data={payment.card} />
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <Form.Item name="name" rules={[{ required: true }]} label={t("fullName")}>
+        <Input autoFocus placeholder={t("fullName")} />
+      </Form.Item>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 24,
+        }}
+      >
         <Form.Item
           name="month"
           rules={[{ required: true }]}
@@ -229,53 +212,6 @@ const EditCreditCard = ({
           />
         </Form.Item>
       </div>
-      <Divider />
-      <Form.Item name="name" rules={[{ required: true }]} label={t("fullName")}>
-        <Input autoFocus placeholder={t("fullName")} />
-      </Form.Item>
-      <Form.Item name="email" rules={[{ required: true }]} label={t("email")}>
-        <Input placeholder={t("email")} type="email" />
-      </Form.Item>
-      <Form.Item
-        name="direction"
-        rules={[{ required: true }]}
-        label={t("location")}
-      >
-        <Input placeholder={t("location")} />
-      </Form.Item>
-      <Form.Item
-        name="country"
-        rules={[{ required: true }]}
-        label={t("country")}
-      >
-        <Select
-          optionFilterProp="children"
-          placeholder={t("country")}
-          showSearch
-        >
-          {Object.entries(Countries.countries).map(([key, value]) => (
-            <Option key={key} value={key}>
-              {value[language] ?? value.es}
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="state"
-        rules={[{ required: true }]}
-        label={t("province")}
-      >
-        <Input placeholder={t("province")} />
-      </Form.Item>
-      <Form.Item name="city" rules={[{ required: true }]} label={t("city")}>
-        <Input placeholder={t("city")} />
-      </Form.Item>
-      <Form.Item name="phone" label={t("phone")}>
-        <Input placeholder={t("phone")} />
-      </Form.Item>
-      <Form.Item name="documentId" label={t("documentId")}>
-        <Input placeholder={t("documentId")} />
-      </Form.Item>
       <Errors
         errors={{
           nonFieldErrors: errs
