@@ -1,3 +1,9 @@
 {
-  "conventionalCommits.scopes": ["api", "core", "default-theme", "dashboard"]
+  "conventionalCommits.scopes": [
+    "api",
+    "core",
+    "default-theme",
+    "dashboard",
+    "backend"
+  ]
 }
