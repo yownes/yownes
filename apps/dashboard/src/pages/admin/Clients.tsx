@@ -1,6 +1,5 @@
 import React from "react";
-import { Table, Typography } from "antd";
-import { ColumnsType } from "antd/lib/table";
+import { Table, Typography, TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import forIn from "lodash/forIn";
 import { TFunction } from "i18next";
@@ -96,7 +95,7 @@ const Clients = () => {
     name: data.name,
   }));
 
-  const columns: ColumnsType<Clients_users_edges_node> = [
+  const columns: TableColumnsType<Clients_users_edges_node> = [
     {
       title: t("name"),
       dataIndex: "username",

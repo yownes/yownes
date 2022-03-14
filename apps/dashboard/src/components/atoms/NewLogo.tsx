@@ -1,5 +1,5 @@
 import React from "react";
-import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import { Grid } from "antd";
 
 import { colors } from "../../lib/colors";
 
@@ -9,7 +9,7 @@ interface LogoProps {
 }
 
 function Logo({ width = 150, height }: LogoProps) {
-  const { md } = useBreakpoint();
+  const { md } = Grid.useBreakpoint();
   const vWidth = md ? width : width - width / 2;
   return (
     <>

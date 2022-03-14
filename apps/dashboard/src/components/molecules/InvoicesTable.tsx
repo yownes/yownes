@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Badge, Table, Typography } from "antd";
-import { ColumnsType } from "antd/lib/table";
+import { Badge, Table, Typography, TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
@@ -28,7 +27,7 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
   const { t } = useTranslation();
   const [expandedRow, setExpandedRow] = useState<string[]>([]);
   const { data } = useQuery<Me>(ME);
-  const columns: ColumnsType<
+  const columns: TableColumnsType<
     MyAccount_me_subscription_invoices_edges_node | Invoices_invoices_edges_node
   > = [
     {

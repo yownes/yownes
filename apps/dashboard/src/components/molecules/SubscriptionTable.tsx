@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Card, Col, Collapse, Table, Typography } from "antd";
-import { ColumnsType } from "antd/lib/table";
+import { Card, Col, Collapse, Table, Typography, TableColumnsType } from "antd";
 import { format } from "date-fns";
 import es from "date-fns/locale/es";
 import { useTranslation } from "react-i18next";
@@ -39,54 +38,55 @@ const SubscriptionTable = ({
 }: SubscriptionTableProps) => {
   const { t } = useTranslation();
   const [expandedRow, setExpandedRow] = useState<string[]>([]);
-  const columnsSubscriptions: ColumnsType<Subscriptions_subscriptions_edges_node> = [
-    {
-      title: t("plan"),
-      dataIndex: ["plan", "product", "name"],
-      key: "name",
-      render: (name) => <Text strong>{name}</Text>,
-    },
-    {
-      title: t("state"),
-      dataIndex: "status",
-      key: "state",
-      render: (state: SubscriptionStatus) => {
-        return <SubscriptionState state={state}></SubscriptionState>;
+  const columnsSubscriptions: TableColumnsType<Subscriptions_subscriptions_edges_node> =
+    [
+      {
+        title: t("plan"),
+        dataIndex: ["plan", "product", "name"],
+        key: "name",
+        render: (name) => <Text strong>{name}</Text>,
       },
-    },
-    {
-      title: t("started"),
-      dataIndex: "created",
-      key: "started",
-      render: (created) => (
-        <Text>
-          {format(new Date(created), "dd MMM'. 'HH:mm", {
-            locale: es,
-          })}
-        </Text>
-      ),
-    },
-    {
-      title: t("ended"),
-      dataIndex: "endedAt",
-      key: "ended",
-      render: (ended) => (
-        <Text>
-          {ended
-            ? format(
-                new Date(ended),
-                new Date(ended).getFullYear() !== new Date().getFullYear()
-                  ? "dd MMM'. 'yyyy' 'HH:mm"
-                  : "dd MMM'. 'HH:mm",
-                {
-                  locale: es,
-                }
-              )
-            : t("unknown")}
-        </Text>
-      ),
-    },
-  ];
+      {
+        title: t("state"),
+        dataIndex: "status",
+        key: "state",
+        render: (state: SubscriptionStatus) => {
+          return <SubscriptionState state={state}></SubscriptionState>;
+        },
+      },
+      {
+        title: t("started"),
+        dataIndex: "created",
+        key: "started",
+        render: (created) => (
+          <Text>
+            {format(new Date(created), "dd MMM'. 'HH:mm", {
+              locale: es,
+            })}
+          </Text>
+        ),
+      },
+      {
+        title: t("ended"),
+        dataIndex: "endedAt",
+        key: "ended",
+        render: (ended) => (
+          <Text>
+            {ended
+              ? format(
+                  new Date(ended),
+                  new Date(ended).getFullYear() !== new Date().getFullYear()
+                    ? "dd MMM'. 'yyyy' 'HH:mm"
+                    : "dd MMM'. 'HH:mm",
+                  {
+                    locale: es,
+                  }
+                )
+              : t("unknown")}
+          </Text>
+        ),
+      },
+    ];
   return (
     <Collapse className={styles.collapse} ghost>
       <Panel

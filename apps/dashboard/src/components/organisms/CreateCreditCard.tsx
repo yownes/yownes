@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Form, Input, Select, Space } from "antd";
-import { FormInstance } from "antd/lib/form";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Select,
+  Space,
+  FormInstance,
+} from "antd";
 import {
   CardElement,
   Elements,

@@ -1,5 +1,5 @@
 import React from "react";
-import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import { Grid } from "antd";
 
 interface LogoProps {
   width?: number;
@@ -7,7 +7,7 @@ interface LogoProps {
 }
 
 function Logo({ width = 150, height }: LogoProps) {
-  const { md } = useBreakpoint();
+  const { md } = Grid.useBreakpoint();
   const vWidth = md ? width : width - (width / 4) * 3;
   return (
     <svg width={vWidth} height={height} viewBox={`0 0 ${vWidth} 52`}>

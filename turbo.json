@@ -12,6 +12,9 @@
       "dependsOn": ["^build"],
       "cache": false
     },
+    "backoffice#start": {
+      "cache": false
+    },
     "clean": {
       "outputs": []
     },

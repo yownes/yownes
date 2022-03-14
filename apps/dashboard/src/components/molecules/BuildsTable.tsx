@@ -1,6 +1,5 @@
 import React from "react";
-import { Table, Typography } from "antd";
-import { ColumnsType } from "antd/lib/table";
+import { Table, Typography, TableColumnsType } from "antd";
 import forIn from "lodash/forIn";
 import { useTranslation } from "react-i18next";
 
@@ -60,7 +59,7 @@ export function getBuildsForCustomer(
 
 const BuildsTable = ({ dataSource }: BuildsTableProps) => {
   const { t } = useTranslation(["translation", "admin"]);
-  const columns: ColumnsType<Builds_builds_edges_node> = [
+  const columns: TableColumnsType<Builds_builds_edges_node> = [
     {
       title: t("date"),
       dataIndex: "date",

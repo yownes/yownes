@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import { Divider, Table, Typography } from "antd";
-import { ColumnsType } from "antd/lib/table";
+import { Divider, Table, Typography, TableColumnsType } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
@@ -17,14 +16,14 @@ const { Text } = Typography;
 
 interface AppTableProps {
   dataSource?: Apps_apps | null;
-  columns?: ColumnsType<Apps_apps_edges_node>;
+  columns?: TableColumnsType<Apps_apps_edges_node>;
 }
 
 const AppTable = ({ dataSource, columns }: AppTableProps) => {
   const { t } = useTranslation("translation");
   const history = useHistory();
   const allCols = useMemo(() => {
-    const cols: ColumnsType<Apps_apps_edges_node> = [
+    const cols: TableColumnsType<Apps_apps_edges_node> = [
       {
         title: t("icon"),
         dataIndex: "logo",

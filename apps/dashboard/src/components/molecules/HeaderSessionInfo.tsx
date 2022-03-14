@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Dropdown, Menu, Modal } from "antd";
-import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import { Button, Dropdown, Menu, Modal, Grid } from "antd";
 import { EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -18,7 +17,7 @@ interface HeaderSessionInfoProps {
 
 const HeaderSessionInfo = ({ email }: HeaderSessionInfoProps) => {
   const { logout } = useAuth();
-  const screens = useBreakpoint();
+  const screens = Grid.useBreakpoint();
   const { t } = useTranslation();
 
   const menu = (

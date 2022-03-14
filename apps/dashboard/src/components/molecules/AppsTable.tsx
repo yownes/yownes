@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import { Divider, Table, Typography } from "antd";
-import { ColumnsType } from "antd/lib/table";
+import { Divider, Table, Typography, TableColumnsType } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import forIn from "lodash/forIn";
 import { useTranslation } from "react-i18next";
@@ -28,7 +27,7 @@ const { Text } = Typography;
 
 interface AppsTableProps {
   dataSource?: Client_user_apps;
-  columns?: ColumnsType<AppBasicData>;
+  columns?: TableColumnsType<AppBasicData>;
 }
 
 function getBuildStatusFilters() {
@@ -45,7 +44,7 @@ function getBuildStatusFilters() {
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
   const { t } = useTranslation("translation");
   const allCols = useMemo(() => {
-    const cols: ColumnsType<AppBasicData> = [
+    const cols: TableColumnsType<AppBasicData> = [
       {
         title: t("icon"),
         dataIndex: "logo",

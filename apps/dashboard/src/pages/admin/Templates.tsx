@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Table } from "antd";
-import { ColumnsType } from "antd/lib/table";
+import { Button, Table, TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
@@ -43,7 +42,7 @@ const Templates = () => {
 
   if (loading) return <Loading />;
 
-  const columns: ColumnsType<Templates_templates_edges_node> = [
+  const columns: TableColumnsType<Templates_templates_edges_node> = [
     {
       title: t("name"),
       dataIndex: "name",

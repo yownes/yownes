@@ -4,13 +4,13 @@ import {
   Button,
   Divider,
   Form,
+  FormInstance,
   Input,
   InputNumber,
   message,
   Select,
   Space,
 } from "antd";
-import { FormInstance } from "antd/lib/form";
 import { useMutation } from "@apollo/client";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -123,17 +123,15 @@ const EditCreditCard = ({
     : "{}";
   const metadataData: IMetadata = JSON.parse(normalizedMetadata ?? "{}");
 
-  const [
-    updatePaymentMethod,
-    { data: dataUpdate, loading: loadingUpdate },
-  ] = useMutation<UpdatePaymentMethod, UpdatePaymentMethodVariables>(
-    UPDATE_PAYMENT_METHOD,
-    {
-      refetchQueries: staff
-        ? [{ query: CLIENT, variables: { id: userId } }]
-        : [{ query: MY_PAYMENT_METHODS }],
-    }
-  );
+  const [updatePaymentMethod, { data: dataUpdate, loading: loadingUpdate }] =
+    useMutation<UpdatePaymentMethod, UpdatePaymentMethodVariables>(
+      UPDATE_PAYMENT_METHOD,
+      {
+        refetchQueries: staff
+          ? [{ query: CLIENT, variables: { id: userId } }]
+          : [{ query: MY_PAYMENT_METHODS }],
+      }
+    );
 
   useEffect(() => {
     form?.setFieldsValue({

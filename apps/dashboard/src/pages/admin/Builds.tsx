@@ -8,8 +8,8 @@ import {
   Table,
   Tooltip,
   Typography,
+  TableColumnsType,
 } from "antd";
-import { ColumnsType } from "antd/lib/table";
 import { useMutation, useQuery } from "@apollo/client";
 import forIn from "lodash/forIn";
 import { useTranslation } from "react-i18next";
@@ -54,9 +54,8 @@ function getBuildStatusFilters() {
 
 const Builds = () => {
   const { data, loading } = useQuery<IBuilds, BuildsVariables>(BUILDS);
-  const { data: limitData, loading: loadingLimit } = useQuery<LimitBuilds>(
-    LIMIT
-  );
+  const { data: limitData, loading: loadingLimit } =
+    useQuery<LimitBuilds>(LIMIT);
   const { t } = useTranslation(["translation", "admin"]);
   const [formBuilds] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -106,7 +105,7 @@ const Builds = () => {
 
   if (loading || loadingLimit) return <Loading />;
 
-  const columns: ColumnsType<Builds_builds_edges_node> = [
+  const columns: TableColumnsType<Builds_builds_edges_node> = [
     {
       title: t("admin:date"),
       dataIndex: "date",
