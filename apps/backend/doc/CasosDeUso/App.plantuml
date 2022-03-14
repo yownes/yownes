@@ -1,0 +1,73 @@
+@startuml APPLICATION
+header Yownes
+
+title Casos de uso de la Aplicación
+
+left to right direction
+
+User as U
+
+package App {
+    usecase (Comprar carrito) as BUY
+    usecase (Ver carrito) as SEECARRITO
+    usecase (Añadir al carrito) as ADDCARRITO
+    usecase (Eliminar del carrito) as DELCARRITO
+    usecase (Editar cantidad) as CANTIDAD
+    usecase (Ver perfil) as SEEPERFIL
+    usecase (Editar direcciones de envio) as UPDENVIO
+    usecase (Añadir direccion de envio) as ADDENVIO
+    usecase (Eliminar direccion de envio) as DELENVIO
+    usecase (Editar metodos de pago) as UPDPAGOS
+    usecase (Añadir metodo de pago) as ADDPAGO
+    usecase (Eliminar metodo de pago) as DELPAGO 
+    usecase (Ver pedidos realizados) as SEEPEDIDOS
+    usecase (Ver estado del pedido) as STATUSPEDIDO
+    usecase (Anular pedido) as DELPEDIDO
+    usecase (Ver pedido) as PEDIDO
+    usecase (Ver lista de productos) as SEEPRODUCTS
+    usecase (Ver detalles de producto) as PRODUCT
+    usecase (Iniciar sesion) as INICIAR
+    usecase (Cerrar sesion) as CERRAR
+    usecase (Registrarse) as REGISTRO
+    usecase (Filtrar/Buscar Productos) as BUSCAR
+    usecase (Aplicar descuento) as DESCUENTO
+    usecase (Añadir a favoritos) as ADDWISH
+    usecase (Eliminar de favoritos) as DELWISH
+    usecase (Ver favoritos) as SEEWISH
+    usecase (Ver categorias) as HOME
+
+    CERRAR ..> INICIAR : <<include>>
+    BUY ..> INICIAR : <<include>>
+    BUY ..> SEECARRITO : <<extends>>
+    SEEPERFIL ..> INICIAR : <<include>>
+    PRODUCT ..> SEEPRODUCTS : <<extends>>
+    ADDWISH ..> PRODUCT : <<extends>>
+    ADDCARRITO ..> PRODUCT : <<extends>>
+    SEEPEDIDOS ..> SEEPERFIL : <<extends>>
+    SEEWISH ..> SEEPERFIL : <<extends>>
+    DELWISH ..> SEEWISH : <<extends>>
+    DESCUENTO ..> BUY : <<extends>>
+    STATUSPEDIDO ..> PEDIDO : <<extends>>
+    STATUSPEDIDO ..> SEEPEDIDOS : <<extends>>
+    DELPEDIDO ..> PEDIDO : <<extends>>
+    ADDPAGO ..> SEEPERFIL : <<extends>>
+    ADDPAGO ..> BUY : <<extends>>
+    DELPAGO ..> SEEPERFIL : <<extends>>
+    UPDPAGOS ..> SEEPERFIL : <<extends>> 
+    ADDENVIO ..> SEEPERFIL : <<extends>>
+    ADDENVIO ..> BUY : <<extends>>
+    DELENVIO ..> SEEPERFIL : <<extends>>
+    UPDENVIO ..> SEEPERFIL : <<extends>> 
+    DELCARRITO ..> SEECARRITO : <<extends>>
+    CANTIDAD ..> SEECARRITO : <<extends>>
+    BUSCAR ..> SEEPRODUCTS : <<extends>>
+    SEEPRODUCTS ..> HOME : <<extends>>
+}
+
+U --> SEECARRITO
+U --> CERRAR
+U --> SEEPERFIL
+U --> REGISTRO
+U --> SEEPRODUCTS
+U --> HOME
+@enduml

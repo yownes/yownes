@@ -1,0 +1,33 @@
+@startuml Flujo
+
+header Yownes
+
+title Aplicar descuento
+
+actor App as USE
+participant GraphQL as APP
+participant CMS as CMS
+
+== Caso fallido ==
+USE -> APP : Aplicar descuento
+activate APP
+APP -> CMS : Existe descuento?
+activate CMS
+return NO
+return Error aplicando descuento
+== Caso correcto ==
+USE -> APP : Aplicar descuento
+activate APP
+APP -> CMS : Existe descuento?
+activate CMS
+return SI
+APP -> CMS : Lo puede aplicar el usuario?
+note right : Es de ese usuario?\nEs del carrito entero?\nEs especifico de un producto?
+activate CMS
+return SI
+APP -> CMS : Esta caducado?
+activate CMS
+return NO
+return Descuento aplicado
+
+@enduml

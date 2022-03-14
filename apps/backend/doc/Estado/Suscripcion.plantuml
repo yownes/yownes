@@ -1,0 +1,21 @@
+@startuml Estados
+
+header Yownes
+
+title Estados de la cuenta
+
+state "Registrada" as REG : Solo puede ver la\npreview de la App
+state "Esperando confirmacion de pago" as ESP : Sigue siendo una cuenta Registrada\nen cuanto permisos
+state "Cuenta de pago" as CUE : Se le permite generar\naplicaciones
+state "Baneada" as BAN : No se le permite pagar la suscripcion
+
+[*] -> REG
+REG -> ESP : Accion <<Pagar>>
+ESP -> CUE : Pago aceptado
+ESP -> REG : Pago cancelado
+CUE -> REG : Accion <<Anular la suscripción>>
+REG --> BAN
+ESP --> BAN
+CUE --> BAN
+BAN --> REG
+@enduml

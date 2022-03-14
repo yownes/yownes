@@ -1,0 +1,32 @@
+@startuml PanelGestionADMIN
+header Yownes
+
+title Casos de uso del Panel de Gestión por parte del Admin
+left to right direction
+
+Admin as A
+package PanelGestion {
+    usecase (Iniciar sesion) as INICIAR
+    usecase (Cerrar sesion) as CERRAR
+    usecase (Dar de baja) as BAJA
+    usecase (Eliminar App) as ELIMINAR
+    usecase (Lista clientes) as LISTA
+    usecase (Detalle cliente) as CLIENTE
+    usecase (Ver pagos del cliente) as PAGOS
+    usecase (Ver configuracion cliente) as TIENDA
+    usecase (Buscar/Filtrar cliente) as BUSCAR
+
+    CERRAR ..> INICIAR : <<include>>
+    LISTA ..> INICIAR : <<include>>
+    CLIENTE ..> LISTA : <<include>>
+    BUSCAR ..> LISTA : <<extends>>
+    PAGOS ..> CLIENTE : <<extends>>
+    TIENDA ..> CLIENTE : <<extends>>
+    BAJA ..> CLIENTE : <<extends>>
+    ELIMINAR ..> CLIENTE : <<extends>>
+}
+
+A --> CERRAR
+A --> CLIENTE
+A --> LISTA
+@enduml

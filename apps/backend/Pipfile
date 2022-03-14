@@ -1,0 +1,41 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+aniso8601 = "==7.0.0"
+certifi = "==2020.6.20"
+chardet = "==3.0.4"
+dj-stripe = "==2.5.1"
+django-filter = "==2.4.0"
+django-graphql-auth = "==0.3.16"
+django-graphql-jwt = "==0.3.0"
+graphene-django = "==2.13.0"
+graphene-file-upload = "==1.3.0"
+graphene = "==2.1.9"
+graphql-core = "==2.3.2"
+graphql-relay = "==2.0.1"
+gunicorn = "==20.0.4"
+idna = "==2.10"
+jsonfield = "==3.1.0"
+promise = "==2.3"
+pytz = "==2020.1"
+requests = "==2.24.0"
+singledispatch = "==3.4.0.3"
+six = "==1.15.0"
+sqlparse = "==0.4.1"
+stripe = "==2.55.0"
+urllib3 = "==1.25.11"
+Django = "==3.2.12"
+Pillow = "==9.0.1"
+PyJWT = "==1.7.1"
+Rx = "==1.6.1"
+Unidecode = "==1.1.1"
+django-cors-headers = "*"
+psycopg2 = "*"
+
+[requires]
+python_version = "3.10"

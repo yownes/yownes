@@ -1,0 +1,36 @@
+@startuml PanelGestionPYME
+header Yownes
+
+title Casos de uso del Panel de Gestión por parte de la PYME
+left to right direction
+
+PYME as P
+package PanelGestion {
+    usecase (Iniciar sesion) as INICIAR
+    usecase (Cerrar sesion) as CERRAR
+    usecase (Registrarse) as REGISTRARSE
+    usecase (Darse de Alta) as ALTA
+    usecase (Darse de baja) as BAJA
+    usecase (Generar app) as GENERAR
+    usecase (Configurar app) as CONFIGURAR
+    usecase (Eliminar App) as ELIMINAR
+    usecase (Ver pagos realizados) as PAGOS
+
+    CERRAR ..> INICIAR : <<include>>
+    ALTA ..> INICIAR : <<include>>
+    GENERAR ..> ALTA : <<include>>
+    CONFIGURAR ..> INICIAR : <<include>>
+    ELIMINAR ..> GENERAR : <<include>>
+    PAGOS ..> ALTA : <<include>>
+    BAJA -right..> ALTA : <<include>>
+}
+
+P --> CERRAR
+P --> REGISTRARSE
+P --> ALTA
+P --> GENERAR
+P --> CONFIGURAR
+P --> ELIMINAR
+P --> BAJA
+P --> PAGOS
+@enduml
