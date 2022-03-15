@@ -12,7 +12,7 @@ import {
   Typography,
 } from "antd";
 import { useMutation } from "@apollo/client";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import { useTranslation } from "react-i18next";
 
 import { CREATE_PRICE, UPDATE_PRICE } from "../../api/mutations";
@@ -132,9 +132,8 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
   const [editingId, setEditingId] = useState("");
   const [archivingId, setArchivingId] = useState("");
   const [archiveState, setArchiveState] = useState(false);
-  const [dataSource, setDataSource] = useState<
-    Plan_product_prices_edges_node[]
-  >();
+  const [dataSource, setDataSource] =
+    useState<Plan_product_prices_edges_node[]>();
   const [prices, setPrices] = useState<Plan_product_prices_edges_node[]>();
   const isEditing = (record: Plan_product_prices_edges_node) =>
     record.id === editingId;
