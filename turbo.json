@@ -12,7 +12,10 @@
       "dependsOn": ["^build"],
       "cache": false
     },
-    "backoffice#start": {
+    "@yownes/dashboard#start": {
+      "cache": false
+    },
+    "@yownes/dashboard#build": {
       "cache": false
     },
     "clean": {

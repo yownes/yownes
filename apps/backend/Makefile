@@ -16,6 +16,10 @@ fix-style:
 lint:
 	flake8 backend/
 
+update-frontend:
+	rm -rf static
+	python manage.py collectstatic
+
 test:
 	reset && python manage.py test
 

@@ -32,13 +32,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
-const uri =
-  process.env.NODE_ENV === "development" ||
-  process.env.REACT_APP_SITE === "plugin"
-    ? `index.php?controller=AdminYownesAjax&action=proxy&ajax=true&${
-        (window as any).__TOKEN__
-      }`
-    : "https://app.yownes.com/graphql";
+const uri = `${import.meta.env.VITE_ENDPOINT_URL}${
+  (window as any).__TOKEN__ ? `&${(window as any).__TOKEN__}` : ""
+}`;
+
 const httpLink = createUploadLink({
   uri,
 });

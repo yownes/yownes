@@ -11,7 +11,11 @@ i18n
     fallbackLng: "es-ES",
     debug: true,
     backend: {
-      loadPath: "/static/locales/{{lng}}/{{ns}}.json",
+      loadPath: (lng: string, ns: string) => {
+        return `${
+          import.meta.env.VITE_LOCALES_PATH
+        }/static/locales/${lng}/${ns}.json`;
+      },
     },
     ns: ["translation", "admin", "auth", "client"],
   });
