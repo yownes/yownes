@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Button, Card, Col, message, Popconfirm, Row } from "antd";
-import { EditOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@apollo/client";
 import { Trans, useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
@@ -23,6 +22,8 @@ import {
   ProfileInfo,
 } from "../../components/molecules";
 
+import "../../index.css";
+
 message.config({ maxCount: 1 });
 
 const Profile = () => {
@@ -37,20 +38,18 @@ const Profile = () => {
   >(APPS, {
     variables: { is_active: true },
   });
-  const [
-    resubscribe,
-    { data: resubscribeData, loading: resubscribing },
-  ] = useMutation<Resubscribe, ResubscribeVariables>(RESUBSCRIBE, {
-    refetchQueries: [
-      {
-        query: UPCOMING_INVOICE,
-        variables: {
-          cId: data?.me?.id ?? "",
-          sId: data?.me?.subscription?.id ?? "",
+  const [resubscribe, { data: resubscribeData, loading: resubscribing }] =
+    useMutation<Resubscribe, ResubscribeVariables>(RESUBSCRIBE, {
+      refetchQueries: [
+        {
+          query: UPCOMING_INVOICE,
+          variables: {
+            cId: data?.me?.id ?? "",
+            sId: data?.me?.subscription?.id ?? "",
+          },
         },
-      },
-    ],
-  });
+      ],
+    });
   useEffect(() => {
     if (resubscribeData?.takeUp?.ok) {
       if (isResubscribed) {
@@ -72,12 +71,6 @@ const Profile = () => {
 
   if (loading || loadingData) return <Loading />;
 
-  const editProfile = (
-    <Link to="/profile/edit">
-      <Button shape="circle" icon={<EditOutlined />} />
-    </Link>
-  );
-
   return (
     <>
       {!data?.me?.verified && (
@@ -94,9 +87,9 @@ const Profile = () => {
         </Row>
       )}
       <Row gutter={[20, 20]}>
-        <Col lg={12} xs={24} style={{ minWidth: 550 }}>
+        <Col span={24} style={{ minWidth: 550 }}>
           <Card>
-            <ProfileInfo profile={data?.me} action={editProfile} />
+            <ProfileInfo profile={data?.me} />
             {data?.me?.accountStatus === AccountAccountStatus.REGISTERED && (
               <Placeholder
                 claim={t("client:subscribeNow")}
@@ -136,7 +129,7 @@ const Profile = () => {
               )}
           </Card>
         </Col>
-        <Col lg={12} xs={24} style={{ minWidth: 550 }}>
+        <Col span={24} style={{ minWidth: 550 }}>
           <Card>
             {(appsData?.apps?.edges.length ?? 0) > 0 ? (
               <>
@@ -151,6 +144,7 @@ const Profile = () => {
                     disabled:
                       (appsData?.apps?.edges.length ?? 0) >= allowedApps,
                     label: t("client:addNewApp"),
+                    buttonClassName: "button-default-primary",
                   }}
                   tooltip={{
                     title: data?.me?.subscription

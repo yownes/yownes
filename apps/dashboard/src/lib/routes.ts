@@ -17,14 +17,14 @@ const routes: RoutePath[] = [
   {
     exact: true,
     path: "/profile",
-    name: "Perfil",
+    name: "Panel principal",
     component: Profile,
     admin: false,
   },
   {
     exact: true,
     path: "/profile/edit",
-    name: "Editar Perfil",
+    name: "Perfil",
     component: EditProfile,
     admin: false,
   },
