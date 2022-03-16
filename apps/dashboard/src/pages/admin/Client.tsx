@@ -320,7 +320,7 @@ const Client = () => {
               <Col span={24}>
                 <ProfileInfo
                   profile={data?.user}
-                  action={profieActions}
+                  extra={profieActions}
                   verified
                 />
               </Col>

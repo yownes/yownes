@@ -1,8 +1,9 @@
 import React, { ReactNode } from "react";
-import { Descriptions, Tag, Typography } from "antd";
+import { Tag, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
 import { AccountBasicData } from "../../api/types/AccountBasicData";
 import { SubscriptionStatus } from "../../api/types/globalTypes";
@@ -10,19 +11,28 @@ import { MyAccount } from "../../api/types/MyAccount";
 import { MY_ACCOUNT } from "../../api/queries";
 import { dateTime, differenceTime, longDate } from "../../lib/parseDate";
 
-import { SubscriptionState, UserState, VerifiedState } from "./";
+import {
+  Descriptions,
+  SubscriptionState,
+  TitleWithAction,
+  UserState,
+  VerifiedState,
+} from "./";
+import { description } from "./Descriptions";
 import { Loading } from "../atoms";
 
-const { Item } = Descriptions;
-const { Text, Title } = Typography;
+import styles from "./ProfileInfo.module.css";
+
+const { Text } = Typography;
 
 interface ProfileInfoProps {
   profile?: AccountBasicData | null;
-  action?: ReactNode;
+  extra?: ReactNode;
   verified?: boolean;
 }
 
-const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
+const ProfileInfo = ({ profile, extra, verified }: ProfileInfoProps) => {
+  const history = useHistory();
   const { data } = useQuery<MyAccount>(MY_ACCOUNT);
   const { t } = useTranslation();
 
@@ -76,78 +86,83 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
     </>
   );
 
+  const info: description[] = [];
+  profile?.username &&
+    !data?.me.isStaff &&
+    info.push({ title: t("username"), description: profile.username });
+  profile?.accountStatus &&
+    info.push({
+      title: t("accountStatus.title"),
+      description: <UserState state={profile.accountStatus} />,
+    });
+  profile?.email &&
+    info.push({ title: t("email"), description: profile.email });
+  profile?.id &&
+    data?.me.isStaff &&
+    info.push({ title: t("id"), description: <Tag>{profile?.id}</Tag> });
+  profile?.dateJoined &&
+    data?.me.isStaff &&
+    info.push({
+      title: t("registrationDate"),
+      description: longDate(new Date(profile.dateJoined)),
+    });
+  verified &&
+    data?.me.isStaff &&
+    info.push({
+      title: t("verifiedStatus"),
+      description: <VerifiedState verified={profile?.verified} />,
+    });
+  data?.me.isStaff &&
+    info.push({
+      title: t("isActive"),
+      description: <VerifiedState verified={profile?.isActive} />,
+    });
+  !data?.me.isStaff &&
+    info.push({
+      title: t("subscription"),
+      description: profile?.subscription ? (
+        profile.subscription.cancelAtPeriodEnd ||
+        profile.subscription.cancelAt ? (
+          <>
+            <SubscriptionState
+              state={profile.subscription.status}
+              tooltip={subscriptionInfo}
+            />
+            {". "}
+            {t("cancelAt", {
+              date: dateTime(new Date(profile.subscription.cancelAt)),
+            })}
+          </>
+        ) : (
+          <SubscriptionState
+            state={profile.subscription.status}
+            tooltip={subscriptionInfo}
+          />
+        )
+      ) : (
+        <Text>{t("noSubscription")}</Text>
+      ),
+    });
+
   return (
-    <Descriptions
-      bordered
-      column={2}
-      extra={action}
-      title={
-        <Title level={3} style={{ marginBottom: 0 }}>
-          {data.me.isStaff ? profile?.username : t("profileInfo")}
-        </Title>
-      }
-      labelStyle={{ color: "#232323", fontWeight: 500 }}
-      layout="vertical"
-      size="small"
-      style={{ marginBottom: 8 }}
-    >
-      {profile?.username && !data?.me.isStaff && (
-        <Item label={t("username")}>{profile.username}</Item>
-      )}
-      {profile?.email && <Item label={t("email")}>{profile.email}</Item>}
-      {profile?.id && data?.me.isStaff && (
-        <Item label={t("id")}>
-          <Tag>{profile?.id}</Tag>
-        </Item>
-      )}
-      {profile?.accountStatus && (
-        <Item label={t("accountStatus.title")}>
-          <UserState state={profile.accountStatus} />
-        </Item>
-      )}
-      {profile?.dateJoined && data?.me.isStaff && (
-        <Item label={t("registrationDate")}>
-          {longDate(new Date(profile.dateJoined))}
-        </Item>
-      )}
-      {verified && data?.me.isStaff && (
-        <Item label={t("verifiedStatus")}>
-          <VerifiedState verified={profile?.verified} />
-        </Item>
-      )}
-      {data?.me.isStaff && (
-        <Item label={t("isActive")}>
-          <VerifiedState verified={profile?.isActive} />
-        </Item>
-      )}
-      {!data.me.isStaff && (
-        <Item label={t("subscription")}>
-          {profile?.subscription ? (
-            profile.subscription.cancelAtPeriodEnd ||
-            profile.subscription.cancelAt ? (
-              <>
-                <SubscriptionState
-                  state={profile.subscription.status}
-                  tooltip={subscriptionInfo}
-                />
-                <Tag>
-                  {t("cancelAt", {
-                    date: dateTime(new Date(profile.subscription.cancelAt)),
-                  })}
-                </Tag>
-              </>
-            ) : (
-              <SubscriptionState
-                state={profile.subscription.status}
-                tooltip={subscriptionInfo}
-              />
-            )
-          ) : (
-            <Text>{t("noSubscription")}</Text>
-          )}
-        </Item>
-      )}
-    </Descriptions>
+    <>
+      <TitleWithAction
+        title={
+          data.me.isStaff && profile ? profile?.username : t("profileInfo")
+        }
+        action={
+          !data.me.isStaff
+            ? {
+                action: () => history.push("/profile/edit"),
+                label: t("editProfile"),
+                buttonClassName: "button-default-primary",
+              }
+            : undefined
+        }
+        extra={data.me.isStaff && extra}
+      />
+      <Descriptions items={info} />
+    </>
   );
 };
 

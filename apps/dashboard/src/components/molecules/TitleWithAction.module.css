@@ -1,19 +1,30 @@
-.container {
-   margin-bottom: 2rem;
- }
-
- .title {
-   display: flex;
-   justify-content: space-between;
- }
-
 .action {
   border: none;
   background: none;
-  padding: .3rem;
+  padding: 0.3rem;
   cursor: pointer;
 }
 
 .action:hover {
   opacity: 0.3;
+}
+
+.container {
+  margin-bottom: 24px;
+}
+
+.description {
+  color: #636363;
+  font-weight: 400;
+  margin-left: 15px;
+  vertical-align: text-bottom;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.titleContainer {
+  display: inline-flex;
 }

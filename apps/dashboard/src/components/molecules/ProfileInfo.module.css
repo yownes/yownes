@@ -1,0 +1,11 @@
+.descriptions {
+  margin-bottom: 8px;
+}
+
+.descriptions * {
+  border: none !important;
+}
+
+.title {
+  margin-bottom: 0;
+}
