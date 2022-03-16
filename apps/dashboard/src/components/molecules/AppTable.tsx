@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Divider, Table, Typography } from "antd";
+import { Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
@@ -12,8 +12,6 @@ import connectionToNodes from "../../lib/connectionToNodes";
 import { BuildState } from "./";
 
 import styles from "./AppTable.module.css";
-
-const { Text } = Typography;
 
 interface AppTableProps {
   dataSource?: Apps_apps | null;
@@ -46,38 +44,7 @@ const AppTable = ({ dataSource, columns }: AppTableProps) => {
         title: t("name"),
         dataIndex: "name",
         key: "name",
-        render: (name, record) => <Link to={`/app/${record.id}`}>{name}</Link>,
-      },
-      {
-        title: t("urls"),
-        dataIndex: "storeLinks",
-        key: "urls",
-        // responsive: ["md"],
-        render: (urls) => {
-          return (
-            <>
-              {urls.ios ? (
-                <a href={urls.ios} rel="noopener noreferrer" target="_blank">
-                  iOS
-                </a>
-              ) : (
-                <Text disabled>iOS</Text>
-              )}
-              <Divider className={styles.divider} type="vertical" />
-              {urls.android ? (
-                <a
-                  href={urls.android}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Android
-                </a>
-              ) : (
-                <Text disabled>Android</Text>
-              )}
-            </>
-          );
-        },
+        render: (name) => name,
       },
       {
         title: t("state"),
@@ -106,9 +73,6 @@ const AppTable = ({ dataSource, columns }: AppTableProps) => {
           }),
       }}
       onRow={(record) => {
-        if (record.storeLinks?.android && record.storeLinks?.ios) {
-          return {};
-        }
         return {
           onClick: () => history.push(`/app/${record.id}`),
         };

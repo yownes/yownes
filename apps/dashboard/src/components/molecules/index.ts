@@ -11,6 +11,7 @@ export { default as CheckoutForm } from "./CheckoutForm";
 export { default as CreditCard } from "./CreditCard";
 export { default as DeleteAccount } from "./DeleteAccount";
 export { default as DeleteClient } from "./DeleteClient";
+export { default as Descriptions } from "./Descriptions";
 export { default as Errors } from "./Errors";
 export { default as ExpandIcon } from "./ExpandIcon";
 export { default as FeaturesInfo } from "./FeaturesInfo";

@@ -10,12 +10,14 @@ interface TitleWithActionProps {
   title: string;
   action?: {
     action: () => void;
+    buttonClassName?: string;
     disabled?: boolean;
     label: ReactNode;
     needsConfirmation?: boolean;
     confirmationTitle?: ReactNode;
   };
   description?: string;
+  extra?: ReactNode;
   tooltip?: {
     title: string;
     visible: boolean;
@@ -26,6 +28,7 @@ const TitleWithAction = ({
   title,
   action,
   description,
+  extra,
   tooltip,
 }: TitleWithActionProps) => {
   const [visible, setVisible] = useState(false);
@@ -33,7 +36,10 @@ const TitleWithAction = ({
   return (
     <div className={styles.container}>
       <div className={styles.title}>
-        <Title level={3}>{title}</Title>
+        <div className={styles.titleContainer}>
+          <Title level={3}>{title}</Title>
+          <span className={styles.description}>{description}</span>
+        </div>
         {action &&
           (action.needsConfirmation ? (
             <Tooltip
@@ -49,7 +55,13 @@ const TitleWithAction = ({
                   onMouseEnter={() => setVisible(true)}
                   onMouseLeave={() => setVisible(false)}
                 >
-                  <Button disabled={action.disabled || false} type="primary">
+                  <Button
+                    className={
+                      !action.disabled ? action.buttonClassName : undefined
+                    }
+                    disabled={action.disabled || false}
+                    type="primary"
+                  >
                     {action.label}
                   </Button>
                 </div>
@@ -65,17 +77,20 @@ const TitleWithAction = ({
                 onMouseLeave={() => setVisible(false)}
               >
                 <Button
+                  className={
+                    !action.disabled ? action.buttonClassName : undefined
+                  }
                   disabled={action.disabled || false}
                   onClick={action.action}
-                  type="primary"
+                  type="default"
                 >
                   {action.label}
                 </Button>
               </div>
             </Tooltip>
           ))}
+        {extra}
       </div>
-      <span>{description}</span>
     </div>
   );
 };

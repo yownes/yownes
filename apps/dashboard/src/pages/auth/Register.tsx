@@ -22,13 +22,8 @@ const Register = () => {
   const location = useLocation<LocationState>();
   const { t } = useTranslation(["auth", "translation"]);
   let { from } = location.state || { from: { pathname: "/" } };
-  const {
-    register,
-    loadingRegister,
-    isAuthenticated,
-    errors,
-    clear,
-  } = useAuth();
+  const { register, loadingRegister, isAuthenticated, errors, clear } =
+    useAuth();
   if (isAuthenticated) {
     return <Redirect to={from} />;
   }
@@ -47,16 +42,16 @@ const Register = () => {
           onFinish={(values) => {
             register?.({
               email: values.email,
-              username: values.name,
+              username: values.username,
               password1: values.password,
               password2: values.confirmPassword,
             });
           }}
         >
           <Form.Item
-            name="name"
+            name="username"
             rules={[
-              { required: true, message: t("required.name") },
+              { required: true, message: t("required.username") },
               { min: 2, message: t("required.min", { num: 2 }) },
             ]}
           >

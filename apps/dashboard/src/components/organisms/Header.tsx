@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { notification, Typography } from "antd";
+import { Col, notification, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -80,20 +80,22 @@ const Header = () => {
   }
 
   return (
-    <header className={styles.container}>
-      <Link to="/">
-        <NewLogo />
-      </Link>
-      <Title level={2} className={styles.title}>
-        {route?.name && data?.me?.isStaff === route.admin && (
-          <>
-            <Text id={styles.titleIcon}>{">"}</Text>
-            {route?.name}
-          </>
-        )}
-      </Title>
-      {data?.me?.email && <HeaderSessionInfo email={data.me.email} />}
-    </header>
+    <Col xs={{ span: 22, offset: 1 }} lg={{ span: 20, offset: 2 }}>
+      <header className={styles.container}>
+        <Link to="/">
+          <NewLogo />
+        </Link>
+        <Title level={1} className={styles.title}>
+          {route?.name && data?.me?.isStaff === route.admin && (
+            <>
+              <Text id={styles.titleIcon}>{">"}</Text>
+              {route?.name}
+            </>
+          )}
+        </Title>
+        {data?.me?.email && <HeaderSessionInfo email={data.me.email} />}
+      </header>
+    </Col>
   );
 };
 

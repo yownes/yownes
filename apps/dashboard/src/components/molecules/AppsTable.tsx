@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Divider, Table, Typography } from "antd";
+import { Table, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { FileImageOutlined } from "@ant-design/icons";
 import forIn from "lodash/forIn";
@@ -75,37 +75,6 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
           t("reset")
         ),
         sorter: (a, b) => a.name.localeCompare(b.name),
-      },
-      {
-        title: t("urls"),
-        dataIndex: "storeLinks",
-        key: "urls",
-        // responsive: ["md"],
-        render: (urls) => {
-          return (
-            <>
-              {urls.ios ? (
-                <a href={urls.ios} rel="noopener noreferrer" target="_blank">
-                  iOS
-                </a>
-              ) : (
-                <Text disabled>iOS</Text>
-              )}
-              <Divider className={styles.divider} type="vertical" />
-              {urls.android ? (
-                <a
-                  href={urls.android}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Android
-                </a>
-              ) : (
-                <Text disabled>Android</Text>
-              )}
-            </>
-          );
-        },
       },
       {
         title: t("state"),

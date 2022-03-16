@@ -1,4 +1,5 @@
 import React from "react";
+import { Col } from "antd";
 
 import { Header } from "../organisms";
 
@@ -17,7 +18,11 @@ const DashboardTemplate = ({
     <>
       <Header />
       {SubHeader}
-      <main className={styles.main}>{children}</main>
+      <main className={styles.main}>
+        <Col xs={{ span: 22, offset: 1 }} lg={{ span: 16, offset: 4 }}>
+          {children}
+        </Col>
+      </main>
     </>
   );
 };
