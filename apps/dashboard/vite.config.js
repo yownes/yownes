@@ -9,6 +9,7 @@ export default defineConfig({
     rollupOptions: {
       plugins: [visualizer()],
     },
+    manifest: "asset-manifest.json",
   },
   css: {
     preprocessorOptions: {

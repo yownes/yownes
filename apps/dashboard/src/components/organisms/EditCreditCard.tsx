@@ -68,7 +68,7 @@ enum Language {
   de = "de",
 }
 
-const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK_TEST);
 
 interface EditCreditCardProps {
   form?: FormInstance;
