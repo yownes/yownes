@@ -1,0 +1,12 @@
+{
+  "name": "yownes/yownes",
+  "require": {
+    "webonyx/graphql-php": "0.11.6",
+    "stripe/stripe-php": "^7.77"
+  },
+  "config": {
+    "preferred-install": "dist",
+    "prepend-autoloader": false
+  },
+  "type": "prestashop-module"
+}

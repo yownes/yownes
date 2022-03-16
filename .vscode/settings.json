@@ -4,6 +4,7 @@
     "core",
     "default-theme",
     "dashboard",
-    "backend"
+    "backend",
+    "prestashop-plugin"
   ]
 }

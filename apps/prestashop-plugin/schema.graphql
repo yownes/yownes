@@ -1,0 +1,674 @@
+schema {
+  query: RootQueryType
+  mutation: RootMutationType
+}
+
+scalar Upload
+
+type Line {
+  label: String
+  value: String
+}
+
+type CartSubtotals {
+  products: Line
+  discounts: Line
+  shipping: Line
+}
+
+type Voucher {
+  id: String
+  name: String
+  code: String
+  reduction: String
+}
+
+type Vouchers {
+  allowed: Boolean
+  added: [Voucher]
+}
+
+type Cart {
+  id: String
+  products: [CartProduct]
+  total: CartTotal
+  vouchers: Vouchers
+  subtotals: CartSubtotals
+  deliveryOption: String
+}
+
+input CartOption {
+  id: String
+  value: String
+}
+
+type CartProductOption {
+  name: String
+  value: String
+  type: String
+}
+
+type CartProduct {
+  key: String
+  product: Product
+  option: [CartProductOption]
+  quantity: Int
+  total: String
+}
+
+type CartTotal {
+  label: String
+  amount: Float
+  value: String
+}
+
+type Category {
+  id: ID
+  image: String
+  imageLazy: String
+  name: String
+  description: String
+  parent_id: String
+  url(url: String): String
+  categories(limit: Int = 3): [Category]
+  keyword: String
+  meta: Meta
+}
+
+type categoryBlog {
+  id: ID
+  image: String
+  imageLazy: String
+  name: String
+  description: String
+  parent_id: String
+  url(url: String): String
+  keyword: String
+  categories(limit: Int = 3): [categoryBlog]
+  meta: Meta
+}
+
+type categoryBlogResult {
+  content: [categoryBlog]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
+
+type CategoryResult {
+  content: [Category]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
+
+type Currency {
+  title: String @deprecated(reason: "Changed to name!")
+  name: String
+  code: String
+  symbol_left: String
+  symbol_right: String
+  active: Boolean
+}
+
+type Customer {
+  id: String
+  firstName: String
+  lastName: String
+  email: String
+}
+
+input CustomerInput {
+  firstName: String
+  lastName: String
+  email: String
+  password: String
+}
+
+type Language {
+  name: String
+  code: String
+  image: String
+  active: Boolean
+}
+
+type LoggedResult {
+  status: Boolean
+  customer: Customer
+}
+
+type LogoutResult {
+  status: Boolean
+}
+
+type OptionValue {
+  id: String
+  name: String
+}
+
+type Page {
+  id: ID
+  title: String @deprecated(reason: "Changed to name!")
+  name: String
+  description: String
+  keyword: String
+  meta: Meta
+  sort_order: Int
+}
+
+type PageResult {
+  content: [Page]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
+
+type postReviewResult {
+  content: [postReview]
+  totalElements: Int
+}
+
+type Post {
+  id: ID
+  title: String @deprecated(reason: "Changed to name!")
+  name: String
+  shortDescription: String
+  description: String
+  image: String
+  imageLazy: String
+  keyword: String
+  rating: Float
+  reviews: postReviewResult
+  categories: [categoryBlog]
+  datePublished: String
+  next: Post
+  prev: Post
+  meta: Meta
+}
+
+type PostResult {
+  content: [Post]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
+
+type postReview {
+  author: String
+  author_email: String
+  content: String
+  created_at: String
+  rating: Float
+}
+
+type Country {
+  id: ID
+  name: String
+}
+type Zone {
+  id: ID
+  name: String
+  countryId: String
+}
+
+type Product {
+  products(limit: Int = 3): [Product]
+  id: ID
+  image: String
+  imageLazy: String
+  imageBig: String
+  name: String
+  shortDescription: String
+  description: String
+  model: String
+  price: String
+  special: String
+  tax: String
+  minimum: Int
+  stock: Int
+  manufacturer: String
+  rating: Float
+  inWishlist: Boolean
+  attributes: [productAttribute]
+  reviews: [ProductReview]
+  options: [ProductOption]
+  images(limit: Int = 3): [productImage]
+  keyword: String
+  meta: Meta
+}
+
+type productAttribute {
+  name: String
+  options: [String]
+}
+
+type productImage {
+  image: String
+  imageLazy: String
+  imageBig: String
+}
+
+type ProductOption {
+  id: String
+  name: String
+  type: String
+  values: [OptionValue]
+}
+
+type FacetFilter {
+  label: String
+  type: String
+  value: String
+  active: Boolean
+}
+
+type Facet {
+  label: String
+  type: String
+  multipleSelectionAllowed: Boolean
+  widgetType: String
+  filters: [FacetFilter]
+}
+
+type SortOrder {
+  entity: String
+  field: String
+  direction: String
+  label: String
+}
+
+type ProductResult {
+  content: [Product]
+  facets: [Facet]
+  sortOrders: [SortOrder]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
+type CountriesResult {
+  content: [Country]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
+type ZonesResult {
+  content: [Zone]
+  first: Boolean
+  last: Boolean
+  number: Int
+  numberOfElements: Int
+  size: Int
+  totalPages: Int
+  totalElements: Int
+}
+
+type ProductReview {
+  author: String
+  author_email: String
+  content: String
+  created_at: String
+  rating: Float
+}
+
+type ContactResult {
+  status: Boolean
+}
+
+type Location {
+  image: String
+  imageLazy: String
+  address: String
+  geocode: String
+  telephone: String
+  fax: String
+  open: String
+  comment: String
+}
+
+type Contact {
+  locations: [Location]
+  store: String
+  address: String
+  email: String
+  geocode: String
+  telephone: String
+  fax: String
+  open: String
+  comment: String
+}
+
+type AccountAddress {
+  id: String
+  firstName: String
+  lastName: String
+  company: String
+  address1: String
+  address2: String
+  zoneId: String
+  zone: Zone
+  countryId: String
+  country: Country
+  city: String
+  zipcode: String
+}
+
+input AccountAddressInput {
+  firstName: String
+  lastName: String
+  company: String
+  address1: String
+  address2: String
+  city: String
+  countryId: String
+  zoneId: String
+  zipcode: String
+}
+
+type AccountPaymentMethod {
+  id: String
+  name: String
+  last4: String
+  brand: String
+  expMonth: Int
+  expYear: Int
+}
+
+type FileResult {
+  code: String
+}
+
+type CheckoutLinkResult {
+  link: String
+}
+
+type Meta {
+  title: String
+  description: String
+  keyword: String
+}
+
+type SlidesResult {
+  speed: Int
+  slides: [Slide]
+}
+
+type SlideImageSize {
+  width: Int
+  height: Int
+}
+
+type Slide {
+  id: String
+  position: Int
+  url: String
+  legend: String
+  title: String
+  description: String
+  active: Boolean
+  imageUrl: String
+  size: SlideImageSize
+}
+
+type HomeResult {
+  meta: Meta
+  banner: String
+  slides: SlidesResult
+}
+
+type LoginResult {
+  token: String
+  customer: Customer
+}
+
+type FieldValue {
+  text: String
+  value: String
+}
+
+type AddressField {
+  type: String
+  name: String
+  label: String
+  required: Boolean
+  values: [FieldValue]
+}
+
+type ShippingMethod {
+  id: String
+  codename: String
+  name: String
+}
+
+type PaymentMethod {
+  id: String
+  codename: String
+  name: String
+}
+
+input InputField {
+  name: String
+  value: String
+}
+
+type CreateOrderResult {
+  success: String
+}
+
+type UpdateOrderResult {
+  paymentMethods: [PaymentMethod]
+  shippingMethods: [ShippingMethod]
+  totals: [Total]
+}
+
+type ConfirmOrderResult {
+  order: Order
+  url: String
+}
+
+type Order {
+  id: String
+  reference: String
+  date: String
+  state: String
+  total: String
+  shippingAddress: AccountAddress
+  paymentAddress: AccountAddress
+  shippingMethod: ShippingMethod
+  products: [CartProduct]
+  subtotals: [Line]
+}
+
+type PaymentAddressResult {
+  fields: [AddressField]
+  agree: String
+}
+
+type Total {
+  title: String
+  text: String
+}
+
+type PaymentIntent {
+  clientSecret: String
+}
+
+type AddDiscountResult {
+  cart: Cart
+  errors: [String]
+}
+
+type Carrier {
+  id: String
+  reference: String
+  name: String
+  delay: String
+  price: String
+  isFree: Boolean
+}
+
+type RootMutationType {
+  uploadFile(file: Upload): FileResult
+  accountLogin(email: String, password: String): LoginResult
+  accountLogout: LogoutResult
+  accountRegister(customer: CustomerInput): Customer
+  accountEdit(customer: CustomerInput): Customer
+  accountEditPassword(password: String): Customer
+  accountAddAddress(address: AccountAddressInput): AccountAddress
+  accountEditAddress(id: String, address: AccountAddressInput): AccountAddress
+  accountRemoveAddress(
+    id: String
+    page: Int = 1
+    size: Int = 10
+  ): [AccountAddress]
+  accountAddPaymentMethod(paymentMethod: String): AccountPaymentMethod
+  accountRemovePaymentMethod(
+    id: String
+    page: Int = 1
+    size: Int = 10
+  ): [AccountPaymentMethod]
+  addBlogPostReview(
+    id: String
+    rating: Float
+    author: String
+    content: String
+  ): Post
+  addToCart(id: String, quantity: Int = 1, options: [CartOption] = []): Cart
+  updateCart(key: String, quantity: Int = 1): Cart
+  removeCart(key: String): Cart
+  addToCompare(id: Int): [Product]
+  removeCompare(id: String): [Product]
+  editCurrency(code: String): [Currency]
+  editLanguage(code: String): [Language]
+  addReview(id: String, rating: Float, author: String, content: String): Product
+  addToWishlist(id: Int): [Product]
+  removeWishlist(id: String): [Product]
+  contactSend(name: String, email: String, message: String): ContactResult
+  createOrder: CreateOrderResult
+  createPaymentIntent(paymentMethod: String): PaymentIntent
+  updateOrder(
+    paymentAddress: [InputField]
+    shippingAddress: [InputField]
+    paymentMethod: String
+    shippingMethod: String
+  ): UpdateOrderResult
+  confirmOrder(
+    paymentAddress: String
+    shippingAddress: String
+  ): ConfirmOrderResult
+  addDiscount(code: String): AddDiscountResult
+  removeDiscount(id: String): Cart
+  setDeliveryOption(option: String): Cart
+}
+
+type RootQueryType {
+  shippingMethods: [ShippingMethod]
+  paymentMethods: [PaymentMethod]
+  paymentAddress: PaymentAddressResult
+  shippingAddress: [AddressField]
+  totals: [Total]
+  home: HomeResult
+  zone(id: Int): Zone
+  zonesList(
+    page: Int = 1
+    size: Int = 10
+    search: String
+    country_id: String
+    sort: String = "name"
+    order: String = "ASC"
+  ): ZonesResult
+  country(id: Int): Country
+  countriesList(
+    page: Int = 1
+    size: Int = 10
+    search: String
+    sort: String = "name"
+    order: String = "ASC"
+  ): CountriesResult
+  categoryBlog(id: String): categoryBlog
+  categoriesBlogList(
+    page: Int = 1
+    size: Int = 10
+    filter: String
+    parent: Int = -1
+    sort: String = "sort_order"
+    order: String = "ASC"
+  ): categoryBlogResult
+  post(id: String): Post
+  postsList(
+    page: Int = 1
+    size: Int = 10
+    filter: String
+    search: String
+    category_id: String = ""
+    sort: String = "sort_order"
+    order: String = "ASC"
+  ): PostResult
+  cart: Cart
+  category(id: String): Category
+  categoriesList(
+    page: Int = 1
+    size: Int = 10
+    filter: String
+    parent: Int = -1
+    sort: String = "sort_order"
+    order: String = "ASC"
+  ): CategoryResult
+  compare: [Product]
+  currency: [Currency]
+  language: [Language]
+  page(id: String): Page
+  pagesList(
+    page: Int = 1
+    size: Int = 10
+    search: String = ""
+    sort: String = "sort_order"
+    order: String = "ASC"
+  ): PageResult
+  productsList(
+    page: Int = 1
+    size: Int = 15
+    filter: String = ""
+    special: Boolean = false
+    search: String = ""
+    ids: [Int] = []
+    category_id: String = ""
+    sort: String = "position"
+    order: String = "ASC"
+  ): ProductResult
+  bestSells: [Product]
+  product(id: String): Product
+  wishlist: [Product]
+  orders: [Order]
+  order(id: String): Order
+  contact: Contact
+  accountCheckLogged: LoggedResult
+  accountAddressList: [AccountAddress]
+  accountPaymentMethodList: [AccountPaymentMethod]
+  accountAddress(id: String): AccountAddress
+  checkoutLink: CheckoutLinkResult
+  carrierList: [Carrier]
+}
