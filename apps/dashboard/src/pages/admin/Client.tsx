@@ -340,7 +340,7 @@ const Client = () => {
           <Card>
             <Row gutter={10}>
               <Col span={24}>
-                <Title level={3}>{t("paymentMethod")}</Title>
+                <Title level={2}>{t("paymentMethod")}</Title>
                 <PaymentMethod
                   customer={data?.user?.customer}
                   staff
@@ -355,7 +355,7 @@ const Client = () => {
       <Row gutter={[20, 20]}>
         <Col xl={12} lg={24} md={24} sm={24} style={{ minWidth: 550 }}>
           <Card>
-            <Title level={3}>{t("admin:apps")}</Title>
+            <Title level={2}>{t("admin:apps")}</Title>
             <AppsTable
               dataSource={data?.user?.apps}
               columns={[
@@ -450,7 +450,7 @@ const Client = () => {
         </Col>
         <Col xl={12} lg={24} md={24} sm={24} style={{ minWidth: 550 }}>
           <Card>
-            <Title level={3}>{t("admin:builds")}</Title>
+            <Title level={2}>{t("admin:builds")}</Title>
             <BuildsTable dataSource={getBuildsForCustomer(data?.user)} />
           </Card>
         </Col>

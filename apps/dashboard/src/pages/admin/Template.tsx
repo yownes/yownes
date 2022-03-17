@@ -52,7 +52,7 @@ const Template = () => {
   return (
     <div style={{ minWidth: 300 }}>
       <Card>
-        <Title level={3}>{t("admin:templateInfo")}</Title>
+        <Title level={2}>{t("admin:templateInfo")}</Title>
         <Form
           form={form}
           initialValues={{

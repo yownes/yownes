@@ -4,6 +4,7 @@
 @font-family: "Ubuntu", Sans-serif, "Ubuntu Mono";
 
 // --- Colors ---
+@disabled-color: #c6c6c6;
 @green-base: #27c272;
 @red-base: #e72e2e;
 // > Primary
@@ -21,14 +22,16 @@
 // --- Button ---
 @btn-border-radius-base: 40px;
 @btn-border-radius-sm: 40px;
+@btn-disable-bg: transparent;
+@btn-disable-border: @disabled-color;
 @btn-font-weight: 500;
 @btn-height-base: 40px;
 @btn-height-sm: 32px;
 @btn-primary-color: #4b4a4b;
 @btn-padding-horizontal-base: 24px;
 @btn-padding-horizontal-sm: 12px;
-@btn-shadow: none;
 @btn-primary-shadow: none;
+@btn-shadow: none;
 @btn-text-shadow: none;
 
 // --- Card ---
@@ -56,5 +59,10 @@
 @table-header-sort-bg: #636363;
 @table-row-hover-bg: #ebfbf3;
 @table-selected-row-bg: #636363;
+
+// --- Tag ---
+@tag-default-bg: #ededed;
+@tag-default-color: #232323;
+@tag-font-size: 14px;
 
 @body-background: #fff;

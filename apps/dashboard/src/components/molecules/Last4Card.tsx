@@ -2,6 +2,8 @@ import React from "react";
 import { Typography } from "antd";
 import { CreditCardOutlined } from "@ant-design/icons";
 
+import { normalice } from "../../lib/normalice";
+
 import { MastercardIcon, VisaIcon } from "../atoms";
 
 const { Text } = Typography;
@@ -17,7 +19,7 @@ interface ICard {
 
 const Last4Card = ({ data }: Last4CardProps) => {
   if (!data) return null;
-  const card: ICard = JSON.parse(data.replace(/'/g, '"'));
+  const card: ICard = JSON.parse(normalice(data));
   return (
     <span style={{ marginRight: 10 }}>
       {card.brand === "mastercard" ? (

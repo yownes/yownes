@@ -9,49 +9,45 @@ export type description = {
 };
 
 interface DescriptionsProps {
+  cols?: 1 | 2;
   items: description[];
 }
 
-const Descriptions = ({ items }: DescriptionsProps) => {
+const Descriptions = ({ cols = 2, items }: DescriptionsProps) => {
   return (
     <>
       <Row>
         {items.map((val, i) => {
-          if (i % 2) {
-            return (
-              <Col span={12}>
-                <Col className={styles.titleCol}>
-                  <span
-                    className={`${styles.titleRight} ${
-                      i === 1 && styles.borderTop
-                    }`}
-                  >
-                    {val.title}
-                  </span>
-                  <span className={styles.descriptionRight}>
-                    {val.description}
-                  </span>
-                </Col>
+          return (
+            <Col key={i} span={cols === 2 ? 12 : 24}>
+              <Col
+                className={
+                  cols === 2
+                    ? i % 2
+                      ? styles.rightCol
+                      : styles.leftCol
+                    : undefined
+                }
+              >
+                <span
+                  className={`${styles.title} ${
+                    (i === 0 || (i === 1 && cols === 2)) && styles.borderTop
+                  }`}
+                >
+                  {val.title}
+                </span>
+                <span
+                  className={
+                    typeof val.description === "string"
+                      ? styles.descriptionText
+                      : styles.description
+                  }
+                >
+                  {val.description}
+                </span>
               </Col>
-            );
-          } else {
-            return (
-              <Col span={12}>
-                <Col className={styles.descriptionCol}>
-                  <span
-                    className={`${styles.titleLeft} ${
-                      i === 0 && styles.borderTop
-                    }`}
-                  >
-                    {val.title}
-                  </span>
-                  <span className={styles.descriptionLeft}>
-                    {val.description}
-                  </span>
-                </Col>
-              </Col>
-            );
-          }
+            </Col>
+          );
         })}
       </Row>
     </>

@@ -9,6 +9,7 @@ import {
   Plans_products_edges_node_features_edges_node,
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { normalice } from "../../lib/normalice";
 
 import { Loading } from "../atoms";
 import { Errors } from "../molecules";
@@ -90,12 +91,14 @@ const ChangeSubscription = ({
                   .filter((price) => price.active)
                   .find(
                     (price) =>
-                      JSON.parse(price.recurring).interval.toUpperCase() ===
-                      interval
+                      JSON.parse(
+                        normalice(price.recurring)
+                      ).interval.toUpperCase() === interval
                   )?.unitAmount;
                 const exceeded = activeApps
-                  ? parseInt(JSON.parse(product.metadata).allowed_apps) <
-                    activeApps
+                  ? parseInt(
+                      JSON.parse(normalice(product.metadata)).allowed_apps
+                    ) < activeApps
                   : false;
                 return (
                   <Select.Option
@@ -114,7 +117,10 @@ const ChangeSubscription = ({
                           <Col>
                             <Text disabled={exceeded}>
                               {"("}
-                              {JSON.parse(product?.metadata).allowed_apps}
+                              {
+                                JSON.parse(normalice(product?.metadata))
+                                  .allowed_apps
+                              }
                               {" Apps)"}
                             </Text>
                           </Col>

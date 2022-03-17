@@ -32,7 +32,7 @@ const EditProfile = () => {
         </Col>
         <Col span={24} style={{ minWidth: 720 }}>
           <Card>
-            <Title level={3}>{t("client:paymentMethod")}</Title>
+            <Title level={2}>{t("client:paymentMethod")}</Title>
             {loading ? (
               <Loading />
             ) : (

@@ -14,7 +14,7 @@ interface PlaceholderProps {
 const Placeholder = ({ claim, image, cta, children }: PlaceholderProps) => {
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>{claim}</h2>
+      <h3 className={styles.title}>{claim}</h3>
       {image && <img src={styles.image} alt="claim" />}
       {cta && (
         <Link to={cta.link}>

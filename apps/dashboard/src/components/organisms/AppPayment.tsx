@@ -40,15 +40,13 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
       },
     }
   );
-  const [
-    updatePayment,
-    { data: mutationData, loading: updating },
-  ] = useMutation<ModifyAppPayment, ModifyAppPaymentVariables>(
-    MODIFY_APP_PAYMENT,
-    {
-      refetchQueries: [{ query: APP_PAYMENTS, variables: { id: appId } }],
-    }
-  );
+  const [updatePayment, { data: mutationData, loading: updating }] =
+    useMutation<ModifyAppPayment, ModifyAppPaymentVariables>(
+      MODIFY_APP_PAYMENT,
+      {
+        refetchQueries: [{ query: APP_PAYMENTS, variables: { id: appId } }],
+      }
+    );
   useEffect(() => {
     if (mutationData?.modifyPaymentMethodApp?.error) {
       setErrs(mutationData.modifyPaymentMethodApp.error);
@@ -64,7 +62,7 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
 
   return (
     <>
-      <Title level={3}>{t("collectMethod")}</Title>
+      <Title level={2}>{t("collectMethod")}</Title>
       <Paragraph>{t("keysDescription")}</Paragraph>
       <Collapse>
         <Collapse.Panel key="stripe" header="Stripe">

@@ -17,7 +17,7 @@ const PersonalData = () => {
   if (loading)
     return (
       <Card>
-        <Title level={3}>{t("client:personalData")}</Title>
+        <Title level={2}>{t("client:personalData")}</Title>
         <Loading />
       </Card>
     );
@@ -39,7 +39,7 @@ const PersonalData = () => {
       <Row gutter={[20, 20]}>
         <Col span={24} style={{ minWidth: 550 }}>
           <Card>
-            <Title level={3}>{t("client:personalData")}</Title>
+            <Title level={2}>{t("client:personalData")}</Title>
             <Form
               initialValues={{
                 username: data?.me?.username,

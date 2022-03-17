@@ -15,6 +15,7 @@ import {
   getColumnFilterProps,
   getColumnSearchProps,
 } from "../../lib/filterColumns";
+import { normalice } from "../../lib/normalice";
 
 import { Loading } from "../../components/atoms";
 import { FeaturesInfo, VerifiedState } from "../../components/molecules";
@@ -92,16 +93,16 @@ const Plans = () => {
       title: t("admin:nApps"),
       dataIndex: ["metadata"],
       key: "apps",
-      render: (metadata) => JSON.parse(metadata).allowed_apps,
+      render: (metadata) => JSON.parse(normalice(metadata)).allowed_apps,
       sorter: (a, b) =>
         parseInt(
-          JSON.parse(a.metadata).allowed_apps
-            ? JSON.parse(a.metadata).allowed_apps
+          JSON.parse(normalice(a.metadata)).allowed_apps
+            ? JSON.parse(normalice(a.metadata)).allowed_apps
             : 0
         ) -
         parseInt(
-          JSON.parse(b.metadata).allowed_apps
-            ? JSON.parse(b.metadata).allowed_apps
+          JSON.parse(normalice(b.metadata)).allowed_apps
+            ? JSON.parse(normalice(b.metadata)).allowed_apps
             : 0
         ),
     },

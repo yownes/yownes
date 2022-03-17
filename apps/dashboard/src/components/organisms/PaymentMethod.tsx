@@ -39,11 +39,11 @@ import {
 } from "../../api/types/RemovePaymentMethod";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { colors } from "../../lib/colors";
+import { normalice } from "../../lib/normalice";
 
 import { CreateCreditCard, EditCreditCard } from "./";
 import { LoadingFullScreen } from "../atoms";
 import { AlertWithLink, CreditCard, SelectableCreditCard } from "../molecules";
-
 import { ICreditCardStripe } from "../molecules/CreditCard";
 
 message.config({ maxCount: 1 });
@@ -82,12 +82,10 @@ const PaymentMethod = ({
       ? [{ query: CLIENT, variables: { id: userId } }]
       : [{ query: MY_PAYMENT_METHODS }],
   });
-  const [
-    removePaymentMethod,
-    { data: removeData, loading: removing },
-  ] = useMutation<RemovePaymentMethod, RemovePaymentMethodVariables>(
-    REMOVE_PAYMENT_METHOD
-  );
+  const [removePaymentMethod, { data: removeData, loading: removing }] =
+    useMutation<RemovePaymentMethod, RemovePaymentMethodVariables>(
+      REMOVE_PAYMENT_METHOD
+    );
   const [tempPaymentMethod, setTempPaymentMethod] = useState<
     PaymentMethodType[] | undefined
   >([]);
@@ -129,15 +127,12 @@ const PaymentMethod = ({
     (customer?.paymentMethods &&
       customer?.defaultPaymentMethod &&
       JSON.parse(
-        connectionToNodes(customer?.paymentMethods)
-          .find(
+        normalice(
+          connectionToNodes(customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId === customer?.defaultPaymentMethod?.stripeId
-          )
-          ?.card.replace(/None/g, "null")
-          .replace(/True/g, "true")
-          .replace(/False/g, "false")
-          .replace(/'/g, '"')!!
+          )?.card
+        )!!
       )) ||
     undefined;
 
@@ -174,11 +169,7 @@ const PaymentMethod = ({
             customer?.paymentMethods.edges.length > 0 ? (
               connectionToNodes(customer?.paymentMethods).map((node) => {
                 const creditcard: ICreditCardStripe = JSON.parse(
-                  node.card
-                    .replace(/None/g, "null")
-                    .replace(/True/g, "true")
-                    .replace(/False/g, "false")
-                    .replace(/'/g, '"')
+                  normalice(node.card)
                 );
                 return (
                   <Card

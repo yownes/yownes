@@ -21,6 +21,7 @@ import {
   UpdatePaymentMethod,
   UpdatePaymentMethodVariables,
 } from "../../api/types/UpdatePaymentMethod";
+import { normalice } from "../../lib/normalice";
 
 import { Errors, SmallCreditCard } from "../molecules";
 
@@ -85,28 +86,13 @@ const EditCreditCard = ({
   const stripe = useStripe();
   const { t } = useTranslation(["translation", "client"]);
 
-  const normalizedBilling = payment.billingDetails
-    ?.replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-  const billingData: IBillingDetails = JSON.parse(normalizedBilling ?? "{}");
-
-  const normalizedCard = payment.card
-    ?.replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-  const cardData: ICreditCard = JSON.parse(normalizedCard ?? "{}");
-
-  const normalizedMetadata = payment.metadata
-    ? payment.metadata
-        .replace(/None/g, "null")
-        .replace(/True/g, "true")
-        .replace(/False/g, "false")
-        .replace(/'/g, '"')
-    : "{}";
-  const metadataData: IMetadata = JSON.parse(normalizedMetadata ?? "{}");
+  const billingData: IBillingDetails = JSON.parse(
+    normalice(payment.billingDetails) ?? "{}"
+  );
+  const cardData: ICreditCard = JSON.parse(normalice(payment.card) ?? "{}");
+  const metadataData: IMetadata = JSON.parse(
+    normalice(payment.metadata) ?? "{}"
+  );
 
   const [updatePaymentMethod, { data: dataUpdate, loading: loadingUpdate }] =
     useMutation<UpdatePaymentMethod, UpdatePaymentMethodVariables>(

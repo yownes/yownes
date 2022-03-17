@@ -86,9 +86,8 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
   const [formFeatures] = Form.useForm();
   const [editingId, setEditingId] = useState("");
   const [deletingId, setDeletingId] = useState("");
-  const [dataSource, setDataSource] = useState<
-    Plan_product_features_edges_node[]
-  >();
+  const [dataSource, setDataSource] =
+    useState<Plan_product_features_edges_node[]>();
   const isEditing = (record: Plan_product_features_edges_node) =>
     record.id === editingId;
   const [createFeature, { loading: creating }] = useMutation<
@@ -329,7 +328,7 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
   });
   return (
     <div style={{ marginBottom: 20, marginTop: 0, minWidth: 750 }}>
-      <Title level={3}>{t("admin:features")}</Title>
+      <Title level={2}>{t("admin:features")}</Title>
       <Button
         disabled={editingId !== "" || deletingId !== ""}
         onClick={() => add()}

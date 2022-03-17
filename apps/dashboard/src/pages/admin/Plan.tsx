@@ -23,6 +23,7 @@ import { Plan as IPlan, PlanVariables } from "../../api/types/Plan";
 import { Plans as IPlans } from "../../api/types/Plans";
 import { UpdatePlan, UpdatePlanVariables } from "../../api/types/UpdatePlan";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { normalice } from "../../lib/normalice";
 
 import { Loading, LoadingFullScreen } from "../../components/atoms";
 import { PricesInfo } from "../../components/molecules";
@@ -63,12 +64,14 @@ const Plan = () => {
   return (
     <div style={{ minWidth: 550 }}>
       <Card>
-        <Title level={3}>{t("admin:planInfo")}</Title>
+        <Title level={2}>{t("admin:planInfo")}</Title>
         <Form
           form={formPlan}
           initialValues={{
             active: planData?.product?.active,
-            apps: JSON.parse(planData?.product?.metadata).allowed_apps || 1,
+            apps:
+              JSON.parse(normalice(planData?.product?.metadata)).allowed_apps ||
+              1,
             description: planData?.product?.description,
             features: connectionToNodes(planData?.product?.features).map(
               (f) => f.id

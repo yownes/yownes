@@ -13,6 +13,7 @@ import {
   Plans_products_edges_node_prices_edges_node,
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { normalice } from "../../lib/normalice";
 
 import { Loading } from "../atoms";
 import { RateSelection } from "../molecules";
@@ -47,7 +48,9 @@ function selectPlan(
   const plan = prices
     .filter((plan) => plan.active)
     .find(
-      (plan) => JSON.parse(plan.recurring).interval.toUpperCase() === interval
+      (plan) =>
+        JSON.parse(normalice(plan.recurring)).interval.toUpperCase() ===
+        interval
     );
   if (plan) {
     return {
@@ -109,15 +112,15 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
   //       plan.metadata && {
   //         key: "allowedApps",
   //         __typename: "CustomType",
-  //         [plan.id]: JSON.parse(plan.metadata.replace(/'/g, '"')),
-  //         name: Object.keys(JSON.parse(plan.metadata.replace(/'/g, '"'))),
+  //         [plan.id]: JSON.parse(normalice(plan.metadata)),
+  //         name: Object.keys(JSON.parse(normalice(plan.metadata))),
   //       }
   //   )
   //   .reduce((a, b) => ({ ...a, ...b }), {});
 
   return (
     <>
-      <Title level={3}>{t("client:selectPlan")}</Title>
+      <Title level={2}>{t("client:selectPlan")}</Title>
       <Table
         columns={[
           {

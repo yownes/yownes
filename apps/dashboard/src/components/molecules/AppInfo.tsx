@@ -31,6 +31,7 @@ import { MyAccount } from "../../api/types/MyAccount";
 import { UpdateApp, UpdateAppVariables } from "../../api/types/UpdateApp";
 import { getAppBuildState } from "../../lib/appBuildState";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { normalice } from "../../lib/normalice";
 import { longDate } from "../../lib/parseDate";
 
 import { BuildState, ImageUpload } from "./";
@@ -103,20 +104,16 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
   >(APPS, {
     variables: { is_active: true },
   });
-  const { data: accountData, loading: loadingAccount } = useQuery<MyAccount>(
-    MY_ACCOUNT
-  );
-  const { data: limitData, loading: loadingLimit } = useQuery<LimitBuilds>(
-    LIMIT
-  );
+  const { data: accountData, loading: loadingAccount } =
+    useQuery<MyAccount>(MY_ACCOUNT);
+  const { data: limitData, loading: loadingLimit } =
+    useQuery<LimitBuilds>(LIMIT);
   const [updateApp, { data: dataUpdate, loading: updating }] = useMutation<
     UpdateApp,
     UpdateAppVariables
   >(UPDATE_APP);
-  const [
-    generateApp,
-    { data: dataGenerate, loading: generating },
-  ] = useMutation<GenerateApp, GenerateAppVariables>(GENERATE_APP);
+  const [generateApp, { data: dataGenerate, loading: generating }] =
+    useMutation<GenerateApp, GenerateAppVariables>(GENERATE_APP);
   useEffect(() => {
     if (dataUpdate?.updateApp?.ok) {
       message.success(t("client:saveChangesSuccessful"), 4);
@@ -139,8 +136,9 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
     if (accountData?.me?.subscription?.plan?.product?.metadata) {
       setAllowedApps(
         parseInt(
-          JSON.parse(accountData?.me?.subscription?.plan?.product?.metadata)
-            .allowed_apps
+          JSON.parse(
+            normalice(accountData?.me?.subscription?.plan?.product?.metadata)
+          ).allowed_apps
         )
       );
     }
@@ -209,7 +207,7 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
           <Text className={styles.info__appId}>ID: {id}</Text>
         </Col>
         <Col lg={{ span: 10 }} md={{ span: 16 }} xs={{ span: 16 }}>
-          <Title className={styles.info__appName} level={3}>
+          <Title className={styles.info__appName} level={2}>
             <Paragraph
               editable={{
                 onChange(value) {

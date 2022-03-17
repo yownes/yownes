@@ -24,6 +24,7 @@ import {
 } from "../../api/types/Plan";
 import { UpdatePrice, UpdatePriceVariables } from "../../api/types/UpdatePrice";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { normalice } from "../../lib/normalice";
 
 import { VerifiedState } from "./";
 import { LoadingFullScreen } from "../atoms";
@@ -154,7 +155,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
     setPrices(
       connectionToNodes(product?.prices).map((price) => ({
         ...price,
-        recurring: JSON.parse(price.recurring),
+        recurring: JSON.parse(normalice(price.recurring)),
       }))
     );
   }, [product]);
@@ -392,7 +393,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
   });
   return (
     <>
-      <Title level={3}>{t("admin:pricesInfo")}</Title>
+      <Title level={2}>{t("admin:pricesInfo")}</Title>
       <Button
         className={styles.new}
         disabled={editingId !== "" || archivingId !== ""}

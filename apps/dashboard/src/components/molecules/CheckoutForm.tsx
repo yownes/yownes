@@ -30,6 +30,7 @@ import {
   UPCOMING_INVOICE,
 } from "../../api/queries";
 import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
+import { normalice } from "../../lib/normalice";
 import connectionToNodes from "../../lib/connectionToNodes";
 
 import { Loading, LoadingFullScreen } from "../atoms";
@@ -48,13 +49,10 @@ interface CheckoutFormProps {
 const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
   const { t } = useTranslation(["translation", "client"]);
   const [paymentMethodId, setPaymentMethodId] = useState<string | null>();
-  const { data: dataAccount, loading: loadingAccount } = useQuery<MyAccount>(
-    MY_ACCOUNT
-  );
-  const {
-    data: paymentMethods,
-    loading: loadingPayments,
-  } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
+  const { data: dataAccount, loading: loadingAccount } =
+    useQuery<MyAccount>(MY_ACCOUNT);
+  const { data: paymentMethods, loading: loadingPayments } =
+    useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
   const [createSubscription, { loading: subscribing }] = useMutation<
     Subscribe,
     SubscribeVariables
@@ -87,29 +85,26 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
     (paymentMethods?.me?.customer?.paymentMethods &&
       paymentMethods?.me?.customer?.defaultPaymentMethod &&
       JSON.parse(
-        connectionToNodes(paymentMethods?.me?.customer?.paymentMethods)
-          .find(
+        normalice(
+          connectionToNodes(paymentMethods?.me?.customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId ===
               paymentMethods?.me?.customer?.defaultPaymentMethod?.stripeId
-          )
-          ?.card.replace(/None/g, "null")
-          .replace(/True/g, "true")
-          .replace(/False/g, "false")
-          .replace(/'/g, '"')!!
+          )?.card
+        )!!
       )) ||
     undefined;
   const expired = card
     ? new Date(card?.exp_year, card?.exp_month) < new Date()
     : false;
-  const interval = JSON.parse(plan.recurring).interval.toUpperCase();
+  const interval = JSON.parse(normalice(plan.recurring)).interval.toUpperCase();
 
   if (loadingAccount || loadingPayments) return <Loading />;
 
   return (
     <Row gutter={[20, 20]}>
       <Col sm={24} md={16}>
-        <Title level={3}>{t("client:selectPaymentMethod")}</Title>
+        <Title level={2}>{t("client:selectPaymentMethod")}</Title>
         <PaymentMethod
           customer={paymentMethods?.me?.customer}
           onCreated={setPaymentMethodId}
@@ -121,7 +116,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
           <Card style={{ width: "100%" }}>
             <Col span={24}>
               <Row>
-                <Title level={3}>{t("client:yourPayment")}</Title>
+                <Title level={2}>{t("client:yourPayment")}</Title>
               </Row>
               <Divider />
               <Row

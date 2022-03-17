@@ -1,6 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+import { normalice } from "../../lib/normalice";
+
 import styles from "./CreditCard.module.css";
 
 interface CreditCardProps {
@@ -62,20 +64,10 @@ const CARDS = {
 
 const CreditCard = ({ data, billing }: CreditCardProps) => {
   const { t } = useTranslation();
-  const normalizedData = data
-    .replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-  const normalizedBilling = billing
-    .replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-
-  const card: ICreditCardStripe = JSON.parse(normalizedData);
-  const billingData: IBillingDetailsStripe = JSON.parse(normalizedBilling);
+  const card: ICreditCardStripe = JSON.parse(normalice(data));
+  const billingData: IBillingDetailsStripe = JSON.parse(normalice(billing));
   const expired = new Date(card.exp_year, card.exp_month) < new Date();
+
   return (
     <div className={styles.creditcard}>
       <div className={styles.front}>

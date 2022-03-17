@@ -2,51 +2,40 @@
   border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.descriptionCol {
+.leftCol {
   padding-right: 12px;
 }
 
-.descriptionLeft {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  padding-top: 2px;
-  padding-right: 16px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  color: #636363;
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.descriptionRight {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  padding-top: 2px;
-  padding-right: 16px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  color: #636363;
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.titleCol {
+.rightCol {
   padding-left: 12px;
 }
 
-.titleLeft {
-  padding-top: 8px;
+.description {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding-top: 2px;
   padding-right: 16px;
-  padding-bottom: 2px;
+  padding-bottom: 8px;
   padding-left: 16px;
-  color: #232323;
+  color: #636363;
   display: block;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 }
 
-.titleRight {
+.descriptionText {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   padding-top: 8px;
+  padding-right: 16px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  color: #636363;
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.title {
+  padding-top: 10px;
   padding-right: 16px;
   padding-bottom: 2px;
   padding-left: 16px;

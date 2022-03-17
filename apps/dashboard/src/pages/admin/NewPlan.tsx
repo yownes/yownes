@@ -43,7 +43,7 @@ const NewPlan = () => {
   return (
     <div style={{ minWidth: 300 }}>
       <Card>
-        <Title level={3}>{t("admin:newPlanInfo")}</Title>
+        <Title level={2}>{t("admin:newPlanInfo")}</Title>
         <Form
           form={form}
           initialValues={{

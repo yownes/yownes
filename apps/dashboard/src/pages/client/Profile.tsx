@@ -13,8 +13,9 @@ import {
 } from "../../api/types/globalTypes";
 import { MyAccount } from "../../api/types/MyAccount";
 import { Resubscribe, ResubscribeVariables } from "../../api/types/Resubscribe";
+import { normalice } from "../../lib/normalice";
 
-import { Loading, LoadingFullScreen } from "../../components/atoms";
+import { Loading, LoadingFullScreen, Space } from "../../components/atoms";
 import {
   AppTable,
   Placeholder,
@@ -62,7 +63,7 @@ const Profile = () => {
     if (data?.me?.subscription?.plan?.product?.metadata) {
       setAllowedApps(
         parseInt(
-          JSON.parse(data?.me?.subscription?.plan?.product?.metadata)
+          JSON.parse(normalice(data?.me?.subscription?.plan?.product?.metadata))
             .allowed_apps
         )
       );
@@ -91,41 +92,49 @@ const Profile = () => {
           <Card>
             <ProfileInfo profile={data?.me} />
             {data?.me?.accountStatus === AccountAccountStatus.REGISTERED && (
-              <Placeholder
-                claim={t("client:subscribeNow")}
-                cta={{ title: t("client:subscribe"), link: "/checkout" }}
-              ></Placeholder>
+              <>
+                <Space />
+                <Placeholder
+                  claim={t("client:subscribeNow")}
+                  cta={{ title: t("client:subscribe"), link: "/checkout" }}
+                ></Placeholder>
+              </>
             )}
             {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
               data.me.subscription.cancelAtPeriodEnd && (
-                <Placeholder claim={t("client:reSubscribeNow")}>
-                  {
-                    <Popconfirm
-                      cancelText={t("cancel")}
-                      okText={t("confirm")}
-                      title={
-                        <Trans
-                          i18nKey={"warnings.unCancelSubscription"}
-                          ns="client"
-                        >
-                          <strong></strong>
-                          <p></p>
-                        </Trans>
-                      }
-                      placement="left"
-                      onConfirm={() => {
-                        if (data?.me?.id) {
-                          resubscribe({
-                            variables: { userId: data.me.id },
-                          });
-                          setIsResubscribed(true);
+                <>
+                  <Space />
+                  <Placeholder claim={t("client:reSubscribeNow")}>
+                    {
+                      <Popconfirm
+                        cancelText={t("cancel")}
+                        okText={t("confirm")}
+                        title={
+                          <Trans
+                            i18nKey={"warnings.unCancelSubscription"}
+                            ns="client"
+                          >
+                            <strong></strong>
+                            <p></p>
+                          </Trans>
                         }
-                      }}
-                    >
-                      <Button type="primary">{t("client:reSubscribe")}</Button>
-                    </Popconfirm>
-                  }
-                </Placeholder>
+                        placement="left"
+                        onConfirm={() => {
+                          if (data?.me?.id) {
+                            resubscribe({
+                              variables: { userId: data.me.id },
+                            });
+                            setIsResubscribed(true);
+                          }
+                        }}
+                      >
+                        <Button type="primary">
+                          {t("client:reSubscribe")}
+                        </Button>
+                      </Popconfirm>
+                    }
+                  </Placeholder>
+                </>
               )}
           </Card>
         </Col>

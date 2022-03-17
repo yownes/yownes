@@ -9,6 +9,7 @@ import { Me } from "../../api/types/Me";
 import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import adminroutes from "../../lib/adminRoutes";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { normalice } from "../../lib/normalice";
 import clientRoutes from "../../lib/routes";
 
 import { NewLogo } from "../atoms";
@@ -32,16 +33,13 @@ const Header = () => {
     (paymentsData?.me?.customer?.paymentMethods &&
       paymentsData?.me?.customer?.defaultPaymentMethod &&
       JSON.parse(
-        connectionToNodes(paymentsData?.me?.customer?.paymentMethods)
-          .find(
+        normalice(
+          connectionToNodes(paymentsData?.me?.customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId ===
               paymentsData?.me?.customer?.defaultPaymentMethod?.stripeId
-          )
-          ?.card.replace(/None/g, "null")
-          .replace(/True/g, "true")
-          .replace(/False/g, "false")
-          .replace(/'/g, '"')!!
+          )?.card
+        )!!
       )) ||
     undefined;
 

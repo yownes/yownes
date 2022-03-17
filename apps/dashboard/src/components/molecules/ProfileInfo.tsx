@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Tag, Typography } from "antd";
+import { Tag } from "antd";
 import { useQuery } from "@apollo/client";
 import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
@@ -20,10 +20,6 @@ import {
 } from "./";
 import { description } from "./Descriptions";
 import { Loading } from "../atoms";
-
-import styles from "./ProfileInfo.module.css";
-
-const { Text } = Typography;
 
 interface ProfileInfoProps {
   profile?: AccountBasicData | null;
@@ -140,7 +136,7 @@ const ProfileInfo = ({ profile, extra, verified }: ProfileInfoProps) => {
           />
         )
       ) : (
-        <Text>{t("noSubscription")}</Text>
+        t("noSubscription")
       ),
     });
 

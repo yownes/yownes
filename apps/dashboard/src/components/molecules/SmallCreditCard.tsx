@@ -1,6 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+import { normalice } from "../../lib/normalice";
+
 import styles from "./SmallCreditCard.module.css";
 
 interface SmallCreditCardProps {
@@ -48,12 +50,7 @@ const CARDS = {
 
 const SmallCreditCard = ({ data }: SmallCreditCardProps) => {
   const { t } = useTranslation();
-  const normalizedData = data
-    .replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-  const card: ICreditCardStripe = JSON.parse(normalizedData);
+  const card: ICreditCardStripe = JSON.parse(normalice(data));
   const expired = new Date(card.exp_year, card.exp_month) < new Date();
   return (
     <div style={{ marginBottom: 24, textAlign: "center" }}>

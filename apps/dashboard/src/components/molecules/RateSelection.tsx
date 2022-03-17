@@ -3,6 +3,7 @@ import { Button, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { PlanInterval } from "../../api/types/globalTypes";
+import { normalice } from "../../lib/normalice";
 
 import { CheckoutLocationState } from "../../pages/client/Checkout";
 
@@ -24,11 +25,11 @@ const RateSelection = ({
   onPlanSelected,
 }: RateSelectionProps) => {
   const { t } = useTranslation("translation");
-  const interval = JSON.parse(plan.recurring).interval.toUpperCase();
+  const interval = JSON.parse(normalice(plan.recurring)).interval.toUpperCase();
   return (
     <div className={styles.container}>
       <Text>{subtitle}</Text>
-      <Title level={3}>{title}</Title>
+      <Title level={2}>{title}</Title>
       <Title level={4}>
         <Text strong>
           {plan.unitAmount

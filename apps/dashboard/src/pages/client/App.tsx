@@ -56,10 +56,8 @@ const App = () => {
   const { appId } = useParams<AppParamTypes>();
   const { t } = useTranslation(["translation", "client"]);
   const history = useHistory();
-  const {
-    data: dataOwnerActive,
-    loading: loadingOwnerActive,
-  } = useQuery<AppOwnerActive>(APP_OWNER_ACTIVE, { variables: { id: appId } });
+  const { data: dataOwnerActive, loading: loadingOwnerActive } =
+    useQuery<AppOwnerActive>(APP_OWNER_ACTIVE, { variables: { id: appId } });
   const [getAppById, { data, loading }] = useLazyQuery<IApp, AppVariables>(APP);
   const [deleteApp, { loading: deleting }] = useMutation<
     DeleteApp,
@@ -115,7 +113,7 @@ const App = () => {
       <Row gutter={[20, 20]}>
         <Col lg={14} xs={24} /*className={styles.minSize}*/>
           <Card className={styles.card}>
-            <Title level={3}>{t("client:style")}</Title>
+            <Title level={2}>{t("client:style")}</Title>
             <TemplateSelector
               value={state.template!!}
               onChange={(selected) => {

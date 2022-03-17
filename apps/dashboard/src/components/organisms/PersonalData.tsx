@@ -21,6 +21,7 @@ import {
   UpdateCustomer,
   UpdateCustomerVariables,
 } from "../../api/types/UpdateCustomer";
+import { normalice } from "../../lib/normalice";
 
 import { Loading, LoadingFullScreen } from "../atoms";
 import { Errors } from "../molecules";
@@ -60,23 +61,17 @@ const PersonalData = () => {
   const { data, loading } = useQuery<MyAccount>(MY_ACCOUNT);
   const country = i18n.language.split("-")[0] as Language;
   const language = Language[country] ?? "es";
-  const normalizedAddress = data?.me?.customer?.address
-    ? data.me.customer.address
-        .replace(/None/g, "null")
-        .replace(/True/g, "true")
-        .replace(/False/g, "false")
-        .replace(/'/g, '"')
-    : "{}";
-  const addressData: IAddress = JSON.parse(normalizedAddress ?? "{}");
-  const normalizedMetadata = data?.me?.customer?.metadata
-    ? data.me.customer.metadata
-        .replace(/None/g, "null")
-        .replace(/True/g, "true")
-        .replace(/False/g, "false")
-        .replace(/'/g, '"')
-    : "{}";
-  const metadataData: IMetadata = JSON.parse(normalizedMetadata ?? "{}");
-  console.log(data, loading);
+
+  const addressData: IAddress = JSON.parse(
+    data?.me?.customer?.address
+      ? normalice(data.me.customer.address)
+      : "{}" ?? "{}"
+  );
+  const metadataData: IMetadata = JSON.parse(
+    data?.me?.customer?.metadata
+      ? normalice(data.me.customer.metadata)
+      : "{}" ?? "{}"
+  );
 
   useEffect(() => {
     if (updateData?.updateCustomer?.ok && isUpdated) {
@@ -88,10 +83,11 @@ const PersonalData = () => {
   if (loading)
     return (
       <Card>
-        <Title level={3}>{t("client:personalData")}</Title>
+        <Title level={2}>{t("client:personalData")}</Title>
         <Loading />
       </Card>
     );
+
   return (
     <>
       {!data?.me?.verified && (
@@ -110,7 +106,7 @@ const PersonalData = () => {
       <Row gutter={[20, 20]}>
         <Col span={24} style={{ minWidth: 550 }}>
           <Card>
-            <Title level={3}>{t("client:personalData")}</Title>
+            <Title level={2}>{t("client:personalData")}</Title>
             <Form
               initialValues={{
                 username: data?.me?.username,
@@ -244,7 +240,7 @@ const PersonalData = () => {
                 //disabled={loading}
                 //loading={loading}
               >
-                {t("client:saveChanges")}
+                {t("save")}
               </Button>
             </Form>
           </Card>

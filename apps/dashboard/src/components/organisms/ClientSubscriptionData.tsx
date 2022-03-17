@@ -66,9 +66,8 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
   const { t } = useTranslation(["translation", "admin"]);
 
   const [finalizeNow, setFinalizeNow] = useState(true);
-  const [invoices, setInvoices] = useState<
-    MyAccount_me_subscription_invoices_edges_node[]
-  >();
+  const [invoices, setInvoices] =
+    useState<MyAccount_me_subscription_invoices_edges_node[]>();
   const [isResubscribed, setIsResubscribed] = useState(false);
   const [isUnsubscribed, setIsUnsubscribed] = useState(false);
   const [subscriptions, setSubscriptions] = useState<
@@ -97,20 +96,16 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
     ],
   };
 
-  const [
-    unsubscribe,
-    { loading: unsubscribing, data: unsubscribeData },
-  ] = useMutation<Unsubscribe, UnsubscribeVariables>(
-    UNSUBSCRIBE,
-    REFETCH_UPCOMING
-  );
-  const [
-    resubscribe,
-    { loading: resubscribing, data: resubscribeData },
-  ] = useMutation<Resubscribe, ResubscribeVariables>(
-    RESUBSCRIBE,
-    REFETCH_UPCOMING
-  );
+  const [unsubscribe, { loading: unsubscribing, data: unsubscribeData }] =
+    useMutation<Unsubscribe, UnsubscribeVariables>(
+      UNSUBSCRIBE,
+      REFETCH_UPCOMING
+    );
+  const [resubscribe, { loading: resubscribing, data: resubscribeData }] =
+    useMutation<Resubscribe, ResubscribeVariables>(
+      RESUBSCRIBE,
+      REFETCH_UPCOMING
+    );
   const { data: upcomingData, loading: loadingUpcoming } = useQuery<
     UpcomingInvoice,
     UpcomingInvoiceVariables
@@ -158,7 +153,7 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
   )
     return (
       <Card>
-        <Title level={3}>{t("admin:clientSubscriptionData")}</Title>
+        <Title level={2}>{t("admin:clientSubscriptionData")}</Title>
         <Loading />
       </Card>
     );
@@ -167,7 +162,7 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
     <Row gutter={[20, 20]}>
       <Col span={24}>
         <Card>
-          <Title className={styles.header} level={3}>
+          <Title className={styles.header} level={2}>
             <div className={styles.headerContainer}>
               <div>
                 {t("admin:clientSubscriptionData")}

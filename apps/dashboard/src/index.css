@@ -27,6 +27,10 @@ h3 {
 }
 
 .ant-alert {
+  border-radius: 12px !important;
+}
+
+.ant-alert-with-description {
   border-radius: 20px !important;
 }
 
@@ -73,8 +77,10 @@ h3 {
 }
 
 .ant-tag {
-  border-radius: 4px !important;
-  padding: 2px 8px !important;
+  border: none !important;
+  border-radius: 8px !important;
+  color: #232323 !important;
+  padding: 6px 12px !important;
 }
 
 .ant-tooltip {

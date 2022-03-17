@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Col, Collapse, Descriptions, Tooltip, Typography } from "antd";
-import { InfoCircleOutlined, RightOutlined } from "@ant-design/icons";
+import { Badge, Col, Collapse, Tooltip, Typography } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
 
@@ -18,10 +18,9 @@ import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
 import { dateTime, shortDate } from "../../lib/parseDate";
 
-import { InvoicesTable } from "./";
+import { Descriptions } from "./";
+import { description } from "./Descriptions";
 
-const { Panel } = Collapse;
-const { Item } = Descriptions;
 const { Text } = Typography;
 
 interface SubscriptionInfoProps {
@@ -52,101 +51,118 @@ const SubscriptionInfo = ({
     );
   }, [subscription]);
 
-  return subscription && subscription.plan ? (
-    <>
-      <Col span="24">
-        <Descriptions
-          bordered
-          column={3}
-          labelStyle={{ color: "#232323", fontWeight: 500 }}
-          layout="vertical"
-          size="small"
-        >
-          <Item label={t("plan")}>
-            {subscription.plan.product && subscription.plan.product.name}
-          </Item>
-          <Item span={2} label={t("description")}>
-            {subscription.plan.product?.description}
-            {features.length > 0 && (
-              <p style={{ margin: 0 }}>
-                {`${t("features")}:`}
-                {features.map((feat) => {
-                  return (
-                    <Text key={feat.id} style={{ paddingLeft: 15 }}>
-                      {"· "}
-                      {feat.name}
-                    </Text>
-                  );
-                })}
-              </p>
-            )}
-          </Item>
-          <Item label={t("price")}>
-            {subscription.plan.amount
-              ? subscription.plan.amount.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })
-              : "-"}
-            {currencySymbol(subscription.plan.currency)}
-          </Item>
-          <Item label={t("interval")}>
-            {subscription.plan.interval === PlanInterval.DAY
-              ? `${t("renewal")} ${t("daily").toLocaleLowerCase()}`
-              : subscription.plan.interval === PlanInterval.WEEK
-              ? `${t("renewal")} ${t("weekly").toLocaleLowerCase()}`
-              : subscription.plan.interval === PlanInterval.MONTH
-              ? `${t("renewal")} ${t("monthly").toLocaleLowerCase()}`
-              : subscription.plan.interval === PlanInterval.YEAR
-              ? `${t("renewal")} ${t("annual").toLocaleLowerCase()}`
-              : "-"}
-          </Item>
-          <Item
-            label={
-              <>
-                {t("balance")}
-                <Tooltip title={t("balanceInfo")}>
-                  <InfoCircleOutlined style={{ marginLeft: 8 }} />
-                </Tooltip>
-              </>
-            }
-          >
-            {upcoming &&
-              `${(upcoming.startingBalance
-                ? (upcoming?.startingBalance / 100) * -1
+  const info: description[] = [];
+  if (subscription && subscription.plan) {
+    subscription.plan.product &&
+      info.push({
+        title: t("plan"),
+        description: subscription.plan.product.name,
+      });
+    info.push({
+      title: t("description"),
+      description: (
+        <>
+          {subscription.plan.product?.description}
+          {features.length > 0 && (
+            <p style={{ margin: 0 }}>
+              {`${t("features")}:`}
+              {features.map((feat) => {
+                return (
+                  <Text key={feat.id} style={{ paddingLeft: 15 }}>
+                    {"· "}
+                    {feat.name}
+                  </Text>
+                );
+              })}
+            </p>
+          )}
+        </>
+      ),
+    });
+    info.push({
+      title: t("price"),
+      description: (
+        <>
+          {subscription.plan.amount
+            ? subscription.plan.amount.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : "-"}
+          {currencySymbol(subscription.plan.currency)}
+        </>
+      ),
+    });
+    info.push({
+      title: t("interval"),
+      description: (
+        <>
+          {subscription.plan.interval === PlanInterval.DAY
+            ? `${t("renewal")} ${t("daily").toLocaleLowerCase()}`
+            : subscription.plan.interval === PlanInterval.WEEK
+            ? `${t("renewal")} ${t("weekly").toLocaleLowerCase()}`
+            : subscription.plan.interval === PlanInterval.MONTH
+            ? `${t("renewal")} ${t("monthly").toLocaleLowerCase()}`
+            : subscription.plan.interval === PlanInterval.YEAR
+            ? `${t("renewal")} ${t("annual").toLocaleLowerCase()}`
+            : "-"}
+        </>
+      ),
+    });
+    info.push({
+      title: (
+        <>
+          {t("balance")}
+          <Tooltip title={t("balanceInfo")}>
+            <InfoCircleOutlined style={{ marginLeft: 8 }} />
+          </Tooltip>
+        </>
+      ),
+      description: (
+        <>
+          {upcoming &&
+            `${(upcoming.startingBalance
+              ? (upcoming?.startingBalance / 100) * -1
+              : 0
+            ).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}${currencySymbol(upcoming.currency || "")}`}
+          {!upcoming &&
+          (subscription.customer.balance !== undefined &&
+            subscription.customer.balance) !== null
+            ? `${(subscription.customer.balance
+                ? (subscription.customer.balance / 100) * -1
                 : 0
               ).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
-              })}${currencySymbol(upcoming.currency || "")}`}
-            {!upcoming &&
-            (subscription.customer.balance !== undefined &&
-              subscription.customer.balance) !== null
-              ? `${(subscription.customer.balance
-                  ? (subscription.customer.balance / 100) * -1
-                  : 0
-                ).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}${currencySymbol(subscription.customer.currency || "")}`
-              : null}
-            {!upcoming &&
-            !subscription.customer.balance &&
-            subscription.customer.balance !== 0
-              ? t("unknown")
-              : null}
-          </Item>
-          <Item label={t("subscribedSince")}>
-            {shortDate(new Date(subscription.created))}
-          </Item>
-          <Item label={t("currentPeriod")}>
-            {t("periodBetween", {
-              start: shortDate(new Date(subscription.currentPeriodStart)),
-              end: shortDate(new Date(subscription.currentPeriodEnd)),
-            })}
-          </Item>
-          {subscription.status !== SubscriptionStatus.INCOMPLETE ? (
-            <Item label={t("nextInvoice")}>
+              })}${currencySymbol(subscription.customer.currency || "")}`
+            : null}
+          {!upcoming &&
+          !subscription.customer.balance &&
+          subscription.customer.balance !== 0
+            ? t("unknown")
+            : null}
+        </>
+      ),
+    });
+    info.push({
+      title: t("subscribedSince"),
+      description: shortDate(new Date(subscription.created)),
+    });
+    info.push({
+      title: t("currentPeriod"),
+      description: t("periodBetween", {
+        start: shortDate(new Date(subscription.currentPeriodStart)),
+        end: shortDate(new Date(subscription.currentPeriodEnd)),
+      }),
+    });
+    subscription.status !== SubscriptionStatus.INCOMPLETE
+      ? info.push({
+          title: t("nextInvoice"),
+          description: (
+            <>
               {upcoming ? (
                 <Tooltip
                   placement="topLeft"
@@ -183,62 +199,63 @@ const SubscriptionInfo = ({
               ) : (
                 <Text>{t("nextInvoiceEmpty")}</Text>
               )}
-            </Item>
-          ) : (
-            <Item
-              label={
-                <Badge dot offset={[4, -1]} title={t("deadlineToPay")}>
-                  {t("incompleteAt")}
-                </Badge>
-              }
+            </>
+          ),
+        })
+      : info.push({
+          title: (
+            <Badge dot offset={[4, -1]} title={t("deadlineToPay")}>
+              {t("incompleteAt")}
+            </Badge>
+          ),
+          description: dateTime(addHours(new Date(subscription.created), 23)),
+        });
+  }
+
+  return (
+    <>
+      <Col span="24">
+        <Descriptions cols={1} items={info} />
+        {/* <Collapse
+          expandIcon={(props) => (
+            <Badge
+              count={numInvoices}
+              offset={[5, -4]}
+              size="small"
+              style={numInvoices === 0 ? { display: "none" } : {}}
+              title={t("pendingInvoices")}
             >
-              {dateTime(addHours(new Date(subscription.created), 23))}
-            </Item>
+              <RightOutlined
+                style={
+                  props.isActive
+                    ? {
+                        transform: "rotate(90deg)",
+                        transition: "transform .24s",
+                      }
+                    : { transition: "transform .24s" }
+                }
+              />
+            </Badge>
           )}
-          <Item label={t("invoices")}>
-            <Collapse
-              expandIcon={(props) => (
-                <Badge
-                  count={numInvoices}
-                  offset={[5, -4]}
-                  size="small"
-                  style={numInvoices === 0 ? { display: "none" } : {}}
-                  title={t("pendingInvoices")}
-                >
-                  <RightOutlined
-                    style={
-                      props.isActive
-                        ? {
-                            transform: "rotate(90deg)",
-                            transition: "transform .24s",
-                          }
-                        : { transition: "transform .24s" }
-                    }
-                  />
-                </Badge>
+          expandIconPosition="right"
+          style={{ margin: 10 }}
+        >
+          <Panel
+            header={t("showInvoicesList", {
+              num: connectionToNodes(subscription.invoices).length,
+            })}
+            key="invoices"
+          >
+            <InvoicesTable
+              invoices={connectionToNodes(subscription.invoices).filter(
+                (inv) => inv.subscription?.stripeId === subscription.stripeId
               )}
-              expandIconPosition="right"
-              style={{ margin: 10 }}
-            >
-              <Panel
-                header={t("showInvoicesList", {
-                  num: connectionToNodes(subscription.invoices).length,
-                })}
-                key="invoices"
-              >
-                <InvoicesTable
-                  invoices={connectionToNodes(subscription.invoices).filter(
-                    (inv) =>
-                      inv.subscription?.stripeId === subscription.stripeId
-                  )}
-                />
-              </Panel>
-            </Collapse>
-          </Item>
-        </Descriptions>
+            />
+          </Panel>
+        </Collapse> */}
       </Col>
     </>
-  ) : null;
+  );
 };
 
 export default SubscriptionInfo;

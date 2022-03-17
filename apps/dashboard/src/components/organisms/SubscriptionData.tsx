@@ -69,6 +69,7 @@ import {
   UpdateSubscriptionVariables,
 } from "../../api/types/UpdateSubscription";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { normalice } from "../../lib/normalice";
 import { dateTime, longDate } from "../../lib/parseDate";
 
 import { ChangeSubscription } from "./";
@@ -100,9 +101,8 @@ const SubscriptionData = () => {
     Invoices,
     InvoicesVariables
   >(INVOICES, { variables: { userId: data?.me?.id ?? "" } });
-  const { data: paymentMethods } = useQuery<MyPaymentMethods>(
-    MY_PAYMENT_METHODS
-  );
+  const { data: paymentMethods } =
+    useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
   const { data: plansData, loading: loadingPlans } = useQuery<Plans>(PLANS);
   const { data: subscriptionsData, loading: loadingSubscriptions } = useQuery<
     Subscriptions,
@@ -114,17 +114,15 @@ const SubscriptionData = () => {
   const [activeApps, setActiveApps] = useState<number>(0);
   const [amount, setAmount] = useState<number | null | undefined>(null);
   const [interval, setInterval] = useState<PlanInterval>(PlanInterval.MONTH);
-  const [invoices, setInvoices] = useState<
-    MyAccount_me_subscription_invoices_edges_node[]
-  >();
+  const [invoices, setInvoices] =
+    useState<MyAccount_me_subscription_invoices_edges_node[]>();
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [isResubscribed, setIsResubscribed] = useState(false);
   const [isUnsubscribed, setIsUnsubscribed] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
-  const [features, setFeatures] = useState<
-    Plans_products_edges_node_features_edges_node[]
-  >();
+  const [features, setFeatures] =
+    useState<Plans_products_edges_node_features_edges_node[]>();
   const [modalStep, setModalStep] = useState(false);
   const [plan, setPlan] = useState<Plans_products_edges_node>();
   const [planId, setPlanId] = useState<string>();
@@ -146,20 +144,16 @@ const SubscriptionData = () => {
       },
     ],
   };
-  const [
-    unsubscribe,
-    { loading: unsubscribing, data: unsubscribeData },
-  ] = useMutation<Unsubscribe, UnsubscribeVariables>(
-    UNSUBSCRIBE,
-    REFETCH_UPCOMING
-  );
-  const [
-    resubscribe,
-    { loading: resubscribing, data: resubscribeData },
-  ] = useMutation<Resubscribe, ResubscribeVariables>(
-    RESUBSCRIBE,
-    REFETCH_UPCOMING
-  );
+  const [unsubscribe, { loading: unsubscribing, data: unsubscribeData }] =
+    useMutation<Unsubscribe, UnsubscribeVariables>(
+      UNSUBSCRIBE,
+      REFETCH_UPCOMING
+    );
+  const [resubscribe, { loading: resubscribing, data: resubscribeData }] =
+    useMutation<Resubscribe, ResubscribeVariables>(
+      RESUBSCRIBE,
+      REFETCH_UPCOMING
+    );
   const [
     updateSubscription,
     { loading: updating, data: updateSubscriptionData, reset },
@@ -196,16 +190,13 @@ const SubscriptionData = () => {
     (paymentMethods?.me?.customer?.paymentMethods &&
       paymentMethods?.me?.customer?.defaultPaymentMethod &&
       JSON.parse(
-        connectionToNodes(paymentMethods?.me?.customer?.paymentMethods)
-          .find(
+        normalice(
+          connectionToNodes(paymentMethods?.me?.customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId ===
               paymentMethods?.me?.customer?.defaultPaymentMethod?.stripeId
-          )
-          ?.card.replace(/None/g, "null")
-          .replace(/True/g, "true")
-          .replace(/False/g, "false")
-          .replace(/'/g, '"')!!
+          )?.card
+        )!!
       )) ||
     undefined;
   const expired = card
@@ -285,7 +276,8 @@ const SubscriptionData = () => {
         .filter((price) => price.active)
         .find(
           (price) =>
-            JSON.parse(price.recurring).interval.toUpperCase() === interval
+            JSON.parse(normalice(price.recurring)).interval.toUpperCase() ===
+            interval
         );
       setAmount(price?.unitAmount);
       setPriceId(price?.stripeId);
@@ -294,11 +286,13 @@ const SubscriptionData = () => {
   useEffect(() => {
     if (data?.me?.subscription?.plan) {
       const priceInterval = JSON.parse(
-        data?.me?.subscription?.plan.product?.prices.edges.find(
-          (price) =>
-            price?.node &&
-            price?.node.stripeId === data?.me?.subscription?.plan?.stripeId
-        )?.node?.recurring
+        normalice(
+          data?.me?.subscription?.plan.product?.prices.edges.find(
+            (price) =>
+              price?.node &&
+              price?.node.stripeId === data?.me?.subscription?.plan?.stripeId
+          )?.node?.recurring
+        )
       ).interval;
       if (priceInterval) {
         setInterval(priceInterval.toUpperCase());
@@ -316,7 +310,7 @@ const SubscriptionData = () => {
   )
     return (
       <Card>
-        <Title level={3}>{t("client:subscriptionData")}</Title>
+        <Title level={2}>{t("client:subscriptionData")}</Title>
         <Loading />
       </Card>
     );
@@ -325,7 +319,7 @@ const SubscriptionData = () => {
     <Row gutter={[20, 20]}>
       <Col span={24}>
         <Card>
-          <Title className={styles.header} level={3}>
+          <Title className={styles.header} level={2}>
             {t("client:subscriptionData")}
             {data?.me?.subscription && (
               <Text className={styles.tag}>
@@ -525,12 +519,14 @@ const SubscriptionData = () => {
                         data?.me?.subscription?.plan &&
                           setInterval(
                             JSON.parse(
-                              data?.me?.subscription?.plan.product?.prices.edges.find(
-                                (price) =>
-                                  price?.node &&
-                                  price?.node.stripeId ===
-                                    data?.me?.subscription?.plan?.stripeId
-                              )?.node?.recurring
+                              normalice(
+                                data?.me?.subscription?.plan.product?.prices.edges.find(
+                                  (price) =>
+                                    price?.node &&
+                                    price?.node.stripeId ===
+                                      data?.me?.subscription?.plan?.stripeId
+                                )?.node?.recurring
+                              )
                             ).interval.toUpperCase()
                           );
                         setPlanId(data?.me?.subscription?.plan?.product?.id);
@@ -642,7 +638,8 @@ const SubscriptionData = () => {
               </Popconfirm>
             )}
           </Row>
-          {subscriptions &&
+          {data?.me?.isStaff &&
+            subscriptions &&
             (subscriptions?.length > 1 ||
               (subscriptions.length === 1 &&
                 (subscriptions[0].status === SubscriptionStatus.CANCELED ||
