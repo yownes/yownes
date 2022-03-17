@@ -7,8 +7,8 @@ echo "Generating bundle..."
 vite build --base=/static/yownes/
 
 echo "Copying files into dashboard..."
-cd ../backend
+cd /home/ubuntu/yownes/apps/backend
+pipenv install
 pipenv run make update-frontend
-cd ../dashboard
 
-echo "Frontend del plugin de PrestaShop actualidado!"
+echo "Frontend from Backend updated!"

@@ -18,6 +18,9 @@
     "@yownes/dashboard#build": {
       "cache": false
     },
+    "@yownes/dashboard#build:backend": {
+      "cache": false
+    },
     "clean": {
       "outputs": []
     },
