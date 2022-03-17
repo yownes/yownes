@@ -3,6 +3,7 @@ import { Tag, Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { ChargeStatus } from "../../api/types/globalTypes";
+import { colors } from "../../lib/colors";
 
 interface PaymentStateProps {
   state: ChargeStatus | null;
@@ -10,9 +11,9 @@ interface PaymentStateProps {
 }
 
 const COLORS = {
-  PENDING: "default",
-  SUCCEEDED: "green",
-  FAILED: "red",
+  PENDING: colors.tagDefault,
+  SUCCEEDED: colors.tagGreen,
+  FAILED: colors.tagRed,
 };
 
 const PaymentState = ({ state, tooltip }: PaymentStateProps) => {
