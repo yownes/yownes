@@ -17,8 +17,7 @@ lint:
 	flake8 backend/
 
 update-frontend:
-	rm -rf static
-	python manage.py collectstatic
+	python manage.py collectstatic --clear --noinput
 
 test:
 	reset && python manage.py test

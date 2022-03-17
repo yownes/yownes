@@ -35,4 +35,4 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: ./yownes/scripts/deploy-yownes-backend.sh
+          script: bash yownes/scripts/deploy-yownes-backend.sh
