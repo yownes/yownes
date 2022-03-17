@@ -9,4 +9,4 @@ vite build --mode plugin
 echo "Copying files into plugin..."
 cp -r dist ../prestashop-plugin/views/js/yownes
 
-echo "Frontend from Backend updated!"
+echo "PrestaShop Frontend plugin updated!"
