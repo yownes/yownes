@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/home/ubuntu/yownes/apps/backend
-Environment="PYTHONPATH=/home/ubuntu/.local/lib/"
-ExecStart=/home/ubuntu/.local/bin/gunicorn --bind :8000 --workers 2 --worker-class uvicorn.workers.UvicornWorker backend.server.asgi:application
+Environment="PYTHONPATH=/home/ubuntu/.local/share/virtualenvs/backend-L-4U1Mr5/lib/"
+ExecStart=/home/ubuntu/.local/share/virtualenvs/backend-L-4U1Mr5/bin/gunicorn --bind :8000 --workers 2 --worker-class uvicorn.workers.UvicornWorker backend.server.asgi:application
 User=ubuntu
 Restart=on-failure
 
