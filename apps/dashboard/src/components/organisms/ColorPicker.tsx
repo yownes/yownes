@@ -23,7 +23,7 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
   const { t } = useTranslation("client");
   return (
     <div>
-      <Title level={4}>{t("color")}</Title>
+      <Title level={5}>{t("color")}</Title>
 
       <Paragraph>{t("colorPalette")}</Paragraph>
       <div style={{ display: "flex", gap: 15 }}>

@@ -29,7 +29,7 @@ const Last4Card = ({ data }: Last4CardProps) => {
       ) : (
         <CreditCardOutlined style={{ color: "#808080", marginBottom: 2 }} />
       )}
-      <Text style={{ marginLeft: 5, marginRight: 3 }}>{" **** "}</Text>
+      <span style={{ marginLeft: 5, marginRight: 3 }}>{" **** "}</span>
       {card.last4}
     </span>
   );

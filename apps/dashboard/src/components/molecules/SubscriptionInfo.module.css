@@ -1,0 +1,13 @@
+.description {
+  padding-bottom: 4px;
+  padding-top: 8px;
+}
+
+.icon {
+  margin-left: 8px;
+  position: absolute;
+}
+
+.emptyMargin {
+  margin: 0;
+}

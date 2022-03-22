@@ -313,7 +313,7 @@ const Client = () => {
 
   return (
     <>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col span={24} style={{ minWidth: 550 }}>
           <Card>
             <Row gutter={10}>
@@ -329,13 +329,13 @@ const Client = () => {
         </Col>
         <Col></Col>
       </Row>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col span={24} style={{ minWidth: 550 }}>
           <ClientSubscriptionData client={data?.user} />
         </Col>
         <Col></Col>
       </Row>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col span={24} style={{ minWidth: 550 }}>
           <Card>
             <Row gutter={10}>
@@ -352,7 +352,7 @@ const Client = () => {
         </Col>
         <Col></Col>
       </Row>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col xl={12} lg={24} md={24} sm={24} style={{ minWidth: 550 }}>
           <Card>
             <Title level={2}>{t("admin:apps")}</Title>

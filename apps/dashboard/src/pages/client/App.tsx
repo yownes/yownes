@@ -96,7 +96,7 @@ const App = () => {
 
   return (
     <>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col span={24} className={styles.minSize}>
           <Card className={styles.card}>
             <AppInfo
@@ -110,7 +110,7 @@ const App = () => {
         </Col>
         <Col></Col>
       </Row>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col lg={14} xs={24} /*className={styles.minSize}*/>
           <Card className={styles.card}>
             <Title level={2}>{t("client:style")}</Title>
@@ -142,7 +142,7 @@ const App = () => {
           </Card>
         </Col>
       </Row>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col></Col>
         <Col span={24} className={styles.minSize}>
           <Card className={styles.minSize}>
@@ -151,7 +151,7 @@ const App = () => {
         </Col>
         <Col></Col>
       </Row>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col span={24}>
           <Popconfirm
             cancelText={t("cancel")}

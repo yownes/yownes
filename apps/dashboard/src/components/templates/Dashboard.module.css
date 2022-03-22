@@ -1,6 +1,6 @@
 .main {
   background-color: #ededed;
   height: calc(100vh - var(--header-height));
-  padding: 40px 0;
+  padding: 44px 0;
   overflow-y: scroll;
 }

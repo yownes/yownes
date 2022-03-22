@@ -16,7 +16,7 @@ export interface UpcomingInvoice_upcominginvoice {
   /**
    * The amount remaining, (as decimal), that is due.
    */
-  amountRemaining: any | null;
+  amountRemaining: number | null;
   /**
    * Three-letter ISO currency code
    */

@@ -18,7 +18,7 @@ export interface UpdateCustomer_updateCustomer_customer {
   /**
    * The customer's address.
    */
-  address: any | null;
+  address: string | null;
   /**
    * The customer's full name or business name.
    */
@@ -30,7 +30,7 @@ export interface UpdateCustomer_updateCustomer_customer {
   /**
    * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
    */
-  metadata: any | null;
+  metadata: string | null;
 }
 
 export interface UpdateCustomer_updateCustomer {

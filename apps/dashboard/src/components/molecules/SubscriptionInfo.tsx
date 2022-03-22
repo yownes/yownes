@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Col, Collapse, Tooltip, Typography } from "antd";
+import { Badge, Col, Tooltip, Typography } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
@@ -14,12 +14,15 @@ import {
   MyAccount_me_subscription_plan_product_features_edges_node,
 } from "../../api/types/MyAccount";
 import { UpcomingInvoice_upcominginvoice } from "../../api/types/UpcomingInvoice";
+import { colors } from "../../lib/colors";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
 import { dateTime, shortDate } from "../../lib/parseDate";
 
 import { Descriptions } from "./";
 import { description } from "./Descriptions";
+
+import styles from "./SubscriptionInfo.module.css";
 
 const { Text } = Typography;
 
@@ -61,28 +64,28 @@ const SubscriptionInfo = ({
     info.push({
       title: t("description"),
       description: (
-        <>
+        <div className={styles.description}>
           {subscription.plan.product?.description}
           {features.length > 0 && (
-            <p style={{ margin: 0 }}>
-              {`${t("features")}:`}
-              {features.map((feat) => {
+            <p className={styles.emptyMargin}>
+              {`${t("include")} `}
+              {features.map((feat, i) => {
                 return (
-                  <Text key={feat.id} style={{ paddingLeft: 15 }}>
-                    {"· "}
+                  <span key={feat.id}>
+                    {i !== 0 && ","}
                     {feat.name}
-                  </Text>
+                  </span>
                 );
               })}
             </p>
           )}
-        </>
+        </div>
       ),
     });
     info.push({
       title: t("price"),
       description: (
-        <>
+        <div className={styles.description}>
           {subscription.plan.amount
             ? subscription.plan.amount.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
@@ -90,36 +93,36 @@ const SubscriptionInfo = ({
               })
             : "-"}
           {currencySymbol(subscription.plan.currency)}
-        </>
+        </div>
       ),
     });
     info.push({
       title: t("interval"),
-      description: (
-        <>
-          {subscription.plan.interval === PlanInterval.DAY
-            ? `${t("renewal")} ${t("daily").toLocaleLowerCase()}`
-            : subscription.plan.interval === PlanInterval.WEEK
-            ? `${t("renewal")} ${t("weekly").toLocaleLowerCase()}`
-            : subscription.plan.interval === PlanInterval.MONTH
-            ? `${t("renewal")} ${t("monthly").toLocaleLowerCase()}`
-            : subscription.plan.interval === PlanInterval.YEAR
-            ? `${t("renewal")} ${t("annual").toLocaleLowerCase()}`
-            : "-"}
-        </>
-      ),
+      description:
+        subscription.plan.interval === PlanInterval.DAY
+          ? `${t("renewal")} ${t("daily").toLocaleLowerCase()}`
+          : subscription.plan.interval === PlanInterval.WEEK
+          ? `${t("renewal")} ${t("weekly").toLocaleLowerCase()}`
+          : subscription.plan.interval === PlanInterval.MONTH
+          ? `${t("renewal")} ${t("monthly").toLocaleLowerCase()}`
+          : subscription.plan.interval === PlanInterval.YEAR
+          ? `${t("renewal")} ${t("annual").toLocaleLowerCase()}`
+          : "-",
     });
     info.push({
       title: (
         <>
           {t("balance")}
           <Tooltip title={t("balanceInfo")}>
-            <InfoCircleOutlined style={{ marginLeft: 8 }} />
+            <InfoCircleOutlined
+              className={styles.icon}
+              style={{ color: colors.green }}
+            />
           </Tooltip>
         </>
       ),
       description: (
-        <>
+        <div className={styles.description}>
           {upcoming &&
             `${(upcoming.startingBalance
               ? (upcoming?.startingBalance / 100) * -1
@@ -144,7 +147,7 @@ const SubscriptionInfo = ({
           subscription.customer.balance !== 0
             ? t("unknown")
             : null}
-        </>
+        </div>
       ),
     });
     info.push({
@@ -162,7 +165,7 @@ const SubscriptionInfo = ({
       ? info.push({
           title: t("nextInvoice"),
           description: (
-            <>
+            <div className={styles.description}>
               {upcoming ? (
                 <Tooltip
                   placement="topLeft"
@@ -199,7 +202,7 @@ const SubscriptionInfo = ({
               ) : (
                 <Text>{t("nextInvoiceEmpty")}</Text>
               )}
-            </>
+            </div>
           ),
         })
       : info.push({
@@ -216,43 +219,6 @@ const SubscriptionInfo = ({
     <>
       <Col span="24">
         <Descriptions cols={1} items={info} />
-        {/* <Collapse
-          expandIcon={(props) => (
-            <Badge
-              count={numInvoices}
-              offset={[5, -4]}
-              size="small"
-              style={numInvoices === 0 ? { display: "none" } : {}}
-              title={t("pendingInvoices")}
-            >
-              <RightOutlined
-                style={
-                  props.isActive
-                    ? {
-                        transform: "rotate(90deg)",
-                        transition: "transform .24s",
-                      }
-                    : { transition: "transform .24s" }
-                }
-              />
-            </Badge>
-          )}
-          expandIconPosition="right"
-          style={{ margin: 10 }}
-        >
-          <Panel
-            header={t("showInvoicesList", {
-              num: connectionToNodes(subscription.invoices).length,
-            })}
-            key="invoices"
-          >
-            <InvoicesTable
-              invoices={connectionToNodes(subscription.invoices).filter(
-                (inv) => inv.subscription?.stripeId === subscription.stripeId
-              )}
-            />
-          </Panel>
-        </Collapse> */}
       </Col>
     </>
   );

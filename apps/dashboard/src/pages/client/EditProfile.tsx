@@ -10,6 +10,7 @@ import { Loading } from "../../components/atoms";
 import { DeleteAccount } from "../../components/molecules";
 import {
   ChangePassword,
+  InvoicesData,
   PaymentMethod,
   PersonalData,
   SubscriptionData,
@@ -23,12 +24,15 @@ const EditProfile = () => {
 
   return (
     <>
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col span={24} style={{ minWidth: 720 }}>
           <PersonalData />
         </Col>
         <Col span={24} style={{ minWidth: 720 }}>
           <SubscriptionData />
+        </Col>
+        <Col span={24} style={{ minWidth: 720 }}>
+          <InvoicesData />
         </Col>
         <Col span={24} style={{ minWidth: 720 }}>
           <Card>

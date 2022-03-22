@@ -25,12 +25,14 @@ const RateSelection = ({
   onPlanSelected,
 }: RateSelectionProps) => {
   const { t } = useTranslation("translation");
-  const interval = JSON.parse(normalice(plan.recurring)).interval.toUpperCase();
+  const interval = JSON.parse(
+    normalice(plan.recurring!!)
+  ).interval.toUpperCase();
   return (
     <div className={styles.container}>
       <Text>{subtitle}</Text>
       <Title level={2}>{title}</Title>
-      <Title level={4}>
+      <Title level={5}>
         <Text strong>
           {plan.unitAmount
             ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")

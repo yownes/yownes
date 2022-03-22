@@ -144,7 +144,7 @@ const ChangeSubscription = ({
           </Space>
         )
       ) : (
-        <Row gutter={[20, 20]}>
+        <Row gutter={[24, 24]}>
           <Col span={24}>
             <Row
               style={{

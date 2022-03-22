@@ -60,7 +60,7 @@ export interface Subscriptions_subscriptions_edges_node_plan {
   /**
    * Amount (as decimal) to be charged on the interval specified.
    */
-  amount: any | null;
+  amount: number | null;
   /**
    * Three-letter ISO currency code
    */

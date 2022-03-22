@@ -85,6 +85,12 @@ export const INVOICE_FRAGMENT = gql`
     stripeId
     subscription {
       id
+      plan {
+        product {
+          id
+          name
+        }
+      }
       status
       stripeId
     }

@@ -153,7 +153,7 @@
   "billingData": "Datos de facturación",
   "billingDirection": "Dirección de facturación",
   "paymentMethod": "Método de pago",
-  "addPaymentMethod": "Añadir nuevo método de pago",
+  "addPaymentMethod": "Añadir método de pago",
   "addingPaymentMethod": "Añadiendo el método de pago",
   "addPaymentMethodSuccessful": "Método de pago añadido con éxito",
   "createPaymentMethod": "Crear método de pago",

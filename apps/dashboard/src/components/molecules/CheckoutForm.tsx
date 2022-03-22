@@ -90,19 +90,21 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
             (payment) =>
               payment.stripeId ===
               paymentMethods?.me?.customer?.defaultPaymentMethod?.stripeId
-          )?.card
-        )!!
+          )?.card!!
+        )
       )) ||
     undefined;
   const expired = card
     ? new Date(card?.exp_year, card?.exp_month) < new Date()
     : false;
-  const interval = JSON.parse(normalice(plan.recurring)).interval.toUpperCase();
+  const interval = JSON.parse(
+    normalice(plan.recurring!!)
+  ).interval.toUpperCase();
 
   if (loadingAccount || loadingPayments) return <Loading />;
 
   return (
-    <Row gutter={[20, 20]}>
+    <Row gutter={[24, 24]}>
       <Col sm={24} md={16}>
         <Title level={2}>{t("client:selectPaymentMethod")}</Title>
         <PaymentMethod
@@ -112,7 +114,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
         />
       </Col>
       <Col sm={24} md={8}>
-        <Row gutter={[20, 20]}>
+        <Row gutter={[24, 24]}>
           <Card style={{ width: "100%" }}>
             <Col span={24}>
               <Row>
@@ -192,7 +194,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                 }}
               >
                 <Text>{t("total")}:</Text>
-                <Title style={{ margin: 0, padding: 0 }} level={4}>
+                <Title style={{ margin: 0, padding: 0 }} level={5}>
                   {plan.unitAmount
                     ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")
                     : "-"}

@@ -24,7 +24,7 @@ const DeleteAccount = () => {
   if (loading || loadingApps) return <Loading />;
 
   return (
-    <>
+    <div style={{ paddingTop: 20 }}>
       <Popconfirm
         cancelText={t("cancel")}
         okText={t("delete")}
@@ -63,7 +63,7 @@ const DeleteAccount = () => {
       >
         <ProfileDangerZone confirmPassword={confirmPassword} />
       </Modal>
-    </>
+    </div>
   );
 };
 

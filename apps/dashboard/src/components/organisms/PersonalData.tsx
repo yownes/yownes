@@ -91,7 +91,7 @@ const PersonalData = () => {
   return (
     <>
       {!data?.me?.verified && (
-        <Row gutter={[20, 20]}>
+        <Row gutter={[24, 24]}>
           <Col span={24} style={{ minWidth: 550 }}>
             <Alert
               showIcon
@@ -103,7 +103,7 @@ const PersonalData = () => {
           <Col></Col>
         </Row>
       )}
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col span={24} style={{ minWidth: 550 }}>
           <Card>
             <Title level={2}>{t("client:personalData")}</Title>

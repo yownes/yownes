@@ -316,7 +316,7 @@ const SubscriptionData = () => {
     );
 
   return (
-    <Row gutter={[20, 20]}>
+    <Row gutter={[24, 24]}>
       <Col span={24}>
         <Card>
           <Title className={styles.header} level={2}>
@@ -335,7 +335,7 @@ const SubscriptionData = () => {
               </Text>
             )}
           </Title>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {
               // TODO: Mensaje error renovación, fecha siguiente intento
               // y permitir intentarlo en este momento
@@ -367,7 +367,7 @@ const SubscriptionData = () => {
               )
             }
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {
               // TODO: Permitir intentar de nuevo con otro método de pago
               data?.me?.subscription?.status ===
@@ -420,7 +420,7 @@ const SubscriptionData = () => {
               )
             }
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {data?.me?.subscription &&
               data?.me?.subscription?.plan &&
               (data.me.subscription.status === SubscriptionStatus.ACTIVE ||
@@ -433,7 +433,7 @@ const SubscriptionData = () => {
                 />
               )}
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
               data.me.subscription.cancelAtPeriodEnd && (
                 <div className={styles.paddingTop}>
@@ -461,7 +461,7 @@ const SubscriptionData = () => {
                 </div>
               )}
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {(!data?.me?.subscription ||
               (data.me.subscription.status === SubscriptionStatus.ACTIVE &&
                 data.me.subscription.cancelAtPeriodEnd) ||
@@ -499,7 +499,7 @@ const SubscriptionData = () => {
                 />
               ))}
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {data?.me?.subscription?.status ===
               SubscriptionStatus.INCOMPLETE_EXPIRED && (
               <AlertWithLink
@@ -509,7 +509,7 @@ const SubscriptionData = () => {
               />
             )}
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
               data.me.subscription.cancelAtPeriodEnd === false && (
                 <div className={styles.padding}>
@@ -525,7 +525,7 @@ const SubscriptionData = () => {
                                     price?.node &&
                                     price?.node.stripeId ===
                                       data?.me?.subscription?.plan?.stripeId
-                                )?.node?.recurring
+                                )?.node?.recurring!!
                               )
                             ).interval.toUpperCase()
                           );
@@ -645,7 +645,7 @@ const SubscriptionData = () => {
                 (subscriptions[0].status === SubscriptionStatus.CANCELED ||
                   subscriptions[0].status ===
                     SubscriptionStatus.INCOMPLETE_EXPIRED))) && (
-              <Row gutter={[20, 20]}>
+              <Row gutter={[24, 24]}>
                 <SubscriptionTable
                   invoices={connectionToNodes(invoicesData?.invoices)}
                   plans={plansData}

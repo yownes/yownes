@@ -5,7 +5,7 @@ import { AdminData, ChangePassword } from "../../components/organisms";
 
 const Profile = () => {
   return (
-    <Row gutter={[20, 20]}>
+    <Row gutter={[24, 24]}>
       <Col span={24}>
         <AdminData />
       </Col>

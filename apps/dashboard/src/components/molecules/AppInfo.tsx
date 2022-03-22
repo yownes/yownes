@@ -187,7 +187,7 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
       >
         <InfoCircleOutlined className={styles.info__icon} />
       </Tooltip>
-      <Row align="middle" justify="start" gutter={[20, 20]}>
+      <Row align="middle" justify="start" gutter={[24, 24]}>
         <Col lg={{ span: 4 }} md={{ span: 8 }} xs={{ span: 8 }}>
           <ImageUpload
             value={data.logo}

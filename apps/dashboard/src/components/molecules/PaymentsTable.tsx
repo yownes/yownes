@@ -24,12 +24,11 @@ const PaymentsTable = ({ payments }: PaymentsTableProps) => {
         title: t("amount"),
         dataIndex: "amount",
         key: "amount",
-        render: (amount, record) => (
-          <Text strong>{`${amount.toLocaleString(undefined, {
+        render: (amount, record) =>
+          `${amount.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
-          })}${currencySymbol(record.currency)}`}</Text>
-        ),
+          })}${currencySymbol(record.currency)}`,
       },
       {
         title: t("state"),
@@ -49,13 +48,10 @@ const PaymentsTable = ({ payments }: PaymentsTableProps) => {
         title: t("date"),
         dataIndex: "created",
         key: "date",
-        render: (date) => (
-          <Text>
-            {format(new Date(date), "dd MMM'. 'HH:mm", {
-              locale: es,
-            })}
-          </Text>
-        ),
+        render: (date) =>
+          format(new Date(date), "dd MMM'. 'HH:mm", {
+            locale: es,
+          }),
       },
     ];
   return payments.length > 0 ? (
@@ -63,15 +59,16 @@ const PaymentsTable = ({ payments }: PaymentsTableProps) => {
       columns={columns}
       dataSource={payments}
       locale={{ emptyText: t("noPayments") }}
-      pagination={{
-        showSizeChanger: true,
-        showTotal: (total, range) =>
-          t("paginationItems", {
-            first: range[0],
-            last: range[1],
-            total: total,
-          }),
-      }}
+      pagination={false}
+      // pagination={{
+      //   showSizeChanger: true,
+      //   showTotal: (total, range) =>
+      //     t("paginationItems", {
+      //       first: range[0],
+      //       last: range[1],
+      //       total: total,
+      //     }),
+      // }}
       rowKey={(row) => row.id}
     />
   ) : (

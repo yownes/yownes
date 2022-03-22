@@ -102,30 +102,26 @@ export enum SubscriptionStatus {
   UNPAID = "UNPAID",
 }
 
-export interface CustomerBillingAddressInput {
+export interface CustomerBillingDetailsAddressInput {
   city?: string | null;
   country?: string | null;
   line1?: string | null;
   state?: string | null;
 }
 
-export interface CustomerBillingInput {
+export interface CustomerBillingDetailsInput {
   name?: string | null;
   email?: string | null;
   phone?: string | null;
-  address?: CustomerBillingAddressInput | null;
+  address?: CustomerBillingDetailsAddressInput | null;
 }
 
 export interface CustomerInput {
-  billing?: CustomerBillingInput | null;
+  billingDetails?: CustomerBillingDetailsInput | null;
   metadata?: PaymentMetadataInput | null;
 }
 
 export interface FeatureInput {
-  name?: string | null;
-}
-
-export interface PaymentBillingDetailsInput {
   name?: string | null;
 }
 
@@ -135,7 +131,6 @@ export interface PaymentCardInput {
 }
 
 export interface PaymentInput {
-  billingDetails?: PaymentBillingDetailsInput | null;
   card?: PaymentCardInput | null;
 }
 

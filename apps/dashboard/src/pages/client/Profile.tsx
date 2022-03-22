@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Button, Card, Col, message, Popconfirm, Row } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
 import { Trans, useTranslation } from "react-i18next";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { RESUBSCRIBE } from "../../api/mutations";
 import { APPS, MY_ACCOUNT, UPCOMING_INVOICE } from "../../api/queries";
@@ -75,7 +75,7 @@ const Profile = () => {
   return (
     <>
       {!data?.me?.verified && (
-        <Row gutter={[20, 20]}>
+        <Row gutter={[24, 24]}>
           <Col span={24}>
             <Alert
               showIcon
@@ -87,7 +87,7 @@ const Profile = () => {
           <Col></Col>
         </Row>
       )}
-      <Row gutter={[20, 20]}>
+      <Row gutter={[24, 24]}>
         <Col span={24} style={{ minWidth: 550 }}>
           <Card>
             <ProfileInfo profile={data?.me} />

@@ -23,7 +23,7 @@ export interface CreatePrice_createPrice_price {
   /**
    * The recurring components of a price such as `interval` and `usage_type`.
    */
-  recurring: any | null;
+  recurring: string | null;
   /**
    * The unit amount in cents to be charged, represented as a whole integer if possible. Null if a sub-cent precision is required.
    */

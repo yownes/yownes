@@ -1,3 +1,12 @@
+.expandedContent {
+  padding: 16px 0 16px 0;
+}
+
 .expandedRow {
-  background-color: #ededed !important;
+  background-color: #ebfbf3 !important;
+  cursor: pointer !important;
+}
+
+.row {
+  cursor: pointer !important;
 }

@@ -159,7 +159,7 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
     );
 
   return (
-    <Row gutter={[20, 20]}>
+    <Row gutter={[24, 24]}>
       <Col span={24}>
         <Card>
           <Title className={styles.header} level={2}>
@@ -320,7 +320,7 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
               </>
             </div>
           </Title>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {
               // TODO: Mensaje error renovación, fecha siguiente intento
               // y permitir intentarlo en este momento
@@ -351,7 +351,7 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
               )
             }
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {client?.subscription &&
               client?.subscription?.plan &&
               (client.subscription.status === SubscriptionStatus.ACTIVE ||
@@ -369,14 +369,14 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
               </Col>
             )}
           </Row>
-          <Row gutter={[20, 20]}></Row>
+          <Row gutter={[24, 24]}></Row>
           {subscriptions &&
             (subscriptions?.length > 1 ||
               (subscriptions.length === 1 &&
                 (subscriptions[0].status === SubscriptionStatus.CANCELED ||
                   subscriptions[0].status ===
                     SubscriptionStatus.INCOMPLETE_EXPIRED))) && (
-              <Row gutter={[20, 20]}>
+              <Row gutter={[24, 24]}>
                 <SubscriptionTable
                   invoices={connectionToNodes(invoicesData?.invoices)}
                   plans={plansData}

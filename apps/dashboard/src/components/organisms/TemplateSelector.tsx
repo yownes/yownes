@@ -29,7 +29,7 @@ const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
   const templates = connectionToNodes(data?.templates);
   return (
     <div className={styles.container}>
-      <Title level={4}>{t("template")}</Title>
+      <Title level={5}>{t("template")}</Title>
       <Radio.Group
         value={value ?? templates[0]?.id}
         onChange={(e) => onChange(e.target.value)}
