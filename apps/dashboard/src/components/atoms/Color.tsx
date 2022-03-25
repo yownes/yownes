@@ -6,20 +6,54 @@ interface ColorProps
     HTMLSpanElement
   > {
   color: string;
-  size?: number;
+  height?: number;
+  noSelected?: boolean;
+  pointer?: boolean;
+  selected?: boolean;
+  size: number;
 }
 
-const Color = ({ color, size, ...rest }: ColorProps) => {
+const Color = ({
+  color,
+  height,
+  noSelected,
+  pointer,
+  selected,
+  size,
+  ...rest
+}: ColorProps) => {
   return (
-    <span
+    <div
       style={{
-        backgroundColor: color,
-        width: size,
-        height: size,
         display: "inline-block",
+        cursor: pointer ? "pointer" : "default",
       }}
-      {...rest}
-    ></span>
+    >
+      <span
+        style={{
+          backgroundColor: color,
+          borderRadius: height ? 6 : 8,
+          display: "block",
+          height: height ?? size,
+          marginRight: 8,
+          width: size,
+        }}
+        {...rest}
+      ></span>
+      {noSelected ? null : (
+        <span
+          style={{
+            backgroundColor: selected ? "#232323" : "transparent",
+            borderRadius: 6,
+            display: "block",
+            marginLeft: (size + 8) / 2 - 7.5,
+            marginTop: 4,
+            height: 6,
+            width: 6,
+          }}
+        ></span>
+      )}
+    </div>
   );
 };
 

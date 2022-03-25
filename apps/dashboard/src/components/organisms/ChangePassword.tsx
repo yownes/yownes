@@ -32,7 +32,9 @@ const ChangePassword = () => {
 
   return (
     <>
-      <Title level={2}>{t("changePassword")}</Title>
+      <Title level={2} style={{ paddingBottom: 24 }}>
+        {t("changePassword")}
+      </Title>
       <Errors
         errors={data?.passwordChange?.errors}
         fields={["oldPassword", "newPassword", "newPassword2"]}

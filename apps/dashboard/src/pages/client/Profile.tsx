@@ -73,7 +73,12 @@ const Profile = () => {
   if (loading || loadingData) return <Loading />;
 
   return (
-    <>
+    <Col
+      xs={{ span: 22, offset: 1 }}
+      sm={{ span: 20, offset: 2 }}
+      md={{ span: 18, offset: 3 }}
+      lg={{ span: 16, offset: 4 }}
+    >
       {!data?.me?.verified && (
         <Row gutter={[24, 24]}>
           <Col span={24}>
@@ -88,7 +93,7 @@ const Profile = () => {
         </Row>
       )}
       <Row gutter={[24, 24]}>
-        <Col span={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <Card>
             <ProfileInfo profile={data?.me} />
             {data?.me?.accountStatus === AccountAccountStatus.REGISTERED && (
@@ -138,7 +143,7 @@ const Profile = () => {
               )}
           </Card>
         </Col>
-        <Col span={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <Card>
             {(appsData?.apps?.edges.length ?? 0) > 0 ? (
               <>
@@ -179,7 +184,7 @@ const Profile = () => {
         </Col>
       </Row>
       {resubscribing && <LoadingFullScreen tip={t("client:resubscribing")} />}
-    </>
+    </Col>
   );
 };
 

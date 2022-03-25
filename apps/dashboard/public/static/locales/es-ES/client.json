@@ -83,10 +83,10 @@
   "publishApp": "Publicar la App",
   "publishingApp": "Publicando la App",
   "publishAppSuccessful": "Proceso de publicación iniciado con éxito",
-  "updateApp": "Actualizar la App",
+  "updateApp": "Actualizar App",
   "updatingApp": "Actualizando la App",
   "updateAppSuccessful": "Proceso de actualización iniciado con éxito",
-  "saveChanges": "Guardar los cambios",
+  "saveChanges": "Guardar cambios",
   "saveChangesConfirm": "¿Guardar los cambios?",
   "savingChanges": "Guardando los cambios",
   "saveChangesSuccessful": "Cambios guardados con éxito",
@@ -95,17 +95,20 @@
     "message": "Tu cuenta no está validada todavía",
     "description": "Comprueba tu correo electrónico en busca del link de validación"
   },
-  "addNew": "Añadir nueva",
-  "addNewApp": "Añadir app",
+  "addApp": "Nueva aplicación",
+  "addNewApp": "Añadir App",
   "addAppClaim": "Crea tu primera App y empieza a vender",
   "subscribeAppClaim": "Suscríbete para poder añadir más Apps",
   "defaultCard": "Tarjeta por defecto",
   "asDefault": "Establecer por defecto",
   "addCard": "Añadir nueva tarjeta",
   "addCardTitle": "Añadir tarjeta",
-  "appName": "Nombre de la app",
+  "appBasicData": "Datos básicos de la App",
+  "appColorMessage": "Elige el color del texto, blanco o negro, que irá sobre el color base que has elegido para el tema. El texto ha de ser legible lo mejor posible. Si no es así, prueba a elegir otro color de fondo.",
+  "appName": "Nombre de la App",
   "noName": "(Sin nombre)",
   "noLink": "(Sin URL)",
+  "linksToStores": "Enlaces a Tiendas",
   "appStatus": {
     "GENERATING": "Generando",
     "PUBLISHED": "Publicada",
@@ -114,7 +117,7 @@
     "UPLOADING": "Subiendo",
     "WAITING": "En espera"
   },
-  "storeLocation": "Dirección de la tienda",
+  "storeLink": "Dirección de la tienda",
   "required": {
     "app": "Introduce el nombre de la app",
     "store": "Introduce la url de la tienda",
@@ -129,7 +132,8 @@
   "checking": "Comprobando",
   "installInstructions": {
     "title": "Instalación",
-    "description": "Instala el plugin en la plataforma de tu tienda online e introduce en la parte de arriba su dirección web para comprobar que es accesible"
+    "descName": "Elige bien el nombre que quieres para tu aplicación. Recomendamos usar el mismo nombre que el de tu empresa o tienda.",
+    "descURL": "Instala el plugin en la plataforma de tu tienda online e introduce en la parte de arriba su dirección web para comprobar que es accesible. La dirección de la tienda es la url de tu tienda. Ej: www.mitienda.com"
   },
   "errors": {
     "100": "Error desconocido",
@@ -164,7 +168,7 @@
   "updatingPaymentMethod": "Actualizando el método de pago",
   "updatePaymentMethodSuccessful": "Método de pago actualizado con éxito",
   "defaultPaymentMethodWarning": "Establecer como método de pago por defecto",
-  "style": "Estilo",
+  "style": "Estilo de la aplicación",
   "cardDetails": "Detalles de la tarjeta",
   "yourPayment": "Resumen",
   "subscriptionResume": "Suscripción de {{amount}}€ al {{interval}}",
@@ -189,16 +193,16 @@
   "oldPassword": "Contraseña actual",
   "newPassword": "Nueva contraseña",
   "newPassword2": "Repetir nueva contraseña",
-  "color": "Color",
+  "color": "Color base de la aplicación",
   "colorPalette": "Muestras de color:",
   "selectedColor": "Color seleccionado:",
   "textColor": "Texto:",
-  "black": "Negro",
-  "white": "Blanco",
+  "black": "Negro sobre Color",
+  "white": "Blanco sobre Color",
   "confirmPassword": "Contraseña",
   "confirmPasswordToDelete": "Introduce tu contraseña para eliminar la cuenta",
   "confirmDeleteAccount": "Eliminar definitivamente mi cuenta",
   "monthlyPayment": "Cargo mensual:",
-  "template": "Plantilla",
-  "preview": "Vista previa"
+  "template": "Plantilla para la aplicación móvil",
+  "preview": "Vista Previa"
 }

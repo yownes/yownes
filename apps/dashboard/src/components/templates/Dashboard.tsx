@@ -19,7 +19,7 @@ const DashboardTemplate = ({
       <Header />
       {SubHeader}
       <main className={styles.main}>
-        <Col xs={{ span: 22, offset: 1 }} lg={{ span: 16, offset: 4 }}>
+        <Col xs={{ span: 22, offset: 1 }} lg={{ span: 20, offset: 2 }}>
           {children}
         </Col>
       </main>

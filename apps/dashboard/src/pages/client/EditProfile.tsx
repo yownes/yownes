@@ -23,20 +23,27 @@ const EditProfile = () => {
   const { data, loading } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
 
   return (
-    <>
+    <Col
+      xs={{ span: 22, offset: 1 }}
+      sm={{ span: 20, offset: 2 }}
+      md={{ span: 18, offset: 3 }}
+      lg={{ span: 16, offset: 4 }}
+    >
       <Row gutter={[24, 24]}>
-        <Col span={24} style={{ minWidth: 720 }}>
+        <Col span={24}>
           <PersonalData />
         </Col>
-        <Col span={24} style={{ minWidth: 720 }}>
+        <Col span={24}>
           <SubscriptionData />
         </Col>
-        <Col span={24} style={{ minWidth: 720 }}>
+        <Col span={24}>
           <InvoicesData />
         </Col>
-        <Col span={24} style={{ minWidth: 720 }}>
+        <Col span={24}>
           <Card>
-            <Title level={2}>{t("client:paymentMethod")}</Title>
+            <Title level={2} style={{ paddingBottom: 24 }}>
+              {t("client:paymentMethod")}
+            </Title>
             {loading ? (
               <Loading />
             ) : (
@@ -47,16 +54,16 @@ const EditProfile = () => {
             )}
           </Card>
         </Col>
-        <Col span={24} style={{ minWidth: 720 }}>
+        <Col span={24}>
           <Card>
             <ChangePassword />
           </Card>
         </Col>
-        <Col span={24} style={{ minWidth: 720 }}>
+        <Col span={24}>
           <DeleteAccount />
         </Col>
       </Row>
-    </>
+    </Col>
   );
 };
 

@@ -40,6 +40,8 @@ import {
 } from "./";
 import { LoadingFullScreen } from "../atoms";
 
+import styles from "./InvoiceInfo.module.css";
+
 const { Text, Title } = Typography;
 
 interface InvoiceInfoProps {
@@ -91,8 +93,8 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
     if (!samePeriod) {
       return (
         <>
-          <Divider style={{ marginBottom: 8, marginTop: 8 }} />
-          <Row style={{ paddingBottom: 8, paddingTop: 8 }}>
+          <Divider className={styles.periodDivider} />
+          <Row className={styles.periodContainer}>
             <Col span={12}>
               <Text type="secondary">
                 {getPeriod(
@@ -129,7 +131,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Row>
         </Col>
       </Row>
-      <Row style={{ paddingBottom: 24, paddingTop: 24 }}>
+      <Row className={styles.detailsContainer}>
         <Col span={24}>
           <Descriptions
             items={[
@@ -155,7 +157,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           />
         </Col>
       </Row>
-      <Row justify="start" style={{ paddingBottom: 8, paddingTop: 16 }}>
+      <Row className={styles.summaryContainer} justify="start">
         <Col span={14}>
           <Row justify="start">
             <Text>{t("summary")}</Text>
@@ -180,7 +182,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
       {connectionToNodes(invoice.invoiceitems).map((value, index, array) => (
         <div key={`${new Date()}${value.id}`}>
           {period(value, index, array)}
-          <Row justify="start" style={{ paddingTop: 8, paddingBottom: 8 }}>
+          <Row className={styles.summaryDetails} justify="start">
             <Col span={14}>
               <Row justify="start">
                 <Text>
@@ -225,8 +227,8 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Row>
         </div>
       ))}
-      <Divider style={{ marginBottom: 24, marginTop: 8 }} />
-      <Row justify="start" style={{ marginBottom: 16 }}>
+      <Divider className={styles.amountDivider} />
+      <Row className={styles.amountContainer} justify="start">
         <Col span={20}>
           <Row justify="end">
             <Text>{t("subtotal")}</Text>
@@ -245,7 +247,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
         </Col>
       </Row>
       {invoice.tax && (
-        <Row justify="start" style={{ marginBottom: 16 }}>
+        <Row className={styles.amountContainer} justify="start">
           <Col span={20}>
             <Row justify="end">
               <Text type="secondary">
@@ -271,7 +273,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Col>
         </Row>
       )}
-      <Row justify="start" style={{ marginBottom: 16 }}>
+      <Row className={styles.amountContainer} justify="start">
         <Col span={20}>
           <Row justify="end">
             <Text>{t("total")}</Text>
@@ -279,7 +281,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <Text strong style={{ fontSize: 16 }}>
+            <Text className={styles.totalAmount} strong>
               {invoice.total.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -292,11 +294,13 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
       {invoice.startingBalance !== null &&
       invoice.endingBalance !== null &&
       invoice.startingBalance - invoice.endingBalance !== 0 ? (
-        <Row justify="start" style={{ marginBottom: 16 }}>
+        <Row className={styles.amountContainer} justify="start">
           <Col span={20}>
             <Row align="middle" justify="end">
               <Tooltip title={t("apliedBalanceInfo")}>
-                <InfoCircleOutlined style={{ marginRight: 8 }} />
+                <div className={styles.icon}>
+                  <InfoCircleOutlined />
+                </div>
               </Tooltip>
               <Text type="secondary">{t("appliedBalance")}</Text>
             </Row>
@@ -318,7 +322,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
         </Row>
       ) : null}
       {invoice.amountPaid && invoice.amountPaid > 0 ? (
-        <Row justify="start" style={{ marginBottom: 16 }}>
+        <Row className={styles.amountContainer} justify="start">
           <Col span={20}>
             <Row justify="end">
               <Text type="secondary">{t("amountPaid")}</Text>
@@ -338,7 +342,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Col>
         </Row>
       ) : null}
-      <Row justify="start" style={{ marginBottom: 16 }}>
+      <Row className={styles.amountContainer} justify="start">
         <Col span={20}>
           <Row justify="end">
             <Text>{t("amountRemaining")}</Text>
@@ -357,15 +361,17 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Row>
         </Col>
       </Row>
-      <Row style={{ paddingTop: 28 }}>
+      <Row className={styles.paymentsContainer}>
         <Col span={24}>
           <Row justify="start">
-            <Title level={5}>{t("invoicePayments")}</Title>
+            <Title className={styles.paymentsTitle} level={5}>
+              {t("invoicePayments")}
+            </Title>
           </Row>
         </Col>
       </Row>
       {invoice.nextPaymentAttempt && invoice.status === InvoiceStatus.DRAFT ? (
-        <div style={{ display: "flex", marginBottom: 30 }}>
+        <div className={styles.nextPaymentContainer}>
           <Alert
             message={t("paymentAttempt", {
               amount:
@@ -382,7 +388,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
         </div>
       ) : (
         invoice.nextPaymentAttempt && (
-          <div style={{ display: "flex", marginBottom: 30 }}>
+          <div className={styles.nextPaymentContainer}>
             {staff ? (
               <Alert
                 message={t("nextPaymentAttempt", {

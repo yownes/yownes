@@ -1,21 +1,51 @@
 .upload {
-  width: 100px;
-  padding: 5px;
-  height: 100px;
-  background: #f4f4f4;
+  align-items: center;
+  width: 100%;
+  background: #ededed;
   display: flex;
   flex-direction: column;
   text-align: center;
   justify-content: center;
-  border: dashed #d7d7d7 2px;
+  border: dashed #c6c6c6 2px;
   cursor: pointer;
+  border-radius: 20px;
+}
+
+.logo:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.imageContainer {
+  width: 100%;
+}
+
+.image {
+  border-radius: 20px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.deleteButton {
+  position: absolute;
+  bottom: 6px;
+  right: 18px;
+}
+
+.uploadButton {
+  position: absolute;
+  width: 100%;
 }
 
 .uploadLarge {
   width: 150px;
   height: 200px;
+  border-radius: 20px;
 }
 
 .upload:hover {
-  border-color: #a8a8a8;
+  border-color: #929292;
 }

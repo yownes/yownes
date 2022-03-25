@@ -1,20 +1,20 @@
-.container {
-  position: relative;
+.previewContainer {
+  cursor: pointer;
+  display: inline-flex;
+  margin-right: 24px;
+  -webkit-transition: color 0.5s ease;
+  -moz-transition: color 0.5s ease;
+  -o-transition: color 0.5s ease;
+  -ms-transition: color 0.5s ease;
+  transition: color 0.5s ease;
 }
 
-.overlay {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 60px;
-  background: linear-gradient(90deg, transparent 0%, white 100%);
-  z-index: 30;
+.previewContainer:hover {
+  color: #328f5e;
 }
 
-.arrow {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  left: 50%;
+.templatesContainer {
+  overflow-x: scroll;
+  display: flex;
+  padding-bottom: 15px;
 }

@@ -38,8 +38,8 @@ const Header = () => {
             (payment) =>
               payment.stripeId ===
               paymentsData?.me?.customer?.defaultPaymentMethod?.stripeId
-          )?.card
-        )!!
+          )?.card!!
+        )
       )) ||
     undefined;
 

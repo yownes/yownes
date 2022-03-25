@@ -92,12 +92,12 @@ const ChangeSubscription = ({
                   .find(
                     (price) =>
                       JSON.parse(
-                        normalice(price.recurring)
+                        normalice(price.recurring!!)
                       ).interval.toUpperCase() === interval
                   )?.unitAmount;
                 const exceeded = activeApps
                   ? parseInt(
-                      JSON.parse(normalice(product.metadata)).allowed_apps
+                      JSON.parse(normalice(product.metadata!!)).allowed_apps
                     ) < activeApps
                   : false;
                 return (
@@ -118,7 +118,7 @@ const ChangeSubscription = ({
                             <Text disabled={exceeded}>
                               {"("}
                               {
-                                JSON.parse(normalice(product?.metadata))
+                                JSON.parse(normalice(product?.metadata!!))
                                   .allowed_apps
                               }
                               {" Apps)"}

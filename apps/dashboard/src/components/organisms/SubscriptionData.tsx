@@ -195,8 +195,8 @@ const SubscriptionData = () => {
             (payment) =>
               payment.stripeId ===
               paymentMethods?.me?.customer?.defaultPaymentMethod?.stripeId
-          )?.card
-        )!!
+          )?.card!!
+        )
       )) ||
     undefined;
   const expired = card
@@ -276,7 +276,7 @@ const SubscriptionData = () => {
         .filter((price) => price.active)
         .find(
           (price) =>
-            JSON.parse(normalice(price.recurring)).interval.toUpperCase() ===
+            JSON.parse(normalice(price.recurring!!)).interval.toUpperCase() ===
             interval
         );
       setAmount(price?.unitAmount);
@@ -291,7 +291,7 @@ const SubscriptionData = () => {
             (price) =>
               price?.node &&
               price?.node.stripeId === data?.me?.subscription?.plan?.stripeId
-          )?.node?.recurring
+          )?.node?.recurring!!
         )
       ).interval;
       if (priceInterval) {
