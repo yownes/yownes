@@ -113,6 +113,7 @@ const SubscriptionData = () => {
 
   const [activeApps, setActiveApps] = useState<number>(0);
   const [amount, setAmount] = useState<number | null | undefined>(null);
+  const [currency, setCurrency] = useState<string | undefined>(undefined);
   const [interval, setInterval] = useState<PlanInterval>(PlanInterval.MONTH);
   const [invoices, setInvoices] =
     useState<MyAccount_me_subscription_invoices_edges_node[]>();
@@ -280,6 +281,7 @@ const SubscriptionData = () => {
             interval
         );
       setAmount(price?.unitAmount);
+      setCurrency(price?.currency);
       setPriceId(price?.stripeId);
     }
   }, [interval, plan]);
@@ -515,6 +517,7 @@ const SubscriptionData = () => {
                 <div className={styles.padding}>
                   {!expired ? (
                     <Button
+                      className="button-default-default"
                       onClick={() => {
                         data?.me?.subscription?.plan &&
                           setInterval(
@@ -689,6 +692,7 @@ const SubscriptionData = () => {
           },
         }}
         cancelButtonProps={{
+          className: "button-default-default",
           onClick: () => {
             if (modalStep) {
               reset();
@@ -702,6 +706,7 @@ const SubscriptionData = () => {
         <ChangeSubscription
           activeApps={activeApps}
           amount={amount}
+          currency={currency}
           currentProductId={data?.me?.subscription?.plan?.product?.id}
           error={
             updateSubscriptionData?.updateSubscription?.error

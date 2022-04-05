@@ -9,6 +9,7 @@ import { AccountBasicData } from "../../api/types/AccountBasicData";
 import { SubscriptionStatus } from "../../api/types/globalTypes";
 import { MyAccount } from "../../api/types/MyAccount";
 import { MY_ACCOUNT } from "../../api/queries";
+import { currencySymbol } from "../../lib/currencySymbol";
 import { dateTime, differenceTime, longDate } from "../../lib/parseDate";
 
 import {
@@ -41,9 +42,7 @@ const ProfileInfo = ({ profile, extra, verified }: ProfileInfoProps) => {
       <span>{profile?.subscription?.plan?.product?.name} </span>
       <span>
         ({profile?.subscription?.plan?.amount}
-        {profile.subscription.plan?.currency === "eur"
-          ? " €"
-          : profile.subscription.plan?.currency}
+        {currencySymbol(profile.subscription.plan?.currency || "")}
         {"/"}
         {t(`${profile.subscription.plan?.interval}`.toLocaleLowerCase())})
       </span>

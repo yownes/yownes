@@ -6,7 +6,7 @@ import { normalice } from "../../lib/normalice";
 import styles from "./SmallCreditCard.module.css";
 
 interface SmallCreditCardProps {
-  data: string;
+  data: string | null;
 }
 
 interface ICreditCardStripe {
@@ -50,6 +50,9 @@ const CARDS = {
 
 const SmallCreditCard = ({ data }: SmallCreditCardProps) => {
   const { t } = useTranslation();
+  if (!data) {
+    return null;
+  }
   const card: ICreditCardStripe = JSON.parse(normalice(data));
   const expired = new Date(card.exp_year, card.exp_month) < new Date();
   return (

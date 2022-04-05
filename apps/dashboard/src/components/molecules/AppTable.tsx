@@ -69,6 +69,7 @@ const AppTable = ({ dataSource, columns }: AppTableProps) => {
             first: range[0],
             last: range[1],
             total: total,
+            item: t("apps"),
           }),
       }}
       onRow={(record) => {

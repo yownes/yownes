@@ -16,8 +16,7 @@ const DashboardTemplate = ({
 }: DashboardTemplateProps) => {
   return (
     <>
-      <Header />
-      {SubHeader}
+      <Header menu={SubHeader} />
       <main className={styles.main}>
         <Col xs={{ span: 22, offset: 1 }} lg={{ span: 20, offset: 2 }}>
           {children}

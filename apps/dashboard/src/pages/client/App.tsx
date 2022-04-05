@@ -17,13 +17,7 @@ import { useParams, useHistory, Redirect } from "react-router-dom";
 
 import { DELETE_APP, GENERATE_APP, UPDATE_APP } from "../../api/mutations";
 import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
-import {
-  APP,
-  APPS,
-  APP_OWNER_ACTIVE,
-  LIMIT,
-  MY_ACCOUNT,
-} from "../../api/queries";
+import { APP, APPS, APP_OWNER_ACTIVE, MY_ACCOUNT } from "../../api/queries";
 import {
   App as IApp,
   AppVariables,
@@ -38,7 +32,6 @@ import {
   BuildBuildStatus,
   StoreAppInput,
 } from "../../api/types/globalTypes";
-import { LimitBuilds } from "../../api/types/LimitBuilds";
 import { MyAccount } from "../../api/types/MyAccount";
 import { UpdateApp, UpdateAppVariables } from "../../api/types/UpdateApp";
 import connectionToNodes from "../../lib/connectionToNodes";
@@ -137,6 +130,7 @@ const App = () => {
   const [appBuildStatus, setAppBuildStatus] = useState<BuildBuildStatus>(
     BuildBuildStatus.WAITING
   );
+  const [buildsLimit, setBuildsLimit] = useState(0);
   const [state, setState] = useState<StoreAppInput>(baseApp);
   const [notYourRecurse, setNotYourRecurse] = useState(false);
 
@@ -152,8 +146,6 @@ const App = () => {
     useQuery<MyAccount>(MY_ACCOUNT);
   const [getAppById, { data, loading }] = useLazyQuery<IApp, AppVariables>(APP);
 
-  const { data: limitData, loading: loadingLimit } =
-    useQuery<LimitBuilds>(LIMIT);
   const [deleteApp, { loading: deleting }] = useMutation<
     DeleteApp,
     DeleteAppVariables
@@ -218,10 +210,16 @@ const App = () => {
           ).allowed_apps
         )
       );
+      setBuildsLimit(
+        parseInt(
+          JSON.parse(
+            normalice(accountData?.me?.subscription?.plan?.product?.metadata)
+          ).allowed_builds
+        )
+      );
     }
   }, [accountData]);
 
-  const buildsLimit = limitData?.configs?.edges[0]?.node?.limit || 0;
   const builds = connectionToNodes(data?.app?.builds);
   const renewalBuild = getRenewalBuild(builds);
   const renewalDate = renewalBuild
@@ -233,14 +231,7 @@ const App = () => {
   );
   const remainingBuilds = buildsLimit - currentBuilds;
 
-  if (
-    loadingAccount ||
-    loadingApps ||
-    loadingLimit ||
-    loadingOwnerActive ||
-    !state ||
-    loading
-  )
+  if (loadingAccount || loadingApps || loadingOwnerActive || !state || loading)
     return <Loading />;
 
   if (notYourRecurse) return <Redirect to="/profile" />;

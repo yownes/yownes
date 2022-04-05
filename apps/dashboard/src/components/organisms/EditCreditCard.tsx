@@ -89,9 +89,11 @@ const EditCreditCard = ({
   const billingData: IBillingDetails = JSON.parse(
     normalice(payment.billingDetails) ?? "{}"
   );
-  const cardData: ICreditCard = JSON.parse(normalice(payment.card) ?? "{}");
+  const cardData: ICreditCard = JSON.parse(
+    payment.card ? normalice(payment.card) : "{}"
+  );
   const metadataData: IMetadata = JSON.parse(
-    normalice(payment.metadata) ?? "{}"
+    payment.metadata ? normalice(payment.metadata) : "{}"
   );
 
   const [updatePaymentMethod, { data: dataUpdate, loading: loadingUpdate }] =

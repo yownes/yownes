@@ -312,9 +312,14 @@ const Client = () => {
   );
 
   return (
-    <>
+    <Col
+      xs={{ span: 22, offset: 1 }}
+      sm={{ span: 20, offset: 2 }}
+      md={{ span: 18, offset: 3 }}
+      lg={{ span: 16, offset: 4 }}
+    >
       <Row gutter={[24, 24]}>
-        <Col span={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <Card>
             <Row gutter={10}>
               <Col span={24}>
@@ -330,13 +335,13 @@ const Client = () => {
         <Col></Col>
       </Row>
       <Row gutter={[24, 24]}>
-        <Col span={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <ClientSubscriptionData client={data?.user} />
         </Col>
         <Col></Col>
       </Row>
       <Row gutter={[24, 24]}>
-        <Col span={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <Card>
             <Row gutter={10}>
               <Col span={24}>
@@ -353,7 +358,7 @@ const Client = () => {
         <Col></Col>
       </Row>
       <Row gutter={[24, 24]}>
-        <Col xl={12} lg={24} md={24} sm={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <Card>
             <Title level={2}>{t("admin:apps")}</Title>
             <AppsTable
@@ -448,7 +453,7 @@ const Client = () => {
             />
           </Card>
         </Col>
-        <Col xl={12} lg={24} md={24} sm={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <Card>
             <Title level={2}>{t("admin:builds")}</Title>
             <BuildsTable dataSource={getBuildsForCustomer(data?.user)} />
@@ -470,7 +475,7 @@ const Client = () => {
         ) : (
           <LoadingFullScreen tip={t("admin:verifying")} />
         ))}
-    </>
+    </Col>
   );
 };
 

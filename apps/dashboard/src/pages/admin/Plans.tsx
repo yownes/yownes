@@ -1,7 +1,16 @@
 import React from "react";
-import { Button, Table, TableColumnsType } from "antd";
+import {
+  Card,
+  Col,
+  Button,
+  Row,
+  Table,
+  TableColumnsType,
+  Tooltip,
+  Typography,
+} from "antd";
 import { useQuery } from "@apollo/client";
-import { useTranslation } from "react-i18next";
+import { TFunction, useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 
 import { PLANS } from "../../api/queries";
@@ -21,6 +30,21 @@ import { Loading } from "../../components/atoms";
 import { FeaturesInfo, VerifiedState } from "../../components/molecules";
 
 import styles from "./Plans.module.css";
+
+const { Text, Title } = Typography;
+
+function getPlanTypeFilters(t: TFunction) {
+  let filters: Filter[] = [];
+  filters.push({
+    text: <Text>{t("admin:particular")}</Text>,
+    value: "particular",
+  });
+  filters.push({
+    text: <Text>{t("admin:business")}</Text>,
+    value: "business",
+  });
+  return filters;
+}
 
 function getVerifiedStatusFilters() {
   let filters: Filter[] = [];
@@ -48,7 +72,9 @@ const Plans = () => {
       title: t("name"),
       dataIndex: "name",
       key: "name",
-      render: (name, record) => <Link to={`/planes/${record.id}`}>{name}</Link>,
+      render: (name, record) => (
+        <Tooltip title={record.description}>{name}</Tooltip>
+      ),
       ...getColumnSearchProps<Plans_products_edges_node>(
         ["name"],
         t("admin:search", { data: t("name") }),
@@ -62,7 +88,7 @@ const Plans = () => {
       title: t("admin:planId"),
       dataIndex: "id",
       key: "id",
-      render: (id) => <Link to={`/planes/${id}`}>{id}</Link>,
+      render: (id) => id,
       ...getColumnSearchProps<Plans_products_edges_node>(
         ["id"],
         t("admin:search", { data: t("admin:planId") }),
@@ -73,36 +99,58 @@ const Plans = () => {
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
-      title: t("admin:description"),
-      dataIndex: ["description"],
-      key: "description",
-      render: (description) => description,
-      ...getColumnSearchProps<Plans_products_edges_node>(
-        ["description"],
-        t("admin:search", { data: t("admin:description") }),
-        t("search"),
-        t("reset"),
-        false
+      title: t("admin:planType"),
+      dataIndex: "metadata",
+      key: "type",
+      render: (metadata) =>
+        t(`admin:${JSON.parse(normalice(metadata)).plan_type}`),
+      ...getColumnFilterProps<Plans_products_edges_node>(
+        ["metadata"],
+        getPlanTypeFilters(t)
       ),
       sorter: (a, b) =>
-        a.description && b.description
-          ? a.description.localeCompare(b.description)
-          : 1,
+        parseInt(
+          JSON.parse(normalice(a.metadata!!)).plan_type
+            ? JSON.parse(normalice(a.metadata!!)).plan_type
+            : 0
+        ) -
+        parseInt(
+          JSON.parse(normalice(b.metadata!!)).plan_type
+            ? JSON.parse(normalice(b.metadata!!)).plan_type
+            : 0
+        ),
     },
     {
       title: t("admin:nApps"),
-      dataIndex: ["metadata"],
+      dataIndex: "metadata",
       key: "apps",
       render: (metadata) => JSON.parse(normalice(metadata)).allowed_apps,
       sorter: (a, b) =>
         parseInt(
-          JSON.parse(normalice(a.metadata)).allowed_apps
-            ? JSON.parse(normalice(a.metadata)).allowed_apps
+          JSON.parse(normalice(a.metadata!!)).allowed_apps
+            ? JSON.parse(normalice(a.metadata!!)).allowed_apps
             : 0
         ) -
         parseInt(
-          JSON.parse(normalice(b.metadata)).allowed_apps
-            ? JSON.parse(normalice(b.metadata)).allowed_apps
+          JSON.parse(normalice(b.metadata!!)).allowed_apps
+            ? JSON.parse(normalice(b.metadata!!)).allowed_apps
+            : 0
+        ),
+    },
+    {
+      title: t("admin:nBuilds"),
+      dataIndex: "metadata",
+      key: "builds",
+      render: (metadata) => JSON.parse(normalice(metadata)).allowed_builds,
+      sorter: (a, b) =>
+        parseInt(
+          JSON.parse(normalice(a.metadata!!)).allowed_builds
+            ? JSON.parse(normalice(a.metadata!!)).allowed_builds
+            : 0
+        ) -
+        parseInt(
+          JSON.parse(normalice(b.metadata!!)).allowed_builds
+            ? JSON.parse(normalice(b.metadata!!)).allowed_builds
             : 0
         ),
     },
@@ -120,36 +168,63 @@ const Plans = () => {
     },
   ];
   return (
-    <div>
-      <div>
-        <Link to="/planes/new">
-          <Button className={styles.new} type="primary">
-            {t("admin:newPlan")}
-          </Button>
-        </Link>
-        <Table
-          className={styles.table}
-          columns={columns}
-          dataSource={dataSource}
-          locale={{ emptyText: t("admin:noPlans") }}
-          onRow={(record) => {
-            return { onClick: () => history.push(`/planes/${record.id}`) };
-          }}
-          pagination={{
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              t("paginationItems", {
-                first: range[0],
-                last: range[1],
-                total: total,
-              }),
-          }}
-          rowClassName={(row) => (!row.active ? styles.inactive : styles.row)}
-          rowKey={(row) => row.id}
-        />
-      </div>
-      <FeaturesInfo features={connectionToNodes(data?.features)} />
-    </div>
+    <Row gutter={[24, 24]}>
+      <Col span={24}>
+        <Card>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Title className={styles.title} level={2}>
+                {t("admin:subscriptionPlans")}
+                <div
+                  style={{
+                    position: "relative",
+                    float: "right",
+                  }}
+                >
+                  <Link to="/planes/new">
+                    <Button className="button-default-primary">
+                      {t("admin:newPlan")}
+                    </Button>
+                  </Link>
+                </div>
+              </Title>
+            </Col>
+          </Row>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Table
+                className={styles.table}
+                columns={columns}
+                dataSource={dataSource}
+                locale={{ emptyText: t("admin:noPlans") }}
+                onRow={(record) => {
+                  return {
+                    onClick: () => history.push(`/planes/${record.id}`),
+                  };
+                }}
+                pagination={{
+                  showSizeChanger: true,
+                  showTotal: (total, range) =>
+                    t("paginationItems", {
+                      first: range[0],
+                      last: range[1],
+                      total: total,
+                      item: t("admin:plans"),
+                    }),
+                }}
+                rowClassName={(row) =>
+                  !row.active ? styles.inactive : styles.row
+                }
+                rowKey={(row) => row.id}
+              />
+            </Col>
+          </Row>
+        </Card>
+      </Col>
+      <Col span={24}>
+        <FeaturesInfo features={connectionToNodes(data?.features)} />
+      </Col>
+    </Row>
   );
 };
 

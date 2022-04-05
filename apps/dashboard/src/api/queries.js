@@ -478,6 +478,7 @@ export const CLIENTS = gql`
             edges {
               node {
                 id
+                isActive
               }
             }
           }
@@ -554,19 +555,6 @@ export const BUILDS = gql`
               username
             }
           }
-        }
-      }
-    }
-  }
-`;
-
-export const LIMIT = gql`
-  query LimitBuilds {
-    configs {
-      edges {
-        node {
-          id
-          limit
         }
       }
     }

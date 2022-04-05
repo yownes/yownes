@@ -24,6 +24,8 @@ import {
 import { LoadingFullScreen } from "../../components/atoms";
 import { ImageUpload } from "../../components/molecules";
 
+import styles from "./NewTemplate.module.css";
+
 const { Title } = Typography;
 
 const NewTemplate = () => {
@@ -36,114 +38,135 @@ const NewTemplate = () => {
   >(CREATE_TEMPLATE);
 
   return (
-    <div style={{ minWidth: 300 }}>
-      <Card>
-        <Title level={2}>{t("admin:newTemplateInfo")}</Title>
-        <Form
-          form={form}
-          initialValues={{
-            isActive: false,
-            previewImg: "",
-            name: "",
-            url: "",
-            snack: "",
-          }}
-          onFinish={(values) => {
-            createTemplate({
-              variables: { template: { ...values } },
-              update(cache, { data }) {
-                if (data?.createTemplate?.ok) {
-                  cache.modify({
-                    fields: {
-                      templates(existing, { toReference }) {
-                        return {
-                          edges: [
-                            ...existing.edges,
-                            {
-                              __typename: "TemplateType",
-                              node: toReference({
-                                ...data.createTemplate?.template,
-                              }),
+    <Row gutter={[24, 24]}>
+      <Col
+        xs={{ span: 22, offset: 1 }}
+        sm={{ span: 20, offset: 2 }}
+        md={{ span: 18, offset: 3 }}
+        lg={{ span: 16, offset: 4 }}
+      >
+        <Card>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Title className={styles.title} level={2}>
+                {t("admin:newTemplateInfo")}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Form
+                form={form}
+                initialValues={{
+                  isActive: false,
+                  previewImg: "",
+                  name: "",
+                  url: "",
+                  snack: "",
+                }}
+                onFinish={(values) => {
+                  createTemplate({
+                    variables: { template: { ...values } },
+                    update(cache, { data }) {
+                      if (data?.createTemplate?.ok) {
+                        cache.modify({
+                          fields: {
+                            templates(existing, { toReference }) {
+                              return {
+                                edges: [
+                                  ...existing.edges,
+                                  {
+                                    __typename: "TemplateType",
+                                    node: toReference({
+                                      ...data.createTemplate?.template,
+                                    }),
+                                  },
+                                ],
+                              };
                             },
-                          ],
-                        };
-                      },
+                          },
+                        });
+                        form.setFieldsValue({
+                          isActive: false,
+                          previewImg: "",
+                          name: "",
+                          url: "",
+                          snack: "",
+                        });
+                        message.success(t("admin:createTemplateSuccessful"), 4);
+                        history.push("/templates");
+                      } else {
+                        message.error(
+                          t(
+                            `admin:errors.${data?.createTemplate?.error}`,
+                            t("error")
+                          ),
+                          4
+                        );
+                      }
                     },
                   });
-                  form.setFieldsValue({
-                    isActive: false,
-                    previewImg: "",
-                    name: "",
-                    url: "",
-                    snack: "",
-                  });
-                  message.success(t("admin:createTemplateSuccessful"), 4);
-                  history.push("/templates");
-                } else {
-                  message.error(
-                    t(
-                      `admin:errors.${data?.createTemplate?.error}`,
-                      t("error")
-                    ),
-                    4
-                  );
-                }
-              },
-            });
-          }}
-          validateMessages={{ required: t("client:requiredInput") }}
-        >
-          <Row gutter={[15, 15]}>
-            <Col md={16} span={24}>
-              <Form.Item
-                name="name"
-                rules={[{ required: true }]}
-                label={t("name")}
+                }}
+                validateMessages={{ required: t("client:requiredInput") }}
               >
-                <Input placeholder={t("name")} />
-              </Form.Item>
-              <Form.Item name="url" label={t("admin:templateUrl")}>
-                <Input placeholder={t("admin:templateUrl")} />
-              </Form.Item>
-              <Form.Item name="snack" label={t("admin:snack")}>
-                <Input placeholder={t("admin:snack")} />
-              </Form.Item>
-              <Form.Item
-                name="isActive"
-                label={t("isActive")}
-                valuePropName="checked"
-              >
-                <Switch />
-              </Form.Item>
-            </Col>
-            <Col md={8} span={24}>
-              <Row justify="start">
-                <Form.Item name="previewImg" label={t("preview")}>
-                  <ImageUpload
-                    alt={t("admin:template")}
-                    confirmMessage={t("admin:warningTemplate")}
-                    onDeleteClicked={() => {
-                      form.setFieldsValue({ previewImg: null });
-                    }}
-                    size="large"
-                    uploadMessage={t("admin:uploadTemplate")}
-                  />
-                </Form.Item>
-              </Row>
+                <Row gutter={[16, 16]}>
+                  <Col lg={15} span={24}>
+                    <Form.Item
+                      name="name"
+                      rules={[{ required: true }]}
+                      label={t("admin:templateName")}
+                    >
+                      <Input placeholder={t("admin:templateName")} />
+                    </Form.Item>
+                    <Form.Item name="url" label={t("admin:templateUrl")}>
+                      <Input placeholder={t("admin:templateUrl")} />
+                    </Form.Item>
+                    <Form.Item name="snack" label={t("admin:snack")}>
+                      <Input placeholder={t("admin:snack")} />
+                    </Form.Item>
+                    <Form.Item
+                      name="isActive"
+                      label={t("admin:activeTemplate")}
+                      valuePropName="checked"
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={9} span={24}>
+                    <Row justify="start">
+                      <Form.Item name="previewImg" label={t("preview")}>
+                        <ImageUpload
+                          alt={t("admin:template")}
+                          confirmMessage={t("admin:warningTemplate")}
+                          onDeleteClicked={() => {
+                            form.setFieldsValue({ previewImg: null });
+                          }}
+                          size="large"
+                          uploadMessage={t("admin:uploadTemplate")}
+                        />
+                      </Form.Item>
+                    </Row>
+                  </Col>
+                </Row>
+                <Row gutter={[16, 16]}>
+                  <Col span={24}>
+                    <Popconfirm
+                      title={t("admin:warningCreateTemplate")}
+                      onConfirm={() => form.submit()}
+                    >
+                      <Button type="primary">
+                        {t("admin:createTemplate")}
+                      </Button>
+                    </Popconfirm>
+                  </Col>
+                </Row>
+              </Form>
             </Col>
           </Row>
-          <Row gutter={[15, 15]}>
-            <Popconfirm
-              title={t("admin:warningCreateTemplate")}
-              onConfirm={() => form.submit()}
-            >
-              <Button type="primary">{t("create")}</Button>
-            </Popconfirm>
-          </Row>
-        </Form>
-      </Card>
-      {creating && <LoadingFullScreen tip={t("admin:creatingTemplate")} />}
-    </div>
+        </Card>
+        {creating && <LoadingFullScreen tip={t("admin:creatingTemplate")} />}
+      </Col>
+    </Row>
   );
 };
 

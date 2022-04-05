@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
+  Card,
+  Col,
   Button,
   Form,
   Input,
   InputNumber,
   message,
   Popconfirm,
+  Row,
   Select,
   Switch,
   Table,
@@ -322,10 +325,12 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
                 title={t("admin:warningCreatePrice")}
                 onConfirm={() => formPrices.submit()}
               >
-                <Button type="link">{t("add")}</Button>
+                <Button style={{ padding: 0, marginRight: 16 }} type="link">
+                  {t("admin:createPrice")}
+                </Button>
               </Popconfirm>
             )}
-            <Button type="link" onClick={discard}>
+            <Button style={{ padding: 0 }} danger type="link" onClick={discard}>
               {t("cancel")}
             </Button>
           </span>
@@ -344,6 +349,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
             visible={archivingId !== "" && archivingId === record.id}
           >
             <Button
+              style={{ padding: 0 }}
               danger={record.active}
               type="link"
               disabled={
@@ -392,50 +398,66 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
     };
   });
   return (
-    <>
-      <Title level={2}>{t("admin:pricesInfo")}</Title>
-      <Button
-        className={styles.new}
-        disabled={editingId !== "" || archivingId !== ""}
-        onClick={() => add()}
-        type="primary"
-      >
-        {t("admin:newPrice")}
-      </Button>
-      <Paragraph type="secondary">{t("admin:warnings.prices")}</Paragraph>
-      <Form
-        form={formPrices}
-        component={false}
-        onFinish={(values) => create(values)}
-      >
-        <Table
-          columns={mergedColumns}
-          components={{
-            body: {
-              cell: (p: EditableCellProps) =>
-                EditableCell({ ...p, dataSource }),
-            },
-          }}
-          dataSource={dataSource}
-          locale={{ emptyText: t("admin:noPrices") }}
-          rowClassName={(row) =>
-            !row.active ? styles.inactive : "editable-row"
-          }
-          rowKey={(row) => row.id}
-          pagination={false}
-        />
-      </Form>
-      {archiving && (
-        <LoadingFullScreen
-          tip={
-            archiveState
-              ? t("admin:archivingPrice")
-              : t("admin:unarchivingPrice")
-          }
-        />
-      )}
-      {creating && <LoadingFullScreen tip={t("admin:creatingPrice")} />}
-    </>
+    <Card>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Title className={styles.title} level={2}>
+            {t("admin:pricesInfo")}
+            <div
+              style={{
+                position: "relative",
+                float: "right",
+              }}
+            >
+              <Button
+                className="button-default-primary"
+                disabled={editingId !== "" || archivingId !== ""}
+                onClick={() => add()}
+              >
+                {t("admin:newPrice")}
+              </Button>
+            </div>
+          </Title>
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Paragraph type="secondary">{t("admin:warnings.prices")}</Paragraph>
+          <Form
+            form={formPrices}
+            component={false}
+            onFinish={(values) => create(values)}
+          >
+            <Table
+              columns={mergedColumns}
+              components={{
+                body: {
+                  cell: (p: EditableCellProps) =>
+                    EditableCell({ ...p, dataSource }),
+                },
+              }}
+              dataSource={dataSource}
+              locale={{ emptyText: t("admin:noPrices") }}
+              rowClassName={(row) =>
+                !row.active ? styles.inactive : "editable-row"
+              }
+              rowKey={(row) => row.id}
+              pagination={false}
+            />
+          </Form>
+          {archiving && (
+            <LoadingFullScreen
+              tip={
+                archiveState
+                  ? t("admin:archivingPrice")
+                  : t("admin:unarchivingPrice")
+              }
+            />
+          )}
+          {creating && <LoadingFullScreen tip={t("admin:creatingPrice")} />}
+        </Col>
+      </Row>
+    </Card>
   );
 };
 

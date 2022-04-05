@@ -17,6 +17,7 @@ import { UpcomingInvoice_upcominginvoice } from "../../api/types/UpcomingInvoice
 import { colors } from "../../lib/colors";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
+import { normalice } from "../../lib/normalice";
 import { dateTime, shortDate } from "../../lib/parseDate";
 
 import { Descriptions } from "./";
@@ -56,6 +57,12 @@ const SubscriptionInfo = ({
 
   const info: description[] = [];
   if (subscription && subscription.plan) {
+    const allowed_apps =
+      JSON.parse(normalice(subscription.plan.product?.metadata!!))
+        .allowed_apps || 1;
+    const allowed_builds =
+      JSON.parse(normalice(subscription.plan.product?.metadata!!))
+        .allowed_builds || 1;
     subscription.plan.product &&
       info.push({
         title: t("plan"),
@@ -71,12 +78,22 @@ const SubscriptionInfo = ({
               {`${t("include")} `}
               {features.map((feat, i) => {
                 return (
-                  <span key={feat.id}>
+                  <span className={styles.feature} key={feat.id}>
                     {i !== 0 && ","}
                     {feat.name}
                   </span>
                 );
               })}
+              {allowed_apps === "1"
+                ? features.length > 0
+                  ? `, ${allowed_apps} ${t("includedApp")}`
+                  : `${allowed_apps} ${t("includedApp")}`
+                : features.length > 0
+                ? `, ${allowed_apps} ${t("includedApps")}`
+                : `${allowed_apps} ${t("includedApps")}`}
+              {allowed_builds === "1"
+                ? ` (${allowed_builds} ${t("includedBuild")})`
+                : ` (${allowed_builds} ${t("includedBuilds")})`}
             </p>
           )}
         </div>

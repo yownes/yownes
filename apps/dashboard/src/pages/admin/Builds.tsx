@@ -1,32 +1,16 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Form,
-  InputNumber,
-  message,
-  Modal,
-  Table,
-  Tooltip,
-  Typography,
-  TableColumnsType,
-} from "antd";
-import { useMutation, useQuery } from "@apollo/client";
+import React from "react";
+import { Card, Col, Row, Table, Typography, TableColumnsType } from "antd";
+import { useQuery } from "@apollo/client";
 import forIn from "lodash/forIn";
 import { useTranslation } from "react-i18next";
 
-import { UPDATE_BUILDS_LIMIT } from "../../api/mutations";
-import { BUILDS, LIMIT } from "../../api/queries";
+import { BUILDS } from "../../api/queries";
 import {
   Builds as IBuilds,
   BuildsVariables,
   Builds_builds_edges_node,
 } from "../../api/types/Builds";
 import { BuildBuildStatus } from "../../api/types/globalTypes";
-import { LimitBuilds } from "../../api/types/LimitBuilds";
-import {
-  UpdateBuildsLimit,
-  UpdateBuildsLimitVariables,
-} from "../../api/types/UpdateBuildsLimit";
 import connectionToNodes from "../../lib/connectionToNodes";
 import {
   Filter,
@@ -39,7 +23,7 @@ import { BuildState as BuildStateVisualizer } from "../../components/molecules";
 
 import styles from "./Builds.module.css";
 
-const { Text } = Typography;
+const { Title } = Typography;
 
 function getBuildStatusFilters() {
   let filters: Filter[] = [];
@@ -53,57 +37,10 @@ function getBuildStatusFilters() {
 }
 
 const Builds = () => {
-  const { data, loading } = useQuery<IBuilds, BuildsVariables>(BUILDS);
-  const { data: limitData, loading: loadingLimit } =
-    useQuery<LimitBuilds>(LIMIT);
   const { t } = useTranslation(["translation", "admin"]);
-  const [formBuilds] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [updateBuildsLimit, { loading: updating }] = useMutation<
-    UpdateBuildsLimit,
-    UpdateBuildsLimitVariables
-  >(UPDATE_BUILDS_LIMIT);
+  const { data, loading } = useQuery<IBuilds, BuildsVariables>(BUILDS);
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    formBuilds.submit();
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  const save = () => {
-    updateBuildsLimit({
-      variables: {
-        limit: formBuilds.getFieldValue("allowed"),
-      },
-      update(cache, { data }) {
-        if (data?.updateBuildsLimit?.ok) {
-          cache.modify({
-            id: cache.identify({ ...limitData?.configs?.edges[0]?.node }),
-            fields: {
-              limit() {
-                return formBuilds.getFieldValue("allowed");
-              },
-            },
-          });
-          message.success(t("admin:updateBuildsLimitSuccessful"), 4);
-        } else {
-          message.error(
-            t(`admin:errors.${data?.updateBuildsLimit?.error}`, t("error")),
-            4
-          );
-        }
-        setIsModalVisible(false);
-      },
-    });
-  };
-
-  if (loading || loadingLimit) return <Loading />;
+  if (loading) return <Loading />;
 
   const columns: TableColumnsType<Builds_builds_edges_node> = [
     {
@@ -178,69 +115,43 @@ const Builds = () => {
   ];
 
   return (
-    <div>
-      <div style={{ marginBottom: 15, position: "relative", float: "right" }}>
-        <Tooltip title={t("update")}>
-          <Button type="default" onClick={showModal}>
-            {t("admin:yearBuildsLimit", {
-              limit: limitData?.configs?.edges[0]?.node?.limit,
-            })}
-          </Button>
-        </Tooltip>
-      </div>
-      <Modal
-        title={t("admin:buildsLimit")}
-        visible={isModalVisible}
-        okButtonProps={{ loading: updating }}
-        okText={t("update")}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <>
-          <Form
-            form={formBuilds}
-            component={false}
-            initialValues={{
-              allowed: limitData?.configs?.edges[0]?.node?.limit,
-            }}
-            onFinish={() => save()}
-          >
-            <Form.Item
-              name="allowed"
-              style={{ margin: 0 }}
-              rules={[
-                {
-                  required: true,
-                  message: t("admin:requiredInput"),
-                },
-              ]}
-            >
-              <InputNumber />
-            </Form.Item>
-          </Form>
-          <Text style={{ display: "block", marginTop: 20 }} type="secondary">
-            {t("admin:warningBuildsLimit")}
-          </Text>
-        </>
-      </Modal>
-      <Table
-        className={styles.table}
-        columns={columns}
-        dataSource={connectionToNodes(data?.builds)}
-        locale={{ emptyText: t("noBuilds") }}
-        pagination={{
-          showSizeChanger: true,
-          showTotal: (total, range) =>
-            t("paginationItems", {
-              first: range[0],
-              last: range[1],
-              total: total,
-            }),
-        }}
-        rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
-        rowKey={(row) => row.id}
-      />
-    </div>
+    <Row gutter={[24, 24]}>
+      <Col span={24}>
+        <Card>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Title className={styles.title} level={2}>
+                {t("admin:buildList")}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Table
+                className={styles.table}
+                columns={columns}
+                dataSource={connectionToNodes(data?.builds)}
+                locale={{ emptyText: t("noBuilds") }}
+                pagination={{
+                  showSizeChanger: true,
+                  showTotal: (total, range) =>
+                    t("paginationItems", {
+                      first: range[0],
+                      last: range[1],
+                      total: total,
+                      item: t("admin:builds"),
+                    }),
+                }}
+                rowClassName={(row) =>
+                  !row.app?.isActive ? styles.app_deleted : ""
+                }
+                rowKey={(row) => row.id}
+              />
+            </Col>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 

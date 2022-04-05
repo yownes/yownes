@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
+  Card,
+  Col,
   Button,
   Form,
   Input,
   message,
   Popconfirm,
+  Row,
   Table,
   Typography,
 } from "antd";
@@ -31,6 +34,8 @@ import {
 } from "../../api/types/UpdateFeature";
 
 import { LoadingFullScreen } from "../atoms";
+
+import styles from "./FeaturesInfo.module.css";
 
 const { Title } = Typography;
 
@@ -258,9 +263,9 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
                   title={t("admin:warningCreateFeature")}
                   onConfirm={() => formFeatures.submit()}
                 >
-                  <Button type="link">{t("add")}</Button>
+                  <Button type="link">{t("admin:createFeature")}</Button>
                 </Popconfirm>
-                <Button type="link" onClick={discard}>
+                <Button danger type="link" onClick={discard}>
                   {t("cancel")}
                 </Button>
               </>
@@ -272,7 +277,7 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
                 >
                   <Button type="link">{t("save")}</Button>
                 </Popconfirm>
-                <Button type="link" onClick={cancel}>
+                <Button danger type="link" onClick={cancel}>
                   {t("cancel")}
                 </Button>
               </>
@@ -327,43 +332,60 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
     };
   });
   return (
-    <div style={{ marginBottom: 20, marginTop: 0, minWidth: 750 }}>
-      <Title level={2}>{t("admin:features")}</Title>
-      <Button
-        disabled={editingId !== "" || deletingId !== ""}
-        onClick={() => add()}
-        style={{ marginBottom: 15 }}
-        type="primary"
-      >
-        {t("admin:newFeature")}
-      </Button>
-      <Form form={formFeatures} component={false} onFinish={() => create()}>
-        <Table
-          columns={mergedColumns}
-          components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-          dataSource={dataSource}
-          locale={{ emptyText: t("admin:noFeatures") }}
-          rowClassName="editable-row"
-          rowKey={(row) => row.id}
-          pagination={{
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              t("paginationItems", {
-                first: range[0],
-                last: range[1],
-                total: total,
-              }),
-          }}
-        />
-      </Form>
-      {creating && <LoadingFullScreen tip={t("admin:creatingFeature")} />}
-      {deleting && <LoadingFullScreen tip={t("admin:deletingFeature")} />}
-      {updating && <LoadingFullScreen tip={t("admin:updatingFeature")} />}
-    </div>
+    <Card>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Title className={styles.title} level={2}>
+            {t("admin:planFeatures")}
+            <div
+              style={{
+                position: "relative",
+                float: "right",
+              }}
+            >
+              <Button
+                className="button-default-primary"
+                disabled={editingId !== "" || deletingId !== ""}
+                onClick={() => add()}
+              >
+                {t("admin:newFeature")}
+              </Button>
+            </div>
+          </Title>
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Form form={formFeatures} component={false} onFinish={() => create()}>
+            <Table
+              columns={mergedColumns}
+              components={{
+                body: {
+                  cell: EditableCell,
+                },
+              }}
+              dataSource={dataSource}
+              locale={{ emptyText: t("admin:noFeatures") }}
+              rowClassName="editable-row"
+              rowKey={(row) => row.id}
+              pagination={{
+                showSizeChanger: true,
+                showTotal: (total, range) =>
+                  t("paginationItems", {
+                    first: range[0],
+                    last: range[1],
+                    total: total,
+                    item: t("features"),
+                  }),
+              }}
+            />
+          </Form>
+          {creating && <LoadingFullScreen tip={t("admin:creatingFeature")} />}
+          {deleting && <LoadingFullScreen tip={t("admin:deletingFeature")} />}
+          {updating && <LoadingFullScreen tip={t("admin:updatingFeature")} />}
+        </Col>
+      </Row>
+    </Card>
   );
 };
 

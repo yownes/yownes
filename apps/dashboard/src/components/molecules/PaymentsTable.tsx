@@ -17,7 +17,7 @@ interface PaymentsTableProps {
 }
 
 const PaymentsTable = ({ payments }: PaymentsTableProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["translation", "admin"]);
   const columns: TableColumnsType<MyAccount_me_subscription_invoices_edges_node_charges_edges_node> =
     [
       {
@@ -67,6 +67,7 @@ const PaymentsTable = ({ payments }: PaymentsTableProps) => {
       //       first: range[0],
       //       last: range[1],
       //       total: total,
+      //       item: t("admin:prices"),
       //     }),
       // }}
       rowKey={(row) => row.id}

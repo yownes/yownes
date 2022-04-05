@@ -41,7 +41,7 @@ const Validate = () => {
           title={t("successfulValidation")}
           extra={
             <Link to="/profile">
-              <Button type="primary">{t("client:goProfile")}</Button>
+              <Button type="primary">{t("goProfile")}</Button>
             </Link>
           }
         ></Result>
@@ -53,7 +53,7 @@ const Validate = () => {
           subTitle={<Errors errors={data?.verifyAccount?.errors} />}
           extra={
             <Link to="/profile">
-              <Button type="primary">{t("client:goProfile")}</Button>
+              <Button type="primary">{t("goProfile")}</Button>
             </Link>
           }
         ></Result>

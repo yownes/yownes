@@ -155,9 +155,11 @@ export interface PriceInput {
 export interface ProductInput {
   active?: boolean | null;
   apps?: number | null;
+  builds?: number | null;
   description?: string | null;
   features?: (string | null)[] | null;
   name?: string | null;
+  type?: string | null;
 }
 
 export interface StoreAppColorInput {

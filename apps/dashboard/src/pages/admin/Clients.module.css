@@ -5,3 +5,7 @@
 .table {
   min-width: 900px;
 }
+
+.title {
+  margin-bottom: 24px !important;
+}

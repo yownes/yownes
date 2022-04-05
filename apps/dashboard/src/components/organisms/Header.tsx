@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { Col, notification, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,11 @@ const { Text, Title } = Typography;
 
 const routes = [...clientRoutes, ...adminroutes];
 
-const Header = () => {
+interface HeaderProps {
+  menu?: ReactNode;
+}
+
+const Header = ({ menu }: HeaderProps) => {
   const history = useHistory();
   const location = useLocation();
   const { t } = useTranslation("translation");
@@ -83,14 +87,18 @@ const Header = () => {
         <Link to="/">
           <NewLogo />
         </Link>
-        <Title level={1} className={styles.title}>
-          {route?.name && data?.me?.isStaff === route.admin && (
-            <>
-              <Text id={styles.titleIcon}>{">"}</Text>
-              {route?.name}
-            </>
-          )}
-        </Title>
+        {data?.me?.isStaff ? (
+          menu
+        ) : (
+          <Title level={1} className={styles.title}>
+            {route?.name && data?.me?.isStaff === route.admin && (
+              <>
+                <Text id={styles.titleIcon}>{">"}</Text>
+                {route?.name}
+              </>
+            )}
+          </Title>
+        )}
         {data?.me?.email && <HeaderSessionInfo email={data.me.email} />}
       </header>
     </Col>

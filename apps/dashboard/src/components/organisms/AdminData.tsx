@@ -25,7 +25,7 @@ const PersonalData = () => {
     <>
       {!data?.me?.verified && (
         <Row gutter={[24, 24]}>
-          <Col span={24} style={{ minWidth: 550 }}>
+          <Col span={24}>
             <Alert
               showIcon
               message={t("client:validate.message")}
@@ -37,9 +37,11 @@ const PersonalData = () => {
         </Row>
       )}
       <Row gutter={[24, 24]}>
-        <Col span={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <Card>
-            <Title level={2}>{t("client:personalData")}</Title>
+            <Title level={2} style={{ paddingBottom: 24 }}>
+              {t("client:personalData")}
+            </Title>
             <Form
               initialValues={{
                 username: data?.me?.username,

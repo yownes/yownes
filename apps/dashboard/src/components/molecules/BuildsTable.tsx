@@ -118,6 +118,7 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
             first: range[0],
             last: range[1],
             total: total,
+            item: t("admin:builds"),
           }),
       }}
       rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}

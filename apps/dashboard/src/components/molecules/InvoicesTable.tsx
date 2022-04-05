@@ -112,6 +112,7 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
             first: range[0],
             last: range[1],
             total: total,
+            item: t("invoices"),
           }),
       }}
       rowClassName={(row) =>

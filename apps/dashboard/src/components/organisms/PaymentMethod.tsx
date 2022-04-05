@@ -8,7 +8,6 @@ import {
   Modal,
   Popconfirm,
   Row,
-  Typography,
   message,
   Tag,
 } from "antd";
@@ -49,7 +48,6 @@ import { ICreditCardStripe } from "../molecules/CreditCard";
 import styles from "./PaymentMethod.module.css";
 
 message.config({ maxCount: 1 });
-const { Text } = Typography;
 
 interface PaymentMethodProps {
   customer:
@@ -148,17 +146,16 @@ const PaymentMethod = ({
                 <Alert
                   message={t("expiredPayment.admin")}
                   showIcon
-                  style={{ marginBottom: 24, marginTop: 8 }}
+                  style={{ marginBottom: 20, marginTop: 24 }}
                   type="error"
                 />
               </Col>
             ) : (
-              <Col span={24}>
+              <Col>
                 <Alert
-                  description={t("expiredPayment.help")}
                   message={t("expiredPayment.message")}
                   showIcon
-                  style={{ marginBottom: 12, marginTop: 4 }}
+                  style={{ marginBottom: 20, marginTop: 4 }}
                   type="error"
                 />
               </Col>
@@ -359,7 +356,13 @@ const PaymentMethod = ({
               </>
             ))
           ) : staff ? (
-            <Alert message={t("noPaymentMethods")} showIcon type="warning" />
+            <div style={{ paddingTop: 20 }}>
+              <Alert
+                message={t("noPaymentMethodsAdmin")}
+                showIcon
+                type="warning"
+              />
+            </div>
           ) : (
             <AlertWithLink
               buttonText={t("client:subscribe")}
@@ -372,9 +375,14 @@ const PaymentMethod = ({
       </Col>
       <Col span={24}>
         <Button
+          className={
+            !customer && location.pathname !== "/checkout"
+              ? undefined
+              : "button-default-primary"
+          }
           disabled={!customer && location.pathname !== "/checkout"}
           onClick={() => setisModalCreateOpen(true)}
-          type="primary"
+          type="ghost"
         >
           {t("client:addPaymentMethod")}
         </Button>

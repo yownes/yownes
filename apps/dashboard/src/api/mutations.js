@@ -201,15 +201,6 @@ export const RESTORE_APP = gql`
   }
 `;
 
-export const UPDATE_BUILDS_LIMIT = gql`
-  mutation UpdateBuildsLimit($limit: Int!) {
-    updateBuildsLimit(limit: $limit) {
-      ok
-      error
-    }
-  }
-`;
-
 /**
  * ACCOUNT
  */

@@ -1,9 +1,8 @@
 import React from "react";
-import { Button, Typography } from "antd";
+import { Button, Col, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
-import { PlanInterval } from "../../api/types/globalTypes";
-import { normalice } from "../../lib/normalice";
+import { currencySymbol } from "../../lib/currencySymbol";
 
 import { CheckoutLocationState } from "../../pages/client/Checkout";
 
@@ -25,39 +24,29 @@ const RateSelection = ({
   onPlanSelected,
 }: RateSelectionProps) => {
   const { t } = useTranslation("translation");
-  const interval = JSON.parse(
-    normalice(plan.recurring!!)
-  ).interval.toUpperCase();
+
   return (
-    <div className={styles.container}>
-      <Text>{subtitle}</Text>
-      <Title level={2}>{title}</Title>
-      <Title level={5}>
-        <Text strong>
-          {plan.unitAmount
-            ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")
-            : "-"}
-        </Text>
-        <Text>
-          {" €/"}
-          {interval === PlanInterval.DAY
-            ? t("day")
-            : interval === PlanInterval.WEEK
-            ? t("week")
-            : interval === PlanInterval.MONTH
-            ? t("month")
-            : interval === PlanInterval.YEAR
-            ? t("year")
-            : "-"}
-        </Text>
-      </Title>
-      <Button onClick={() => onPlanSelected(plan)} type="primary">
-        {t("select")}
-      </Button>
-      <Text type="secondary" style={{ display: "block", marginTop: 10 }}>
-        {t("priceWithTaxes")}
-      </Text>
-    </div>
+    <Row gutter={[24, 24]}>
+      <Col span={24} style={{ display: "flex", flexDirection: "row" }}>
+        <Row align="middle" style={{ flex: 1, flexDirection: "column" }}>
+          <Text className={styles.name}>{title}</Text>
+          {/* <Text className={styles.description}>{subtitle}</Text> */}
+          <Text className={styles.price}>
+            {plan.unitAmount
+              ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")
+              : "-"}
+            {currencySymbol(plan.currency || "")}
+          </Text>
+          <Text className={styles.tax}>{t("priceWithTaxes")}</Text>
+          <Button
+            className={`${styles.button} button-default-primary`}
+            onClick={() => onPlanSelected(plan)}
+          >
+            {t("select")}
+          </Button>
+        </Row>
+      </Col>
+    </Row>
   );
 };
 

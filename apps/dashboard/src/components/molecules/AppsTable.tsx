@@ -107,6 +107,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
             first: range[0],
             last: range[1],
             total: total,
+            item: t("apps"),
           }),
       }}
       rowClassName={(row) => (!row.isActive ? styles.app_deleted : "")}

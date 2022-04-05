@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
-  const { t } = useTranslation(["translation", "client"]);
+  const { t } = useTranslation();
   return (
     <Card>
       <Result
@@ -13,7 +13,7 @@ const NotFound = () => {
         subTitle={t("404subTitle")}
         extra={
           <Link to="/profile">
-            <Button type="primary">{t("client:goProfile")}</Button>
+            <Button type="primary">{t("goDashboard")}</Button>
           </Link>
         }
       />
