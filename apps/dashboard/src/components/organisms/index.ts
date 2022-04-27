@@ -1,3 +1,4 @@
+export { default as AccountData } from "./AccountData";
 export { default as AdminData } from "./AdminData";
 export { default as AdminHeader } from "./AdminHeader";
 export { default as AppPayment } from "./AppPayment";
@@ -7,11 +8,11 @@ export { default as ChangeSubscription } from "./ChangeSubscription";
 export { default as ClientSubscriptionData } from "./ClientSubscriptionData";
 export { default as CreateCreditCard } from "./CreateCreditCard";
 export { default as ColorPicker } from "./ColorPicker";
+export { default as CustomerData } from "./CustomerData";
 export { default as EditCreditCard } from "./EditCreditCard";
 export { default as Header } from "./Header";
 export { default as InvoicesData } from "./InvoicesData";
 export { default as PaymentMethod } from "./PaymentMethod";
-export { default as PersonalData } from "./PersonalData";
 export { default as ProfileDangerZone } from "./ProfileDangerZone";
 export { default as RateTable } from "./RateTable";
 export { default as Router } from "./Router";

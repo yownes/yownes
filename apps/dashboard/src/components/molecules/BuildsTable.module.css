@@ -3,3 +3,8 @@
   font-style: italic;
   opacity: 0.7;
 }
+
+.empty {
+  display: block;
+  margin-top: 24px;
+}

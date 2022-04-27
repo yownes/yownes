@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import styles from "./SmallCreditCard.module.css";
 
@@ -53,7 +53,7 @@ const SmallCreditCard = ({ data }: SmallCreditCardProps) => {
   if (!data) {
     return null;
   }
-  const card: ICreditCardStripe = JSON.parse(normalice(data));
+  const card: ICreditCardStripe = JSON.parse(normalize(data));
   const expired = new Date(card.exp_year, card.exp_month) < new Date();
   return (
     <div style={{ marginBottom: 24, textAlign: "center" }}>
@@ -71,12 +71,12 @@ const SmallCreditCard = ({ data }: SmallCreditCardProps) => {
           }}
         ></div>
         <div className={styles.cardnumbercontainer}>
-          <text className={`${styles.cardnumbertitle} ${styles.light}`}>
+          <span className={`${styles.cardnumbertitle} ${styles.light}`}>
             {t("cardNumberLow")}
-          </text>
-          <text
+          </span>
+          <span
             className={`${styles.cardnumber} ${styles.light}`}
-          >{`**** **** **** ${card.last4}`}</text>
+          >{`**** **** **** ${card.last4}`}</span>
         </div>
       </div>
     </div>

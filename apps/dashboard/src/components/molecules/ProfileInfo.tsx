@@ -42,7 +42,7 @@ const ProfileInfo = ({ profile, extra, verified }: ProfileInfoProps) => {
       <span>{profile?.subscription?.plan?.product?.name} </span>
       <span>
         ({profile?.subscription?.plan?.amount}
-        {currencySymbol(profile.subscription.plan?.currency || "")}
+        {currencySymbol(profile.subscription.plan?.currency ?? "")}
         {"/"}
         {t(`${profile.subscription.plan?.interval}`.toLocaleLowerCase())})
       </span>

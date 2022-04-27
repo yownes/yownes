@@ -1,4 +1,4 @@
-export function normalice(data: string): string {
+export function normalize(data: string): string {
   return data
     .replace(/None/g, "null")
     .replace(/True/g, "true")

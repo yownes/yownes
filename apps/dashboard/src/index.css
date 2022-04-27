@@ -84,6 +84,7 @@ h5 {
 
 .ant-btn-primary[disabled] {
   background-color: #ededed !important;
+  border-color: transparent !important;
 }
 
 .ant-dropdown-menu {
@@ -109,6 +110,23 @@ h5 {
   line-height: 24px !important;
 }
 
+.ant-modal-confirm-content {
+  margin-top: 24px !important;
+}
+
+.ant-modal-confirm-content p {
+  margin-bottom: 8px !important;
+}
+
+.none .ant-modal-confirm-content {
+  display: none !important;
+}
+
+.ant-modal-confirm-title {
+  font-size: 22px !important;
+  font-weight: 400 !important;
+}
+
 .ant-modal-close {
   display: none !important;
 }
@@ -130,6 +148,7 @@ h5 {
 
 .ant-modal-title {
   font-size: 22px !important;
+  font-weight: 400 !important;
 }
 
 .ant-notification-notice {
@@ -181,6 +200,10 @@ h5 {
   overflow: scroll !important;
 }
 
+.ant-form-item-explain-error {
+  padding-bottom: 16px;
+}
+
 .ant-table-filter-dropdown .ant-btn-default {
   color: #f59d35 !important;
   border-color: #f59d35 !important;
@@ -212,7 +235,7 @@ h5 {
 }
 
 .ant-pagination-item *:not(.ant-pagination-disabled *),
-.ant-select-item-option-selected * {
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) * {
   color: #232323 !important;
 }
 
@@ -261,8 +284,7 @@ h5 {
 }
 
 .ant-table-pagination.ant-pagination {
-  margin: 0 !important;
-  margin-top: 24px !important;
+  margin: 24px 32px 0px 0px !important;
 }
 
 .ant-table-thead

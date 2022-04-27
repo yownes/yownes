@@ -1,8 +1,10 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Col, Divider, Row, Select, Space, Switch, Typography } from "antd";
+import find from "lodash/find";
 import { useTranslation } from "react-i18next";
 
 import { PlanInterval } from "../../api/types/globalTypes";
+import { MyAccount_me_subscription_plan_product } from "../../api/types/MyAccount";
 import {
   Plans_features_edges_node,
   Plans_products_edges_node,
@@ -10,7 +12,7 @@ import {
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import { Loading } from "../atoms";
 import { Errors } from "../molecules";
@@ -38,7 +40,10 @@ interface ChangeSubscriptionProps {
   loading: boolean;
   onChangeInterval: Dispatch<SetStateAction<PlanInterval>>;
   onChangePlan: (plan: string) => void;
-  plan: Plans_products_edges_node | undefined;
+  plan:
+    | Plans_products_edges_node
+    | MyAccount_me_subscription_plan_product
+    | undefined;
   planId: string | undefined;
   plansFeatures: (Plans_features_edges_node | null)[] | null | undefined;
   products: Plans_products_edges_node[];
@@ -63,10 +68,65 @@ const ChangeSubscription = ({
   step,
 }: ChangeSubscriptionProps) => {
   const { t } = useTranslation();
-  const allowed_apps =
-    JSON.parse(normalice(plan?.metadata!!)).allowed_apps || 1;
-  const allowed_builds =
-    JSON.parse(normalice(plan?.metadata!!)).allowed_builds || 1;
+
+  const allowed_apps = plan?.metadata
+    ? JSON.parse(normalize(plan.metadata)).allowed_apps || 1
+    : 1;
+  const allowed_builds = plan?.metadata
+    ? JSON.parse(normalize(plan.metadata)).allowed_builds || 1
+    : 1;
+
+  const legacyOption = () => {
+    if (find(products, (p) => p.id === currentProductId) !== undefined) {
+      return undefined;
+    }
+    const allowed = JSON.parse(normalize(plan?.metadata!!)).allowed_apps;
+    const prices = connectionToNodes(plan?.prices);
+    const price = prices
+      .filter((price) => price.active)
+      .find(
+        (price) =>
+          JSON.parse(normalize(price.recurring!!)).interval.toUpperCase() ===
+          interval
+      );
+
+    return (
+      <Select.Option disabled key={currentProductId} value={currentProductId}>
+        <Row justify="space-between">
+          <Row gutter={10} justify="start">
+            <Col>
+              <Text className={`${styles.disabled} ${styles.strong}`}>
+                {plan?.name}{" "}
+              </Text>
+            </Col>
+            {plan?.metadata && (
+              <Col>
+                <Text className={`${styles.disabled} ${styles.strong}`}>
+                  {"("}
+                  {allowed} {allowed === 1 ? t("app") : t("apps")}
+                  {")"}
+                </Text>
+              </Col>
+            )}
+          </Row>
+          <Col>
+            <Text className={styles.disabled} italic>
+              {t("legacy")}
+            </Text>
+          </Col>
+          <Col>
+            <Text className={`${styles.disabled} ${styles.strong}`}>
+              {price?.unitAmount
+                ? (price?.unitAmount / 100).toFixed(2).replace(/\./g, ",")
+                : "-"}
+              {`${currencySymbol(price?.currency ?? "")}/`}
+              {t(`${interval}`.toLocaleLowerCase())}
+            </Text>
+          </Col>
+        </Row>
+      </Select.Option>
+    );
+  };
 
   return (
     <Row gutter={[24, 24]}>
@@ -98,21 +158,22 @@ const ChangeSubscription = ({
                   onChange={onChangePlan}
                   value={planId}
                 >
+                  {legacyOption()}
                   {products?.map((product) => {
+                    const allowed = parseInt(
+                      JSON.parse(normalize(product.metadata!!)).allowed_apps
+                    );
+                    const exceeded = activeApps ? allowed < activeApps : false;
                     const prices = connectionToNodes(product.prices);
                     const price = prices
                       .filter((price) => price.active)
                       .find(
                         (price) =>
                           JSON.parse(
-                            normalice(price.recurring!!)
+                            normalize(price.recurring!!)
                           ).interval.toUpperCase() === interval
                       );
-                    const exceeded = activeApps
-                      ? parseInt(
-                          JSON.parse(normalice(product.metadata!!)).allowed_apps
-                        ) < activeApps
-                      : false;
+
                     return (
                       <Select.Option
                         disabled={exceeded}
@@ -144,11 +205,9 @@ const ChangeSubscription = ({
                                   disabled={exceeded}
                                 >
                                   {"("}
-                                  {
-                                    JSON.parse(normalice(product.metadata!!))
-                                      .allowed_apps
-                                  }
-                                  {" Apps)"}
+                                  {allowed}{" "}
+                                  {allowed === 1 ? t("app") : t("apps")}
+                                  {")"}
                                 </Text>
                               </Col>
                             )}
@@ -167,7 +226,7 @@ const ChangeSubscription = ({
                                     .toFixed(2)
                                     .replace(/\./g, ",")
                                 : "-"}
-                              {`${currencySymbol(price?.currency || "")}/`}
+                              {`${currencySymbol(price?.currency ?? "")}/`}
                               {t(`${interval}`.toLocaleLowerCase())}
                             </Text>
                           </Col>
@@ -269,7 +328,7 @@ const ChangeSubscription = ({
                       {amount
                         ? (amount / 100 / 1.21).toFixed(2).replace(/\./g, ",")
                         : "-"}
-                      {currencySymbol(currency || "")}
+                      {currencySymbol(currency ?? "")}
                     </Text>
                   </Row>
                 </Col>
@@ -282,7 +341,7 @@ const ChangeSubscription = ({
                             .toFixed(2)
                             .replace(/\./g, ",")
                         : "-"}
-                      {currencySymbol(currency || "")}
+                      {currencySymbol(currency ?? "")}
                     </Text>
                   </Row>
                 </Col>
@@ -293,7 +352,7 @@ const ChangeSubscription = ({
                       {amount
                         ? (amount / 100).toFixed(2).replace(/\./g, ",")
                         : "-"}
-                      {currencySymbol(currency || "")}
+                      {currencySymbol(currency ?? "")}
                     </Text>
                   </Row>
                 </Col>

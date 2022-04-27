@@ -20,7 +20,7 @@ interface ValidateParamTypes {
 
 const Validate = () => {
   const location = useParams<ValidateParamTypes>();
-  const { t } = useTranslation(["auth", "client"]);
+  const { t } = useTranslation(["auth"]);
   const [verifyAccount, { data, loading }] = useMutation<
     VerifyAccount,
     VerifyAccountVariables
@@ -41,7 +41,7 @@ const Validate = () => {
           title={t("successfulValidation")}
           extra={
             <Link to="/profile">
-              <Button type="primary">{t("goProfile")}</Button>
+              <Button type="primary">{t("translation:goDashboard")}</Button>
             </Link>
           }
         ></Result>
@@ -53,7 +53,7 @@ const Validate = () => {
           subTitle={<Errors errors={data?.verifyAccount?.errors} />}
           extra={
             <Link to="/profile">
-              <Button type="primary">{t("goProfile")}</Button>
+              <Button type="primary">{t("translation:goDashboard")}</Button>
             </Link>
           }
         ></Result>

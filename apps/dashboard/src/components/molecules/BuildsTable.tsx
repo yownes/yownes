@@ -74,7 +74,7 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       render: (buildId) => <Text strong>{buildId}</Text>,
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["buildId"],
-        t("admin:search", { data: t("buildId") }),
+        t("admin:search"),
         t("search"),
         t("reset")
       ),
@@ -86,7 +86,7 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       key: "app.name",
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["app", "name"],
-        t("admin:search", { data: t("app") }),
+        t("admin:search"),
         t("search"),
         t("reset")
       ),
@@ -106,7 +106,7 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       sorter: (a, b) => a.buildStatus.localeCompare(b.buildStatus),
     },
   ];
-  return (
+  return dataSource.length > 0 ? (
     <Table
       columns={columns}
       dataSource={dataSource}
@@ -124,6 +124,10 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
       rowKey={(row) => row.buildId}
     />
+  ) : (
+    <Text className={styles.empty} type="secondary">
+      {t("noBuilds")}
+    </Text>
   );
 };
 

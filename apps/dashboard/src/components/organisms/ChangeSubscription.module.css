@@ -5,6 +5,10 @@
   font-weight: bold;
 }
 
+.disabled {
+  color: #c6c6c6 !important;
+}
+
 .features {
   color: #636363;
   display: grid !important;

@@ -1,3 +1,11 @@
+.editingRow > td {
+  background-color: transparent !important;
+}
+
+.input {
+  margin-bottom: 0px !important;
+}
+
 .title {
   margin-bottom: 24px !important;
 }

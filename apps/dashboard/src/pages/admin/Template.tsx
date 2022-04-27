@@ -4,7 +4,6 @@ import {
   Card,
   Col,
   Form,
-  Input,
   message,
   Popconfirm,
   Row,
@@ -26,12 +25,12 @@ import {
   UpdateTemplateVariables,
 } from "../../api/types/UpdateTemplate";
 
-import { Loading, LoadingFullScreen } from "../../components/atoms";
+import { Loading, LoadingFullScreen, TextField } from "../../components/atoms";
 import { ImageUpload } from "../../components/molecules";
 
 import styles from "./Template.module.css";
 
-const { Title } = Typography;
+const { Text, Title } = Typography;
 
 interface TemplateProps {
   id: string;
@@ -119,53 +118,108 @@ const Template = () => {
                 }}
                 validateMessages={{ required: t("client:requiredInput") }}
               >
-                <Row gutter={[16, 16]}>
+                <Row gutter={[24, 0]}>
                   <Col lg={15} span={24}>
-                    <Form.Item
-                      name="name"
-                      rules={[{ required: true }]}
-                      label={t("admin:templateName")}
-                    >
-                      <Input placeholder={t("admin:templateName")} />
-                    </Form.Item>
-                    <Form.Item name="url" label={t("admin:templateUrl")}>
-                      <Input placeholder={t("admin:templateUrl")} />
-                    </Form.Item>
-                    <Form.Item name="snack" label={t("admin:snack")}>
-                      <Input placeholder={t("admin:snack")} />
-                    </Form.Item>
-                    <Form.Item
-                      name="isActive"
-                      label={t("admin:activeTemplate")}
-                      valuePropName="checked"
-                    >
-                      <Switch />
-                    </Form.Item>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          label={t("admin:templateName")}
+                          defaultValue={data?.template?.name}
+                          name="name"
+                          rules={[{ required: true }]}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          label={t("admin:templateUrl")}
+                          defaultValue={data?.template?.url ?? ""}
+                          name="url"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          label={t("admin:snack")}
+                          defaultValue={data?.template?.name}
+                          name="snack"
+                        />
+                      </Col>
+                    </Row>
                   </Col>
                   <Col lg={9} span={24}>
-                    <Row justify="start">
-                      <Form.Item name="previewImg" label={t("preview")}>
-                        <ImageUpload
-                          alt={t("admin:template")}
-                          confirmMessage={t("admin:warningTemplate")}
-                          onDeleteClicked={() => {
-                            form.setFieldsValue({ previewImg: null });
-                          }}
-                          size="large"
-                          uploadMessage={t("admin:uploadTemplate")}
-                        />
-                      </Form.Item>
+                    <Row>
+                      <Col span={24}>
+                        <Row>
+                          <Col span={24}>
+                            <Row justify="center">
+                              <Col>
+                                <Form.Item name="previewImg">
+                                  <ImageUpload
+                                    alt={t("admin:template")}
+                                    confirmMessage={t("admin:warningTemplate")}
+                                    onDeleteClicked={() => {
+                                      form.setFieldsValue({ previewImg: null });
+                                    }}
+                                    size="large"
+                                    uploadMessage={t("admin:uploadTemplate")}
+                                  />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                          </Col>
+                          <Col span={24}>
+                            <Row justify="center">
+                              <Col>
+                                <Text
+                                  className={styles.previewText}
+                                  type="secondary"
+                                >
+                                  {t("preview")}
+                                </Text>
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Col>
                     </Row>
                   </Col>
                 </Row>
-                <Row gutter={[16, 16]}>
+                <Row>
                   <Col span={24}>
-                    <Popconfirm
-                      title={t("client:saveChangesConfirm")}
-                      onConfirm={() => form.submit()}
-                    >
-                      <Button type="primary">{t("client:saveChanges")}</Button>
-                    </Popconfirm>
+                    <Row>
+                      <Col span={24}>
+                        <div className={styles.activeContainer}>
+                          <span>{t("admin:activeTemplate")}</span>
+                          <Form.Item
+                            className={styles.active}
+                            name="isActive"
+                            valuePropName="checked"
+                          >
+                            <Switch />
+                          </Form.Item>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <Row>
+                      <Col span={24}>
+                        <Popconfirm
+                          cancelButtonProps={{
+                            className: "button-default-default",
+                          }}
+                          onConfirm={() => form.submit()}
+                          title={t("client:saveChangesConfirm")}
+                        >
+                          <Button type="primary">
+                            {t("client:saveChanges")}
+                          </Button>
+                        </Popconfirm>
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
               </Form>

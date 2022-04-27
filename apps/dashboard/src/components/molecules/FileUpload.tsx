@@ -162,13 +162,14 @@ const ImageUpload = ({
         </label>
         {file && (
           <Popconfirm
+            cancelButtonProps={{ className: "button-default-default" }}
             cancelText={t("cancel")}
             okText={t("delete")}
-            title={confirmMessage ? confirmMessage : t("client:warnings.logo")}
             onConfirm={() => {
               onDeleteClicked();
               reset(inputRef);
             }}
+            title={confirmMessage ? confirmMessage : t("client:warnings.logo")}
           >
             <span className={styles.deleteButton}>
               <Button danger icon={<DeleteOutlined />} />

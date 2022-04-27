@@ -1,5 +1,9 @@
 .editing {
-  margin: 0;
+  margin: 0 !important;
+}
+
+.editingRow > td {
+  background-color: transparent !important;
 }
 
 .fullWidth {
@@ -15,6 +19,10 @@
 .inactive td:last-child {
   background-color: #f8f8f8;
   font-style: italic;
+}
+
+.input {
+  margin-bottom: 0px !important;
 }
 
 .title {

@@ -2,9 +2,18 @@
   text-align: center;
 }
 
+.description {
+  margin: 24px 0px;
+}
+
+.errors {
+  padding-bottom: 24px;
+}
+
 .rightAlign {
-  text-align: right;
   display: inline-block;
+  margin-bottom: 24px;
+  text-align: right;
   width: 100%;
 }
 

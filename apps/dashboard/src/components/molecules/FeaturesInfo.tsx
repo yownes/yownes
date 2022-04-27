@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   Col,
-  Button,
   Form,
-  Input,
   message,
   Popconfirm,
   Row,
@@ -33,7 +32,7 @@ import {
   UpdateFeatureVariables,
 } from "../../api/types/UpdateFeature";
 
-import { LoadingFullScreen } from "../atoms";
+import { LoadingFullScreen, TextField } from "../atoms";
 
 import styles from "./FeaturesInfo.module.css";
 
@@ -64,21 +63,23 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const { t } = useTranslation(["translation", "admin"]);
+
   return (
     <td {...restProps}>
       {editing ? (
-        <Form.Item
+        <TextField
+          autofocus
+          label={title}
+          defaultValue={record.name}
           name={dataIndex}
-          style={{ margin: 0 }}
           rules={[
             {
               required: true,
               message: t("admin:requiredInput"),
             },
           ]}
-        >
-          <Input />
-        </Form.Item>
+          wrapperClassName={styles.input}
+        />
       ) : (
         children
       )}
@@ -260,8 +261,9 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
             {record.id === "1" ? (
               <>
                 <Popconfirm
-                  title={t("admin:warningCreateFeature")}
+                  cancelButtonProps={{ className: "button-default-default" }}
                   onConfirm={() => formFeatures.submit()}
+                  title={t("admin:warningCreateFeature")}
                 >
                   <Button type="link">{t("admin:createFeature")}</Button>
                 </Popconfirm>
@@ -272,8 +274,9 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
             ) : (
               <>
                 <Popconfirm
-                  title={t("admin:warningSaveChanges")}
+                  cancelButtonProps={{ className: "button-default-default" }}
                   onConfirm={() => save(record)}
+                  title={t("admin:warningSaveChanges")}
                 >
                   <Button type="link">{t("save")}</Button>
                 </Popconfirm>
@@ -293,9 +296,10 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
               {t("edit")}
             </Button>
             <Popconfirm
-              title={t("admin:warningDeleteFeature")}
-              onConfirm={() => del(record)}
+              cancelButtonProps={{ className: "button-default-default" }}
               onCancel={() => cancel()}
+              onConfirm={() => del(record)}
+              title={t("admin:warningDeleteFeature")}
               visible={deletingId !== "" && deletingId === record.id}
             >
               <Button
@@ -366,7 +370,11 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
               }}
               dataSource={dataSource}
               locale={{ emptyText: t("admin:noFeatures") }}
-              rowClassName="editable-row"
+              rowClassName={(row) =>
+                row.id === "1" || row.id === editingId
+                  ? styles.editingRow
+                  : "editable-row"
+              }
               rowKey={(row) => row.id}
               pagination={{
                 showSizeChanger: true,

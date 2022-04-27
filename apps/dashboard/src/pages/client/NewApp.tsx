@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Button, Card, Col, Input, Form, Typography } from "antd";
+import { Button, Card, Col, Form, Typography } from "antd";
 import { ApolloCache, FetchResult, useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
@@ -9,6 +9,7 @@ import { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
 import { colors } from "../../lib/colors";
 
 import { baseApp } from "./App";
+import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 
 const { Title } = Typography;
@@ -92,20 +93,19 @@ const NewApp = () => {
           }}
           style={{ paddingTop: 24 }}
         >
-          <Form.Item
-            name="name"
+          <TextField
+            autofocus
             label={t("appName")}
+            name="name"
             rules={[{ required: true, message: t("required.app") }]}
-          >
-            <Input autoFocus />
-          </Form.Item>
-          <Form.Item
-            name="apiLink"
+          />
+          <TextField
+            disabled={Boolean(storeInfo?.link)}
             label={t("storeLocation")}
+            name="apiLink"
             rules={[{ required: true, message: t("required.store") }]}
-          >
-            <Input disabled={Boolean(storeInfo?.link)} type="url" />
-          </Form.Item>
+            type="url"
+          />
           {storeInfo?.link && !data?.createApp?.ok && (
             <div>{t("checkLocation")}</div>
           )}
@@ -138,6 +138,7 @@ const NewApp = () => {
             htmlType="submit"
             disabled={loading}
             loading={loading}
+            style={{ marginTop: 8 }}
           >
             {loading ? t("checking") : t("check")}
           </Button>

@@ -15,7 +15,7 @@ import {
   Plans_products_edges_node_prices_edges_node,
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import { Loading } from "../atoms";
 import { RateSelection } from "../molecules";
@@ -51,7 +51,7 @@ function selectPlan(
     .filter((plan) => plan.active)
     .find(
       (plan) =>
-        JSON.parse(normalice(plan.recurring!!)).interval.toUpperCase() ===
+        JSON.parse(normalize(plan.recurring!!)).interval.toUpperCase() ===
         interval
     );
   if (plan) {
@@ -92,14 +92,14 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
   const plans = orderBy(
     connectionToNodes(data?.products),
     [
-      (item) => JSON.parse(normalice(item.metadata!!)).plan_type,
+      (item) => JSON.parse(normalize(item.metadata!!)).plan_type,
       (item) =>
         connectionToNodes(item.prices)
           .filter((price) => price.active)
           .find(
             (price) =>
               JSON.parse(
-                normalice(price.recurring!!)
+                normalize(price.recurring!!)
               ).interval.toUpperCase() === interval
           )?.unitAmount,
     ],
@@ -107,7 +107,7 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
   );
 
   const plansByType = orderBy(
-    groupBy(plans, (p) => JSON.parse(normalice(p.metadata!!)).plan_type),
+    groupBy(plans, (p) => JSON.parse(normalize(p.metadata!!)).plan_type),
     "desc"
   );
   console.log(plansByType);
@@ -129,10 +129,10 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
       };
     });
   const apps = plans.map((plan) => ({
-    [plan.id]: JSON.parse(normalice(plan.metadata!!)).allowed_apps,
+    [plan.id]: JSON.parse(normalize(plan.metadata!!)).allowed_apps,
   }));
   const builds = plans.map((plan) => ({
-    [plan.id]: JSON.parse(normalice(plan.metadata!!)).allowed_builds,
+    [plan.id]: JSON.parse(normalize(plan.metadata!!)).allowed_builds,
   }));
   dataSource.push(
     {
@@ -216,7 +216,7 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
                         <Divider className={styles.divider}>
                           {t(
                             `subscriptionType.${
-                              JSON.parse(normalice(p[0].metadata!!)).plan_type
+                              JSON.parse(normalize(p[0].metadata!!)).plan_type
                             }`
                           )}
                         </Divider>

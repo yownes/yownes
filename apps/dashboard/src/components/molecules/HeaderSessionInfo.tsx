@@ -13,28 +13,34 @@ const { confirm } = Modal;
 
 interface HeaderSessionInfoProps {
   email: string;
+  staff: boolean;
 }
 
-const HeaderSessionInfo = ({ email }: HeaderSessionInfoProps) => {
+const HeaderSessionInfo = ({ email, staff }: HeaderSessionInfoProps) => {
   const { logout } = useAuth();
   const screens = Grid.useBreakpoint();
   const { t } = useTranslation();
 
   const menu = (
     <Menu>
-      <Item key="0">
-        <Link to="/profile">{t("profile")}</Link>
+      {!staff && (
+        <Item key="0">
+          <Link to="/profile">{t("dashboard")}</Link>
+        </Item>
+      )}
+      <Item key="1">
+        <Link to={staff ? "/profile" : "/profile/edit"}>{t("profile")}</Link>
       </Item>
       <Divider />
       <SubMenu key="sub1" title={t("help.title")}>
         {/* TODO: add correct links */}
-        <Item key="1">
+        <Item key="2">
           <Link to="">{t("help.sup")}</Link>
         </Item>
-        <Item key="2">
+        <Item key="3">
           <Link to="">{t("help.pp")}</Link>
         </Item>
-        <Item key="3">
+        <Item key="4">
           <Link to="/tos">{t("help.tos")}</Link>
         </Item>
       </SubMenu>
@@ -42,13 +48,17 @@ const HeaderSessionInfo = ({ email }: HeaderSessionInfoProps) => {
       <Item
         onClick={() => {
           confirm({
-            title: t("confirmLogout"),
+            cancelButtonProps: {
+              className: "button-default-default",
+            },
+            className: "none",
             icon: <ExclamationCircleOutlined />,
             okText: t("confirm"),
             onOk: () => logout?.(),
+            title: t("confirmLogout"),
           });
         }}
-        key="1"
+        key="5"
       >
         {t("logout")}
       </Item>
@@ -64,7 +74,11 @@ const HeaderSessionInfo = ({ email }: HeaderSessionInfoProps) => {
         </div>
       )}
       <Dropdown overlay={menu} trigger={["click"]}>
-        <Button icon={<EllipsisOutlined />} shape="circle" />
+        <Button
+          className="button-default-default"
+          icon={<EllipsisOutlined className={styles.icon} />}
+          shape="circle"
+        />
       </Dropdown>
     </div>
   );

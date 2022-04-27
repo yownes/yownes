@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Space } from "antd";
+import { Button, Col, Form, Row } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
@@ -14,14 +14,20 @@ import { MyAccount } from "../../api/types/MyAccount";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { Errors as IErrors, useAuth } from "../../lib/auth";
 
-import { LoadingFullScreen } from "../atoms";
+import { LoadingFullScreen, TextField } from "../atoms";
 import { Errors } from "../molecules";
 
 interface ProfileDangerZoneProps {
   confirmPassword: boolean;
+  onCancel: () => void;
 }
 
-const ProfileDangerZone = ({ confirmPassword }: ProfileDangerZoneProps) => {
+const ProfileDangerZone = ({
+  confirmPassword,
+  onCancel,
+}: ProfileDangerZoneProps) => {
+  const { logout } = useAuth();
+  const { t } = useTranslation(["client", "translation"]);
   const [errors, setErrors] = useState<IErrors>();
   const { data } = useQuery<MyAccount>(MY_ACCOUNT);
   const [deleteAccount, { loading: deleting }] = useMutation<
@@ -32,75 +38,98 @@ const ProfileDangerZone = ({ confirmPassword }: ProfileDangerZoneProps) => {
     Unsubscribe,
     UnsubscribeVariables
   >(UNSUBSCRIBE);
-  const { t } = useTranslation("client");
-  const { logout } = useAuth();
-  if (!confirmPassword) {
-    return null;
-  }
+
+  if (!confirmPassword) return null;
+
   return (
     <>
-      <Space direction="vertical" style={{ display: "flex" }}>
-        <Errors errors={errors} fields={["password"]} />
-        <Form
-          onFinish={(values) => {
-            if (data?.me?.id) {
-              unsubscribe({
-                variables: { userId: data?.me?.id, atPeriodEnd: true },
-                update(cache, { data: unsubs }) {
-                  if (unsubs?.dropOut?.ok && data.me) {
-                    cache.modify({
-                      id: cache.identify({
-                        ...data?.me,
-                      }),
-                      fields: {
-                        accountStatus: () => AccountAccountStatus.REGISTERED,
-                        subscription: () => null,
-                      },
-                    });
-                  }
-                },
-              }).then((unsubs) => {
-                deleteAccount({
-                  variables: { password: values.password },
-                }).then(({ data }) => {
-                  if (data?.deleteAccount?.success) {
-                    logout?.();
-                  } else {
-                    setErrors(data?.deleteAccount?.errors);
-                  }
-                });
-                if (
-                  unsubs.data?.dropOut?.error &&
-                  unsubs.data?.dropOut?.error !== "104"
-                ) {
-                  setErrors({
-                    nonFieldErrors: [
-                      {
-                        code: "unsubscribe_error",
-                        message: t(
-                          `errors.${unsubs.data?.dropOut?.error}`,
-                          t("error")
-                        ),
-                      },
-                    ],
+      <Form
+        onFinish={(values) => {
+          if (data?.me?.id) {
+            unsubscribe({
+              variables: { userId: data?.me?.id, atPeriodEnd: true },
+              update(cache, { data: unsubs }) {
+                if (unsubs?.dropOut?.ok && data.me) {
+                  cache.modify({
+                    id: cache.identify({
+                      ...data?.me,
+                    }),
+                    fields: {
+                      accountStatus: () => AccountAccountStatus.REGISTERED,
+                      subscription: () => null,
+                    },
                   });
                 }
+              },
+            }).then((unsubs) => {
+              deleteAccount({
+                variables: { password: values.password },
+              }).then(({ data }) => {
+                if (data?.deleteAccount?.success) {
+                  logout?.();
+                } else {
+                  setErrors(data?.deleteAccount?.errors);
+                }
               });
-            }
-          }}
-        >
-          <Form.Item
-            name="password"
-            label={t("confirmPassword")}
-            rules={[{ required: true, message: t("confirmPasswordToDelete") }]}
-          >
-            <Input.Password autoFocus onFocus={() => setErrors(undefined)} />
-          </Form.Item>
-          <Button loading={deleting} htmlType="submit" type="primary" danger>
-            {t("confirmDeleteAccount")}
-          </Button>
-        </Form>
-      </Space>
+              if (
+                unsubs.data?.dropOut?.error &&
+                unsubs.data?.dropOut?.error !== "104"
+              ) {
+                setErrors({
+                  nonFieldErrors: [
+                    {
+                      code: "unsubscribe_error",
+                      message: t(
+                        `errors.${unsubs.data?.dropOut?.error}`,
+                        t("error")
+                      ),
+                    },
+                  ],
+                });
+              }
+            });
+          }
+        }}
+      >
+        <Row gutter={[24, 0]}>
+          <Col span={24}>
+            <TextField
+              autofocus
+              label={t("confirmPassword")}
+              name="password"
+              onFocus={() => setErrors(undefined)}
+              rules={[
+                { required: true, message: t("confirmPasswordToDelete") },
+              ]}
+              type="password"
+            />
+          </Col>
+          {errors && (
+            <Col span={24} style={{ paddingBottom: 24 }}>
+              <Errors errors={errors} />
+            </Col>
+          )}
+          <Col span={24}>
+            <Row gutter={[8, 0]} justify="end">
+              <Col>
+                <Button className="button-default-default" onClick={onCancel}>
+                  {t("translation:cancel")}
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  loading={deleting}
+                  htmlType="submit"
+                  type="primary"
+                  danger
+                >
+                  {t("confirmDeleteAccount")}
+                </Button>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Form>
       {(deleting || unsubscribing) && (
         <LoadingFullScreen tip={t("deletingAccount")} />
       )}

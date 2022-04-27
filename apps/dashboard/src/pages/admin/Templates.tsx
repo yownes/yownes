@@ -60,7 +60,7 @@ const Templates = () => {
       render: (name) => name,
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["name"],
-        t("admin:search", { data: t("name") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -74,7 +74,7 @@ const Templates = () => {
       render: (id) => id,
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["id"],
-        t("admin:search", { data: t("admin:templateId") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -89,7 +89,7 @@ const Templates = () => {
       ellipsis: true, // hace que las otras Cols tengan el mismo tamaño
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["url"],
-        t("admin:search", { data: t("admin:templateUrl") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -103,7 +103,7 @@ const Templates = () => {
       render: (snack) => snack,
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["snack"],
-        t("admin:search", { data: t("admin:snack") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -149,31 +149,33 @@ const Templates = () => {
           </Row>
           <Row gutter={[24, 24]}>
             <Col span={24}>
-              <Table
-                className={styles.table}
-                columns={columns}
-                dataSource={dataSource}
-                locale={{ emptyText: t("admin:noTemplates") }}
-                onRow={(record) => {
-                  return {
-                    onClick: () => history.push(`/templates/${record.id}`),
-                  };
-                }}
-                pagination={{
-                  showSizeChanger: true,
-                  showTotal: (total, range) =>
-                    t("paginationItems", {
-                      first: range[0],
-                      last: range[1],
-                      total: total,
-                      item: t("admin:templates"),
-                    }),
-                }}
-                rowClassName={(row) =>
-                  !row.isActive ? styles.inactive : styles.row
-                }
-                rowKey={(row) => row.id}
-              />
+              <div className={styles.overflow}>
+                <Table
+                  className={styles.table}
+                  columns={columns}
+                  dataSource={dataSource}
+                  locale={{ emptyText: t("admin:noTemplates") }}
+                  onRow={(record) => {
+                    return {
+                      onClick: () => history.push(`/templates/${record.id}`),
+                    };
+                  }}
+                  pagination={{
+                    showSizeChanger: true,
+                    showTotal: (total, range) =>
+                      t("paginationItems", {
+                        first: range[0],
+                        last: range[1],
+                        total: total,
+                        item: t("admin:templates"),
+                      }),
+                  }}
+                  rowClassName={(row) =>
+                    !row.isActive ? styles.inactive : styles.row
+                  }
+                  rowKey={(row) => row.id}
+                />
+              </div>
             </Col>
           </Row>
         </Card>

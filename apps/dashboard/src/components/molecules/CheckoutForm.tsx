@@ -31,7 +31,7 @@ import {
 } from "../../api/queries";
 import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
 import { currencySymbol } from "../../lib/currencySymbol";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 import connectionToNodes from "../../lib/connectionToNodes";
 
 import { Loading, LoadingFullScreen } from "../atoms";
@@ -88,7 +88,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
     (paymentMethods?.me?.customer?.paymentMethods &&
       paymentMethods?.me?.customer?.defaultPaymentMethod &&
       JSON.parse(
-        normalice(
+        normalize(
           connectionToNodes(paymentMethods?.me?.customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId ===
@@ -101,7 +101,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
     ? new Date(card?.exp_year, card?.exp_month) < new Date()
     : false;
   const interval = JSON.parse(
-    normalice(plan.recurring!!)
+    normalize(plan.recurring!!)
   ).interval.toUpperCase();
 
   if (loadingAccount || loadingPayments) return <Loading />;
@@ -209,7 +209,9 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                     onClick={() => {
                       if (dataAccount?.me?.id) {
                         confirm({
-                          title: t("client:warnings.confirmSubscription"),
+                          cancelButtonProps: {
+                            className: "button-default-default",
+                          },
                           icon: <ExclamationCircleOutlined />,
                           onOk: () => {
                             createSubscription({
@@ -246,6 +248,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                               },
                             });
                           },
+                          title: t("client:warnings.confirmSubscription"),
                         });
                       }
                     }}
@@ -262,7 +265,10 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                         : t("client:confirmSubscriptionDisabledMethod")
                     }
                   >
-                    <Button disabled={!(paymentMethodId && !expired)}>
+                    <Button
+                      disabled={!(paymentMethodId && !expired)}
+                      type="primary"
+                    >
                       {t("client:confirmSubscription")}
                     </Button>
                   </Tooltip>

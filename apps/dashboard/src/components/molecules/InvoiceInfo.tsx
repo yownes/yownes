@@ -29,7 +29,7 @@ import {
 import { PayInvoice, PayInvoiceVariables } from "../../api/types/PayInvoice";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
-import { getAddress } from "../../lib/getAddress";
+import { normalize } from "../../lib/normalize";
 import { dateTime, getPeriod } from "../../lib/parseDate";
 
 import {
@@ -69,7 +69,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
   }, [isPaid, payInvoiceData, t]);
 
   const address = invoice.customer.address
-    ? JSON.parse(getAddress(invoice.customer.address))
+    ? JSON.parse(normalize(invoice.customer.address))
     : undefined;
   const direction = address
     ? `${address.line1}, ${address.city} - ${address.state} (${address.country})`
@@ -441,7 +441,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
                 onConfirm={() => {
                   payInvoice({
                     variables: {
-                      invoiceId: invoice.stripeId || "",
+                      invoiceId: invoice.stripeId ?? "",
                     },
                     update(cache, { data: payData }) {
                       if (payData?.payInvoice?.ok) {

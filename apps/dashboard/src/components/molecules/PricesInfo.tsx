@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   Col,
-  Button,
   Form,
-  Input,
-  InputNumber,
   message,
   Popconfirm,
   Row,
@@ -27,10 +25,10 @@ import {
 } from "../../api/types/Plan";
 import { UpdatePrice, UpdatePriceVariables } from "../../api/types/UpdatePrice";
 import connectionToNodes from "../../lib/connectionToNodes";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import { VerifiedState } from "./";
-import { LoadingFullScreen } from "../atoms";
+import { LoadingFullScreen, TextField } from "../atoms";
 
 import styles from "./PricesInfo.module.css";
 
@@ -64,11 +62,24 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const { t } = useTranslation(["translation", "admin"]);
+
   const inputNode =
     inputType === "number" ? (
-      <InputNumber />
+      <TextField
+        autofocus={dataIndex === "unitAmount"}
+        label={title}
+        name={title}
+        type="number"
+        wrapperClassName={styles.input}
+      />
     ) : inputType === "text" ? (
-      <Input />
+      <TextField
+        autofocus={dataIndex === "unitAmount"}
+        label={title}
+        name={title}
+        type="text"
+        wrapperClassName={styles.input}
+      />
     ) : null;
   return (
     <td {...restProps}>
@@ -158,7 +169,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
     setPrices(
       connectionToNodes(product?.prices).map((price) => ({
         ...price,
-        recurring: JSON.parse(normalice(price.recurring)),
+        recurring: JSON.parse(normalize(price.recurring)),
       }))
     );
   }, [product]);
@@ -322,8 +333,9 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
           <span>
             {record.id === "1" && (
               <Popconfirm
-                title={t("admin:warningCreatePrice")}
+                cancelButtonProps={{ className: "button-default-default" }}
                 onConfirm={() => formPrices.submit()}
+                title={t("admin:warningCreatePrice")}
               >
                 <Button style={{ padding: 0, marginRight: 16 }} type="link">
                   {t("admin:createPrice")}
@@ -336,16 +348,17 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
           </span>
         ) : (
           <Popconfirm
+            cancelButtonProps={{ className: "button-default-default" }}
+            onCancel={() => cancel()}
+            onConfirm={() => {
+              setArchiveState(record.active);
+              record.active ? arch(record, false) : arch(record, true);
+            }}
             title={
               record.active
                 ? t("admin:warningArchivePrice")
                 : t("admin:warningUnarchivePrice")
             }
-            onConfirm={() => {
-              setArchiveState(record.active);
-              record.active ? arch(record, false) : arch(record, true);
-            }}
-            onCancel={() => cancel()}
             visible={archivingId !== "" && archivingId === record.id}
           >
             <Button
@@ -439,7 +452,11 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
               dataSource={dataSource}
               locale={{ emptyText: t("admin:noPrices") }}
               rowClassName={(row) =>
-                !row.active ? styles.inactive : "editable-row"
+                row.id === "1"
+                  ? styles.editingRow
+                  : !row.active
+                  ? styles.inactive
+                  : "editable-row"
               }
               rowKey={(row) => row.id}
               pagination={false}

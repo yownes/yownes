@@ -1,10 +1,10 @@
 import React from "react";
-import { Col, Input, Radio, Row, Typography } from "antd";
+import { Col, Radio, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { StoreAppColorInput } from "../../api/types/globalTypes";
 
-import { Color } from "../atoms";
+import { Color, TextField } from "../atoms";
 
 import styles from "./ColorPicker.module.css";
 
@@ -58,22 +58,31 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
           </Row>
           <Row>
             <div className={styles.customColorContainer}>
-              <Input
-                className={styles.customColorInput}
-                placeholder="#333333"
-                value={value?.color ?? defaultColors[0]}
+              <TextField
+                defaultValue={
+                  value?.color?.toLocaleUpperCase() ??
+                  defaultColors[0]?.toLocaleUpperCase()
+                }
+                label={t("client:colorHex")}
+                name="name"
                 onChange={(e) =>
                   onChange({
-                    color: e.target.value,
+                    color: e.target.value?.toLocaleUpperCase(),
                     text: (value?.text as TextColor) ?? "white",
                   })
                 }
+                rules={[{ required: true }]}
+                value={
+                  value?.color?.toLocaleUpperCase() ??
+                  defaultColors[0]?.toLocaleUpperCase()
+                }
+                wrapperClassName={styles.customColorInput}
               />
               <Color
                 color={value?.color ?? defaultColors[0]}
                 noSelected
                 height={28}
-                size={136}
+                size={120}
               />
             </div>
           </Row>

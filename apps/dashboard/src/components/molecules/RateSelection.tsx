@@ -35,7 +35,7 @@ const RateSelection = ({
             {plan.unitAmount
               ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")
               : "-"}
-            {currencySymbol(plan.currency || "")}
+            {currencySymbol(plan.currency ?? "")}
           </Text>
           <Text className={styles.tax}>{t("priceWithTaxes")}</Text>
           <Button

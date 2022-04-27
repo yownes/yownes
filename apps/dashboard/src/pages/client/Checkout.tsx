@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Result, Row, Space, Steps } from "antd";
+import { Button, Card, Col, Result, Row, Steps } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, Redirect } from "react-router-dom";
@@ -14,7 +14,7 @@ import { Plans_products_edges_node_prices_edges_node } from "../../api/types/Pla
 
 import { Loading } from "../../components/atoms";
 import { CheckoutForm } from "../../components/molecules";
-import { RateTable } from "../../components/organisms";
+import { CustomerData, RateTable } from "../../components/organisms";
 
 export interface CheckoutLocationState
   extends Plans_products_edges_node_prices_edges_node {
@@ -46,7 +46,7 @@ const Checkout = () => {
     if (current === 0) {
       return <Redirect to="/profile" />;
     }
-    if (current === 3) {
+    if (current === 4) {
       return <Redirect to="/profile" />;
     }
   }
@@ -62,18 +62,23 @@ const Checkout = () => {
           <Card>
             <Steps current={current} onChange={(c) => setCurrent(c)}>
               <Step
-                disabled={current > 1}
+                disabled={current > 2}
                 key={0}
                 title={t("client:subscriptionSteps.plan")}
               />
               <Step
-                disabled={current !== 1}
+                disabled={current !== 1 && current !== 2}
                 key={1}
-                title={t("client:subscriptionSteps.pay")}
+                title={t("client:subscriptionSteps.customer")}
               />
               <Step
                 disabled={current !== 2}
                 key={2}
+                title={t("client:subscriptionSteps.pay")}
+              />
+              <Step
+                disabled={current !== 3}
+                key={3}
                 title={t("client:subscriptionSteps.end")}
               />
             </Steps>
@@ -88,16 +93,17 @@ const Checkout = () => {
               }}
             />
           )}
-          {current === 1 && (
+          {current === 1 && <CustomerData onFinish={() => setCurrent(2)} />}
+          {current === 2 && (
             <CheckoutForm
               plan={plan!}
               onSubscribed={(status) => {
                 setStatus(status);
-                setCurrent(2);
+                setCurrent(3);
               }}
             />
           )}
-          {current === 2 && (
+          {current === 3 && (
             <Col
               xs={{ span: 22, offset: 1 }}
               sm={{ span: 20, offset: 2 }}
@@ -128,7 +134,7 @@ const Checkout = () => {
                           : "/profile/edit"
                       }
                     >
-                      <Button type="primary" onClick={() => setCurrent(3)}>
+                      <Button type="primary" onClick={() => setCurrent(4)}>
                         {status === SubscriptionStatus.ACTIVE
                           ? t("goDashboard")
                           : t("goProfile")}

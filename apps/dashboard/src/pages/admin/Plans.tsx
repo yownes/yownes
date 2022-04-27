@@ -1,8 +1,8 @@
 import React from "react";
 import {
+  Button,
   Card,
   Col,
-  Button,
   Row,
   Table,
   TableColumnsType,
@@ -24,7 +24,7 @@ import {
   getColumnFilterProps,
   getColumnSearchProps,
 } from "../../lib/filterColumns";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import { Loading } from "../../components/atoms";
 import { FeaturesInfo, VerifiedState } from "../../components/molecules";
@@ -77,7 +77,7 @@ const Plans = () => {
       ),
       ...getColumnSearchProps<Plans_products_edges_node>(
         ["name"],
-        t("admin:search", { data: t("name") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -91,7 +91,7 @@ const Plans = () => {
       render: (id) => id,
       ...getColumnSearchProps<Plans_products_edges_node>(
         ["id"],
-        t("admin:search", { data: t("admin:planId") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -103,20 +103,20 @@ const Plans = () => {
       dataIndex: "metadata",
       key: "type",
       render: (metadata) =>
-        t(`admin:${JSON.parse(normalice(metadata)).plan_type}`),
+        t(`admin:${JSON.parse(normalize(metadata)).plan_type}`),
       ...getColumnFilterProps<Plans_products_edges_node>(
         ["metadata"],
         getPlanTypeFilters(t)
       ),
       sorter: (a, b) =>
         parseInt(
-          JSON.parse(normalice(a.metadata!!)).plan_type
-            ? JSON.parse(normalice(a.metadata!!)).plan_type
+          JSON.parse(normalize(a.metadata!!)).plan_type
+            ? JSON.parse(normalize(a.metadata!!)).plan_type
             : 0
         ) -
         parseInt(
-          JSON.parse(normalice(b.metadata!!)).plan_type
-            ? JSON.parse(normalice(b.metadata!!)).plan_type
+          JSON.parse(normalize(b.metadata!!)).plan_type
+            ? JSON.parse(normalize(b.metadata!!)).plan_type
             : 0
         ),
     },
@@ -124,16 +124,16 @@ const Plans = () => {
       title: t("admin:nApps"),
       dataIndex: "metadata",
       key: "apps",
-      render: (metadata) => JSON.parse(normalice(metadata)).allowed_apps,
+      render: (metadata) => JSON.parse(normalize(metadata)).allowed_apps,
       sorter: (a, b) =>
         parseInt(
-          JSON.parse(normalice(a.metadata!!)).allowed_apps
-            ? JSON.parse(normalice(a.metadata!!)).allowed_apps
+          JSON.parse(normalize(a.metadata!!)).allowed_apps
+            ? JSON.parse(normalize(a.metadata!!)).allowed_apps
             : 0
         ) -
         parseInt(
-          JSON.parse(normalice(b.metadata!!)).allowed_apps
-            ? JSON.parse(normalice(b.metadata!!)).allowed_apps
+          JSON.parse(normalize(b.metadata!!)).allowed_apps
+            ? JSON.parse(normalize(b.metadata!!)).allowed_apps
             : 0
         ),
     },
@@ -141,16 +141,16 @@ const Plans = () => {
       title: t("admin:nBuilds"),
       dataIndex: "metadata",
       key: "builds",
-      render: (metadata) => JSON.parse(normalice(metadata)).allowed_builds,
+      render: (metadata) => JSON.parse(normalize(metadata)).allowed_builds,
       sorter: (a, b) =>
         parseInt(
-          JSON.parse(normalice(a.metadata!!)).allowed_builds
-            ? JSON.parse(normalice(a.metadata!!)).allowed_builds
+          JSON.parse(normalize(a.metadata!!)).allowed_builds
+            ? JSON.parse(normalize(a.metadata!!)).allowed_builds
             : 0
         ) -
         parseInt(
-          JSON.parse(normalice(b.metadata!!)).allowed_builds
-            ? JSON.parse(normalice(b.metadata!!)).allowed_builds
+          JSON.parse(normalize(b.metadata!!)).allowed_builds
+            ? JSON.parse(normalize(b.metadata!!)).allowed_builds
             : 0
         ),
     },
@@ -192,31 +192,33 @@ const Plans = () => {
           </Row>
           <Row gutter={[24, 24]}>
             <Col span={24}>
-              <Table
-                className={styles.table}
-                columns={columns}
-                dataSource={dataSource}
-                locale={{ emptyText: t("admin:noPlans") }}
-                onRow={(record) => {
-                  return {
-                    onClick: () => history.push(`/planes/${record.id}`),
-                  };
-                }}
-                pagination={{
-                  showSizeChanger: true,
-                  showTotal: (total, range) =>
-                    t("paginationItems", {
-                      first: range[0],
-                      last: range[1],
-                      total: total,
-                      item: t("admin:plans"),
-                    }),
-                }}
-                rowClassName={(row) =>
-                  !row.active ? styles.inactive : styles.row
-                }
-                rowKey={(row) => row.id}
-              />
+              <div className={styles.overflow}>
+                <Table
+                  className={styles.table}
+                  columns={columns}
+                  dataSource={dataSource}
+                  locale={{ emptyText: t("admin:noPlans") }}
+                  onRow={(record) => {
+                    return {
+                      onClick: () => history.push(`/planes/${record.id}`),
+                    };
+                  }}
+                  pagination={{
+                    showSizeChanger: true,
+                    showTotal: (total, range) =>
+                      t("paginationItems", {
+                        first: range[0],
+                        last: range[1],
+                        total: total,
+                        item: t("admin:plans"),
+                      }),
+                  }}
+                  rowClassName={(row) =>
+                    !row.active ? styles.inactive : styles.row
+                  }
+                  rowKey={(row) => row.id}
+                />
+              </div>
             </Col>
           </Row>
         </Card>

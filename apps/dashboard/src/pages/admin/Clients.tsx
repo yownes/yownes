@@ -111,7 +111,7 @@ const Clients = () => {
       render: (name) => name,
       ...getColumnSearchProps<Clients_users_edges_node>(
         ["username"],
-        t("admin:search", { data: t("name") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -125,7 +125,7 @@ const Clients = () => {
       render: (id) => id,
       ...getColumnSearchProps<Clients_users_edges_node>(
         ["id"],
-        t("admin:search", { data: t("admin:clientId") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -220,29 +220,31 @@ const Clients = () => {
           </Row>
           <Row gutter={[24, 24]}>
             <Col span={24}>
-              <Table
-                className={styles.table}
-                columns={columns}
-                dataSource={dataSource}
-                locale={{ emptyText: t("admin:noClients") }}
-                onRow={(record) => {
-                  return {
-                    onClick: () => history.push(`/clients/${record.id}`),
-                  };
-                }}
-                pagination={{
-                  showSizeChanger: true,
-                  showTotal: (total, range) =>
-                    t("paginationItems", {
-                      first: range[0],
-                      last: range[1],
-                      total: total,
-                      item: t("admin:clients"),
-                    }),
-                }}
-                rowClassName={styles.row}
-                rowKey={(row) => row.id}
-              />
+              <div className={styles.overflow}>
+                <Table
+                  className={styles.table}
+                  columns={columns}
+                  dataSource={dataSource}
+                  locale={{ emptyText: t("admin:noClients") }}
+                  onRow={(record) => {
+                    return {
+                      onClick: () => history.push(`/clients/${record.id}`),
+                    };
+                  }}
+                  pagination={{
+                    showSizeChanger: true,
+                    showTotal: (total, range) =>
+                      t("paginationItems", {
+                        first: range[0],
+                        last: range[1],
+                        total: total,
+                        item: t("admin:clients"),
+                      }),
+                  }}
+                  rowClassName={styles.row}
+                  rowKey={(row) => row.id}
+                />
+              </div>
             </Col>
           </Row>
         </Card>

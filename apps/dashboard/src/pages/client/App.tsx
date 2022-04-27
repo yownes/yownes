@@ -35,7 +35,7 @@ import {
 import { MyAccount } from "../../api/types/MyAccount";
 import { UpdateApp, UpdateAppVariables } from "../../api/types/UpdateApp";
 import connectionToNodes from "../../lib/connectionToNodes";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import { Loading, LoadingFullScreen } from "../../components/atoms";
 import { AppInfo } from "../../components/molecules";
@@ -206,14 +206,14 @@ const App = () => {
       setAllowedApps(
         parseInt(
           JSON.parse(
-            normalice(accountData?.me?.subscription?.plan?.product?.metadata)
+            normalize(accountData?.me?.subscription?.plan?.product?.metadata)
           ).allowed_apps
         )
       );
       setBuildsLimit(
         parseInt(
           JSON.parse(
-            normalice(accountData?.me?.subscription?.plan?.product?.metadata)
+            normalize(accountData?.me?.subscription?.plan?.product?.metadata)
           ).allowed_builds
         )
       );
@@ -244,7 +244,7 @@ const App = () => {
             <Col span={24}>
               <Card>
                 <AppInfo
-                  app={data?.app ?? undefined}
+                  app={data?.app!!}
                   build={{
                     limit: buildsLimit,
                     remaining: remainingBuilds,
@@ -301,24 +301,12 @@ const App = () => {
                 <Row className={styles.buttons} justify="space-around">
                   <Col>
                     <Popconfirm
+                      cancelButtonProps={{
+                        className: "button-default-default",
+                      }}
                       cancelText={t("cancel")}
                       disabled={appsAreEqual(state, data?.app) || updating}
                       okText={t("save")}
-                      title={
-                        <Trans
-                          i18nKey={
-                            appBuildStatus === BuildBuildStatus.QUEUED
-                              ? "warnings.saveApply"
-                              : data?.app?.builds.edges.length === 0
-                              ? "warnings.saveNotApplyFirst"
-                              : "warnings.saveNotApplyNoFirst"
-                          }
-                          ns="client"
-                        >
-                          <strong></strong>
-                          <p></p>
-                        </Trans>
-                      }
                       onConfirm={() => {
                         if (!state.apiLink || !state.name) {
                           message.error(t("client:saveChangesError"), 4);
@@ -372,6 +360,21 @@ const App = () => {
                           });
                         }
                       }}
+                      title={
+                        <Trans
+                          i18nKey={
+                            appBuildStatus === BuildBuildStatus.QUEUED
+                              ? "warnings.saveApply"
+                              : data?.app?.builds.edges.length === 0
+                              ? "warnings.saveNotApplyFirst"
+                              : "warnings.saveNotApplyNoFirst"
+                          }
+                          ns="client"
+                        >
+                          <strong></strong>
+                          <p></p>
+                        </Trans>
+                      }
                     >
                       <Tooltip
                         title={t("client:noChanges")}

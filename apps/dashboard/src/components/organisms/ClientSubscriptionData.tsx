@@ -6,12 +6,14 @@ import {
   Checkbox,
   Col,
   message,
+  Modal,
   Popconfirm,
   Row,
   Tag,
   Typography,
 } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import reverse from "lodash/reverse";
 import addDays from "date-fns/addDays";
 import { Trans, useTranslation } from "react-i18next";
@@ -56,6 +58,7 @@ import {
 import styles from "./ClientSubscriptionData.module.css";
 
 message.config({ maxCount: 1 });
+const { confirm } = Modal;
 const { Text, Title } = Typography;
 
 interface ClientSubscriptionDataProps {
@@ -189,110 +192,142 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
                     SubscriptionStatus.INCOMPLETE ||
                   client?.subscription?.status ===
                     SubscriptionStatus.PAST_DUE) && (
-                  <Popconfirm
-                    cancelText={t("cancel")}
-                    destroyTooltipOnHide={true}
-                    okText={t("confirm")}
-                    title={
-                      <>
-                        <Trans
-                          i18nKey={
-                            client?.subscription?.status ===
-                            SubscriptionStatus.INCOMPLETE
-                              ? "warnings.cancelSubscriptionIncompleteNow"
-                              : client?.subscription?.status ===
-                                SubscriptionStatus.PAST_DUE
-                              ? client.apps && client.apps.edges.length > 0
-                                ? "warnings.cancelSubscriptionPastDueNowApps"
-                                : "warnings.cancelSubscriptionPastDueNowNoApps"
-                              : client.apps && client.apps.edges.length > 0
-                              ? "warnings.cancelSubscription"
-                              : "warnings.cancelSubscriptionNoApps"
-                          }
-                          ns="admin"
-                          values={{
-                            date: dateTime(
-                              new Date(client.subscription.currentPeriodEnd)
-                            ),
-                          }}
-                        >
-                          <strong></strong>
-                          <p></p>
-                          <p></p>
-                          <p></p>
-                        </Trans>
-                        {client?.subscription?.status ===
-                          SubscriptionStatus.ACTIVE &&
-                          client.subscription.cancelAtPeriodEnd === false && (
-                            <p>
-                              <Checkbox
-                                defaultChecked={finalizeNow}
-                                onChange={(e) =>
-                                  setFinalizeNow(e.target.checked)
+                  <>
+                    <Col>
+                      <div className={styles.paddingTop24}>
+                        <Button
+                          danger
+                          onClick={() => {
+                            confirm({
+                              icon: <ExclamationCircleOutlined />,
+                              title: t(
+                                "admin:warnings.cancelSubscriptionTitle"
+                              ),
+                              content: (
+                                <>
+                                  <Trans
+                                    i18nKey={
+                                      client?.subscription?.status ===
+                                      SubscriptionStatus.INCOMPLETE
+                                        ? "warnings.cancelSubscriptionIncompleteNow"
+                                        : client?.subscription?.status ===
+                                          SubscriptionStatus.PAST_DUE
+                                        ? client.apps &&
+                                          client.apps.edges.length > 0
+                                          ? "warnings.cancelSubscriptionPastDueNowApps"
+                                          : "warnings.cancelSubscriptionPastDueNowNoApps"
+                                        : client?.apps &&
+                                          client.apps.edges.length > 0
+                                        ? "warnings.cancelSubscription"
+                                        : "warnings.cancelSubscriptionNoApps"
+                                    }
+                                    ns="admin"
+                                    values={{
+                                      date: dateTime(
+                                        new Date(
+                                          client?.subscription?.currentPeriodEnd
+                                        )
+                                      ),
+                                    }}
+                                  >
+                                    <p></p>
+                                    <p></p>
+                                  </Trans>
+                                  {client?.subscription?.status ===
+                                    SubscriptionStatus.ACTIVE &&
+                                    client.subscription.cancelAtPeriodEnd ===
+                                      false && (
+                                      <p className={styles.paddingTop}>
+                                        <Checkbox
+                                          defaultChecked={finalizeNow}
+                                          onChange={(e) =>
+                                            setFinalizeNow(e.target.checked)
+                                          }
+                                        >
+                                          {t("admin:finalizeNow")}
+                                        </Checkbox>
+                                      </p>
+                                    )}
+                                </>
+                              ),
+                              cancelButtonProps: {
+                                className: "button-default-default",
+                              },
+                              cancelText: t("close"),
+                              okButtonProps: {
+                                autoFocus: false,
+                                danger: true,
+                                type: "default",
+                              },
+                              okText: t(
+                                "admin:cancelClientSubscriptionConfirm"
+                              ),
+                              onOk: () => {
+                                if (client?.id) {
+                                  unsubscribe({
+                                    variables: {
+                                      userId: client?.id,
+                                      atPeriodEnd: !finalizeNow,
+                                    },
+                                    update(cache, { data: result }) {
+                                      if (result?.dropOut?.ok && client) {
+                                        if (!finalizeNow) {
+                                          cache.modify({
+                                            id: cache.identify({
+                                              ...client,
+                                            }),
+                                            fields: {
+                                              accountStatus: () =>
+                                                result.dropOut?.accountStatus ||
+                                                AccountAccountStatus.REGISTERED,
+                                            },
+                                          });
+                                        } else {
+                                          cache.modify({
+                                            id: cache.identify({
+                                              ...client,
+                                            }),
+                                            fields: {
+                                              accountStatus: () =>
+                                                result.dropOut?.accountStatus ||
+                                                AccountAccountStatus.REGISTERED,
+                                              subscription: () => null,
+                                            },
+                                          });
+                                        }
+                                      }
+                                    },
+                                  });
+                                  setIsUnsubscribed(true);
                                 }
-                              >
-                                {t("admin:finalizeNow")}
-                              </Checkbox>
-                            </p>
-                          )}
-                      </>
-                    }
-                    placement="left"
-                    onConfirm={() => {
-                      if (client?.id) {
-                        unsubscribe({
-                          variables: {
-                            userId: client?.id,
-                            atPeriodEnd: !finalizeNow,
-                          },
-                          update(cache, { data: result }) {
-                            if (result?.dropOut?.ok && client) {
-                              if (!finalizeNow) {
-                                cache.modify({
-                                  id: cache.identify({
-                                    ...client,
-                                  }),
-                                  fields: {
-                                    accountStatus: () =>
-                                      result.dropOut?.accountStatus ||
-                                      AccountAccountStatus.REGISTERED,
-                                  },
-                                });
-                              } else {
-                                cache.modify({
-                                  id: cache.identify({
-                                    ...client,
-                                  }),
-                                  fields: {
-                                    accountStatus: () =>
-                                      result.dropOut?.accountStatus ||
-                                      AccountAccountStatus.REGISTERED,
-                                    subscription: () => null,
-                                  },
-                                });
-                              }
-                            }
-                          },
-                        });
-                        setIsUnsubscribed(true);
-                      }
-                    }}
-                  >
-                    <Button
-                      className={styles.button}
-                      danger
-                      onClick={() => setFinalizeNow(true)}
-                      type="default"
-                    >
-                      {t("admin:cancelClientSubscription")}
-                    </Button>
-                  </Popconfirm>
+                              },
+                            });
+                          }}
+                          type="default"
+                        >
+                          {t("admin:cancelClientSubscription")}
+                        </Button>
+                      </div>
+                    </Col>
+                  </>
                 )}
                 {client?.subscription?.status === SubscriptionStatus.ACTIVE &&
                   client.subscription.cancelAtPeriodEnd && (
                     <Popconfirm
+                      cancelButtonProps={{
+                        className: "button-default-default",
+                      }}
                       cancelText={t("cancel")}
                       okText={t("confirm")}
+                      onConfirm={() => {
+                        if (client?.id) {
+                          resubscribe({
+                            variables: { userId: client.id },
+                          });
+                          setIsResubscribed(true);
+                        }
+                      }}
+                      placement="left"
                       title={
                         <Trans
                           i18nKey={"warnings.unCancelSubscription"}
@@ -302,15 +337,6 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
                           <p></p>
                         </Trans>
                       }
-                      placement="left"
-                      onConfirm={() => {
-                        if (client?.id) {
-                          resubscribe({
-                            variables: { userId: client.id },
-                          });
-                          setIsResubscribed(true);
-                        }
-                      }}
                     >
                       <Button className={styles.button} danger type="default">
                         {t("admin:reSubscribeClient")}
@@ -369,7 +395,6 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
               </Col>
             )}
           </Row>
-          <Row gutter={[24, 24]}></Row>
           {subscriptions &&
             (subscriptions?.length > 1 ||
               (subscriptions.length === 1 &&
@@ -377,11 +402,13 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
                   subscriptions[0].status ===
                     SubscriptionStatus.INCOMPLETE_EXPIRED))) && (
               <Row gutter={[24, 24]}>
-                <SubscriptionTable
-                  invoices={connectionToNodes(invoicesData?.invoices)}
-                  plans={plansData}
-                  subscriptions={subscriptions}
-                />
+                <Col span={24}>
+                  <SubscriptionTable
+                    invoices={connectionToNodes(invoicesData?.invoices)}
+                    plans={plansData}
+                    subscriptions={subscriptions}
+                  />
+                </Col>
               </Row>
             )}
         </Card>

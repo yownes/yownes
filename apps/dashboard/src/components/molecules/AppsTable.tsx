@@ -69,7 +69,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
         render: (name) => <Text strong>{name}</Text>,
         ...getColumnSearchProps<Client_user_apps_edges_node>(
           ["name"],
-          t("admin:search", { data: t("app") }),
+          t("admin:search"),
           t("search"),
           t("reset")
         ),
@@ -95,7 +95,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
     return columns ? [...cols, ...columns] : cols;
   }, [columns, t]);
   const data = connectionToNodes(dataSource);
-  return (
+  return data.length > 0 ? (
     <Table
       columns={allCols}
       dataSource={data}
@@ -113,6 +113,10 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
       rowClassName={(row) => (!row.isActive ? styles.app_deleted : "")}
       rowKey={(row) => row.id}
     />
+  ) : (
+    <Text className={styles.empty} type="secondary">
+      {t("noApps")}
+    </Text>
   );
 };
 

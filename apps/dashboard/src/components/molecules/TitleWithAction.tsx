@@ -47,9 +47,10 @@ const TitleWithAction = ({
               visible={tooltip && tooltip.visible && visible}
             >
               <Popconfirm
+                cancelButtonProps={{ className: "button-default-default" }}
+                onConfirm={action.action}
                 placement="bottomRight"
                 title={action.confirmationTitle || t("warnings.action")}
-                onConfirm={action.action}
               >
                 <div
                   onMouseEnter={() => setVisible(true)}

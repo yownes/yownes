@@ -1,10 +1,11 @@
 import React from "react";
-import { Form, Input, Button, Checkbox, Typography } from "antd";
+import { Form, Button, Checkbox, Typography } from "antd";
 import { Trans, useTranslation } from "react-i18next";
 import { Link, Redirect, useLocation } from "react-router-dom";
 
 import { useAuth } from "../../lib/auth";
 
+import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 import Auth from "../../components/templates/Auth";
 
@@ -31,13 +32,9 @@ const Register = () => {
     <Auth image="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>{t("createAnAccount")}</h1>
-        <p>
+        <div className={styles.description}>
           <Text type="secondary">{t("createAnAccountDescription")}</Text>
-        </p>
-        <Errors
-          errors={errors}
-          fields={["email", "username", "password1", "password2"]}
-        />
+        </div>
         <Form
           onFinish={(values) => {
             register?.({
@@ -48,25 +45,23 @@ const Register = () => {
             });
           }}
         >
-          <Form.Item
+          <TextField
+            autofocus
+            label={t("translation:userName")}
             name="username"
             rules={[
               { required: true, message: t("required.username") },
               { min: 2, message: t("required.min", { num: 2 }) },
             ]}
-          >
-            <Input placeholder={t("translation:userName")} />
-          </Form.Item>
-          <Form.Item
+          />
+          <TextField
+            label={t("translation:email")}
             name="email"
-            rules={[
-              { required: true, message: t("required.email") },
-              { type: "email", message: t("required.validEmail") },
-            ]}
-          >
-            <Input placeholder={t("translation:email")} />
-          </Form.Item>
-          <Form.Item
+            rules={[{ required: true, message: t("required.email") }]}
+            type="email"
+          />
+          <TextField
+            label={t("password")}
             name="password"
             rules={[
               { required: true, message: t("required.password") },
@@ -75,10 +70,11 @@ const Register = () => {
                 message: t("required.minPassword", { num: 8 }),
               },
             ]}
-          >
-            <Input.Password placeholder={t("password")} />
-          </Form.Item>
-          <Form.Item
+            type="password"
+          />
+          <TextField
+            label={t("confirmPassword")}
+            dependencies={["password"]}
             name="confirmPassword"
             rules={[
               { required: true, message: t("required.passwordMatch") },
@@ -91,10 +87,8 @@ const Register = () => {
                 },
               }),
             ]}
-            dependencies={["password"]}
-          >
-            <Input.Password placeholder={t("confirmPassword")} />
-          </Form.Item>
+            type="password"
+          />
           <Form.Item
             name="agreement"
             valuePropName="checked"
@@ -111,9 +105,22 @@ const Register = () => {
               </Trans>
             </Checkbox>
           </Form.Item>
+          {errors && (
+            <div className={styles.errors}>
+              <Errors
+                errors={errors}
+                fields={["email", "username", "password1", "password2"]}
+              />
+            </div>
+          )}
           <div className={styles.buttons}>
-            <Button block type="ghost" onClick={() => clear?.()}>
-              <Link to={`/auth/login`}>{t("connect")}</Link>
+            <Button
+              block
+              className="button-default-default"
+              type="ghost"
+              onClick={() => clear?.()}
+            >
+              <Link to={`/auth/login`}>{t("login")}</Link>
             </Button>
             <Button
               block

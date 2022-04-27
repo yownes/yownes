@@ -56,7 +56,7 @@ const Builds = () => {
       key: "buildId",
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["buildId"],
-        t("admin:search", { data: t("admin:buildId") }),
+        t("admin:search"),
         t("search"),
         t("reset")
       ),
@@ -68,7 +68,7 @@ const Builds = () => {
       key: "client",
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["app", "customer", "username"],
-        t("admin:search", { data: t("admin:client") }),
+        t("admin:search"),
         t("search"),
         t("reset")
       ),
@@ -81,7 +81,7 @@ const Builds = () => {
       key: "clientId",
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["app", "customer", "id"],
-        t("admin:search", { data: t("admin:clientId") }),
+        t("admin:search"),
         t("search"),
         t("reset")
       ),
@@ -93,7 +93,7 @@ const Builds = () => {
       key: "app",
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["app", "name"],
-        t("admin:search", { data: t("admin:app") }),
+        t("admin:search"),
         t("search"),
         t("reset")
       ),
@@ -127,26 +127,28 @@ const Builds = () => {
           </Row>
           <Row gutter={[24, 24]}>
             <Col span={24}>
-              <Table
-                className={styles.table}
-                columns={columns}
-                dataSource={connectionToNodes(data?.builds)}
-                locale={{ emptyText: t("noBuilds") }}
-                pagination={{
-                  showSizeChanger: true,
-                  showTotal: (total, range) =>
-                    t("paginationItems", {
-                      first: range[0],
-                      last: range[1],
-                      total: total,
-                      item: t("admin:builds"),
-                    }),
-                }}
-                rowClassName={(row) =>
-                  !row.app?.isActive ? styles.app_deleted : ""
-                }
-                rowKey={(row) => row.id}
-              />
+              <div className={styles.overflow}>
+                <Table
+                  className={styles.table}
+                  columns={columns}
+                  dataSource={connectionToNodes(data?.builds)}
+                  locale={{ emptyText: t("noBuilds") }}
+                  pagination={{
+                    showSizeChanger: true,
+                    showTotal: (total, range) =>
+                      t("paginationItems", {
+                        first: range[0],
+                        last: range[1],
+                        total: total,
+                        item: t("admin:builds"),
+                      }),
+                  }}
+                  rowClassName={(row) =>
+                    !row.app?.isActive ? styles.app_deleted : ""
+                  }
+                  rowKey={(row) => row.id}
+                />
+              </div>
             </Col>
           </Row>
         </Card>

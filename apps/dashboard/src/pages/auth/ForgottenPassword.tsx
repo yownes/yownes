@@ -10,6 +10,7 @@ import {
   SendPasswordResetEmailVariables,
 } from "../../api/types/SendPasswordResetEmail";
 
+import { TextField } from "../../components/atoms";
 import Auth from "../../components/templates/Auth";
 
 import styles from "./auth.module.css";
@@ -27,9 +28,9 @@ const ForgottenPassword = () => {
     <Auth image="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>{t("forgotPassword")}</h1>
-        <p>
+        <div className={styles.description}>
           <Text type="secondary">{t("forgotPasswordDescription")}</Text>
-        </p>
+        </div>
         <Form
           form={formReset}
           onFinish={(values) => {
@@ -49,17 +50,15 @@ const ForgottenPassword = () => {
             });
           }}
         >
-          <Form.Item
+          <TextField
+            autofocus
+            label={t("translation:email")}
             name="email"
-            rules={[
-              { required: true, message: t("required.email") },
-              { type: "email", message: t("required.validEmail") },
-            ]}
-          >
-            <Input placeholder={t("translation:email")} />
-          </Form.Item>
+            rules={[{ required: true, message: t("required.email") }]}
+            type="email"
+          />
           <div className={styles.buttons}>
-            <Button block type="ghost">
+            <Button block className="button-default-default" type="ghost">
               <Link to={`/auth/login`} style={{ display: "block" }}>
                 {t("login")}
               </Link>

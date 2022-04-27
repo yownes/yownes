@@ -13,7 +13,6 @@ import {
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
-import { PaymentMethod as PaymentMethodType } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
@@ -38,11 +37,11 @@ import {
 } from "../../api/types/RemovePaymentMethod";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { colors } from "../../lib/colors";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import { CreateCreditCard, EditCreditCard } from "./";
 import { LoadingFullScreen } from "../atoms";
-import { AlertWithLink, CreditCard, SelectableCreditCard } from "../molecules";
+import { AlertWithLink, CreditCard } from "../molecules";
 import { ICreditCardStripe } from "../molecules/CreditCard";
 
 import styles from "./PaymentMethod.module.css";
@@ -86,9 +85,6 @@ const PaymentMethod = ({
     useMutation<RemovePaymentMethod, RemovePaymentMethodVariables>(
       REMOVE_PAYMENT_METHOD
     );
-  const [tempPaymentMethod, setTempPaymentMethod] = useState<
-    PaymentMethodType[] | undefined
-  >([]);
   const [paymentMethod, setPaymentMethod] = useState<
     | MyPaymentMethods_me_customer_paymentMethods_edges_node
     | Client_user_customer_paymentMethods_edges_node
@@ -127,7 +123,7 @@ const PaymentMethod = ({
     (customer?.paymentMethods &&
       customer?.defaultPaymentMethod &&
       JSON.parse(
-        normalice(
+        normalize(
           connectionToNodes(customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId === customer?.defaultPaymentMethod?.stripeId
@@ -174,7 +170,7 @@ const PaymentMethod = ({
             customer?.paymentMethods.edges.length > 0 ? (
               connectionToNodes(customer?.paymentMethods).map((node) => {
                 const creditcard: ICreditCardStripe = JSON.parse(
-                  normalice(node.card!!)
+                  normalize(node.card!!)
                 );
                 const expired =
                   new Date(creditcard.exp_year, creditcard.exp_month) <
@@ -224,6 +220,9 @@ const PaymentMethod = ({
                       >
                         {!expired ? (
                           <Popconfirm
+                            cancelButtonProps={{
+                              className: "button-default-default",
+                            }}
                             onConfirm={(e) => {
                               addPayment({
                                 variables: {
@@ -268,10 +267,11 @@ const PaymentMethod = ({
                             }}
                           />
                           <Popconfirm
+                            cancelButtonProps={{
+                              className: "button-default-default",
+                            }}
                             cancelText={t("cancel")}
                             okText={t("delete")}
-                            title={t("client:warnings.card")}
-                            placement="topLeft"
                             onConfirm={() => {
                               if (node.stripeId) {
                                 removePaymentMethod({
@@ -294,6 +294,8 @@ const PaymentMethod = ({
                                 });
                               }
                             }}
+                            placement="left"
+                            title={t("client:warnings.card")}
                           >
                             <Button
                               className={styles.deleteIcon}
@@ -335,26 +337,7 @@ const PaymentMethod = ({
               <Alert message={t("noPaymentMethods")} showIcon type="warning" />
             )
           ) : location.pathname === "/checkout" ? (
-            tempPaymentMethod &&
-            tempPaymentMethod.map((temp) => (
-              <>
-                <Card
-                  bodyStyle={{
-                    padding: 0,
-                    marginBottom: 20,
-                    marginTop: 4,
-                  }}
-                  bordered={false}
-                  key={temp.id}
-                >
-                  <SelectableCreditCard
-                    data={temp}
-                    onSelected={() => setSelectedId(temp.id)}
-                    selected={temp.id === selectedId}
-                  />
-                </Card>
-              </>
-            ))
+            <Alert message={t("noCustomer")} showIcon type="warning" />
           ) : staff ? (
             <div style={{ paddingTop: 20 }}>
               <Alert
@@ -389,6 +372,7 @@ const PaymentMethod = ({
       </Col>
       <Modal
         centered
+        destroyOnClose
         footer={null}
         onCancel={handleCancelCreate}
         title={t("client:addPaymentMethod")}
@@ -396,12 +380,13 @@ const PaymentMethod = ({
       >
         <CreateCreditCard
           form={formCreate}
+          onCancel={handleCancelCreate}
           onCreated={(paymentMethod, isDefault) => {
             if (customer) {
               addPayment({
                 variables: {
                   isDefault: isDefault,
-                  paymentMethodId: paymentMethod!!.id,
+                  paymentMethodId: paymentMethod ?? "",
                   userId: userId,
                 },
                 update(cache, { data: newData }) {
@@ -414,15 +399,7 @@ const PaymentMethod = ({
                 },
               });
             } else {
-              if (paymentMethod) {
-                onCreated && onCreated(paymentMethod.id);
-                setTempPaymentMethod((tempPaymentMethod) => [
-                  ...(tempPaymentMethod ?? []),
-                  paymentMethod,
-                ]);
-                setSelectedId(paymentMethod.id);
-                formCreate.resetFields();
-              }
+              message.error(t("noCustomerError"), 4);
             }
             setisAdded(true);
             setisModalCreateOpen(false);
@@ -440,6 +417,7 @@ const PaymentMethod = ({
         {isModalUpdateOpen && (
           <EditCreditCard
             form={formUpdate}
+            onCancel={handleCancelUpdate}
             onEdited={() => {
               setisModalUpdateOpen(false);
             }}

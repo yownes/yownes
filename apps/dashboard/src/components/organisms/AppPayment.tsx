@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Collapse,
-  Form,
-  Input,
-  message,
-  Row,
-  Space,
-  Typography,
-} from "antd";
+import { Button, Col, Form, message, Row, Typography } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
@@ -21,7 +11,7 @@ import {
   ModifyAppPaymentVariables,
 } from "../../api/types/ModifyAppPayment";
 
-import { Loading, LoadingFullScreen } from "../atoms";
+import { Loading, LoadingFullScreen, TextField } from "../atoms";
 import { Errors } from "../molecules";
 
 message.config({ maxCount: 1 });
@@ -69,72 +59,68 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
           <Title level={2}>{t("collectMethod")}</Title>
         </Col>
         <Col span={24}>
-          <Text>{t("keysDescription")}</Text>
+          <Text type="secondary">{t("keysDescription")}</Text>
         </Col>
         <Col span={24}>
-          <Collapse>
-            <Collapse.Panel key="stripe" header="Stripe">
-              <Form
-                initialValues={data?.app?.paymentMethod ?? undefined}
-                onChange={() => setErrs(undefined)}
-                onFinish={(values) => {
-                  updatePayment({
-                    variables: {
-                      data: values,
-                      appId,
-                    },
-                  });
-                }}
-                validateMessages={{ required: t("requiredInput") }}
-              >
-                <Form.Item
-                  name="stripeTestPublic"
-                  label={t("testPublicKey")}
-                  rules={[{ required: true }]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  name="stripeTestSecret"
-                  label={t("testPrivateKey")}
-                  rules={[{ required: true }]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  name="stripeProdPublic"
-                  label={t("prodPublicKey")}
-                  rules={[{ required: true }]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  name="stripeProdSecret"
-                  label={t("prodPrivateKey")}
-                  rules={[{ required: true }]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Space direction="vertical" size="middle">
-                  {errs && (
-                    <Errors
-                      errors={{
-                        nonFieldErrors: [
-                          {
-                            message: t(`errors.${errs}`, t("error")),
-                            code: errs,
-                          },
-                        ],
-                      }}
-                    />
-                  )}
-                  <Button loading={updating} htmlType="submit" type="primary">
-                    {t("updateStripeKeys")}
-                  </Button>
-                </Space>
-              </Form>
-            </Collapse.Panel>
-          </Collapse>
+          <Form
+            initialValues={data?.app?.paymentMethod ?? undefined}
+            onChange={() => setErrs(undefined)}
+            onFinish={(values) => {
+              updatePayment({
+                variables: {
+                  data: values,
+                  appId,
+                },
+              });
+            }}
+            validateMessages={{ required: t("requiredInput") }}
+          >
+            <TextField
+              defaultValue={data?.app?.paymentMethod?.stripeTestPublic}
+              label={t("testPublicKey")}
+              name="stripeTestPublic"
+              rules={[{ required: true }]}
+              type="password"
+            />
+            <TextField
+              defaultValue={data?.app?.paymentMethod?.stripeTestSecret}
+              label={t("testPrivateKey")}
+              name="stripeTestSecret"
+              rules={[{ required: true }]}
+              type="password"
+            />
+            <TextField
+              defaultValue={data?.app?.paymentMethod?.stripeProdPublic}
+              label={t("prodPublicKey")}
+              name="stripeProdPublic"
+              rules={[{ required: true }]}
+              type="password"
+            />
+            <TextField
+              defaultValue={data?.app?.paymentMethod?.stripeProdSecret}
+              label={t("prodPrivateKey")}
+              name="stripeProdSecret"
+              rules={[{ required: true }]}
+              type="password"
+            />
+            {errs && (
+              <div style={{ paddingBottom: 24 }}>
+                <Errors
+                  errors={{
+                    nonFieldErrors: [
+                      {
+                        message: t(`errors.${errs}`, t("error")),
+                        code: errs,
+                      },
+                    ],
+                  }}
+                />
+              </div>
+            )}
+            <Button loading={updating} htmlType="submit" type="primary">
+              {t("updateStripeKeys")}
+            </Button>
+          </Form>
         </Col>
         {updating && <LoadingFullScreen tip={t("updatingStripeKeys")} />}
       </Row>

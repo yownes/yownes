@@ -73,12 +73,13 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
     },
   ];
 
-  return (
+  return invoices?.length > 0 ? (
     <Table
       columns={columns}
       dataSource={invoices}
       expandable={{
         expandIcon: () => undefined,
+        expandIconColumnIndex: -1,
         // expandIcon: ({ expanded, onExpand, record }) => (
         //   <Badge
         //     dot
@@ -121,6 +122,8 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
       rowKey={(row) => row.created}
       style={{ marginTop: 20 }}
     />
+  ) : (
+    <Text type="secondary">{t("noInvoices")}</Text>
   );
 };
 

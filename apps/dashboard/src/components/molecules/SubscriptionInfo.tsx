@@ -17,7 +17,7 @@ import { UpcomingInvoice_upcominginvoice } from "../../api/types/UpcomingInvoice
 import { colors } from "../../lib/colors";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 import { dateTime, shortDate } from "../../lib/parseDate";
 
 import { Descriptions } from "./";
@@ -57,12 +57,14 @@ const SubscriptionInfo = ({
 
   const info: description[] = [];
   if (subscription && subscription.plan) {
-    const allowed_apps =
-      JSON.parse(normalice(subscription.plan.product?.metadata!!))
-        .allowed_apps || 1;
-    const allowed_builds =
-      JSON.parse(normalice(subscription.plan.product?.metadata!!))
-        .allowed_builds || 1;
+    const allowed_apps = subscription.plan.product?.metadata
+      ? JSON.parse(normalize(subscription.plan.product.metadata))
+          .allowed_apps || 1
+      : 1;
+    const allowed_builds = subscription.plan.product?.metadata
+      ? JSON.parse(normalize(subscription.plan.product.metadata))
+          .allowed_builds || 1
+      : 1;
     subscription.plan.product &&
       info.push({
         title: t("plan"),
@@ -147,7 +149,7 @@ const SubscriptionInfo = ({
             ).toLocaleString(undefined, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
-            })}${currencySymbol(upcoming.currency || "")}`}
+            })}${currencySymbol(upcoming.currency ?? "")}`}
           {!upcoming &&
           (subscription.customer.balance !== undefined &&
             subscription.customer.balance) !== null
@@ -157,7 +159,7 @@ const SubscriptionInfo = ({
               ).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
-              })}${currencySymbol(subscription.customer.currency || "")}`
+              })}${currencySymbol(subscription.customer.currency ?? "")}`
             : null}
           {!upcoming &&
           !subscription.customer.balance &&
@@ -185,7 +187,7 @@ const SubscriptionInfo = ({
             <div className={styles.description}>
               {upcoming ? (
                 <Tooltip
-                  placement="topLeft"
+                  placement="top"
                   title={
                     upcoming.startingBalance !== null &&
                     upcoming.endingBalance !== null &&
@@ -196,7 +198,7 @@ const SubscriptionInfo = ({
                         ).toLocaleString(undefined, {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
-                        })}${currencySymbol(upcoming.currency || "")}`
+                        })}${currencySymbol(upcoming.currency ?? "")}`
                       : null
                   }
                 >
@@ -210,7 +212,7 @@ const SubscriptionInfo = ({
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         }),
-                    currency: currencySymbol(upcoming.currency || ""),
+                    currency: currencySymbol(upcoming.currency ?? ""),
                     date: upcoming.nextPaymentAttempt
                       ? shortDate(new Date(upcoming.nextPaymentAttempt))
                       : t("unknown").toLocaleLowerCase(),
@@ -233,11 +235,9 @@ const SubscriptionInfo = ({
   }
 
   return (
-    <>
-      <Col span="24">
-        <Descriptions cols={1} items={info} />
-      </Col>
-    </>
+    <Col span="24">
+      <Descriptions cols={1} items={info} />
+    </Col>
   );
 };
 

@@ -4,15 +4,10 @@ import {
   Card,
   Col,
   Form,
-  Input,
-  InputNumber,
   message,
   Popconfirm,
-  Radio,
   Row,
-  Select,
   Switch,
-  Tag,
   Typography,
 } from "antd";
 import { useQuery, useMutation } from "@apollo/client";
@@ -24,18 +19,20 @@ import { PLAN, PLANS } from "../../api/queries";
 import { Plan as IPlan, PlanVariables } from "../../api/types/Plan";
 import { Plans as IPlans } from "../../api/types/Plans";
 import { UpdatePlan, UpdatePlanVariables } from "../../api/types/UpdatePlan";
-import { colors } from "../../lib/colors";
 import connectionToNodes from "../../lib/connectionToNodes";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
-import { Loading, LoadingFullScreen } from "../../components/atoms";
+import {
+  Loading,
+  LoadingFullScreen,
+  MultiSelectField,
+  SelectField,
+  TextField,
+} from "../../components/atoms";
 import { PricesInfo } from "../../components/molecules";
 
 import styles from "./Plan.module.css";
 
-const { Group } = Radio;
-const RButton = Radio.Button;
-const { Option } = Select;
 const { Title } = Typography;
 
 interface PlanProps {
@@ -87,19 +84,21 @@ const Plan = () => {
                 form={formPlan}
                 initialValues={{
                   active: planData?.product?.active,
-                  apps:
-                    JSON.parse(normalice(planData?.product?.metadata!!))
-                      .allowed_apps || 1,
-                  builds:
-                    JSON.parse(normalice(planData?.product?.metadata!!))
-                      .allowed_builds || 1,
+                  apps: planData?.product?.metadata
+                    ? JSON.parse(normalize(planData.product.metadata))
+                        .allowed_apps || 1
+                    : 1,
+                  builds: planData?.product?.metadata
+                    ? JSON.parse(normalize(planData.product.metadata))
+                        .allowed_builds || 1
+                    : 1,
                   description: planData?.product?.description,
                   features: connectionToNodes(planData?.product?.features).map(
                     (f) => f.id
                   ),
                   name: planData?.product?.name,
                   type:
-                    JSON.parse(normalice(planData?.product?.metadata!!))
+                    JSON.parse(normalize(planData?.product?.metadata!!))
                       .plan_type || "particular",
                 }}
                 onFinish={(values: FormProps) => {
@@ -156,102 +155,127 @@ const Plan = () => {
                 }}
                 validateMessages={{ required: t("client:requiredInput") }}
               >
-                <Row gutter={[16, 16]}>
-                  <Col span={12}>
-                    <Form.Item
-                      label={t("name")}
-                      name="name"
-                      rules={[{ required: true }]}
-                    >
-                      <Input placeholder={t("name")} />
-                    </Form.Item>
-                    <Form.Item
-                      label={t("admin:nApps")}
-                      name="apps"
-                      rules={[{ required: true }]}
-                    >
-                      <InputNumber
-                        className={styles.inputNumber}
-                        placeholder={t("admin:nApps")}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label={t("admin:nBuilds")}
-                      name="builds"
-                      rules={[{ required: true }]}
-                    >
-                      <InputNumber
-                        className={styles.inputNumber}
-                        placeholder={t("admin:nBuilds")}
-                      />
-                    </Form.Item>
-                    <Form.Item name="features" label={t("admin:features")}>
-                      <Select
-                        allowClear
-                        mode="multiple"
-                        placeholder={t("admin:features")}
-                        showArrow
-                        tagRender={(props) => (
-                          <Tag
-                            onMouseDown={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                            }}
-                            closable={true}
-                            onClose={props.onClose}
-                            color={colors.tagGreen}
-                            style={{ margin: "2px 4px" }}
-                          >
-                            {props.label}
-                          </Tag>
-                        )}
-                      >
-                        {connectionToNodes(plansData?.features)?.map((feat) => (
-                          <Option key={feat.id} value={feat.id}>
-                            {feat.name}
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item label={t("admin:planType")} name="type">
-                      <Group>
-                        <RButton value="particular">
-                          {t("admin:particular")}
-                        </RButton>
-                        <RButton value="business">
-                          {t("admin:business")}
-                        </RButton>
-                      </Group>
-                    </Form.Item>
-                    <Form.Item
-                      label={t("admin:activePlan")}
-                      name="active"
-                      valuePropName="checked"
-                    >
-                      <Switch />
-                    </Form.Item>
+                <Row gutter={[24, 0]}>
+                  <Col span={24} md={12}>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          label={t("name")}
+                          defaultValue={planData?.product?.name}
+                          name="name"
+                          rules={[{ required: true }]}
+                        />
+                      </Col>
+                    </Row>
+                    <Row gutter={[24, 24]}>
+                      <Col span={12}>
+                        <TextField
+                          label={t("admin:nApps")}
+                          defaultValue={
+                            planData?.product?.metadata
+                              ? JSON.parse(normalize(planData.product.metadata))
+                                  .allowed_apps || 1
+                              : 1
+                          }
+                          name="apps"
+                          rules={[{ required: true }]}
+                          type="number"
+                        />
+                      </Col>
+                      <Col span={12}>
+                        <TextField
+                          label={t("admin:nBuilds")}
+                          defaultValue={
+                            planData?.product?.metadata
+                              ? JSON.parse(normalize(planData.product.metadata))
+                                  .allowed_builds || 1
+                              : 1
+                          }
+                          name="builds"
+                          rules={[{ required: true }]}
+                          type="number"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <MultiSelectField
+                          defaultValue={connectionToNodes(
+                            planData?.product?.features
+                          ).map((f) => f.id)}
+                          label={t("admin:features")}
+                          name="features"
+                          options={connectionToNodes(plansData?.features)}
+                          wrapperClassName={styles.multiselect}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <SelectField
+                          label={t("admin:planType")}
+                          defaultValue={
+                            JSON.parse(normalize(planData?.product?.metadata!!))
+                              .plan_type || "particular"
+                          }
+                          name="type"
+                          options={[
+                            { id: "particular", name: t("admin:particular") },
+                            { id: "business", name: t("admin:business") },
+                          ]}
+                          rules={[{ required: true }]}
+                        />
+                      </Col>
+                    </Row>
                   </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label={t("description")}
-                      name="description"
-                      rules={[{ required: true }]}
-                    >
-                      <Input.TextArea
-                        placeholder={t("description")}
-                        rows={12}
-                      />
-                    </Form.Item>
+                  <Col span={24} md={12}>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          defaultValue={planData?.product?.description ?? ""}
+                          label={t("description")}
+                          name="description"
+                          rows={9}
+                          rules={[{ required: true }]}
+                          type="textarea"
+                        />
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
-                <Row gutter={[16, 16]}>
+                <Row>
                   <Col span={24}>
-                    <Popconfirm
-                      title={t("client:saveChangesConfirm")}
-                      onConfirm={() => formPlan.submit()}
-                    >
-                      <Button type="primary">{t("client:saveChanges")}</Button>
-                    </Popconfirm>
+                    <Row>
+                      <Col span={24}>
+                        <div className={styles.activeContainer}>
+                          <span>{t("admin:activePlan")}</span>
+                          <Form.Item
+                            className={styles.active}
+                            name="active"
+                            valuePropName="checked"
+                          >
+                            <Switch />
+                          </Form.Item>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <Row>
+                      <Col span={24}>
+                        <Popconfirm
+                          cancelButtonProps={{
+                            className: "button-default-default",
+                          }}
+                          onConfirm={() => formPlan.submit()}
+                          title={t("client:saveChangesConfirm")}
+                        >
+                          <Button type="primary">
+                            {t("client:saveChanges")}
+                          </Button>
+                        </Popconfirm>
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
               </Form>

@@ -5,8 +5,13 @@
 }
 
 .customColorInput {
+  margin-bottom: 0px !important;
   margin-right: 8px !important;
-  width: 100px !important;
+  width: 116px !important;
+}
+
+.customColorInput input {
+  font-weight: 500;
 }
 
 .textColor {

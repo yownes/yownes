@@ -19,6 +19,7 @@ export interface AccountBasicData_customer {
    * The customer's address.
    */
   address: string | null;
+  email: string;
   /**
    * The customer's full name or business name.
    */
@@ -51,6 +52,7 @@ export interface AccountBasicData_subscription_customer {
    * The currency the customer can be charged in for recurring billing purposes
    */
   currency: string;
+  email: string;
   /**
    * The customer's full name or business name.
    */
@@ -436,6 +438,10 @@ export interface AccountBasicData_subscription_plan_product_prices_edges_node {
    */
   id: string;
   stripeId: string | null;
+  /**
+   * Three-letter ISO currency code
+   */
+  currency: string;
   /**
    * The recurring components of a price such as `interval` and `usage_type`.
    */

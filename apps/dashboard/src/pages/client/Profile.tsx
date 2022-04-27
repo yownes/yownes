@@ -13,7 +13,7 @@ import {
 } from "../../api/types/globalTypes";
 import { MyAccount } from "../../api/types/MyAccount";
 import { Resubscribe, ResubscribeVariables } from "../../api/types/Resubscribe";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import { Loading, LoadingFullScreen, Space } from "../../components/atoms";
 import {
@@ -63,7 +63,7 @@ const Profile = () => {
     if (data?.me?.subscription?.plan?.product?.metadata) {
       setAllowedApps(
         parseInt(
-          JSON.parse(normalice(data?.me?.subscription?.plan?.product?.metadata))
+          JSON.parse(normalize(data?.me?.subscription?.plan?.product?.metadata))
             .allowed_apps
         )
       );
@@ -112,8 +112,20 @@ const Profile = () => {
                   <Placeholder claim={t("client:reSubscribeNow")}>
                     {
                       <Popconfirm
+                        cancelButtonProps={{
+                          className: "button-default-default",
+                        }}
                         cancelText={t("cancel")}
                         okText={t("confirm")}
+                        onConfirm={() => {
+                          if (data?.me?.id) {
+                            resubscribe({
+                              variables: { userId: data.me.id },
+                            });
+                            setIsResubscribed(true);
+                          }
+                        }}
+                        placement="left"
                         title={
                           <Trans
                             i18nKey={"warnings.unCancelSubscription"}
@@ -123,15 +135,6 @@ const Profile = () => {
                             <p></p>
                           </Trans>
                         }
-                        placement="left"
-                        onConfirm={() => {
-                          if (data?.me?.id) {
-                            resubscribe({
-                              variables: { userId: data.me.id },
-                            });
-                            setIsResubscribed(true);
-                          }
-                        }}
                       >
                         <Button type="primary">
                           {t("client:reSubscribe")}

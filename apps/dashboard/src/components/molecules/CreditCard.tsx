@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 
 import styles from "./CreditCard.module.css";
 
@@ -64,8 +64,8 @@ const CARDS = {
 
 const CreditCard = ({ data, billing }: CreditCardProps) => {
   const { t } = useTranslation();
-  const card: ICreditCardStripe = JSON.parse(normalice(data));
-  const billingData: IBillingDetailsStripe = JSON.parse(normalice(billing));
+  const card: ICreditCardStripe = JSON.parse(normalize(data));
+  const billingData: IBillingDetailsStripe = JSON.parse(normalize(billing));
   const expired = new Date(card.exp_year, card.exp_month) < new Date();
 
   return (
@@ -104,8 +104,8 @@ const CreditCard = ({ data, billing }: CreditCardProps) => {
             transform="translate(54.106 428.172)"
             className={`${styles.st2} ${styles.st5} ${styles.st6}`}
           >
-            {billingData?.name?.toUpperCase().length > 16
-              ? `${billingData?.name?.toUpperCase().substring(0, 16)}...`
+            {billingData?.name?.toUpperCase().length > 20
+              ? `${billingData?.name?.toUpperCase().substring(0, 20)}...`
               : billingData?.name?.toUpperCase()}
           </text>
           <text
@@ -115,7 +115,7 @@ const CreditCard = ({ data, billing }: CreditCardProps) => {
             {t("nameLow")}
           </text>
           <text
-            transform="translate(450.775 380.88)"
+            transform="translate(560.775 380.88)"
             className={`${styles.st7} ${styles.st5} ${styles.st8}`}
           >
             {t("expiresLow")}
@@ -127,26 +127,13 @@ const CreditCard = ({ data, billing }: CreditCardProps) => {
             {t("cardNumberLow")}
           </text>
           <text
-            transform="translate(574.422 432.51)"
+            transform="translate(560.775 432.51)"
             className={`${styles.st2} ${styles.st5} ${styles.st9}`}
           >
             {`${
               card.exp_month < 10 ? `0${card.exp_month}` : card.exp_month
             }/${card.exp_year.toString().match(/\d{2}$/)}`}
           </text>
-          <text
-            transform="translate(450.385 415.61)"
-            className={`${styles.st2} ${styles.st10} ${styles.st11}`}
-          >
-            {t("validUp")}
-          </text>
-          <text
-            transform="translate(450.385 438.676)"
-            className={`${styles.st2} ${styles.st10} ${styles.st11}`}
-          >
-            {t("untilUp")}
-          </text>
-          <path className={styles.st2} d="M560.5 421l-14.1-6.8v13.7z" />
           <g>
             <path d="M168.1 143.6H82.9c-10.2 0-18.5-8.3-18.5-18.5V74.9c0-10.2 8.3-18.5 18.5-18.5h85.3c10.2 0 18.5 8.3 18.5 18.5v50.2c-.1 10.2-8.4 18.5-18.6 18.5z" />
             <path d="M82 70h1.5v60H82zM167.4 70h1.5v60h-1.5zM125.5 130.8c-10.2 0-18.5-8.3-18.5-18.5 0-4.6 1.7-8.9 4.7-12.3-3-3.4-4.7-7.7-4.7-12.3 0-10.2 8.3-18.5 18.5-18.5S144 77.5 144 87.7c0 4.6-1.7 8.9-4.7 12.3 3 3.4 4.7 7.7 4.7 12.3-.1 10.2-8.3 18.5-18.5 18.5zm0-60c-9.3 0-16.9 7.6-16.9 16.9 0 4.4 1.7 8.6 4.8 11.8l.5.5-.5.5c-3.1 3.2-4.8 7.4-4.8 11.8 0 9.3 7.6 16.9 16.9 16.9s16.9-7.6 16.9-16.9c0-4.4-1.7-8.6-4.8-11.8l-.5-.5.5-.5c3.1-3.2 4.8-7.4 4.8-11.8 0-9.3-7.6-16.9-16.9-16.9z" />

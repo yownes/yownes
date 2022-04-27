@@ -4,6 +4,11 @@
   opacity: 0.7;
 }
 
+.overflow {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
 .table {
   min-width: 800px;
 }

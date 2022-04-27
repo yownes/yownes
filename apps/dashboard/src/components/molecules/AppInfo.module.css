@@ -24,6 +24,10 @@
   letter-spacing: 0.5;
 }
 
+.input {
+  margin-bottom: 0px !important;
+}
+
 .storeLink {
   font-weight: 500;
   margin-right: 16px;

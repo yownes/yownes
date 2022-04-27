@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Form, Input, message, Row, Tooltip, Typography } from "antd";
+import { Col, Form, message, Row, Tooltip, Typography } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
@@ -10,6 +10,7 @@ import { colors } from "../../lib/colors";
 import { longDate } from "../../lib/parseDate";
 
 import { BuildState, ImageUpload } from "./";
+import { TextField } from "../atoms";
 
 import styles from "./AppInfo.module.css";
 
@@ -32,7 +33,6 @@ interface AppInfoProps {
 
 const AppInfo = ({ app, build, data, id, onChange }: AppInfoProps) => {
   const { t } = useTranslation(["translation", "client"]);
-  const [form] = Form.useForm();
   const [appBuildStatus, setAppBuildStatus] = useState<BuildBuildStatus>(
     BuildBuildStatus.WAITING
   );
@@ -40,13 +40,6 @@ const AppInfo = ({ app, build, data, id, onChange }: AppInfoProps) => {
   useEffect(() => {
     setAppBuildStatus(getAppBuildState(app));
   }, [app]);
-
-  useEffect(() => {
-    form?.setFieldsValue({
-      name: data.name,
-      link: data.apiLink,
-    });
-  }, [data]);
 
   return (
     <>
@@ -158,29 +151,45 @@ const AppInfo = ({ app, build, data, id, onChange }: AppInfoProps) => {
           </div>
         </Col>
         <Col span={24}>
-          <Form form={form}>
-            <Form.Item label={t("client:appName")} name="name" required>
-              <Input
-                onChange={(value) =>
-                  onChange({
-                    ...data,
-                    name: value.target.value,
-                  })
-                }
-                placeholder={t("client:appName")}
-              />
-            </Form.Item>
-            <Form.Item label={t("client:storeLink")} name="link" required>
-              <Input
-                onChange={(value) =>
-                  onChange({
-                    ...data,
-                    apiLink: value.target.value,
-                  })
-                }
-                placeholder={t("client:storeLink")}
-              />
-            </Form.Item>
+          <Form
+            initialValues={{
+              name: app?.name,
+              link: app?.apiLink ?? "",
+            }}
+            validateMessages={{ required: t("client:requiredInput") }}
+          >
+            <Row gutter={[24, 0]}>
+              <Col span={24} md={12}>
+                <TextField
+                  defaultValue={app?.name}
+                  label={t("client:appName")}
+                  name="name"
+                  onChange={(value) =>
+                    onChange({
+                      ...data,
+                      name: value.target.value,
+                    })
+                  }
+                  rules={[{ required: true }]}
+                  wrapperClassName={styles.input}
+                />
+              </Col>
+              <Col span={24} md={12}>
+                <TextField
+                  defaultValue={app?.apiLink ?? ""}
+                  label={t("client:storeLink")}
+                  name="link"
+                  onChange={(value) =>
+                    onChange({
+                      ...data,
+                      apiLink: value.target.value,
+                    })
+                  }
+                  rules={[{ required: true }]}
+                  wrapperClassName={styles.input}
+                />
+              </Col>
+            </Row>
           </Form>
         </Col>
       </Row>

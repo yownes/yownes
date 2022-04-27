@@ -278,6 +278,16 @@ export const ADD_PAYMENT_METHOD = gql`
   }
 `;
 
+export const CREATE_PAYMENT_METHOD = gql`
+  mutation CreatePaymentMethod($payment: CreatePaymentInput!) {
+    createPaymentMethod(payment: $payment) {
+      ok
+      error
+      id
+    }
+  }
+`;
+
 export const UPDATE_PAYMENT_METHOD = gql`
   mutation UpdatePaymentMethod(
     $id: ID!

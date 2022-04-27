@@ -114,6 +114,7 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
     customer {
       id
       address
+      email
       name
       phone
       metadata
@@ -131,6 +132,7 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
         address
         balance
         currency
+        email
         name
         phone
         metadata
@@ -170,6 +172,7 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
               node {
                 id
                 stripeId
+                currency
                 recurring
                 unitAmount
                 active

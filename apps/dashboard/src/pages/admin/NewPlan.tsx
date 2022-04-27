@@ -4,15 +4,10 @@ import {
   Card,
   Col,
   Form,
-  Input,
-  InputNumber,
   message,
   Popconfirm,
-  Radio,
   Row,
-  Select,
   Switch,
-  Tag,
   Typography,
 } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
@@ -23,16 +18,18 @@ import { CREATE_PLAN } from "../../api/mutations";
 import { PLANS } from "../../api/queries";
 import { CreatePlan, CreatePlanVariables } from "../../api/types/CreatePlan";
 import { Plans } from "../../api/types/Plans";
-import { colors } from "../../lib/colors";
 import connectionToNodes from "../../lib/connectionToNodes";
 
-import { Loading, LoadingFullScreen } from "../../components/atoms";
+import {
+  Loading,
+  LoadingFullScreen,
+  MultiSelectField,
+  SelectField,
+  TextField,
+} from "../../components/atoms";
 
 import styles from "./NewPlan.module.css";
 
-const { Group } = Radio;
-const RButton = Radio.Button;
-const { Option } = Select;
 const { Text, Title } = Typography;
 
 const NewPlan = () => {
@@ -118,105 +115,117 @@ const NewPlan = () => {
                 }}
                 validateMessages={{ required: t("client:requiredInput") }}
               >
-                <Row gutter={[16, 16]}>
-                  <Col span={12}>
-                    <Form.Item
-                      name="name"
-                      rules={[{ required: true }]}
-                      label={t("name")}
-                    >
-                      <Input placeholder={t("name")} />
-                    </Form.Item>
-                    <Form.Item
-                      label={t("admin:nApps")}
-                      name="apps"
-                      rules={[{ required: true }]}
-                    >
-                      <InputNumber
-                        className={styles.inputNumber}
-                        placeholder={t("admin:nApps")}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label={t("admin:nBuilds")}
-                      name="builds"
-                      rules={[{ required: true }]}
-                    >
-                      <InputNumber
-                        className={styles.inputNumber}
-                        placeholder={t("admin:nBuilds")}
-                      />
-                    </Form.Item>
-                    <Form.Item name="features" label={t("admin:features")}>
-                      <Select
-                        allowClear
-                        mode="multiple"
-                        placeholder={t("admin:features")}
-                        showArrow
-                        tagRender={(props) => (
-                          <Tag
-                            onMouseDown={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                            }}
-                            closable={true}
-                            onClose={props.onClose}
-                            color={colors.tagGreen}
-                            style={{ margin: "2px 4px" }}
-                          >
-                            {props.label}
-                          </Tag>
-                        )}
-                      >
-                        {connectionToNodes(plans?.features)?.map((feat) => (
-                          <Option key={feat.id} value={feat.id}>
-                            {feat.name}
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item label={t("admin:planType")} name="type">
-                      <Group>
-                        <RButton value="particular">
-                          {t("admin:particular")}
-                        </RButton>
-                        <RButton value="business">
-                          {t("admin:business")}
-                        </RButton>
-                      </Group>
-                    </Form.Item>
-                    <Form.Item
-                      label={t("admin:activePlan")}
-                      name="active"
-                      valuePropName="checked"
-                    >
-                      <Switch />
-                    </Form.Item>
+                <Row gutter={[24, 0]}>
+                  <Col span={24} md={12}>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          label={t("name")}
+                          name="name"
+                          rules={[{ required: false }]}
+                        />
+                      </Col>
+                    </Row>
+                    <Row gutter={[24, 24]}>
+                      <Col span={12}>
+                        <TextField
+                          defaultValue={1}
+                          label={t("admin:nApps")}
+                          name="apps"
+                          rules={[{ required: true }]}
+                          type="number"
+                        />
+                      </Col>
+                      <Col span={12}>
+                        <TextField
+                          defaultValue={1}
+                          label={t("admin:nBuilds")}
+                          name="builds"
+                          rules={[{ required: true }]}
+                          type="number"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <MultiSelectField
+                          label={t("admin:features")}
+                          name="features"
+                          options={connectionToNodes(plans?.features)}
+                          wrapperClassName={styles.multiselect}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <SelectField
+                          label={t("admin:planType")}
+                          name="type"
+                          options={[
+                            { id: "particular", name: t("admin:particular") },
+                            { id: "business", name: t("admin:business") },
+                          ]}
+                          rules={[{ required: true }]}
+                        />
+                      </Col>
+                    </Row>
                   </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label={t("description")}
-                      name="description"
-                      rules={[{ required: true }]}
-                    >
-                      <Input.TextArea
-                        placeholder={t("description")}
-                        rows={12}
-                      />
-                    </Form.Item>
+                  <Col span={24} md={12}>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          label={t("description")}
+                          name="description"
+                          rows={9}
+                          rules={[{ required: true }]}
+                          type="textarea"
+                        />
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
-                <Row gutter={[16, 16]}>
+                <Row>
                   <Col span={24}>
-                    <Text type="secondary">{t("admin:warningNewPlan")}</Text>
+                    <Row>
+                      <Col span={24}>
+                        <div className={styles.activeContainer}>
+                          <span>{t("admin:activePlan")}</span>
+                          <Form.Item
+                            className={styles.active}
+                            name="active"
+                            valuePropName="checked"
+                          >
+                            <Switch />
+                          </Form.Item>
+                        </div>
+                      </Col>
+                    </Row>
                   </Col>
                   <Col span={24}>
-                    <Popconfirm
-                      title={t("admin:warningCreateNewPlan")}
-                      onConfirm={() => form.submit()}
-                    >
-                      <Button type="primary">{t("admin:createPlan")}</Button>
-                    </Popconfirm>
+                    <Row>
+                      <Col className={styles.warning} span={24}>
+                        <Text type="secondary">
+                          {t("admin:warningNewPlan")}
+                        </Text>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <Row>
+                      <Col span={24}>
+                        <Popconfirm
+                          cancelButtonProps={{
+                            className: "button-default-default",
+                          }}
+                          onConfirm={() => form.submit()}
+                          title={t("admin:warningCreateNewPlan")}
+                        >
+                          <Button type="primary">
+                            {t("admin:createPlan")}
+                          </Button>
+                        </Popconfirm>
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
               </Form>

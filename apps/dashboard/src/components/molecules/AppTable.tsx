@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Table, TableColumnsType } from "antd";
+import { Table, TableColumnsType, Typography } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -11,6 +11,8 @@ import connectionToNodes from "../../lib/connectionToNodes";
 import { BuildState } from "./";
 
 import styles from "./AppTable.module.css";
+
+const { Text } = Typography;
 
 interface AppTableProps {
   dataSource?: Apps_apps | null;
@@ -57,7 +59,7 @@ const AppTable = ({ dataSource, columns }: AppTableProps) => {
     return columns ? [...cols, ...columns] : cols;
   }, [columns, t]);
   const data = connectionToNodes(dataSource);
-  return (
+  return data.length > 0 ? (
     <Table
       columns={allCols}
       dataSource={data}
@@ -80,6 +82,10 @@ const AppTable = ({ dataSource, columns }: AppTableProps) => {
       rowClassName={styles.row}
       rowKey={(row) => row.id}
     />
+  ) : (
+    <Text className={styles.empty} type="secondary">
+      {t("noApps")}
+    </Text>
   );
 };
 

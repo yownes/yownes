@@ -9,7 +9,7 @@ import { Me } from "../../api/types/Me";
 import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import adminroutes from "../../lib/adminRoutes";
 import connectionToNodes from "../../lib/connectionToNodes";
-import { normalice } from "../../lib/normalice";
+import { normalize } from "../../lib/normalize";
 import clientRoutes from "../../lib/routes";
 
 import { NewLogo } from "../atoms";
@@ -37,7 +37,7 @@ const Header = ({ menu }: HeaderProps) => {
     (paymentsData?.me?.customer?.paymentMethods &&
       paymentsData?.me?.customer?.defaultPaymentMethod &&
       JSON.parse(
-        normalice(
+        normalize(
           connectionToNodes(paymentsData?.me?.customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId ===
@@ -99,7 +99,9 @@ const Header = ({ menu }: HeaderProps) => {
             )}
           </Title>
         )}
-        {data?.me?.email && <HeaderSessionInfo email={data.me.email} />}
+        {data?.me?.email && (
+          <HeaderSessionInfo email={data.me.email} staff={data.me.isStaff} />
+        )}
       </header>
     </Col>
   );

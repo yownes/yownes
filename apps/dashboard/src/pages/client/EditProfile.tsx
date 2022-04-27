@@ -9,10 +9,11 @@ import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import { Loading } from "../../components/atoms";
 import { DeleteAccount } from "../../components/molecules";
 import {
+  AccountData,
   ChangePassword,
+  CustomerData,
   InvoicesData,
   PaymentMethod,
-  PersonalData,
   SubscriptionData,
 } from "../../components/organisms";
 
@@ -31,7 +32,10 @@ const EditProfile = () => {
     >
       <Row gutter={[24, 24]}>
         <Col span={24}>
-          <PersonalData />
+          <AccountData />
+        </Col>
+        <Col span={24}>
+          <CustomerData />
         </Col>
         <Col span={24}>
           <SubscriptionData />
