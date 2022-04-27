@@ -4,28 +4,30 @@ import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { Invoices, InvoicesVariables } from "../../api/types/Invoices";
-import { MyAccount } from "../../api/types/MyAccount";
-import { INVOICES, MY_ACCOUNT } from "../../api/queries";
+import { INVOICES } from "../../api/queries";
 
 import { Loading } from "../atoms";
 import { InvoicesTable } from "../molecules";
 
-import styles from "./SubscriptionData.module.css";
+import styles from "./InvoicesData.module.css";
 import connectionToNodes from "../../lib/connectionToNodes";
 
 const { Title } = Typography;
 
-const SubscriptionData = () => {
+interface InvoicesDataProps {
+  userId: string;
+}
+
+const InvoicesData = ({ userId }: InvoicesDataProps) => {
   const { t } = useTranslation(["translation", "client"]);
-  const { data, loading } = useQuery<MyAccount>(MY_ACCOUNT);
   const { data: invoicesData, loading: loadingInvoices } = useQuery<
     Invoices,
     InvoicesVariables
-  >(INVOICES, { variables: { userId: data?.me?.id ?? "" } });
+  >(INVOICES, { variables: { userId: userId } });
 
   message.config({ maxCount: 1 });
 
-  if (loading || loadingInvoices)
+  if (loadingInvoices)
     return (
       <Card>
         <Title level={2}>{t("invoices")}</Title>
@@ -47,4 +49,4 @@ const SubscriptionData = () => {
   );
 };
 
-export default SubscriptionData;
+export default InvoicesData;

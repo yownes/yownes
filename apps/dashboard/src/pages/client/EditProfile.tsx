@@ -41,7 +41,7 @@ const EditProfile = () => {
           <SubscriptionData />
         </Col>
         <Col span={24}>
-          <InvoicesData />
+          <InvoicesData userId={data?.me?.id!!} />
         </Col>
         <Col span={24}>
           <Card>
