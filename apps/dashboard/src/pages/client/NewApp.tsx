@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Button, Card, Col, Form, Typography } from "antd";
+import { Button, Card, Col, Form, message, Typography } from "antd";
 import { ApolloCache, FetchResult, useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
@@ -63,6 +63,7 @@ const NewApp = () => {
     }
   }, [storeInfo, create, update]);
   if (data?.createApp?.ok) {
+    message.success(t("addNewAppSuccessful"), 4);
     return <Redirect to={`/app/${data.createApp.storeApp?.id}`} />;
   }
   return (
