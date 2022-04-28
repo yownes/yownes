@@ -60,28 +60,30 @@ const AppTable = ({ dataSource, columns }: AppTableProps) => {
   }, [columns, t]);
   const data = connectionToNodes(dataSource);
   return data.length > 0 ? (
-    <Table
-      columns={allCols}
-      dataSource={data}
-      locale={{ emptyText: t("noApps") }}
-      pagination={{
-        showSizeChanger: true,
-        showTotal: (total, range) =>
-          t("paginationItems", {
-            first: range[0],
-            last: range[1],
-            total: total,
-            item: t("apps"),
-          }),
-      }}
-      onRow={(record) => {
-        return {
-          onClick: () => history.push(`/app/${record.id}`),
-        };
-      }}
-      rowClassName={styles.row}
-      rowKey={(row) => row.id}
-    />
+    <div className={styles.overflow}>
+      <Table
+        columns={allCols}
+        dataSource={data}
+        locale={{ emptyText: t("noApps") }}
+        pagination={{
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            t("paginationItems", {
+              first: range[0],
+              last: range[1],
+              total: total,
+              item: t("apps"),
+            }),
+        }}
+        onRow={(record) => {
+          return {
+            onClick: () => history.push(`/app/${record.id}`),
+          };
+        }}
+        rowClassName={styles.row}
+        rowKey={(row) => row.id}
+      />
+    </div>
   ) : (
     <Text className={styles.empty} type="secondary">
       {t("noApps")}

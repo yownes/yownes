@@ -20,3 +20,8 @@
   font-size: 1.5rem;
   width: 40px;
 }
+
+.overflow {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}

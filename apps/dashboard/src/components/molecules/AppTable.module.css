@@ -9,6 +9,11 @@
   width: 40px;
 }
 
+.overflow {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
 .row {
   cursor: pointer;
 }

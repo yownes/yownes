@@ -107,23 +107,25 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
     },
   ];
   return dataSource.length > 0 ? (
-    <Table
-      columns={columns}
-      dataSource={dataSource}
-      locale={{ emptyText: t("noBuilds") }}
-      pagination={{
-        showSizeChanger: true,
-        showTotal: (total, range) =>
-          t("paginationItems", {
-            first: range[0],
-            last: range[1],
-            total: total,
-            item: t("admin:builds"),
-          }),
-      }}
-      rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
-      rowKey={(row) => row.buildId}
-    />
+    <div className={styles.overflow}>
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        locale={{ emptyText: t("noBuilds") }}
+        pagination={{
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            t("paginationItems", {
+              first: range[0],
+              last: range[1],
+              total: total,
+              item: t("admin:builds"),
+            }),
+        }}
+        rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
+        rowKey={(row) => row.buildId}
+      />
+    </div>
   ) : (
     <Text className={styles.empty} type="secondary">
       {t("noBuilds")}
