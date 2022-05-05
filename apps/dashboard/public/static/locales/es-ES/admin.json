@@ -119,6 +119,7 @@
   "actions": "Acciones",
   "profile": "Perfil",
   "newTemplate": "Nueva Plantilla",
+  "templatePreview": "Vista previa",
   "templateName": "Nombre de la Plantilla",
   "templateUrl": "URL de la Plantilla",
   "snack": "ID Snack",

@@ -8,6 +8,7 @@ import {
   TableColumnsType,
   Typography,
 } from "antd";
+import { FileImageOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
@@ -54,6 +55,23 @@ const Templates = () => {
 
   const columns: TableColumnsType<Templates_templates_edges_node> = [
     {
+      title: t("admin:templatePreview"),
+      dataIndex: "previewImg",
+      key: "preview",
+      render: (logo) =>
+        logo ? (
+          <img
+            src={logo}
+            alt={t("admin:templatePreview")}
+            width={40}
+            height={40}
+            style={{ objectFit: "contain" }}
+          />
+        ) : (
+          <FileImageOutlined className={styles.icon} />
+        ),
+    },
+    {
       title: t("name"),
       dataIndex: "name",
       key: "name",
@@ -86,7 +104,7 @@ const Templates = () => {
       dataIndex: ["url"],
       key: "url",
       render: (url) => url,
-      ellipsis: true, // hace que las otras Cols tengan el mismo tamaño
+      // ellipsis: true, // hace que las otras Cols tengan el mismo tamaño
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["url"],
         t("admin:search"),

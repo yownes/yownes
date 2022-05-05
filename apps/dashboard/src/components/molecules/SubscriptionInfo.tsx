@@ -4,11 +4,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
 
-import {
-  InvoiceStatus,
-  PlanInterval,
-  SubscriptionStatus,
-} from "../../api/types/globalTypes";
+import { PlanInterval, SubscriptionStatus } from "../../api/types/globalTypes";
 import {
   MyAccount_me_subscription,
   MyAccount_me_subscription_plan_product_features_edges_node,
@@ -40,19 +36,11 @@ const SubscriptionInfo = ({
   const [features, setFeatures] = useState<
     MyAccount_me_subscription_plan_product_features_edges_node[]
   >([]);
-  const [numInvoices, setNumInvoices] = useState<number>(0);
 
   useEffect(() => {
     if (subscription && subscription.plan) {
       setFeatures(connectionToNodes(subscription.plan.product?.features));
     }
-  }, [subscription]);
-  useEffect(() => {
-    setNumInvoices(
-      connectionToNodes(subscription?.invoices).filter(
-        (inv) => inv.status === InvoiceStatus.OPEN
-      ).length
-    );
   }, [subscription]);
 
   const info: description[] = [];
