@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from "react";
-import { Col, notification, Typography } from "antd";
+import { Col, notification, Row, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -83,25 +83,45 @@ const Header = ({ menu }: HeaderProps) => {
 
   return (
     <Col xs={{ span: 22, offset: 1 }} lg={{ span: 20, offset: 2 }}>
-      <header className={styles.container}>
-        <Link to="/">
-          <NewLogo />
-        </Link>
-        {data?.me?.isStaff ? (
-          menu
-        ) : (
-          <Title level={1} className={styles.title}>
-            {route?.name && data?.me?.isStaff === route.admin && (
-              <>
-                <Text id={styles.titleIcon}>{">"}</Text>
-                {route?.name}
-              </>
-            )}
-          </Title>
-        )}
-        {data?.me?.email && (
-          <HeaderSessionInfo email={data.me.email} staff={data.me.isStaff} />
-        )}
+      <header>
+        <Row align="middle">
+          <Col span={6} md={5} xs={3}>
+            <Link to="/">
+              <NewLogo />
+            </Link>
+          </Col>
+          <Col span={12} md={14} xs={18}>
+            <Row justify="center">
+              <Col>
+                {data?.me?.isStaff ? (
+                  menu
+                ) : (
+                  <Title level={1} className={styles.title}>
+                    {route?.name && data?.me?.isStaff === route.admin && (
+                      <>
+                        <Text id={styles.titleIcon}>{">"}</Text>
+                        {route?.name}
+                      </>
+                    )}
+                  </Title>
+                )}
+              </Col>
+            </Row>
+          </Col>
+          <Col span={6} md={5} xs={3}>
+            <Row justify="end">
+              <Col>
+                {" "}
+                {data?.me?.email && (
+                  <HeaderSessionInfo
+                    email={data.me.email}
+                    staff={data.me.isStaff}
+                  />
+                )}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
       </header>
     </Col>
   );

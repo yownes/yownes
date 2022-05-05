@@ -1,11 +1,3 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--header-height);
-  padding: 2rem 0;
-}
-
 .icon {
   font-size: 20px !important;
   margin-right: 4px;
