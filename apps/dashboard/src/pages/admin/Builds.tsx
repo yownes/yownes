@@ -23,7 +23,7 @@ import { BuildState as BuildStateVisualizer } from "../../components/molecules";
 
 import styles from "./Builds.module.css";
 
-const { Title } = Typography;
+const { Paragraph, Title } = Typography;
 
 function getBuildStatusFilters() {
   let filters: Filter[] = [];
@@ -54,6 +54,7 @@ const Builds = () => {
       title: t("admin:buildId"),
       dataIndex: "buildId",
       key: "buildId",
+      render: (id) => <Paragraph copyable>{id}</Paragraph>,
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["buildId"],
         t("admin:search"),
@@ -79,6 +80,7 @@ const Builds = () => {
       title: t("admin:clientId"),
       dataIndex: ["app", "customer", "id"],
       key: "clientId",
+      render: (id) => <Paragraph copyable>{id}</Paragraph>,
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["app", "customer", "id"],
         t("admin:search"),

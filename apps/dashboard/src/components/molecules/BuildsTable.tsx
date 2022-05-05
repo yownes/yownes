@@ -18,7 +18,7 @@ import { BuildState as BuildStateVisualizer } from "../../components/molecules";
 
 import styles from "./BuildsTable.module.css";
 
-const { Text } = Typography;
+const { Paragraph, Text } = Typography;
 
 interface BuildsTableProps {
   dataSource: Builds_builds_edges_node[];
@@ -71,7 +71,7 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       title: t("buildId"),
       dataIndex: "buildId",
       key: "buildId",
-      render: (buildId) => <Text strong>{buildId}</Text>,
+      render: (buildId) => <Paragraph copyable>{buildId}</Paragraph>,
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["buildId"],
         t("admin:search"),
@@ -84,6 +84,7 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       title: "App",
       dataIndex: ["app", "name"],
       key: "app.name",
+      render: (name) => name,
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["app", "name"],
         t("admin:search"),

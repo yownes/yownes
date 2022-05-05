@@ -287,6 +287,11 @@ h5 {
   font-weight: 400;
 }
 
+.ant-table-cell > .ant-typography {
+  color: #636363 !important;
+  margin-bottom: 0px !important;
+}
+
 .ant-table-pagination.ant-pagination {
   margin: 24px 32px 0px 0px !important;
 }
@@ -309,6 +314,10 @@ h5 {
   color: #232323 !important;
   font-size: 12px !important;
   margin-left: 8px !important;
+}
+
+.ant-tag > .ant-typography {
+  margin-bottom: 0px !important;
 }
 
 .ant-tooltip {

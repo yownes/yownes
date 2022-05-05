@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Tag } from "antd";
+import { Tag, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
@@ -21,6 +21,8 @@ import {
 } from "./";
 import { description } from "./Descriptions";
 import { Loading } from "../atoms";
+
+const { Paragraph } = Typography;
 
 interface ProfileInfoProps {
   profile?: AccountBasicData | null;
@@ -94,7 +96,14 @@ const ProfileInfo = ({ profile, extra, verified }: ProfileInfoProps) => {
     info.push({ title: t("email"), description: profile.email });
   profile?.id &&
     data?.me.isStaff &&
-    info.push({ title: t("id"), description: <Tag>{profile?.id}</Tag> });
+    info.push({
+      title: t("id"),
+      description: (
+        <Tag>
+          <Paragraph copyable>{profile?.id}</Paragraph>
+        </Tag>
+      ),
+    });
   profile?.dateJoined &&
     data?.me.isStaff &&
     info.push({
@@ -123,10 +132,11 @@ const ProfileInfo = ({ profile, extra, verified }: ProfileInfoProps) => {
               state={profile.subscription.status}
               tooltip={subscriptionInfo}
             />
-            {". "}
-            {t("cancelAt", {
-              date: dateTime(new Date(profile.subscription.cancelAt)),
-            })}
+            <Tag>
+              {t("cancelAt", {
+                date: dateTime(new Date(profile.subscription.cancelAt)),
+              })}
+            </Tag>
           </>
         ) : (
           <SubscriptionState

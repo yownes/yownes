@@ -66,7 +66,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
         title: t("name"),
         dataIndex: "name",
         key: "name",
-        render: (name) => <Text strong>{name}</Text>,
+        render: (name) => name,
         ...getColumnSearchProps<Client_user_apps_edges_node>(
           ["name"],
           t("admin:search"),
