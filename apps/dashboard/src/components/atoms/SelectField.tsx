@@ -4,9 +4,10 @@ import { Rule } from "antd/lib/form";
 
 import "./SelectField.css";
 
-interface Option {
+export interface Option {
   id: string | number;
   name: string;
+  disabled?: boolean;
 }
 
 interface SelectFieldProps {
@@ -40,13 +41,13 @@ const SelectField = ({
         <select
           className="select-text"
           defaultValue={defaultValue ?? ""}
-          required
+          // required
           value={value}
           onChange={onChange}
         >
           {defaultEmpty && <option value="" disabled></option>}
           {options.map((o) => (
-            <option key={o.id} value={o.id}>
+            <option key={o.id} disabled={o.disabled ?? undefined} value={o.id}>
               {o.name}
             </option>
           ))}

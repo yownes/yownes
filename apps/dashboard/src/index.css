@@ -250,6 +250,10 @@ h5 {
   padding: 8px !important;
 }
 
+.ant-pagination-options svg {
+  vertical-align: middle !important;
+}
+
 .ant-popover-inner {
   border-radius: 20px !important;
 }

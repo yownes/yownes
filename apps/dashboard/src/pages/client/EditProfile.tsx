@@ -3,7 +3,7 @@ import { Card, Col, Row, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
-import { MY_PAYMENT_METHODS } from "../../api/queries";
+import { MY_ACCOUNT, MY_PAYMENT_METHODS } from "../../api/queries";
 import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 
 import { Loading } from "../../components/atoms";
@@ -16,11 +16,14 @@ import {
   PaymentMethod,
   SubscriptionData,
 } from "../../components/organisms";
+import { MyAccount } from "../../api/types/MyAccount";
 
 const { Title } = Typography;
 
 const EditProfile = () => {
   const { t } = useTranslation(["translation", "client"]);
+  const { data: accountData, loading: loadingAccount } =
+    useQuery<MyAccount>(MY_ACCOUNT);
   const { data, loading } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
 
   return (
@@ -35,13 +38,31 @@ const EditProfile = () => {
           <AccountData />
         </Col>
         <Col span={24}>
-          <CustomerData />
+          {loadingAccount ? (
+            <Card>
+              <Title level={2} style={{ paddingBottom: 24 }}>
+                {t("client:customerData")}
+              </Title>
+              <Loading />
+            </Card>
+          ) : (
+            <CustomerData customer={accountData?.me} />
+          )}
         </Col>
         <Col span={24}>
           <SubscriptionData />
         </Col>
         <Col span={24}>
-          <InvoicesData userId={data?.me?.id!!} />
+          {loading ? (
+            <Card>
+              <Title level={2} style={{ paddingBottom: 24 }}>
+                {t("invoices")}
+              </Title>
+              <Loading />
+            </Card>
+          ) : (
+            <InvoicesData userId={data?.me?.id!!} />
+          )}
         </Col>
         <Col span={24}>
           <Card>

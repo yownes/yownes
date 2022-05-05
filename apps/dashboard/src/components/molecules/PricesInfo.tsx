@@ -7,7 +7,6 @@ import {
   message,
   Popconfirm,
   Row,
-  Select,
   Switch,
   Table,
   Typography,
@@ -28,11 +27,11 @@ import connectionToNodes from "../../lib/connectionToNodes";
 import { normalize } from "../../lib/normalize";
 
 import { VerifiedState } from "./";
-import { LoadingFullScreen, TextField } from "../atoms";
+import { LoadingFullScreen, SelectField, TextField } from "../atoms";
+import { Option } from "../atoms/SelectField";
 
 import styles from "./PricesInfo.module.css";
 
-const { Option } = Select;
 const { Paragraph, Title } = Typography;
 
 interface PricesInfoProps {
@@ -62,13 +61,29 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const { t } = useTranslation(["translation", "admin"]);
+  const intervals: Option[] = [];
+  Object.keys(PlanInterval).map((i) =>
+    intervals.push({
+      id: i.toLocaleUpperCase(),
+      name: t(`admin:intervals.${i}`),
+      disabled:
+        record &&
+        dataSource?.find(
+          (r) =>
+            r.recurring.interval.toLowerCase() === i.toLowerCase() &&
+            r.id !== record.id &&
+            r.active
+        ) !== undefined,
+    })
+  );
 
   const inputNode =
     inputType === "number" ? (
       <TextField
         autofocus={dataIndex === "unitAmount"}
         label={title}
-        name={title}
+        name={dataIndex}
+        rules={[{ required: true }]}
         type="number"
         wrapperClassName={styles.input}
       />
@@ -76,67 +91,50 @@ const EditableCell: React.FC<EditableCellProps> = ({
       <TextField
         autofocus={dataIndex === "unitAmount"}
         label={title}
-        name={title}
+        name={dataIndex}
+        rules={[{ required: true }]}
         type="text"
         wrapperClassName={styles.input}
       />
     ) : null;
   return (
     <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          className={styles.editing}
-          name={dataIndex}
-          rules={
-            dataIndex !== "active"
-              ? [
-                  {
-                    required: true,
-                    message: t("admin:requiredInput"),
-                  },
-                ]
-              : undefined
-          }
-          valuePropName={dataIndex === "active" ? "checked" : undefined}
-        >
-          {inputNode
-            ? inputNode
-            : (dataIndex === "currency" && (
-                <Select className={styles.fullWidth}>
-                  <Option key="eur" value="eur">
-                    Euro
-                  </Option>
-                  <Option key="usd" value="usd">
-                    USD
-                  </Option>
-                </Select>
-              )) ||
-              (isEqual(dataIndex, ["recurring", "interval"]) && (
-                <Select className={styles.fullWidth}>
-                  {Object.keys(PlanInterval).map((e) => (
-                    <Option
-                      disabled={
-                        dataSource?.find(
-                          (r) =>
-                            r.recurring.interval.toLowerCase() ===
-                              e.toLowerCase() &&
-                            r.id !== record.id &&
-                            r.active
-                        ) !== undefined
-                      }
-                      key={e.toLowerCase()}
-                      value={e.toLowerCase()}
-                    >
-                      {t(`admin:intervals.${e}`)}
-                    </Option>
-                  ))}
-                </Select>
-              )) ||
-              (dataIndex === "active" && <Switch defaultChecked={false} />)}
-        </Form.Item>
-      ) : (
-        children
-      )}
+      {editing
+        ? inputNode
+          ? inputNode
+          : (dataIndex === "currency" && (
+              <SelectField
+                label={t("admin:currency")}
+                defaultEmpty
+                name="currency"
+                options={[
+                  { id: "eur", name: t("admin:euro") },
+                  { id: "usd", name: t("admin:usd") },
+                ]}
+                rules={[{ required: true }]}
+                wrapperClassName={styles.input}
+              />
+            )) ||
+            (isEqual(dataIndex, ["recurring", "interval"]) && (
+              <SelectField
+                defaultEmpty
+                label={t("admin:interval")}
+                name="interval"
+                options={intervals}
+                rules={[{ required: true }]}
+                wrapperClassName={styles.input}
+              />
+            )) ||
+            (dataIndex === "active" && (
+              <Form.Item
+                className={styles.switch}
+                name="active"
+                valuePropName="checked"
+              >
+                <Switch defaultChecked={false} />
+              </Form.Item>
+            ))
+        : children}
     </td>
   );
 };
@@ -169,7 +167,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
     setPrices(
       connectionToNodes(product?.prices).map((price) => ({
         ...price,
-        recurring: JSON.parse(normalize(price.recurring)),
+        recurring: JSON.parse(normalize(price.recurring ?? "")),
       }))
     );
   }, [product]);
@@ -227,48 +225,47 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
     setArchivingId("");
   };
 
-  const create = (record: Plan_product_prices_edges_node) => {
-    product &&
-      createPrice({
-        variables: {
-          id: product?.id,
-          price: {
-            active: record.active || false,
-            amount: record.unitAmount,
-            currency: record.currency,
-            interval: record.recurring.interval.toUpperCase(),
-          },
+  const create = () => {
+    createPrice({
+      variables: {
+        id: product?.id ?? "",
+        price: {
+          active: formPrices.getFieldValue("active") || false,
+          amount: formPrices.getFieldValue("unitAmount"),
+          currency: formPrices.getFieldValue("currency"),
+          interval: formPrices.getFieldValue("interval"),
         },
-        update(cache, { data }) {
-          if (data?.createPrice?.ok) {
-            cache.modify({
-              id: cache.identify({ ...product }),
-              fields: {
-                prices(existing, { toReference }) {
-                  return {
-                    edges: [
-                      ...existing.edges,
-                      {
-                        __typename: "StripePriceType",
-                        node: toReference({
-                          ...data.createPrice?.price,
-                        }),
-                      },
-                    ],
-                  };
-                },
+      },
+      update(cache, { data }) {
+        if (data?.createPrice?.ok) {
+          cache.modify({
+            id: cache.identify({ ...product }),
+            fields: {
+              prices(existing, { toReference }) {
+                return {
+                  edges: [
+                    ...existing.edges,
+                    {
+                      __typename: "StripePriceType",
+                      node: toReference({
+                        ...data.createPrice?.price,
+                      }),
+                    },
+                  ],
+                };
               },
-            });
-            setEditingId("");
-            message.success(t("admin:createPriceSuccessful"), 4);
-          } else {
-            message.error(
-              t(`admin:errors.${data?.createPrice?.error}`, t("error")),
-              4
-            );
-          }
-        },
-      });
+            },
+          });
+          setEditingId("");
+          message.success(t("admin:createPriceSuccessful"), 4);
+        } else {
+          message.error(
+            t(`admin:errors.${data?.createPrice?.error}`, t("error")),
+            4
+          );
+        }
+      },
+    });
   };
 
   const discard = () => {
@@ -439,7 +436,8 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
           <Form
             form={formPrices}
             component={false}
-            onFinish={(values) => create(values)}
+            onFinish={() => create()}
+            validateMessages={{ required: t("client:requiredInput") }}
           >
             <Table
               columns={mergedColumns}

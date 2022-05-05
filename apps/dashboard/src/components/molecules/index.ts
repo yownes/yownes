@@ -7,6 +7,8 @@ export { default as AppTable } from "./AppTable";
 export { default as BanClient } from "./BanClient";
 export { default as BuildsTable } from "./BuildsTable";
 export { default as BuildState } from "./BuildState";
+export { default as CancelSubscriptionClient } from "./CancelSubscriptionClient";
+export { default as ChangeSubscriptionClient } from "./ChangeSubscriptionClient";
 export { default as CheckoutForm } from "./CheckoutForm";
 export { default as CreditCard } from "./CreditCard";
 export { default as DeleteAccount } from "./DeleteAccount";

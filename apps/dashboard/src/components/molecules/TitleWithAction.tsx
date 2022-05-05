@@ -7,7 +7,7 @@ import styles from "./TitleWithAction.module.css";
 const { Title } = Typography;
 
 interface TitleWithActionProps {
-  title: string;
+  title: string | ReactNode;
   action?: {
     action: () => void;
     buttonClassName?: string;

@@ -93,7 +93,9 @@ const Checkout = () => {
               }}
             />
           )}
-          {current === 1 && <CustomerData onFinish={() => setCurrent(2)} />}
+          {current === 1 && (
+            <CustomerData customer={data.me} onFinish={() => setCurrent(2)} />
+          )}
           {current === 2 && (
             <CheckoutForm
               plan={plan!}

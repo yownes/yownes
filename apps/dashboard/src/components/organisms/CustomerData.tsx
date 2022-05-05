@@ -1,33 +1,24 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  message,
-  Row,
-  Select,
-  Typography,
-} from "antd";
-import { useMutation, useQuery } from "@apollo/client";
+import { Button, Card, Col, Form, message, Row, Typography } from "antd";
+import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 import { UPDATE_CUSTOMER } from "../../api/mutations";
-import { MY_ACCOUNT } from "../../api/queries";
-import { MyAccount } from "../../api/types/MyAccount";
+import { Client_user } from "../../api/types/Client";
+import { MyAccount_me } from "../../api/types/MyAccount";
 import {
   UpdateCustomer,
   UpdateCustomerVariables,
 } from "../../api/types/UpdateCustomer";
 import { normalize } from "../../lib/normalize";
 
-import { Loading, LoadingFullScreen, TextField } from "../atoms";
+import { LoadingFullScreen, SelectField, TextField } from "../atoms";
+import { Option } from "../atoms/SelectField";
 import { Errors } from "../molecules";
 
 import * as Countries from "../../data/countries.json";
 
-const { Option } = Select;
 const { Title } = Typography;
 
 enum Language {
@@ -39,6 +30,7 @@ enum Language {
 }
 
 interface CustomerDataProps {
+  customer: Client_user | MyAccount_me | null | undefined;
   onFinish?: () => void;
 }
 
@@ -53,7 +45,7 @@ interface IMetadata {
   document_id?: string;
 }
 
-const CustomerData = ({ onFinish }: CustomerDataProps) => {
+const CustomerData = ({ customer, onFinish }: CustomerDataProps) => {
   const location = useLocation();
   const { t, i18n } = useTranslation(["translation", "client"]);
   const [errs, setErrs] = useState("");
@@ -61,19 +53,25 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
   const [updateCustomer, { data: updateData, loading: updating }] = useMutation<
     UpdateCustomer,
     UpdateCustomerVariables
-  >(UPDATE_CUSTOMER, { refetchQueries: [{ query: MY_ACCOUNT }] });
-  const { data, loading } = useQuery<MyAccount>(MY_ACCOUNT);
+  >(UPDATE_CUSTOMER);
   const country = i18n.language.split("-")[0] as Language;
   const language = Language[country] ?? "es";
+  const countries: Option[] = [];
+  Object.entries(Countries.countries).map(([key, value]) =>
+    countries.push({
+      id: key,
+      name: value[language] ?? value.es,
+    })
+  );
 
   const addressData: IAddress = JSON.parse(
-    data?.me?.customer?.address
-      ? normalize(data.me.customer.address)
+    customer?.customer?.address
+      ? normalize(customer.customer.address)
       : "{}" ?? "{}"
   );
   const metadataData: IMetadata = JSON.parse(
-    data?.me?.customer?.metadata
-      ? normalize(data.me.customer.metadata)
+    customer?.customer?.metadata
+      ? normalize(customer.customer.metadata)
       : "{}" ?? "{}"
   );
 
@@ -88,14 +86,6 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
     }
   }, [updateData, isUpdated, t]);
 
-  if (loading)
-    return (
-      <Card>
-        <Title level={2}>{t("client:customerData")}</Title>
-        <Loading />
-      </Card>
-    );
-
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
@@ -105,10 +95,10 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
           </Title>
           <Form
             initialValues={{
-              email: data?.me?.customer?.email,
-              name: data?.me?.customer?.name,
+              email: customer?.customer?.email,
+              name: customer?.customer?.name,
               documentId: metadataData.document_id,
-              phone: data?.me?.customer?.phone,
+              phone: customer?.customer?.phone,
               location: addressData.line1,
               city: addressData.city,
               province: addressData.state,
@@ -125,7 +115,7 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
               setErrs("");
               updateCustomer({
                 variables: {
-                  userId: data?.me?.id!!,
+                  userId: customer?.id ?? "",
                   customer: {
                     billingDetails: {
                       email: values.email,
@@ -143,14 +133,14 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
                     },
                   },
                 },
-                update(cache, { data: customerData }) {
-                  if (customerData?.updateCustomer?.ok) {
+                update(cache, { data }) {
+                  if (data?.updateCustomer?.ok) {
                     setIsUpdated(true);
                   } else {
-                    customerData?.updateCustomer?.error &&
+                    data?.updateCustomer?.error &&
                       setErrs(
                         t(
-                          `client:errors.${customerData.updateCustomer.error}`,
+                          `client:errors.${data.updateCustomer.error}`,
                           t("error")
                         )
                       );
@@ -165,7 +155,7 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
                 <Row gutter={[24, 0]}>
                   <Col span={24} md={12}>
                     <TextField
-                      defaultValue={data?.me?.customer?.name}
+                      defaultValue={customer?.customer?.name}
                       name="name"
                       rules={[{ required: true }]}
                       label={t("name")}
@@ -173,7 +163,7 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
                   </Col>
                   <Col span={24} md={12}>
                     <TextField
-                      defaultValue={data?.me?.customer?.email}
+                      defaultValue={customer?.customer?.email}
                       label={t("email")}
                       name="email"
                       rules={[{ required: true }]}
@@ -191,7 +181,7 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
                   </Col>
                   <Col span={24} md={12}>
                     <TextField
-                      defaultValue={data?.me?.customer?.phone}
+                      defaultValue={customer?.customer?.phone}
                       label={t("phone")}
                       name="phone"
                       rules={[{ required: true }]}
@@ -228,7 +218,7 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
                 </Row>
                 <Row gutter={[24, 0]}>
                   <Col span={24} md={12}>
-                    <Form.Item
+                    {/* <Form.Item
                       name="country"
                       rules={[{ required: true }]}
                       label={t("country")}
@@ -246,7 +236,14 @@ const CustomerData = ({ onFinish }: CustomerDataProps) => {
                           )
                         )}
                       </Select>
-                    </Form.Item>
+                    </Form.Item> */}
+                    <SelectField
+                      label={t("country")}
+                      defaultValue={addressData.country}
+                      name="country"
+                      options={countries}
+                      rules={[{ required: true }]}
+                    />
                   </Col>
                 </Row>
               </Col>

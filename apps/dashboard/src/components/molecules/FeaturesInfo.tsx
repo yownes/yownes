@@ -69,8 +69,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
       {editing ? (
         <TextField
           autofocus
-          label={title}
           defaultValue={record.name}
+          label={title}
           name={dataIndex}
           rules={[
             {

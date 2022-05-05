@@ -9,6 +9,14 @@
 
 /* select starting stylings ------------------------------*/
 .select {
+  font-family: var(
+    --font-family,
+    "Roboto",
+    "Segoe UI",
+    BlinkMacSystemFont,
+    system-ui,
+    -apple-system
+  );
   /* font-family: "Roboto", "Helvetica", "Arial", sans-serif; */
   position: relative;
   /* height: 68px; */
@@ -70,15 +78,15 @@
 
 /* LABEL ======================================= */
 .select-label {
-  color: rgba(0, 0, 0, 0.26);
+  color: rgba(var(--clr-text-dark, 0, 0, 0));
   background: white;
-  font-size: 18px;
-  font-weight: normal;
+  font-size: 14px;
+  font-weight: 500;
   position: absolute;
   pointer-events: none;
   padding: 0 5px;
   left: 10px;
-  top: 12px;
+  top: 16px;
   transition: 0.2s ease all;
 }
 

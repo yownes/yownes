@@ -9,7 +9,6 @@ import {
   ChangeVerifiedVariables,
 } from "../../api/types/ChangeVerified";
 import { Client as IClient } from "../../api/types/Client";
-import { AccountAccountStatus } from "../../api/types/globalTypes";
 import { Errors as IErrors } from "../../lib/auth";
 
 import { Errors } from "./";

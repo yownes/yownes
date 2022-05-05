@@ -42,6 +42,7 @@ import {
 import { getBuildsForCustomer } from "../../components/molecules/BuildsTable";
 import {
   ClientSubscriptionData,
+  CustomerData,
   InvoicesData,
   PaymentMethod,
 } from "../../components/organisms";
@@ -150,6 +151,12 @@ const Client = () => {
               </Col>
             </Row>
           </Card>
+        </Col>
+        <Col></Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <CustomerData customer={data?.user} />
         </Col>
         <Col></Col>
       </Row>
