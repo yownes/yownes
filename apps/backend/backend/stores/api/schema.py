@@ -2,13 +2,12 @@ import graphene
 from graphene_django.filter import DjangoFilterConnectionField
 from graphql_jwt.decorators import login_required, staff_member_required
 
-from ..models import Build, Config, StoreApp, Template
-from .mutations import (UpdateBuildsLimit, CreateStoreAppMutation,
+from ..models import Build, StoreApp, Template
+from .mutations import (CreateStoreAppMutation,
                         DeleteAppMutation, DeletePaymentMethodAppMutation,
                         GenerateAppMutation, RestoreAppMutation, CreateOrUpdatePaymentMethodAppMutation,
                         UpdateStoreAppMutation, CreateTemplateMutation, UpdateTemplateMutation)
-from .types import BuildType, ConfigType, StoreAppCustomerType, StoreAppType, TemplateType
-import logging
+from .types import BuildType, StoreAppCustomerType, StoreAppType, TemplateType
 
 
 class StoresQuery(graphene.ObjectType):
@@ -21,7 +20,6 @@ class StoresQuery(graphene.ObjectType):
     app = graphene.relay.Node.Field(StoreAppType)
     apps = DjangoFilterConnectionField(StoreAppType, is_active=graphene.Boolean())
     builds = DjangoFilterConnectionField(BuildType)
-    configs = DjangoFilterConnectionField(ConfigType)
 
     @login_required
     def resolve_templates(self, info, **kwargs):
@@ -46,14 +44,8 @@ class StoresQuery(graphene.ObjectType):
     def resolve_builds(self, info, **kwargs):
         return Build.objects.all()
 
-    @login_required
-    def resolve_configs(self, info, **kwargs):
-        return Config.objects.all()
-
 
 class StoresMutation(graphene.ObjectType):
-    update_builds_limit = UpdateBuildsLimit.Field()
-
     generate_app = GenerateAppMutation.Field()
     create_app = CreateStoreAppMutation.Field()
     update_app = UpdateStoreAppMutation.Field()

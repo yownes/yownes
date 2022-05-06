@@ -130,21 +130,3 @@ class StoreApp(models.Model):
             status = "eliminada"
         return f"[{status}] {self.name}"
 
-
-class Config(models.Model):
-    limit = models.IntegerField()
-
-    def save(self):
-        count = Config.objects.all().count()
-        save_permission = Config.has_add_permission(self)
-        
-        if count < 2: # if there's more than one object it will not save them in the database
-            super(Config, self).save()
-        elif save_permission:
-            super(Config, self).save()
-
-    def has_add_permission(self):
-        return Config.objects.filter(id=self.id).exists()
-
-    def __str__(self):
-        return f"Límite de builds en {self.limit}"

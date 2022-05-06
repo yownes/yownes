@@ -5,7 +5,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from djstripe.models import Invoice, Price, Product, Subscription
 
 from ..models import FeaturesModel
-from .mutations import AddPaymentMethod, UpdateCustomerMutation, DropOutUserMutation, TakeUpUserMutation, UpdateSubscriptionMutation, SubscribeMutation, DetachPaymentMethod, UpdatePaymentMethod, CreatePlanMutation, UpdatePlanMutation, CreatePriceMutation, UpdatePriceMutation, CreateFeatureMutation, UpdateFeatureMutation, DeleteFeatureMutation, PayInvoiceMutation
+from .mutations import AddPaymentMethod, CreatePaymentMethod, UpdateCustomerMutation, DropOutUserMutation, TakeUpUserMutation, UpdateSubscriptionMutation, SubscribeMutation, DetachPaymentMethod, UpdatePaymentMethod, CreatePlanMutation, UpdatePlanMutation, CreatePriceMutation, UpdatePriceMutation, CreateFeatureMutation, UpdateFeatureMutation, DeleteFeatureMutation, PayInvoiceMutation
 from .types import FeaturesType, StripeBalanceType, StripeInvoiceType, StripePriceType, StripeProductType, StripeSubscriptionType, StripeUpcomingInvoiceType
 import logging
 
@@ -16,8 +16,8 @@ class PaymentsMutation(graphene.ObjectType):
     take_up = TakeUpUserMutation.Field()
     update_subscription = UpdateSubscriptionMutation.Field()
     detach_payment_method = DetachPaymentMethod.Field()
-    # select_default_payment_method = SelectDefaultPaymentMethod.Field()
     add_payment_method = AddPaymentMethod.Field()
+    create_payment_method = CreatePaymentMethod.Field()
     update_payment_method = UpdatePaymentMethod.Field()
     create_plan = CreatePlanMutation.Field()
     update_plan = UpdatePlanMutation.Field()

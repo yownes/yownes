@@ -9,7 +9,7 @@ from backend.account.api.types import AccountStatusEnum
 from backend.errors import Error, StripeErrorsEs
 from backend.graphql.types import Return
 
-from ..api.types import (CustomerInput, FeatureInput, FeaturesType, PaymentInput, PriceInput, ProductInput, StripeInvoiceType, StripePriceType, StripeProductType, StripeSubscriptionType)
+from ..api.types import (CustomerInput, FeatureInput, FeaturesType, CreatePaymentInput, PaymentInput, PriceInput, ProductInput, StripeCustomerType, StripeInvoiceType, StripePriceType, StripeProductType, StripeSubscriptionType)
 from ..models import FeaturesModel
 
 import logging
@@ -139,7 +139,7 @@ class UpdateSubscriptionMutation(graphene.Mutation):
             return UpdateSubscriptionMutation(ok=True, subscription=subscription, account_status=info.context.user.account_status)
         except Exception as e:
             logging.warning(e)
-            return UpdateSubscriptionMutation(ok=False, error=e)
+            return UpdateSubscriptionMutation(ok=False, error=Error.UNKNOWN_ERROR.value)
 
 
 class AddPaymentMethod(graphene.Mutation):
@@ -173,6 +173,29 @@ class AddPaymentMethod(graphene.Mutation):
             return Return(ok=False, error=e)
 
 
+class CreatePaymentMethod(graphene.Mutation):
+    class Arguments:
+        payment = CreatePaymentInput(required=True)
+
+    ok = graphene.Boolean()
+    error = graphene.String()
+    id = graphene.String()
+
+    @login_required
+    def mutate(self, info, payment):
+        try:
+            stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+            payment_method = stripe.PaymentMethod.create(billing_details=payment.billing_details, card=payment.card, type="card")
+            payment_method_obj = stripe.PaymentMethod.retrieve(payment_method.id)
+            PaymentMethod.sync_from_stripe_data(payment_method_obj)
+            
+            return CreatePaymentMethod(ok=True, id=payment_method.id)
+        except Exception as e:
+            error_message=StripeErrorsEs[e.code].value
+            logging.warning("error type: %s %s", e.code, error_message)
+            return CreatePaymentMethod(ok=False, error=error_message)
+
+
 class UpdatePaymentMethod(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
@@ -190,7 +213,7 @@ class UpdatePaymentMethod(graphene.Mutation):
         # TODO Comprobar que los campos obligatorios llegan (igual poniedo required en los type ya bastaría)
         try:
             stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-            payment_method_mod = stripe.PaymentMethod.modify(payment_method_id, billing_details=payment.billing_details, card=payment.card, metadata=payment.metadata,)
+            payment_method_mod = stripe.PaymentMethod.modify(payment_method_id, billing_details=payment.billing_details, card=payment.card)
             payment_method_obj = stripe.PaymentMethod.retrieve(payment_method_id)
             PaymentMethod.sync_from_stripe_data(payment_method_obj)
             
@@ -208,17 +231,30 @@ class UpdateCustomerMutation(graphene.Mutation):
 
     ok = graphene.Boolean()
     error = graphene.String()
+    customer = graphene.Field(StripeCustomerType)
     
     @login_required
     def mutate(self, info, user_id, customer):
         user_object = Node.get_node_from_global_id(info, user_id)
-        logging.warning(user_object)
-        logging.warning(customer)
         if not user_object:
             return UpdateCustomerMutation(ok=False, error=Error.NO_RECURSE.value)
-        return UpdateCustomerMutation(ok=True)
+        try:
+            stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
+            try:
+                customer_obj = Customer.objects.get(id=user_object.customer.id)
+            except:
+                customer_obj, created = Customer.get_or_create(subscriber=user_object)
+            user_object.customer=customer_obj
+            user_object.save()
+            mod = stripe.Customer.modify(customer_obj.id, address=customer.billing_details.address, email=customer.billing_details.email, name=customer.billing_details.name, phone=customer.billing_details.phone, metadata={"document_id": customer.metadata.document_id})
+            cus_obj = stripe.Customer.retrieve(customer_obj.id)
+            Customer.sync_from_stripe_data(cus_obj)
+            customer_object = Customer.objects.get(id=customer_obj.id)
+        except:
+            return Return(ok=False, error=Error.UPDATE_CUSTOMER_ERROR.value)
         
-
+        return UpdateCustomerMutation(ok=True, customer=customer_object)
+        
 
 class DropOutUserMutation(graphene.Mutation):
     class Arguments:
@@ -281,28 +317,6 @@ class TakeUpUserMutation(graphene.Mutation):
             return TakeUpUserMutation(ok=False, error=e)
 
 
-class SelectDefaultPaymentMethod(graphene.Mutation):
-    class Arguments:
-        payment_method_id = graphene.ID(required=True)
-
-    Output = Return
-
-    @login_required
-    def mutate(self, info, payment_method_id):
-        try:
-            stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-            payment_method_obj = stripe.PaymentMethod.retrieve(payment_method_id)
-            PaymentMethod.sync_from_stripe_data(payment_method_obj)
-
-            user = info.context.user
-            user.customer.default_payment_method = payment_method_obj
-            user.customer.save()
-            Customer.sync_from_stripe_data(user.customer)
-            return Return(ok=True)
-        except Exception as e:
-            return Return(ok=False, error=e)
-
-
 class DetachPaymentMethod(graphene.Mutation):
     class Arguments:
         payment_method_id = graphene.ID(required=True)
@@ -334,7 +348,7 @@ class CreatePlanMutation(graphene.Mutation):
     def mutate(self, info, data):
         try:
             stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-            plan_new = stripe.Product.create(active=data.active, name=data.name, description=data.description, metadata={"allowed_apps": data.apps},)
+            plan_new = stripe.Product.create(active=data.active, name=data.name, description=data.description, metadata={"allowed_apps": data.apps, "allowed_builds": data.builds, "plan_type": data.type},)
             plan_obj = stripe.Product.retrieve(plan_new.id)
             djstripe.models.Product.sync_from_stripe_data(plan_obj)
             plan_object = Product.objects.get(id=plan_obj.id)
@@ -371,10 +385,10 @@ class UpdatePlanMutation(graphene.Mutation):
             plan_object.active = data.active
             plan_object.name = data.name
             plan_object.description = data.description
-            plan_object.metadata = {"allowed_apps": data.apps}
+            plan_object.metadata = {"allowed_apps": data.apps, "allowed_builds": data.builds, "plan_type": data.type}
             plan_object.save()
             stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
-            plan_mod = stripe.Product.modify(plan_object.id, active=data.active, name=data.name, description=data.description, metadata={"allowed_apps": data.apps},)
+            plan_mod = stripe.Product.modify(plan_object.id, active=data.active, name=data.name, description=data.description, metadata={"allowed_apps": data.apps, "allowed_builds": data.builds, "plan_type": data.type},)
             plan_obj = stripe.Product.retrieve(plan_object.id)
             djstripe.models.Product.sync_from_stripe_data(plan_obj)
             return Return(ok=True)

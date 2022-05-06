@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Optional, Sequence
 
-from ..models import Build, BuildStatus, Config, PaymentMethod, StoreApp, Template
+from ..models import Build, BuildStatus, PaymentMethod, StoreApp, Template
 
 BuildStatusEnum = graphene.Enum.from_enum(BuildStatus)
 
@@ -65,14 +65,6 @@ class BuildType(DjangoObjectType):
         exclude_fields = ()
         interfaces = (graphene.relay.Node,)
         convert_choices_to_enum = ["build_status"]
-
-
-class ConfigType(DjangoObjectType):
-    class Meta:
-        model = Config
-        filter_fields = ["limit"]
-        exclude_fields = ()
-        interfaces = (graphene.relay.Node,)
 
 
 class TemplateType(DjangoObjectType):

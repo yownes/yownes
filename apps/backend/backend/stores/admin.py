@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Build, Config, PaymentMethod, StoreApp, Template
+from .models import Build, PaymentMethod, StoreApp, Template
 
 
 class PaymentMethodAdmin(admin.TabularInline):
@@ -15,4 +15,3 @@ class StoreAppAdmin(admin.ModelAdmin):
 admin.site.register(StoreApp, StoreAppAdmin)
 admin.site.register(Template)
 admin.site.register(Build)
-admin.site.register(Config)

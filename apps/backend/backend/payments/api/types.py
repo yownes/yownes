@@ -1,5 +1,5 @@
 import graphene
-from djstripe.models import BalanceTransaction, Charge, Customer, Invoice, InvoiceItem, PaymentIntent, PaymentMethod, Plan, Price, Product, Subscription, TaxRate, UpcomingInvoice
+from djstripe.models import Charge, Customer, Invoice, InvoiceItem, PaymentIntent, PaymentMethod, Plan, Price, Product, Subscription, TaxRate, UpcomingInvoice
 from graphene_django import DjangoObjectType
 
 from ..models import FeaturesModel
@@ -177,13 +177,31 @@ class FeatureInput(graphene.InputObjectType):
     name = graphene.String()
 
 
+class PaymentBillingDetailsInput(graphene.InputObjectType):
+    name = graphene.String()
+
+
 class PaymentCardInput(graphene.InputObjectType):
     exp_month = graphene.String()
     exp_year = graphene.String()
 
 
 class PaymentInput(graphene.InputObjectType):
+    billing_details = PaymentBillingDetailsInput()
     card = PaymentCardInput()
+
+
+class CreatePaymentCardInput(graphene.InputObjectType):
+    number = graphene.String()
+    exp_month = graphene.String()
+    exp_year = graphene.String()
+    cvc = graphene.String()
+
+
+class CreatePaymentInput(graphene.InputObjectType):
+    billing_details = PaymentBillingDetailsInput()
+    card = CreatePaymentCardInput()
+
 
 class CustomerBillingDetailsAddressInput(graphene.InputObjectType):
     city = graphene.String()
@@ -225,7 +243,9 @@ class PriceInput(graphene.InputObjectType):
 class ProductInput(graphene.InputObjectType):
     active = graphene.Boolean()
     apps = graphene.Int()
+    builds = graphene.Int()
     description = graphene.String()
     features = graphene.List(graphene.String)
     name = graphene.String()
+    type = graphene.String()
 
