@@ -8,7 +8,7 @@ vite build --base=/static/yownes/
 
 echo "Copying files into dashboard..."
 cd /home/ubuntu/yownes/apps/backend
-pipenv install
-pipenv run make update-frontend
+/home/ubuntu/.local/bin/pipenv install
+/home/ubuntu/.local/bin/pipenv run make update-frontend
 
 echo "Frontend from Backend updated!"
