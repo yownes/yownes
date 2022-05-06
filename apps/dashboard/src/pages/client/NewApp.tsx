@@ -1,14 +1,18 @@
 import React, { useCallback, useEffect } from "react";
-import { Button, Input, Form, Card, Space } from "antd";
+import { Button, Card, Col, Form, message, Typography } from "antd";
 import { ApolloCache, FetchResult, useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
 import { CREATE_APP } from "../../api/mutations";
 import { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
+import { colors } from "../../lib/colors";
 
 import { baseApp } from "./App";
+import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
+
+const { Title } = Typography;
 
 const NewApp = () => {
   const storeInfo:
@@ -59,77 +63,89 @@ const NewApp = () => {
     }
   }, [storeInfo, create, update]);
   if (data?.createApp?.ok) {
+    message.success(t("addNewAppSuccessful"), 4);
     return <Redirect to={`/app/${data.createApp.storeApp?.id}`} />;
   }
   return (
-    <Card style={{ minWidth: 300 }}>
-      <Form
-        initialValues={{
-          name: storeInfo?.name,
-          apiLink: storeInfo?.link,
-        }}
-        onFinish={(values) => {
-          create({
-            variables: {
-              data: {
-                apiLink: values.apiLink,
-                name: values.name,
-                color: baseApp.color,
+    <Col
+      xs={{ span: 22, offset: 1 }}
+      sm={{ span: 20, offset: 2 }}
+      md={{ span: 18, offset: 3 }}
+      lg={{ span: 16, offset: 4 }}
+    >
+      <Card>
+        <Title level={2}>{t("addApp")}</Title>
+        <Form
+          initialValues={{
+            name: storeInfo?.name,
+            apiLink: storeInfo?.link,
+          }}
+          onFinish={(values) => {
+            create({
+              variables: {
+                data: {
+                  apiLink: values.apiLink,
+                  name: values.name,
+                  color: baseApp.color,
+                },
               },
-            },
-            update,
-          });
-        }}
-      >
-        <Form.Item
-          name="name"
-          label={t("appName")}
-          rules={[{ required: true, message: t("required.app") }]}
+              update,
+            });
+          }}
+          style={{ paddingTop: 24 }}
         >
-          <Input autoFocus />
-        </Form.Item>
-        <Form.Item
-          name="apiLink"
-          label={t("storeLocation")}
-          rules={[{ required: true, message: t("required.store") }]}
-        >
-          <Input disabled={Boolean(storeInfo?.link)} type="url" />
-        </Form.Item>
-        <Space direction="vertical" size="middle">
-          {data?.createApp?.error && (
-            <Errors
-              errors={{
-                nonFieldErrors: [
-                  {
-                    message: t(`errors.${data?.createApp?.error}`),
-                    code: "error",
-                  },
-                ],
-              }}
-            />
+          <TextField
+            autofocus
+            label={t("appName")}
+            name="name"
+            rules={[{ required: true, message: t("required.app") }]}
+          />
+          <TextField
+            disabled={Boolean(storeInfo?.link)}
+            label={t("storeLocation")}
+            name="apiLink"
+            rules={[{ required: true, message: t("required.store") }]}
+            type="url"
+          />
+          {storeInfo?.link && !data?.createApp?.ok && (
+            <div>{t("checkLocation")}</div>
           )}
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={loading}
-              loading={loading}
-            >
-              {loading ? t("checking") : t("check")}
-            </Button>
-          </Form.Item>
-        </Space>
-      </Form>
-      {storeInfo?.link && !data?.createApp?.ok && (
-        <div>{t("checkLocation")}</div>
-      )}
-      {!storeInfo?.link && (
-        <div>
-          <h2>{t("installInstructions.title")}</h2>
-          <p>{t("installInstructions.description")}</p>
-        </div>
-      )}
-    </Card>
+          {!storeInfo?.link && (
+            <div style={{ color: colors.secondary }}>
+              <div style={{ paddingBottom: 16 }}>
+                {t("installInstructions.descName")}
+              </div>
+              <div style={{ paddingBottom: 16 }}>
+                {t("installInstructions.descURL")}
+              </div>
+            </div>
+          )}
+          {data?.createApp?.error && (
+            <div style={{ paddingBottom: 16 }}>
+              <Errors
+                errors={{
+                  nonFieldErrors: [
+                    {
+                      message: t(`errors.${data?.createApp?.error}`),
+                      code: "error",
+                    },
+                  ],
+                }}
+              />
+            </div>
+          )}
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={loading}
+            loading={loading}
+            style={{ marginTop: 8 }}
+          >
+            {loading ? t("checking") : t("check")}
+          </Button>
+        </Form>
+      </Card>
+    </Col>
   );
 };
 

@@ -3,18 +3,19 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { BuildBuildStatus } from "../../api/types/globalTypes";
+import { colors } from "../../lib/colors";
 
 interface BuildStateProps {
   state: BuildBuildStatus;
 }
 
 const COLORS = {
-  STALLED: "default",
-  QUEUED: "purple",
-  GENERATING: "cyan",
-  UPLOADING: "magenta",
-  PUBLISHED: "green",
-  WAITING: "orange",
+  STALLED: colors.tagDefault,
+  QUEUED: colors.tagPurple,
+  GENERATING: colors.tagCyan,
+  UPLOADING: colors.tagYellow,
+  PUBLISHED: colors.tagGreen,
+  WAITING: colors.tagOrange,
 };
 
 const BuildState = ({ state }: BuildStateProps) => {

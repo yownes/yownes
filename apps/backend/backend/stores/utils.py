@@ -12,8 +12,6 @@ from urllib import error
 
 from .api.types import (BuildsData, BuildStatusEnum, BuildData)
 
-BUILS_ALLOWED_BY_YEAR = 3
-
 
 def _is_store_link_valid(store_link: str) -> bool:
     logging.warning("_is_store_link_valid")
@@ -67,13 +65,13 @@ def _get_renewal_date(_date: date) -> date:
     return renewal_date
 
 
-def _current_builds(_builds: Sequence[BuildsData]) -> int:
+def _available_builds(_builds: Sequence[BuildsData], _allowed: int) -> int:
     renewal_build = _get_renewal_build(_builds)
     renewal_date = None
     if renewal_build:
         renewal_date = _get_renewal_date(renewal_build.date)
     current_builds = _count_current_builds(_builds, renewal_date)
-    return BUILS_ALLOWED_BY_YEAR - current_builds
+    return _allowed - current_builds
 
 
 def _has_build_in_progress(_builds: Sequence[BuildsData]) -> bool:

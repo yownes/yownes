@@ -8,6 +8,24 @@
   padding-left: 15px;
 }
 
+.expandedContent {
+  padding: 16px 0px;
+}
+
 .expandedRow {
-  background-color: #ededed !important;
+  background-color: #ebfbf3 !important;
+  cursor: pointer !important;
+}
+
+.overflow {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.row {
+  cursor: pointer !important;
+}
+
+.table {
+  min-width: 750px;
 }

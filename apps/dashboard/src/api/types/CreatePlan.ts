@@ -75,7 +75,7 @@ export interface CreatePlan_createPlan_plan {
   /**
    * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
    */
-  metadata: any | null;
+  metadata: string | null;
   /**
    * The product's name, meant to be displayable to the customer. Applicable to both `service` and `good` types.
    */

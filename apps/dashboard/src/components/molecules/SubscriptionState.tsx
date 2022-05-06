@@ -3,6 +3,7 @@ import { Tag, Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { SubscriptionStatus } from "../../api/types/globalTypes";
+import { colors } from "../../lib/colors";
 
 interface SubscriptionStateProps {
   state?: SubscriptionStatus;
@@ -10,13 +11,13 @@ interface SubscriptionStateProps {
 }
 
 const COLORS = {
-  ACTIVE: "green",
-  CANCELED: "default",
-  INCOMPLETE: "orange",
-  INCOMPLETE_EXPIRED: "red",
-  PAST_DUE: "red",
-  TRIALING: "cyan",
-  UNPAID: "red",
+  ACTIVE: colors.tagGreen,
+  CANCELED: colors.tagDefault,
+  INCOMPLETE: colors.tagOrange,
+  INCOMPLETE_EXPIRED: colors.tagRed,
+  PAST_DUE: colors.tagRed,
+  TRIALING: colors.tagCyan,
+  UNPAID: colors.tagRed,
 };
 
 const SubscriptionState = ({ state, tooltip }: SubscriptionStateProps) => {

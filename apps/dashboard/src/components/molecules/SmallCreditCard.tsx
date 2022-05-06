@@ -1,14 +1,16 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+import { normalize } from "../../lib/normalize";
+
 import styles from "./SmallCreditCard.module.css";
 
 interface SmallCreditCardProps {
-  data: string;
+  data: string | null;
 }
 
 interface ICreditCardStripe {
-  brand: "visa" | "maestro" | "mastercard";
+  brand: "visa" | "maestro" | "mastercard" | "amex";
   checks: {
     address_line1_check?: string;
     address_postal_code_check?: string;
@@ -48,12 +50,10 @@ const CARDS = {
 
 const SmallCreditCard = ({ data }: SmallCreditCardProps) => {
   const { t } = useTranslation();
-  const normalizedData = data
-    .replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-  const card: ICreditCardStripe = JSON.parse(normalizedData);
+  if (!data) {
+    return null;
+  }
+  const card: ICreditCardStripe = JSON.parse(normalize(data));
   const expired = new Date(card.exp_year, card.exp_month) < new Date();
   return (
     <div style={{ marginBottom: 24, textAlign: "center" }}>
@@ -71,12 +71,12 @@ const SmallCreditCard = ({ data }: SmallCreditCardProps) => {
           }}
         ></div>
         <div className={styles.cardnumbercontainer}>
-          <text className={`${styles.cardnumbertitle} ${styles.light}`}>
+          <span className={`${styles.cardnumbertitle} ${styles.light}`}>
             {t("cardNumberLow")}
-          </text>
-          <text
+          </span>
+          <span
             className={`${styles.cardnumber} ${styles.light}`}
-          >{`**** **** **** ${card.last4}`}</text>
+          >{`**** **** **** ${card.last4}`}</span>
         </div>
       </div>
     </div>

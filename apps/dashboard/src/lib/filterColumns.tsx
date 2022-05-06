@@ -1,9 +1,11 @@
 import React from "react";
-import { Button, Input, Space } from "antd";
+import { Button, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import get from "lodash/get";
 
 import { colors } from "./colors";
+
+import { TextField } from "../components/atoms";
 
 interface FilterDropdownProps {
   setSelectedKeys: (keys: string[]) => void;
@@ -35,14 +37,21 @@ export function getColumnSearchProps<T>(
       clearFilters,
     }: FilterDropdownProps) => (
       <div style={{ padding: 8 }}>
-        <Input
-          placeholder={dataHolder}
+        <TextField
+          autoFocus
+          label={dataHolder}
+          name={dataHolder}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-          onPressEnter={() => handleSearch(confirm)}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              handleSearch(confirm);
+            }
+          }}
+          single
+          style={{ width: 188 }}
         />
         <Space>
           <Button
@@ -55,7 +64,6 @@ export function getColumnSearchProps<T>(
           <Button
             type="primary"
             onClick={() => handleSearch(confirm)}
-            icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
           >

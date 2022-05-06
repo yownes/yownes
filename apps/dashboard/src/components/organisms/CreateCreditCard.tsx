@@ -1,187 +1,160 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Select,
-  Space,
-  FormInstance,
-} from "antd";
-import {
-  CardElement,
-  Elements,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
-import { loadStripe, PaymentMethod, StripeError } from "@stripe/stripe-js";
+import { Button, Checkbox, Col, Form, FormInstance, Row } from "antd";
+import { useMutation } from "@apollo/client";
+import { StripeError } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 
-import { CardSection, Errors } from "../molecules";
+import { CREATE_PAYMENT_METHOD } from "../../api/mutations";
+import {
+  CreatePaymentMethod,
+  CreatePaymentMethodVariables,
+} from "../../api/types/CreatePaymentMethod";
 
-import * as Countries from "../../data/countries.json";
-
-const { Option } = Select;
-
-enum Language {
-  en = "en",
-  es = "es",
-  fr = "fr",
-  ca = "ca",
-  de = "de",
-}
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK_TEST);
+import { TextField } from "../atoms";
+import { Errors } from "../molecules";
 
 interface CreateCreditCardProps {
-  onCreated: (
-    paymentMethod: PaymentMethod | undefined,
-    isDefault: boolean
-  ) => void;
+  onCancel: () => void;
+  onCreated: (paymentMethod: string | undefined, isDefault: boolean) => void;
   form?: FormInstance;
 }
 
-const CreateCreditCardContainer = (props: CreateCreditCardProps) => {
-  return (
-    <Elements stripe={stripePromise}>
-      <CreateCreditCard {...props} />
-    </Elements>
-  );
-};
-
-const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
-  const [creating, setCreating] = useState(false);
+const CreateCreditCard = ({
+  onCancel,
+  onCreated,
+  form,
+}: CreateCreditCardProps) => {
   const [errs, setErrs] = useState<StripeError>();
   const [isDefault, setIsDefault] = useState(true);
-  const stripe = useStripe();
-  const elements = useElements();
-  const { t, i18n } = useTranslation(["translation", "client"]);
-  const country = i18n.language.split("-")[0] as Language;
-  const language = Language[country] ?? "es";
+  const { t } = useTranslation(["translation", "client"]);
+
+  const [createPayment, { data: createData, loading: creating }] = useMutation<
+    CreatePaymentMethod,
+    CreatePaymentMethodVariables
+  >(CREATE_PAYMENT_METHOD);
 
   return (
     <Form
       form={form}
-      validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
+      onChange={() => setErrs(undefined)}
       onFinish={async (values) => {
-        setCreating(true);
-        if (!stripe || !elements) {
-          setCreating(false);
-          return;
-        }
-        const cardElement = elements.getElement(CardElement);
-        if (!cardElement) {
-          setCreating(false);
-          return;
-        }
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-          type: "card",
-          card: cardElement,
-          billing_details: {
-            address: {
-              city: values.city,
-              country: values.country,
-              line1: values.direction,
-              state: values.state,
+        createPayment({
+          variables: {
+            payment: {
+              card: {
+                number: values.number,
+                expMonth: values.month,
+                expYear: values.year,
+                cvc: values.cvc,
+              },
+              billingDetails: {
+                name: values.name,
+              },
             },
-            email: values.email,
-            name: values.name,
-            phone: values.phone ?? null,
           },
-          metadata: { document_id: values.documentId },
+          update(cache, { data }) {
+            if (data?.createPaymentMethod?.error) {
+              setErrs(t(`admin:errors.${data?.createPaymentMethod?.error}`));
+            } else {
+              onCreated(data?.createPaymentMethod?.id ?? "", isDefault);
+            }
+          },
         });
-        if (error) {
-          setCreating(false);
-          setErrs(error);
-        } else {
-          setCreating(false);
-          onCreated(paymentMethod, isDefault);
-        }
       }}
+      validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
     >
-      <Form.Item name="name" rules={[{ required: true }]} label={t("fullName")}>
-        <Input autoFocus placeholder={t("fullName")} />
-      </Form.Item>
-      <Form.Item name="email" rules={[{ required: true }]} label={t("email")}>
-        <Input placeholder={t("email")} type="email" />
-      </Form.Item>
-      <Form.Item
-        name="direction"
+      <TextField
+        autofocus
+        label={t("fullName")}
+        name="name"
         rules={[{ required: true }]}
-        label={t("location")}
-      >
-        <Input placeholder={t("location")} />
-      </Form.Item>
-      <Form.Item
-        name="country"
+      />
+      <TextField
+        creditcard
+        label={t("cardNumber")}
+        maxLength={16}
+        minLength={16}
+        name="number"
         rules={[{ required: true }]}
-        label={t("country")}
-      >
-        <Select
-          optionFilterProp="children"
-          placeholder={t("country")}
-          showSearch
-        >
-          {Object.entries(Countries.countries).map(([key, value]) => (
-            <Option key={key} value={key}>
-              {value[language] ?? value.es}
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="state"
-        rules={[{ required: true }]}
-        label={t("province")}
-      >
-        <Input placeholder={t("province")} />
-      </Form.Item>
-      <Form.Item name="city" rules={[{ required: true }]} label={t("city")}>
-        <Input placeholder={t("city")} />
-      </Form.Item>
-      <Form.Item name="phone" label={t("phone")}>
-        <Input placeholder={t("phone")} />
-      </Form.Item>
-      <Form.Item name="documentId" label={t("documentId")}>
-        <Input placeholder={t("documentId")} />
-      </Form.Item>
-      <Form.Item
-        name="card"
-        rules={[{ required: true }]}
-        label={t("client:cardDetails")}
-        labelCol={{ span: 24 }}
-      >
-        <CardSection onChange={() => setErrs(undefined)} />
-      </Form.Item>
-      <Space direction="vertical" size="middle">
-        <Checkbox
-          defaultChecked={isDefault}
-          onChange={(e) => setIsDefault(e.target.checked)}
-        >
-          {t("client:defaultPaymentMethodWarning")}
-        </Checkbox>
-        <div style={{ marginBottom: 15 }}>
-          <Errors
-            errors={{
-              nonFieldErrors: errs?.type
-                ? [{ message: errs?.message || "", code: errs.type }]
-                : undefined,
-            }}
+      />
+      <Row gutter={[24, 24]}>
+        <Col span={9}>
+          <TextField
+            label={t("monthHelp")}
+            max={12}
+            min={1}
+            maxLength={2}
+            minLength={1}
+            name="month"
+            rules={[{ required: true }]}
+            type="number"
           />
-        </div>
-      </Space>
-      <Space direction="vertical" size="middle">
-        <Button
-          loading={creating}
-          htmlType="submit"
-          type="primary"
-          size="large"
-        >
-          {t("client:createPaymentMethod")}
-        </Button>
-      </Space>
+        </Col>
+        <Col span={9}>
+          <TextField
+            label={t("yearHelp")}
+            min={new Date().getFullYear()}
+            maxLength={4}
+            minLength={4}
+            name="year"
+            rules={[{ required: true }]}
+            type="number"
+          />
+        </Col>
+        <Col span={6}>
+          <TextField
+            label={t("cvc")}
+            max={999}
+            maxLength={3}
+            minLength={3}
+            name="cvc"
+            rules={[{ required: true }]}
+            type="number"
+          />
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Checkbox
+            defaultChecked={isDefault}
+            onChange={(e) => setIsDefault(e.target.checked)}
+          >
+            {t("client:defaultPaymentMethodWarning")}
+          </Checkbox>
+        </Col>
+        {errs && (
+          <Col span={24}>
+            <Errors
+              errors={{
+                nonFieldErrors: errs?.type
+                  ? [{ message: errs?.message ?? "", code: errs.type }]
+                  : undefined,
+              }}
+            />
+          </Col>
+        )}
+        <Col span={24}>
+          <Row gutter={[8, 24]} justify="end">
+            <Col>
+              <Button className="button-default-default" onClick={onCancel}>
+                {t("cancel")}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                loading={creating}
+                htmlType="submit"
+                type="primary"
+                size="large"
+              >
+                {t("client:createPaymentMethod")}
+              </Button>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     </Form>
   );
 };
 
-export default CreateCreditCardContainer;
+export default CreateCreditCard;

@@ -1,5 +1,17 @@
 .editing {
-  margin: 0;
+  margin: 0 !important;
+}
+
+.editingRow > td {
+  background-color: transparent !important;
+}
+
+.input div[class="ant-form-item-explain-error"] {
+  padding-bottom: 0px !important;
+}
+
+.input div[class="select"] {
+  padding-bottom: 2px !important;
 }
 
 .fullWidth {
@@ -17,6 +29,14 @@
   font-style: italic;
 }
 
-.new {
-  margin-bottom: 15px;
+.input {
+  margin-bottom: 0px !important;
+}
+
+.switch {
+  margin-bottom: 0px !important;
+}
+
+.title {
+  margin-bottom: 24px !important;
 }

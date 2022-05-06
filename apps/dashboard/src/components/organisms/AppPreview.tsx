@@ -18,7 +18,7 @@ const AppPreview = ({ id, app }: AppPreviewProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.title}>
-        <Title level={3}>{t("preview")}</Title>
+        <Title level={2}>{t("preview")}</Title>
       </div>
       <div className={styles.previewContainer}>
         <div className={styles.preview}></div>

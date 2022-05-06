@@ -102,22 +102,43 @@ export enum SubscriptionStatus {
   UNPAID = "UNPAID",
 }
 
+export interface CreatePaymentCardInput {
+  number?: string | null;
+  expMonth?: string | null;
+  expYear?: string | null;
+  cvc?: string | null;
+}
+
+export interface CreatePaymentInput {
+  billingDetails?: PaymentBillingDetailsInput | null;
+  card?: CreatePaymentCardInput | null;
+}
+
+export interface CustomerBillingDetailsAddressInput {
+  city?: string | null;
+  country?: string | null;
+  line1?: string | null;
+  state?: string | null;
+}
+
+export interface CustomerBillingDetailsInput {
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  address?: CustomerBillingDetailsAddressInput | null;
+}
+
+export interface CustomerInput {
+  billingDetails?: CustomerBillingDetailsInput | null;
+  metadata?: PaymentMetadataInput | null;
+}
+
 export interface FeatureInput {
   name?: string | null;
 }
 
-export interface PaymentBillingDetailsAddressInput {
-  line1?: string | null;
-  city?: string | null;
-  country?: string | null;
-  state?: string | null;
-}
-
 export interface PaymentBillingDetailsInput {
   name?: string | null;
-  email?: string | null;
-  phone?: string | null;
-  address?: PaymentBillingDetailsAddressInput | null;
 }
 
 export interface PaymentCardInput {
@@ -128,7 +149,6 @@ export interface PaymentCardInput {
 export interface PaymentInput {
   billingDetails?: PaymentBillingDetailsInput | null;
   card?: PaymentCardInput | null;
-  metadata?: PaymentMetadataInput | null;
 }
 
 export interface PaymentMetadataInput {
@@ -152,9 +172,11 @@ export interface PriceInput {
 export interface ProductInput {
   active?: boolean | null;
   apps?: number | null;
+  builds?: number | null;
   description?: string | null;
   features?: (string | null)[] | null;
   name?: string | null;
+  type?: string | null;
 }
 
 export interface StoreAppColorInput {

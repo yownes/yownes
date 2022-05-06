@@ -1,9 +1,19 @@
-/* .row {
-  cursor: pointer;
-} */
+.empty {
+  display: block;
+  margin-top: 24px;
+}
 
 .icon {
-  color: #4B4A4B;
+  color: #4b4a4b;
   font-size: 1.5rem;
   width: 40px;
+}
+
+.overflow {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.row {
+  cursor: pointer;
 }

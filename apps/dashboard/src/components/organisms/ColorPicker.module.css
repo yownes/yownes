@@ -1,0 +1,27 @@
+.customColorContainer {
+  align-items: center;
+  display: flex;
+  margin-top: 8px;
+}
+
+.customColorInput {
+  margin-bottom: 0px !important;
+  margin-right: 8px !important;
+  width: 116px !important;
+}
+
+.customColorInput input {
+  font-weight: 500;
+}
+
+.textColor {
+  border-radius: 6px;
+  min-width: 180px;
+  padding: 8px;
+  text-align: center;
+}
+
+.textColorText {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}

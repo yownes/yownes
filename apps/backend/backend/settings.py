@@ -229,8 +229,6 @@ GRAPHQL_AUTH = {
     },
 }
 
-print(os.environ)
-
 # Email configuration
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

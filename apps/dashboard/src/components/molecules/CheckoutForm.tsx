@@ -30,12 +30,16 @@ import {
   UPCOMING_INVOICE,
 } from "../../api/queries";
 import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
+import { currencySymbol } from "../../lib/currencySymbol";
+import { normalize } from "../../lib/normalize";
 import connectionToNodes from "../../lib/connectionToNodes";
 
 import { Loading, LoadingFullScreen } from "../atoms";
 import { ICreditCardStripe } from "./CreditCard";
 import { PaymentMethod } from "../organisms";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
+
+import styles from "./CheckoutForm.module.css";
 
 const { confirm } = Modal;
 const { Title, Text } = Typography;
@@ -48,13 +52,10 @@ interface CheckoutFormProps {
 const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
   const { t } = useTranslation(["translation", "client"]);
   const [paymentMethodId, setPaymentMethodId] = useState<string | null>();
-  const { data: dataAccount, loading: loadingAccount } = useQuery<MyAccount>(
-    MY_ACCOUNT
-  );
-  const {
-    data: paymentMethods,
-    loading: loadingPayments,
-  } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
+  const { data: dataAccount, loading: loadingAccount } =
+    useQuery<MyAccount>(MY_ACCOUNT);
+  const { data: paymentMethods, loading: loadingPayments } =
+    useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
   const [createSubscription, { loading: subscribing }] = useMutation<
     Subscribe,
     SubscribeVariables
@@ -87,63 +88,68 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
     (paymentMethods?.me?.customer?.paymentMethods &&
       paymentMethods?.me?.customer?.defaultPaymentMethod &&
       JSON.parse(
-        connectionToNodes(paymentMethods?.me?.customer?.paymentMethods)
-          .find(
+        normalize(
+          connectionToNodes(paymentMethods?.me?.customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId ===
               paymentMethods?.me?.customer?.defaultPaymentMethod?.stripeId
-          )
-          ?.card.replace(/None/g, "null")
-          .replace(/True/g, "true")
-          .replace(/False/g, "false")
-          .replace(/'/g, '"')!!
+          )?.card!!
+        )
       )) ||
     undefined;
   const expired = card
     ? new Date(card?.exp_year, card?.exp_month) < new Date()
     : false;
-  const interval = JSON.parse(plan.recurring).interval.toUpperCase();
+  const interval = JSON.parse(
+    normalize(plan.recurring!!)
+  ).interval.toUpperCase();
 
   if (loadingAccount || loadingPayments) return <Loading />;
 
   return (
-    <Row gutter={[20, 20]}>
+    <Row gutter={[24, 24]}>
       <Col sm={24} md={16}>
-        <Title level={3}>{t("client:selectPaymentMethod")}</Title>
-        <PaymentMethod
-          customer={paymentMethods?.me?.customer}
-          onCreated={setPaymentMethodId}
-          userId={dataAccount?.me?.id!!}
-        />
+        <Card>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Title className={styles.title} level={2}>
+                {t("client:selectPaymentMethod")}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <PaymentMethod
+                customer={paymentMethods?.me?.customer}
+                onCreated={setPaymentMethodId}
+                userId={dataAccount?.me?.id!!}
+              />
+            </Col>
+          </Row>
+        </Card>
       </Col>
       <Col sm={24} md={8}>
-        <Row gutter={[20, 20]}>
-          <Card style={{ width: "100%" }}>
+        <Card>
+          <Row gutter={[24, 24]}>
             <Col span={24}>
-              <Row>
-                <Title level={3}>{t("client:yourPayment")}</Title>
-              </Row>
-              <Divider />
-              <Row
-                style={{
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
-                  marginBottom: 5,
-                }}
-              >
-                <Text>{t("plan")}:</Text>
-                <Text style={{ margin: 0, padding: 0 }} strong>
+              <Title className={styles.resumeTitle} level={2}>
+                {t("client:yourPayment")}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutter={[24, 8]}>
+            <Col span={24}>
+              <Row justify="space-between">
+                <Text>{t("plan")}</Text>
+                <Text className={styles.description} type="secondary">
                   {plan.name}
                 </Text>
               </Row>
-              <Row
-                style={{
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text>{t("renewal")}:</Text>
-                <Text style={{ margin: 0, padding: 0 }} strong>
+            </Col>
+            <Col span={24}>
+              <Row justify="space-between">
+                <Text>{t("renewal")}</Text>
+                <Text className={styles.description} type="secondary">
                   {interval === PlanInterval.DAY
                     ? t("daily")
                     : interval === PlanInterval.WEEK
@@ -155,124 +161,122 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                     : "-"}
                 </Text>
               </Row>
-              <Divider />
-              <Row
-                style={{
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
-                  marginBottom: 5,
-                }}
-              >
-                <Text>{t("raw")}:</Text>
-                <Text style={{ margin: 0, padding: 0 }} strong>
+            </Col>
+            <Col span={24}>
+              <Divider className={styles.divider} />
+            </Col>
+            <Col span={24}>
+              <Row justify="space-between">
+                <Text>{t("raw")}</Text>
+                <Text className={styles.description} type="secondary">
                   {plan.unitAmount
                     ? (plan.unitAmount / 100 / 1.21)
                         .toFixed(2)
                         .replace(/\./g, ",")
                     : "-"}
-                  {" €"}
+                  {currencySymbol(plan.currency)}
                 </Text>
               </Row>
-              <Row
-                style={{
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text>{t("taxes")}:</Text>
-                <Text style={{ margin: 0, padding: 0 }} strong>
+            </Col>
+            <Col span={24}>
+              <Row justify="space-between">
+                <Text>{t("taxes")}</Text>
+                <Text className={styles.description} type="secondary">
                   {plan.unitAmount
                     ? (plan.unitAmount / 100 - plan.unitAmount / 100 / 1.21)
                         .toFixed(2)
                         .replace(/\./g, ",")
                     : "-"}
-                  {" €"}
+                  {currencySymbol(plan.currency)}
                 </Text>
               </Row>
-              <Row
-                style={{
-                  alignItems: "flex-end",
-                  justifyContent: "space-between",
-                  marginTop: 20,
-                }}
-              >
-                <Text>{t("total")}:</Text>
-                <Title style={{ margin: 0, padding: 0 }} level={4}>
+            </Col>
+            <Col span={24}>
+              <Row className={styles.total} justify="space-between">
+                <Text>{t("total")}</Text>
+                <Title className={styles.description} level={5}>
                   {plan.unitAmount
                     ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")
                     : "-"}
-                  {" €"}
+                  {currencySymbol(plan.currency)}
                 </Title>
               </Row>
-              <Divider />
             </Col>
             <Col span={24}>
-              {paymentMethodId && !expired ? (
-                <Button
-                  onClick={() => {
-                    if (dataAccount?.me?.id) {
-                      confirm({
-                        title: t("client:warnings.confirmSubscription"),
-                        icon: <ExclamationCircleOutlined />,
-                        onOk: () => {
-                          createSubscription({
-                            variables: {
-                              paymentMethodId,
-                              priceId: plan.stripeId!!,
-                            },
-                            update(cache, { data }) {
-                              if (data?.subscribe?.ok) {
-                                onSubscribed(
-                                  data.subscribe.subscription?.status
-                                );
-                                cache.modify({
-                                  id: cache.identify({
-                                    ...dataAccount.me,
-                                  }),
-                                  fields: {
-                                    accountStatus: () =>
-                                      data.subscribe?.accountStatus ||
-                                      AccountAccountStatus.REGISTERED,
-                                    subscription: () =>
-                                      data.subscribe?.subscription,
-                                  },
-                                });
-                              } else {
-                                message.error(
-                                  t(
-                                    `client:errors.${data?.subscribe?.error}`,
-                                    t("error")
-                                  ),
-                                  4
-                                );
-                              }
-                            },
-                          });
-                        },
-                      });
-                    }
-                  }}
-                  type="primary"
-                  size="large"
-                >
-                  {t("client:confirmSubscription")}
-                </Button>
-              ) : (
-                <Tooltip
-                  title={
-                    paymentMethodId
-                      ? t("client:confirmSubscriptionDisabledInvalid")
-                      : t("client:confirmSubscriptionDisabledMethod")
-                  }
-                >
-                  <Button disabled={!(paymentMethodId && !expired)}>
+              <Row justify="end">
+                {paymentMethodId && !expired ? (
+                  <Button
+                    onClick={() => {
+                      if (dataAccount?.me?.id) {
+                        confirm({
+                          cancelButtonProps: {
+                            className: "button-default-default",
+                          },
+                          icon: <ExclamationCircleOutlined />,
+                          onOk: () => {
+                            createSubscription({
+                              variables: {
+                                paymentMethodId,
+                                priceId: plan.stripeId!!,
+                              },
+                              update(cache, { data }) {
+                                if (data?.subscribe?.ok) {
+                                  onSubscribed(
+                                    data.subscribe.subscription?.status
+                                  );
+                                  cache.modify({
+                                    id: cache.identify({
+                                      ...dataAccount.me,
+                                    }),
+                                    fields: {
+                                      accountStatus: () =>
+                                        data.subscribe?.accountStatus ||
+                                        AccountAccountStatus.REGISTERED,
+                                      subscription: () =>
+                                        data.subscribe?.subscription,
+                                    },
+                                  });
+                                } else {
+                                  message.error(
+                                    t(
+                                      `client:errors.${data?.subscribe?.error}`,
+                                      t("error")
+                                    ),
+                                    4
+                                  );
+                                }
+                              },
+                            });
+                          },
+                          title: t("client:warnings.confirmSubscription"),
+                        });
+                      }
+                    }}
+                    type="primary"
+                    size="large"
+                  >
                     {t("client:confirmSubscription")}
                   </Button>
-                </Tooltip>
-              )}
+                ) : (
+                  <Tooltip
+                    title={
+                      paymentMethodId
+                        ? t("client:confirmSubscriptionDisabledInvalid")
+                        : t("client:confirmSubscriptionDisabledMethod")
+                    }
+                  >
+                    <Button
+                      disabled={!(paymentMethodId && !expired)}
+                      type="primary"
+                    >
+                      {t("client:confirmSubscription")}
+                    </Button>
+                  </Tooltip>
+                )}
+              </Row>
             </Col>
-          </Card>
-        </Row>
+          </Row>
+        </Card>
       </Col>
       {subscribing && <LoadingFullScreen tip={t("client:subscribing")} />}
     </Row>

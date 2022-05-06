@@ -9,12 +9,95 @@ import { AccountAccountStatus, InvoiceBillingReason, ChargeStatus, InvoiceStatus
 // GraphQL query operation: Client
 // ====================================================
 
+export interface Client_user_customer_defaultPaymentMethod {
+  __typename: "StripePaymentMethodType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  stripeId: string | null;
+}
+
+export interface Client_user_customer_paymentMethods_edges_node {
+  __typename: "StripePaymentMethodType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  stripeId: string | null;
+  /**
+   * Additional information for payment methods of type `card`
+   */
+  card: string | null;
+  /**
+   * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
+   */
+  billingDetails: string;
+  /**
+   * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
+   */
+  metadata: string | null;
+}
+
+export interface Client_user_customer_paymentMethods_edges {
+  __typename: "StripePaymentMethodTypeEdge";
+  /**
+   * The item at the end of the edge
+   */
+  node: Client_user_customer_paymentMethods_edges_node | null;
+}
+
+export interface Client_user_customer_paymentMethods {
+  __typename: "StripePaymentMethodTypeConnection";
+  /**
+   * Contains the nodes in this connection.
+   */
+  edges: (Client_user_customer_paymentMethods_edges | null)[];
+}
+
+export interface Client_user_customer {
+  __typename: "StripeCustomerType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  /**
+   * The customer's address.
+   */
+  address: string | null;
+  email: string;
+  /**
+   * The customer's full name or business name.
+   */
+  name: string;
+  /**
+   * The customer's phone number.
+   */
+  phone: string;
+  /**
+   * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
+   */
+  metadata: string | null;
+  /**
+   * default payment method used for subscriptions and invoices for the customer.
+   */
+  defaultPaymentMethod: Client_user_customer_defaultPaymentMethod | null;
+  /**
+   * Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.
+   */
+  paymentMethods: Client_user_customer_paymentMethods;
+}
+
 export interface Client_user_subscription_customer {
   __typename: "StripeCustomerType";
   /**
    * The ID of the object.
    */
   id: string;
+  /**
+   * The customer's address.
+   */
+  address: string | null;
   /**
    * Current balance (in cents), if any, being stored on the customer's account. If negative, the customer has credit to apply to the next invoice. If positive, the customer has an amount owed that will be added to the next invoice. The balance does not refer to any unpaid invoices; it solely takes into account amounts that have yet to be successfully applied to any invoice. This balance is only taken into account for recurring billing purposes (i.e., subscriptions, invoices, invoice items).
    */
@@ -23,6 +106,19 @@ export interface Client_user_subscription_customer {
    * The currency the customer can be charged in for recurring billing purposes
    */
   currency: string;
+  email: string;
+  /**
+   * The customer's full name or business name.
+   */
+  name: string;
+  /**
+   * The customer's phone number.
+   */
+  phone: string;
+  /**
+   * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
+   */
+  metadata: string | null;
 }
 
 export interface Client_user_subscription_invoices_edges_node_charges_edges_node_paymentIntent {
@@ -44,7 +140,7 @@ export interface Client_user_subscription_invoices_edges_node_charges_edges_node
   /**
    * Additional information for payment methods of type `card`
    */
-  card: any | null;
+  card: string | null;
 }
 
 export interface Client_user_subscription_invoices_edges_node_charges_edges_node {
@@ -113,7 +209,7 @@ export interface Client_user_subscription_invoices_edges_node_customer {
   /**
    * The customer's address.
    */
-  address: any | null;
+  address: string | null;
   /**
    * Current balance (in cents), if any, being stored on the customer's account. If negative, the customer has credit to apply to the next invoice. If positive, the customer has an amount owed that will be added to the next invoice. The balance does not refer to any unpaid invoices; it solely takes into account amounts that have yet to be successfully applied to any invoice. This balance is only taken into account for recurring billing purposes (i.e., subscriptions, invoices, invoice items).
    */
@@ -202,7 +298,7 @@ export interface Client_user_subscription_invoices_edges_node_paymentIntent_paym
   /**
    * Additional information for payment methods of type `card`
    */
-  card: any | null;
+  card: string | null;
 }
 
 export interface Client_user_subscription_invoices_edges_node_paymentIntent {
@@ -214,11 +310,31 @@ export interface Client_user_subscription_invoices_edges_node_paymentIntent {
   /**
    * The payment error encountered in the previous PaymentIntent confirmation.
    */
-  lastPaymentError: any | null;
+  lastPaymentError: string | null;
   /**
    * Payment method used in this PaymentIntent.
    */
   paymentMethod: Client_user_subscription_invoices_edges_node_paymentIntent_paymentMethod | null;
+}
+
+export interface Client_user_subscription_invoices_edges_node_subscription_plan_product {
+  __typename: "StripeProductType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  /**
+   * The product's name, meant to be displayable to the customer. Applicable to both `service` and `good` types.
+   */
+  name: string;
+}
+
+export interface Client_user_subscription_invoices_edges_node_subscription_plan {
+  __typename: "StripePlanType";
+  /**
+   * The product whose pricing this plan determines.
+   */
+  product: Client_user_subscription_invoices_edges_node_subscription_plan_product | null;
 }
 
 export interface Client_user_subscription_invoices_edges_node_subscription {
@@ -227,6 +343,10 @@ export interface Client_user_subscription_invoices_edges_node_subscription {
    * The ID of the object.
    */
   id: string;
+  /**
+   * The plan associated with this subscription. This value will be `null` for multi-plan subscriptions
+   */
+  plan: Client_user_subscription_invoices_edges_node_subscription_plan | null;
   /**
    * The status of this subscription.
    */
@@ -373,9 +493,13 @@ export interface Client_user_subscription_plan_product_prices_edges_node {
   id: string;
   stripeId: string | null;
   /**
+   * Three-letter ISO currency code
+   */
+  currency: string;
+  /**
    * The recurring components of a price such as `interval` and `usage_type`.
    */
-  recurring: any | null;
+  recurring: string | null;
   /**
    * The unit amount in cents to be charged, represented as a whole integer if possible. Null if a sub-cent precision is required.
    */
@@ -416,7 +540,7 @@ export interface Client_user_subscription_plan_product {
   /**
    * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
    */
-  metadata: any | null;
+  metadata: string | null;
   /**
    * The product's name, meant to be displayable to the customer. Applicable to both `service` and `good` types.
    */
@@ -503,68 +627,6 @@ export interface Client_user_subscription {
    * The plan associated with this subscription. This value will be `null` for multi-plan subscriptions
    */
   plan: Client_user_subscription_plan | null;
-}
-
-export interface Client_user_customer_defaultPaymentMethod {
-  __typename: "StripePaymentMethodType";
-  /**
-   * The ID of the object.
-   */
-  id: string;
-  stripeId: string | null;
-}
-
-export interface Client_user_customer_paymentMethods_edges_node {
-  __typename: "StripePaymentMethodType";
-  /**
-   * The ID of the object.
-   */
-  id: string;
-  stripeId: string | null;
-  /**
-   * Additional information for payment methods of type `card`
-   */
-  card: any | null;
-  /**
-   * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
-   */
-  billingDetails: any;
-  /**
-   * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
-   */
-  metadata: any | null;
-}
-
-export interface Client_user_customer_paymentMethods_edges {
-  __typename: "StripePaymentMethodTypeEdge";
-  /**
-   * The item at the end of the edge
-   */
-  node: Client_user_customer_paymentMethods_edges_node | null;
-}
-
-export interface Client_user_customer_paymentMethods {
-  __typename: "StripePaymentMethodTypeConnection";
-  /**
-   * Contains the nodes in this connection.
-   */
-  edges: (Client_user_customer_paymentMethods_edges | null)[];
-}
-
-export interface Client_user_customer {
-  __typename: "StripeCustomerType";
-  /**
-   * The ID of the object.
-   */
-  id: string;
-  /**
-   * default payment method used for subscriptions and invoices for the customer.
-   */
-  defaultPaymentMethod: Client_user_customer_defaultPaymentMethod | null;
-  /**
-   * Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.
-   */
-  paymentMethods: Client_user_customer_paymentMethods;
 }
 
 export interface Client_user_apps_edges_node_storeLinks {
@@ -656,13 +718,13 @@ export interface Client_user {
   isStaff: boolean;
   dateJoined: any;
   /**
-   * The user's Stripe Subscription object, if it exists
-   */
-  subscription: Client_user_subscription | null;
-  /**
    * The user's Stripe Customer object, if it exists
    */
   customer: Client_user_customer | null;
+  /**
+   * The user's Stripe Subscription object, if it exists
+   */
+  subscription: Client_user_subscription | null;
   apps: Client_user_apps;
 }
 

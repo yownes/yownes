@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Button, message, Modal, Space, Typography } from "antd";
-import { useMutation, useQuery } from "@apollo/client";
+import { Button, Col, message, Modal, Row, Typography } from "antd";
+import { useMutation } from "@apollo/client";
 import { Trans, useTranslation } from "react-i18next";
 
 import { DELETE_CLIENT, UNSUBSCRIBE } from "../../api/mutations";
-import { CLIENT } from "../../api/queries";
-import { Client as IClient, ClientVariables } from "../../api/types/Client";
+import { Client as IClient } from "../../api/types/Client";
 import {
   DeleteClient as IDeleteClient,
   DeleteClientVariables,
@@ -20,17 +19,15 @@ import { Loading, LoadingFullScreen } from "../atoms";
 const { Text } = Typography;
 
 interface DeleteClientProps {
+  data: IClient | undefined;
   id: string;
   menuVisible?: (visible: boolean) => void;
 }
 
-const DeleteClient = ({ id, menuVisible }: DeleteClientProps) => {
+const DeleteClient = ({ data, id, menuVisible }: DeleteClientProps) => {
   const { t } = useTranslation(["translation", "admin"]);
   const [showModal, setShowModal] = useState(false);
   const [errors, setErrors] = useState<IErrors>();
-  const { data } = useQuery<IClient, ClientVariables>(CLIENT, {
-    variables: { id },
-  });
   const [deleteClient, { loading: deleting }] = useMutation<
     IDeleteClient,
     DeleteClientVariables
@@ -62,137 +59,166 @@ const DeleteClient = ({ id, menuVisible }: DeleteClientProps) => {
         title={t("admin:deleteClientConfirm")}
         visible={showModal}
       >
-        <Space direction="vertical" size="large" style={{ display: "flex" }}>
-          <Trans
-            i18nKey={
-              data.user.subscription
-                ? data.user.apps && data.user.apps?.edges.length > 0
-                  ? "warnings.deleteSubsApps"
-                  : "warnings.deleteSubsNoApps"
-                : data.user.apps && data.user.apps?.edges.length > 0
-                ? "warnings.deleteNoSubsApps"
-                : "warnings.deleteNoSubsNoApps"
-            }
-            ns="admin"
-          >
-            <strong></strong>
-          </Trans>
-          <Errors errors={errors} fields={["password"]} />
-          <Button
-            danger
-            type="primary"
-            onClick={(values) => {
-              if (data?.user) {
-                if (data.user.subscription) {
-                  unsubscribe({
-                    variables: { userId: data.user.id, atPeriodEnd: false },
-                    update(cache, { data: unsubs }) {
-                      if (unsubs?.dropOut?.ok && data.user) {
-                        cache.modify({
-                          id: cache.identify({
-                            ...data?.user,
-                          }),
-                          fields: {
-                            accountStatus: () =>
-                              AccountAccountStatus.REGISTERED,
-                            subscription: () => null,
-                          },
-                        });
-                      }
-                    },
-                  }).then((unsubs) => {
-                    deleteClient({
-                      variables: { active: false, userId: id },
-                      update(cache, { data: del }) {
-                        if (del?.deleteClient?.ok && data.user) {
-                          cache.modify({
-                            id: cache.identify({
-                              ...data?.user,
-                            }),
-                            fields: {
-                              isActive: () => false,
-                            },
-                          });
-                        }
-                      },
-                    }).then(({ data }) => {
-                      if (data?.deleteClient?.ok) {
-                        setShowModal(false);
-                        message.success(t("admin:deleteClientSuccessful"), 4);
-                      } else {
-                        setErrors({
-                          nonFieldErrors: [
-                            {
-                              code: "delete_client_error",
-                              message: t(
-                                `errors.${data?.deleteClient?.error}`,
-                                t("error")
-                              ),
-                            },
-                          ],
-                        });
-                      }
-                    });
-                    if (
-                      unsubs.data?.dropOut?.error &&
-                      unsubs.data?.dropOut?.error !== "104"
-                    ) {
-                      setErrors({
-                        nonFieldErrors: [
-                          {
-                            code: "unsubscribe_error",
-                            message: t(
-                              `errors.${unsubs.data?.dropOut?.error}`,
-                              t("error")
-                            ),
-                          },
-                        ],
-                      });
-                    }
-                  });
-                } else {
-                  deleteClient({
-                    variables: { active: false, userId: id },
-                    update(cache, { data: del }) {
-                      if (del?.deleteClient?.ok && data.user) {
-                        cache.modify({
-                          id: cache.identify({
-                            ...data?.user,
-                          }),
-                          fields: {
-                            isActive: () => false,
-                          },
-                        });
-                      }
-                    },
-                  }).then(({ data: del }) => {
-                    if (del?.deleteClient?.ok) {
-                      setShowModal(false);
-                      message.success(t("admin:deleteClientSuccessful"), 4);
-                    } else {
-                      setErrors({
-                        nonFieldErrors: [
-                          {
-                            code: "delete_client_error",
-                            message: t(
-                              `errors.${del?.deleteClient?.error}`,
-                              t("error")
-                            ),
-                          },
-                        ],
-                      });
-                    }
-                  });
-                }
+        <Row gutter={[24, 24]}>
+          <Col span={24}>
+            <Trans
+              i18nKey={
+                data.user.subscription
+                  ? data.user.apps && data.user.apps?.edges.length > 0
+                    ? "warnings.deleteSubsApps"
+                    : "warnings.deleteSubsNoApps"
+                  : data.user.apps && data.user.apps?.edges.length > 0
+                  ? "warnings.deleteNoSubsApps"
+                  : "warnings.deleteNoSubsNoApps"
               }
-            }}
-          >
-            {t("admin:confirmDeleteClient")}
-          </Button>
-        </Space>
-        {(deleting || unsubscribing) && (
-          <LoadingFullScreen tip={t("admin:deletingClient")} />
-        )}
+              ns="admin"
+            >
+              <p></p>
+            </Trans>
+          </Col>
+          {errors && (
+            <Col span={24}>
+              <Errors errors={errors} />
+            </Col>
+          )}
+          <Col span={24}>
+            <Row gutter={[8, 24]} justify="end">
+              <Col>
+                <Button
+                  className="button-default-default"
+                  onClick={() => setShowModal(false)}
+                >
+                  {t("cancel")}
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  danger
+                  type="primary"
+                  onClick={(values) => {
+                    if (data?.user) {
+                      if (data.user.subscription) {
+                        unsubscribe({
+                          variables: {
+                            userId: data.user.id,
+                            atPeriodEnd: false,
+                          },
+                          update(cache, { data: unsubs }) {
+                            if (unsubs?.dropOut?.ok && data.user) {
+                              cache.modify({
+                                id: cache.identify({
+                                  ...data?.user,
+                                }),
+                                fields: {
+                                  accountStatus: () =>
+                                    AccountAccountStatus.REGISTERED,
+                                  subscription: () => null,
+                                },
+                              });
+                            }
+                          },
+                        }).then((unsubs) => {
+                          deleteClient({
+                            variables: { active: false, userId: id },
+                            update(cache, { data: del }) {
+                              if (del?.deleteClient?.ok && data.user) {
+                                cache.modify({
+                                  id: cache.identify({
+                                    ...data?.user,
+                                  }),
+                                  fields: {
+                                    isActive: () => false,
+                                  },
+                                });
+                              }
+                            },
+                          }).then(({ data }) => {
+                            if (data?.deleteClient?.ok) {
+                              setShowModal(false);
+                              message.success(
+                                t("admin:deleteClientSuccessful"),
+                                4
+                              );
+                            } else {
+                              setErrors({
+                                nonFieldErrors: [
+                                  {
+                                    code: "delete_client_error",
+                                    message: t(
+                                      `errors.${data?.deleteClient?.error}`,
+                                      t("error")
+                                    ),
+                                  },
+                                ],
+                              });
+                            }
+                          });
+                          if (
+                            unsubs.data?.dropOut?.error &&
+                            unsubs.data?.dropOut?.error !== "104"
+                          ) {
+                            setErrors({
+                              nonFieldErrors: [
+                                {
+                                  code: "unsubscribe_error",
+                                  message: t(
+                                    `errors.${unsubs.data?.dropOut?.error}`,
+                                    t("error")
+                                  ),
+                                },
+                              ],
+                            });
+                          }
+                        });
+                      } else {
+                        deleteClient({
+                          variables: { active: false, userId: id },
+                          update(cache, { data: del }) {
+                            if (del?.deleteClient?.ok && data.user) {
+                              cache.modify({
+                                id: cache.identify({
+                                  ...data?.user,
+                                }),
+                                fields: {
+                                  isActive: () => false,
+                                },
+                              });
+                            }
+                          },
+                        }).then(({ data: del }) => {
+                          if (del?.deleteClient?.ok) {
+                            setShowModal(false);
+                            message.success(
+                              t("admin:deleteClientSuccessful"),
+                              4
+                            );
+                          } else {
+                            setErrors({
+                              nonFieldErrors: [
+                                {
+                                  code: "delete_client_error",
+                                  message: t(
+                                    `errors.${del?.deleteClient?.error}`,
+                                    t("error")
+                                  ),
+                                },
+                              ],
+                            });
+                          }
+                        });
+                      }
+                    }
+                  }}
+                >
+                  {t("admin:confirmDeleteClient")}
+                </Button>
+              </Col>
+            </Row>
+          </Col>
+          {(deleting || unsubscribing) && (
+            <LoadingFullScreen tip={t("admin:deletingClient")} />
+          )}
+        </Row>
       </Modal>
     </>
   );

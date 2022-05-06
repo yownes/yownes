@@ -1,0 +1,19 @@
+.active {
+  display: inline-block !important;
+  margin-left: 16px !important;
+}
+
+.activeContainer {
+  align-items: baseline;
+  display: flex;
+}
+
+.preview {
+  display: block;
+}
+
+.previewText,
+.title {
+  display: block;
+  margin-bottom: 24px !important;
+}

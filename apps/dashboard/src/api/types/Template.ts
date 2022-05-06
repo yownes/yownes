@@ -27,9 +27,6 @@ export interface Template_template {
 }
 
 export interface Template {
-  /**
-   * The ID of the object
-   */
   template: Template_template | null;
 }
 

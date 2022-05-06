@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Col, Collapse, Descriptions, Tooltip, Typography } from "antd";
-import { InfoCircleOutlined, RightOutlined } from "@ant-design/icons";
+import { Badge, Col, Tooltip, Typography } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
 
-import {
-  InvoiceStatus,
-  PlanInterval,
-  SubscriptionStatus,
-} from "../../api/types/globalTypes";
+import { PlanInterval, SubscriptionStatus } from "../../api/types/globalTypes";
 import {
   MyAccount_me_subscription,
   MyAccount_me_subscription_plan_product_features_edges_node,
 } from "../../api/types/MyAccount";
 import { UpcomingInvoice_upcominginvoice } from "../../api/types/UpcomingInvoice";
+import { colors } from "../../lib/colors";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
+import { normalize } from "../../lib/normalize";
 import { dateTime, shortDate } from "../../lib/parseDate";
 
-import { InvoicesTable } from "./";
+import { Descriptions } from "./";
+import { description } from "./Descriptions";
 
-const { Panel } = Collapse;
-const { Item } = Descriptions;
+import styles from "./SubscriptionInfo.module.css";
+
 const { Text } = Typography;
 
 interface SubscriptionInfoProps {
@@ -37,119 +36,146 @@ const SubscriptionInfo = ({
   const [features, setFeatures] = useState<
     MyAccount_me_subscription_plan_product_features_edges_node[]
   >([]);
-  const [numInvoices, setNumInvoices] = useState<number>(0);
 
   useEffect(() => {
     if (subscription && subscription.plan) {
       setFeatures(connectionToNodes(subscription.plan.product?.features));
     }
   }, [subscription]);
-  useEffect(() => {
-    setNumInvoices(
-      connectionToNodes(subscription?.invoices).filter(
-        (inv) => inv.status === InvoiceStatus.OPEN
-      ).length
-    );
-  }, [subscription]);
 
-  return subscription && subscription.plan ? (
-    <>
-      <Col span="24">
-        <Descriptions
-          bordered
-          column={3}
-          labelStyle={{ color: "#232323", fontWeight: 500 }}
-          layout="vertical"
-          size="small"
-        >
-          <Item label={t("plan")}>
-            {subscription.plan.product && subscription.plan.product.name}
-          </Item>
-          <Item span={2} label={t("description")}>
-            {subscription.plan.product?.description}
-            {features.length > 0 && (
-              <p style={{ margin: 0 }}>
-                {`${t("features")}:`}
-                {features.map((feat) => {
-                  return (
-                    <Text key={feat.id} style={{ paddingLeft: 15 }}>
-                      {"· "}
-                      {feat.name}
-                    </Text>
-                  );
-                })}
-              </p>
-            )}
-          </Item>
-          <Item label={t("price")}>
-            {subscription.plan.amount
-              ? subscription.plan.amount.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })
-              : "-"}
-            {currencySymbol(subscription.plan.currency)}
-          </Item>
-          <Item label={t("interval")}>
-            {subscription.plan.interval === PlanInterval.DAY
-              ? `${t("renewal")} ${t("daily").toLocaleLowerCase()}`
-              : subscription.plan.interval === PlanInterval.WEEK
-              ? `${t("renewal")} ${t("weekly").toLocaleLowerCase()}`
-              : subscription.plan.interval === PlanInterval.MONTH
-              ? `${t("renewal")} ${t("monthly").toLocaleLowerCase()}`
-              : subscription.plan.interval === PlanInterval.YEAR
-              ? `${t("renewal")} ${t("annual").toLocaleLowerCase()}`
-              : "-"}
-          </Item>
-          <Item
-            label={
-              <>
-                {t("balance")}
-                <Tooltip title={t("balanceInfo")}>
-                  <InfoCircleOutlined style={{ marginLeft: 8 }} />
-                </Tooltip>
-              </>
-            }
-          >
-            {upcoming &&
-              `${(upcoming.startingBalance
-                ? (upcoming?.startingBalance / 100) * -1
+  const info: description[] = [];
+  if (subscription && subscription.plan) {
+    const allowed_apps = subscription.plan.product?.metadata
+      ? JSON.parse(normalize(subscription.plan.product.metadata))
+          .allowed_apps || 1
+      : 1;
+    const allowed_builds = subscription.plan.product?.metadata
+      ? JSON.parse(normalize(subscription.plan.product.metadata))
+          .allowed_builds || 1
+      : 1;
+    subscription.plan.product &&
+      info.push({
+        title: t("plan"),
+        description: subscription.plan.product.name,
+      });
+    info.push({
+      title: t("description"),
+      description: (
+        <div className={styles.description}>
+          {subscription.plan.product?.description}
+          {features.length > 0 && (
+            <p className={styles.emptyMargin}>
+              {`${t("include")} `}
+              {features.map((feat, i) => {
+                return (
+                  <span className={styles.feature} key={feat.id}>
+                    {i !== 0 && ","}
+                    {feat.name}
+                  </span>
+                );
+              })}
+              {allowed_apps === "1"
+                ? features.length > 0
+                  ? `, ${allowed_apps} ${t("includedApp")}`
+                  : `${allowed_apps} ${t("includedApp")}`
+                : features.length > 0
+                ? `, ${allowed_apps} ${t("includedApps")}`
+                : `${allowed_apps} ${t("includedApps")}`}
+              {allowed_builds === "1"
+                ? ` (${allowed_builds} ${t("includedBuild")})`
+                : ` (${allowed_builds} ${t("includedBuilds")})`}
+            </p>
+          )}
+        </div>
+      ),
+    });
+    info.push({
+      title: t("price"),
+      description: (
+        <div className={styles.description}>
+          {subscription.plan.amount
+            ? subscription.plan.amount.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : "-"}
+          {currencySymbol(subscription.plan.currency)}
+        </div>
+      ),
+    });
+    info.push({
+      title: t("interval"),
+      description:
+        subscription.plan.interval === PlanInterval.DAY
+          ? `${t("renewal")} ${t("daily").toLocaleLowerCase()}`
+          : subscription.plan.interval === PlanInterval.WEEK
+          ? `${t("renewal")} ${t("weekly").toLocaleLowerCase()}`
+          : subscription.plan.interval === PlanInterval.MONTH
+          ? `${t("renewal")} ${t("monthly").toLocaleLowerCase()}`
+          : subscription.plan.interval === PlanInterval.YEAR
+          ? `${t("renewal")} ${t("annual").toLocaleLowerCase()}`
+          : "-",
+    });
+    info.push({
+      title: (
+        <>
+          {t("balance")}
+          <Tooltip title={t("balanceInfo")}>
+            <InfoCircleOutlined
+              className={styles.icon}
+              style={{ color: colors.green }}
+            />
+          </Tooltip>
+        </>
+      ),
+      description: (
+        <div className={styles.description}>
+          {upcoming &&
+            `${(upcoming.startingBalance
+              ? (upcoming?.startingBalance / 100) * -1
+              : 0
+            ).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}${currencySymbol(upcoming.currency ?? "")}`}
+          {!upcoming &&
+          (subscription.customer.balance !== undefined &&
+            subscription.customer.balance) !== null
+            ? `${(subscription.customer.balance
+                ? (subscription.customer.balance / 100) * -1
                 : 0
               ).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
-              })}${currencySymbol(upcoming.currency || "")}`}
-            {!upcoming &&
-            (subscription.customer.balance !== undefined &&
-              subscription.customer.balance) !== null
-              ? `${(subscription.customer.balance
-                  ? (subscription.customer.balance / 100) * -1
-                  : 0
-                ).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}${currencySymbol(subscription.customer.currency || "")}`
-              : null}
-            {!upcoming &&
-            !subscription.customer.balance &&
-            subscription.customer.balance !== 0
-              ? t("unknown")
-              : null}
-          </Item>
-          <Item label={t("subscribedSince")}>
-            {shortDate(new Date(subscription.created))}
-          </Item>
-          <Item label={t("currentPeriod")}>
-            {t("periodBetween", {
-              start: shortDate(new Date(subscription.currentPeriodStart)),
-              end: shortDate(new Date(subscription.currentPeriodEnd)),
-            })}
-          </Item>
-          {subscription.status !== SubscriptionStatus.INCOMPLETE ? (
-            <Item label={t("nextInvoice")}>
+              })}${currencySymbol(subscription.customer.currency ?? "")}`
+            : null}
+          {!upcoming &&
+          !subscription.customer.balance &&
+          subscription.customer.balance !== 0
+            ? t("unknown")
+            : null}
+        </div>
+      ),
+    });
+    info.push({
+      title: t("subscribedSince"),
+      description: shortDate(new Date(subscription.created)),
+    });
+    info.push({
+      title: t("currentPeriod"),
+      description: t("periodBetween", {
+        start: shortDate(new Date(subscription.currentPeriodStart)),
+        end: shortDate(new Date(subscription.currentPeriodEnd)),
+      }),
+    });
+    subscription.status !== SubscriptionStatus.INCOMPLETE
+      ? info.push({
+          title: t("nextInvoice"),
+          description: (
+            <div className={styles.description}>
               {upcoming ? (
                 <Tooltip
-                  placement="topLeft"
+                  placement="top"
                   title={
                     upcoming.startingBalance !== null &&
                     upcoming.endingBalance !== null &&
@@ -160,7 +186,7 @@ const SubscriptionInfo = ({
                         ).toLocaleString(undefined, {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
-                        })}${currencySymbol(upcoming.currency || "")}`
+                        })}${currencySymbol(upcoming.currency ?? "")}`
                       : null
                   }
                 >
@@ -174,7 +200,7 @@ const SubscriptionInfo = ({
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         }),
-                    currency: currencySymbol(upcoming.currency || ""),
+                    currency: currencySymbol(upcoming.currency ?? ""),
                     date: upcoming.nextPaymentAttempt
                       ? shortDate(new Date(upcoming.nextPaymentAttempt))
                       : t("unknown").toLocaleLowerCase(),
@@ -183,62 +209,24 @@ const SubscriptionInfo = ({
               ) : (
                 <Text>{t("nextInvoiceEmpty")}</Text>
               )}
-            </Item>
-          ) : (
-            <Item
-              label={
-                <Badge dot offset={[4, -1]} title={t("deadlineToPay")}>
-                  {t("incompleteAt")}
-                </Badge>
-              }
-            >
-              {dateTime(addHours(new Date(subscription.created), 23))}
-            </Item>
-          )}
-          <Item label={t("invoices")}>
-            <Collapse
-              expandIcon={(props) => (
-                <Badge
-                  count={numInvoices}
-                  offset={[5, -4]}
-                  size="small"
-                  style={numInvoices === 0 ? { display: "none" } : {}}
-                  title={t("pendingInvoices")}
-                >
-                  <RightOutlined
-                    style={
-                      props.isActive
-                        ? {
-                            transform: "rotate(90deg)",
-                            transition: "transform .24s",
-                          }
-                        : { transition: "transform .24s" }
-                    }
-                  />
-                </Badge>
-              )}
-              expandIconPosition="right"
-              style={{ margin: 10 }}
-            >
-              <Panel
-                header={t("showInvoicesList", {
-                  num: connectionToNodes(subscription.invoices).length,
-                })}
-                key="invoices"
-              >
-                <InvoicesTable
-                  invoices={connectionToNodes(subscription.invoices).filter(
-                    (inv) =>
-                      inv.subscription?.stripeId === subscription.stripeId
-                  )}
-                />
-              </Panel>
-            </Collapse>
-          </Item>
-        </Descriptions>
-      </Col>
-    </>
-  ) : null;
+            </div>
+          ),
+        })
+      : info.push({
+          title: (
+            <Badge dot offset={[4, -1]} title={t("deadlineToPay")}>
+              {t("incompleteAt")}
+            </Badge>
+          ),
+          description: dateTime(addHours(new Date(subscription.created), 23)),
+        });
+  }
+
+  return (
+    <Col span="24">
+      <Descriptions cols={1} items={info} />
+    </Col>
+  );
 };
 
 export default SubscriptionInfo;

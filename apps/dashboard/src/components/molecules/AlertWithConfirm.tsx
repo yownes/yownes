@@ -27,11 +27,12 @@ const AlertWithConfirm = ({
       <Alert
         action={
           <Popconfirm
+            cancelButtonProps={{ className: "button-default-default" }}
             cancelText={t("cancel")}
             okText={t("confirm")}
-            title={confirmText}
-            placement="left"
             onConfirm={onConfirm}
+            placement="left"
+            title={confirmText}
           >
             <Button size="small" type="primary">
               {buttonText}

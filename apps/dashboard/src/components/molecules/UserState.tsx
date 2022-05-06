@@ -3,16 +3,17 @@ import { Tag } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { AccountAccountStatus } from "../../api/types/globalTypes";
+import { colors } from "../../lib/colors";
 
 interface UserStateProps {
   state?: AccountAccountStatus;
 }
 
 const COLORS = {
-  REGISTERED: "default",
-  WAITING_PAYMENT: "orange",
-  PAID_ACCOUNT: "green",
-  BANNED: "red",
+  REGISTERED: colors.tagDefault,
+  WAITING_PAYMENT: colors.tagOrange,
+  PAID_ACCOUNT: colors.tagGreen,
+  BANNED: colors.tagRed,
 };
 
 const UserState = ({ state }: UserStateProps) => {

@@ -1,0 +1,11 @@
+.clickable {
+  cursor: pointer;
+}
+
+.deleteIcon {
+  border-color: transparent !important;
+}
+
+.editIcon {
+  border-color: transparent !important;
+}

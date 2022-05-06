@@ -1,0 +1,50 @@
+.amountContainer {
+  margin-bottom: 16px;
+}
+
+.amountDivider {
+  margin-bottom: 24px !important;
+  margin-top: 8px !important;
+}
+
+.detailsContainer {
+  padding-bottom: 24px;
+  padding-top: 24px;
+}
+
+.icon {
+  margin-right: 8px;
+}
+
+.nextPaymentContainer {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.paymentsContainer {
+  padding-top: 28px;
+}
+
+.paymentsTitle {
+  padding-bottom: 24px;
+}
+
+.periodDivider {
+  margin-bottom: 8px !important;
+  margin-top: 8px !important;
+}
+
+.periodContainer,
+.summaryDetails {
+  padding-bottom: 8px;
+  padding-top: 8px;
+}
+
+.summaryContainer {
+  padding-bottom: 8px;
+  padding-top: 16px;
+}
+
+.totalAmount {
+  font-size: 16px !important;
+}

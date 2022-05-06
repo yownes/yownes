@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Result, Typography } from "antd";
+import { Button, Form, Result, Typography } from "antd";
 import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ import {
 } from "../../api/types/PasswordReset";
 import { Errors as IErrors } from "../../lib/auth";
 
+import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 import Auth from "../../components/templates/Auth";
 
@@ -40,10 +41,9 @@ const PasswordReset = () => {
         {!data?.passwordReset?.success && (
           <>
             <h1 className={styles.centerText}>{t("resetPassword")}</h1>
-            <p>
+            <div className={styles.description}>
               <Text type="secondary">{t("resetPasswordDescription")}</Text>
-            </p>
-            <Errors errors={errors} fields={["newPassword1", "newPassword2"]} />
+            </div>
             <Form
               form={formNewPassword}
               onFinish={(values) => {
@@ -66,7 +66,9 @@ const PasswordReset = () => {
                 });
               }}
             >
-              <Form.Item
+              <TextField
+                autofocus
+                label={t("newPassword")}
                 name="newPassword1"
                 rules={[
                   { required: true, message: t("required.password") },
@@ -75,10 +77,11 @@ const PasswordReset = () => {
                     message: t("required.minPassword", { num: 8 }),
                   },
                 ]}
-              >
-                <Input.Password placeholder={t("newPassword")} />
-              </Form.Item>
-              <Form.Item
+                type="password"
+              />
+              <TextField
+                dependencies={["newPassword1"]}
+                label={t("confirmNewPassword")}
                 name="newPassword2"
                 rules={[
                   { required: true, message: t("required.passwordMatch") },
@@ -91,12 +94,18 @@ const PasswordReset = () => {
                     },
                   }),
                 ]}
-                dependencies={["newPassword1"]}
-              >
-                <Input.Password placeholder={t("confirmNewPassword")} />
-              </Form.Item>
+                type="password"
+              />
+              {errors && (
+                <div className={styles.errors}>
+                  <Errors
+                    errors={errors}
+                    fields={["newPassword1", "newPassword2"]}
+                  />
+                </div>
+              )}
               <div className={styles.buttons}>
-                <Button block type="ghost">
+                <Button block className="button-default-default" type="ghost">
                   <Link to={`/auth/login`} style={{ display: "block" }}>
                     {t("login")}
                   </Link>

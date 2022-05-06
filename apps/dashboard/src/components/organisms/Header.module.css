@@ -1,11 +1,3 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--header-height);
-  padding: 0 2rem;
-}
-
 .icon {
   font-size: 20px !important;
   margin-right: 4px;
@@ -19,6 +11,6 @@
 }
 
 #titleIcon {
-  color: #328f5e;
-  margin-right: 6px;
+  color: #61db9b;
+  margin-right: 12px;
 }

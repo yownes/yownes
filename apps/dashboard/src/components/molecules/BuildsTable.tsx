@@ -18,7 +18,7 @@ import { BuildState as BuildStateVisualizer } from "../../components/molecules";
 
 import styles from "./BuildsTable.module.css";
 
-const { Text } = Typography;
+const { Paragraph, Text } = Typography;
 
 interface BuildsTableProps {
   dataSource: Builds_builds_edges_node[];
@@ -71,10 +71,10 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       title: t("buildId"),
       dataIndex: "buildId",
       key: "buildId",
-      render: (buildId) => <Text strong>{buildId}</Text>,
+      render: (buildId) => <Paragraph copyable>{buildId}</Paragraph>,
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["buildId"],
-        t("admin:search", { data: t("buildId") }),
+        t("admin:search"),
         t("search"),
         t("reset")
       ),
@@ -84,9 +84,10 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       title: "App",
       dataIndex: ["app", "name"],
       key: "app.name",
+      render: (name) => name,
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["app", "name"],
-        t("admin:search", { data: t("app") }),
+        t("admin:search"),
         t("search"),
         t("reset")
       ),
@@ -106,23 +107,30 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       sorter: (a, b) => a.buildStatus.localeCompare(b.buildStatus),
     },
   ];
-  return (
-    <Table
-      columns={columns}
-      dataSource={dataSource}
-      locale={{ emptyText: t("noBuilds") }}
-      pagination={{
-        showSizeChanger: true,
-        showTotal: (total, range) =>
-          t("paginationItems", {
-            first: range[0],
-            last: range[1],
-            total: total,
-          }),
-      }}
-      rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
-      rowKey={(row) => row.buildId}
-    />
+  return dataSource.length > 0 ? (
+    <div className={styles.overflow}>
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        locale={{ emptyText: t("noBuilds") }}
+        pagination={{
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            t("paginationItems", {
+              first: range[0],
+              last: range[1],
+              total: total,
+              item: t("admin:builds"),
+            }),
+        }}
+        rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
+        rowKey={(row) => row.buildId}
+      />
+    </div>
+  ) : (
+    <Text className={styles.empty} type="secondary">
+      {t("noBuilds")}
+    </Text>
   );
 };
 

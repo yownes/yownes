@@ -85,6 +85,12 @@ export const INVOICE_FRAGMENT = gql`
     stripeId
     subscription {
       id
+      plan {
+        product {
+          id
+          name
+        }
+      }
       status
       stripeId
     }
@@ -105,6 +111,14 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
     isActive
     isStaff
     dateJoined
+    customer {
+      id
+      address
+      email
+      name
+      phone
+      metadata
+    }
     subscription {
       id
       cancelAt
@@ -115,8 +129,13 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
       currentPeriodStart
       customer {
         id
+        address
         balance
         currency
+        email
+        name
+        phone
+        metadata
       }
       endedAt
       invoices {
@@ -153,6 +172,7 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
               node {
                 id
                 stripeId
+                currency
                 recurring
                 unitAmount
                 active
@@ -461,6 +481,7 @@ export const CLIENTS = gql`
             edges {
               node {
                 id
+                isActive
               }
             }
           }
@@ -537,19 +558,6 @@ export const BUILDS = gql`
               username
             }
           }
-        }
-      }
-    }
-  }
-`;
-
-export const LIMIT = gql`
-  query LimitBuilds {
-    configs {
-      edges {
-        node {
-          id
-          limit
         }
       }
     }

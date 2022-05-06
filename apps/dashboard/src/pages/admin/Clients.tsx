@@ -1,10 +1,18 @@
 import React from "react";
-import { Table, Typography, TableColumnsType } from "antd";
+import {
+  Col,
+  Card,
+  Row,
+  Table,
+  TableColumnsType,
+  Tooltip,
+  Typography,
+} from "antd";
 import { useQuery } from "@apollo/client";
 import forIn from "lodash/forIn";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { CLIENTS, PLANS } from "../../api/queries";
 import {
@@ -28,7 +36,7 @@ import { UserState, VerifiedState } from "../../components/molecules";
 
 import styles from "./Clients.module.css";
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 interface IPlan {
   id: string;
@@ -100,12 +108,10 @@ const Clients = () => {
       title: t("name"),
       dataIndex: "username",
       key: "name",
-      render: (name, record) => (
-        <Link to={`/clients/${record.id}`}>{name}</Link>
-      ),
+      render: (name) => name,
       ...getColumnSearchProps<Clients_users_edges_node>(
         ["username"],
-        t("admin:search", { data: t("name") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -116,10 +122,10 @@ const Clients = () => {
       title: t("admin:clientId"),
       dataIndex: "id",
       key: "id",
-      render: (id) => <Link to={`/clients/${id}`}>{id}</Link>,
+      render: (id) => id,
       ...getColumnSearchProps<Clients_users_edges_node>(
         ["id"],
-        t("admin:search", { data: t("admin:clientId") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -130,8 +136,16 @@ const Clients = () => {
       title: t("apps"),
       dataIndex: ["apps", "edges"],
       key: "apps",
-      render: (apps: Clients_users_edges_node_apps_edges[]) => apps.length,
-      sorter: (a, b) => a.apps.edges.length - b.apps.edges.length,
+      render: (apps: Clients_users_edges_node_apps_edges[]) => (
+        <Tooltip overlay={t("admin:activeInactiveApps")}>{`${
+          apps.filter((a) => a.node?.isActive).length
+        } (${
+          apps.length - apps.filter((a) => a.node?.isActive).length
+        })`}</Tooltip>
+      ),
+      sorter: (a, b) =>
+        a.apps.edges.filter((app) => app?.node?.isActive).length -
+        b.apps.edges.filter((app) => app?.node?.isActive).length,
     },
     {
       title: t("state"),
@@ -194,28 +208,48 @@ const Clients = () => {
     },
   ];
   return (
-    <div>
-      <Table
-        className={styles.table}
-        columns={columns}
-        dataSource={dataSource}
-        locale={{ emptyText: t("admin:noClients") }}
-        onRow={(record) => {
-          return { onClick: () => history.push(`/clients/${record.id}`) };
-        }}
-        pagination={{
-          showSizeChanger: true,
-          showTotal: (total, range) =>
-            t("paginationItems", {
-              first: range[0],
-              last: range[1],
-              total: total,
-            }),
-        }}
-        rowClassName={styles.row}
-        rowKey={(row) => row.id}
-      />
-    </div>
+    <Row gutter={[24, 24]}>
+      <Col span={24}>
+        <Card>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Title className={styles.title} level={2}>
+                {t("admin:clientList")}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <div className={styles.overflow}>
+                <Table
+                  className={styles.table}
+                  columns={columns}
+                  dataSource={dataSource}
+                  locale={{ emptyText: t("admin:noClients") }}
+                  onRow={(record) => {
+                    return {
+                      onClick: () => history.push(`/clients/${record.id}`),
+                    };
+                  }}
+                  pagination={{
+                    showSizeChanger: true,
+                    showTotal: (total, range) =>
+                      t("paginationItems", {
+                        first: range[0],
+                        last: range[1],
+                        total: total,
+                        item: t("admin:clients"),
+                      }),
+                  }}
+                  rowClassName={styles.row}
+                  rowKey={(row) => row.id}
+                />
+              </div>
+            </Col>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 

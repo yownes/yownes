@@ -23,7 +23,11 @@ const LoadingFullScreen = ({ tip }: LoadingFullScreenProps) => {
         zIndex: 9999,
       }}
     >
-      <Spin style={{ color: colors.green }} size="large" tip={tip} />
+      <Spin
+        style={{ color: colors.green, fontWeight: 500 }}
+        size="large"
+        tip={tip}
+      />
     </div>
   );
 };

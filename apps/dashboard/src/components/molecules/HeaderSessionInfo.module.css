@@ -4,6 +4,10 @@
   gap: 0.7rem;
 }
 
+.icon {
+  color: #232323 !important;
+}
+
 .info {
   display: flex;
   flex-direction: column;

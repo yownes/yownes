@@ -201,15 +201,6 @@ export const RESTORE_APP = gql`
   }
 `;
 
-export const UPDATE_BUILDS_LIMIT = gql`
-  mutation UpdateBuildsLimit($limit: Int!) {
-    updateBuildsLimit(limit: $limit) {
-      ok
-      error
-    }
-  }
-`;
-
 /**
  * ACCOUNT
  */
@@ -250,6 +241,22 @@ export const DELETE_CLIENT = gql`
   }
 `;
 
+export const UPDATE_CUSTOMER = gql`
+  mutation UpdateCustomer($customer: CustomerInput!, $userId: ID!) {
+    updateCustomer(customer: $customer, userId: $userId) {
+      ok
+      error
+      customer {
+        id
+        address
+        name
+        phone
+        metadata
+      }
+    }
+  }
+`;
+
 /**
  * PAYMENTS
  */
@@ -267,6 +274,16 @@ export const ADD_PAYMENT_METHOD = gql`
     ) {
       ok
       error
+    }
+  }
+`;
+
+export const CREATE_PAYMENT_METHOD = gql`
+  mutation CreatePaymentMethod($payment: CreatePaymentInput!) {
+    createPaymentMethod(payment: $payment) {
+      ok
+      error
+      id
     }
   }
 `;

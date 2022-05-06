@@ -3,15 +3,19 @@
 }
 
 .header {
-  margin-bottom: 20px !important;
+  margin-bottom: 24px !important;
 }
 
 .padding {
-  padding: 16px 15px 0px 7.5px;
+  padding: 24px 15px 0px 7.5px;
 }
 
 .paddingTop {
   padding-top: 16px;
+}
+
+.paddingTop24 {
+  padding-top: 24px;
 }
 
 .renewalAlert {
@@ -21,6 +25,6 @@
 .tag {
   font-family: "Ubuntu";
   font-weight: 400;
-  margin-left: 15px;
+  margin-left: 24px;
   vertical-align: text-bottom;
 }

@@ -1,6 +1,33 @@
+.button {
+  margin-bottom: 16px;
+}
+
 .container {
   display: grid;
-  grid-template-rows: 40px 100px 80px auto auto; 
+  grid-template-rows: 40px 100px 80px auto auto;
   padding: 1rem;
   height: 100%;
+}
+
+.description {
+  margin-bottom: 24px;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  margin-top: 16px;
+}
+
+.price {
+  color: #61db9b !important;
+  font-size: 45px;
+  font-weight: bold;
+  line-height: 44px;
+}
+.tax {
+  color: #636363 !important;
+  font-family: "Ubuntu Mono" !important;
+  margin-bottom: 24px;
 }

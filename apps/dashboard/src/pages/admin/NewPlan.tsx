@@ -4,12 +4,9 @@ import {
   Card,
   Col,
   Form,
-  Input,
-  InputNumber,
   message,
   Popconfirm,
   Row,
-  Select,
   Switch,
   Typography,
 } from "antd";
@@ -23,9 +20,16 @@ import { CreatePlan, CreatePlanVariables } from "../../api/types/CreatePlan";
 import { Plans } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
 
-import { Loading, LoadingFullScreen } from "../../components/atoms";
+import {
+  Loading,
+  LoadingFullScreen,
+  MultiSelectField,
+  SelectField,
+  TextField,
+} from "../../components/atoms";
 
-const { Option } = Select;
+import styles from "./NewPlan.module.css";
+
 const { Text, Title } = Typography;
 
 const NewPlan = () => {
@@ -41,120 +45,196 @@ const NewPlan = () => {
   if (loading) return <Loading />;
 
   return (
-    <div style={{ minWidth: 300 }}>
-      <Card>
-        <Title level={3}>{t("admin:newPlanInfo")}</Title>
-        <Form
-          form={form}
-          initialValues={{
-            active: false,
-            apps: 1,
-            description: "",
-            features: [],
-            name: "",
-          }}
-          onFinish={(values) => {
-            createPlan({
-              variables: { plan: { ...values } },
-              update(cache, { data }) {
-                if (data?.createPlan?.ok) {
-                  cache.modify({
-                    fields: {
-                      products(existing, { toReference }) {
-                        return {
-                          edges: [
-                            ...existing.edges,
-                            {
-                              __typename: "StripeProductType",
-                              node: toReference({
-                                ...data.createPlan?.plan,
-                              }),
-                            },
-                          ],
-                        };
-                      },
-                    },
-                  });
-                  form.setFieldsValue({
-                    active: false,
-                    apps: 1,
-                    description: "",
-                    features: [],
-                    name: "",
-                  });
-                  message.success(t("admin:createPlanSuccessful"), 4);
-                  history.push("/planes");
-                } else {
-                  message.error(
-                    t(`admin:errors.${data?.createPlan?.error}`, t("error")),
-                    4
-                  );
-                }
-              },
-            });
-          }}
-          validateMessages={{ required: t("client:requiredInput") }}
-        >
-          <Row gutter={[15, 15]}>
+    <Row gutter={[24, 24]}>
+      <Col span={24}>
+        <Card>
+          <Row gutter={[24, 24]}>
             <Col span={24}>
-              <Form.Item
-                name="name"
-                rules={[{ required: true }]}
-                label={t("name")}
-              >
-                <Input placeholder={t("name")} />
-              </Form.Item>
-              <Form.Item
-                name="description"
-                rules={[{ required: true }]}
-                label={t("description")}
-              >
-                <Input.TextArea placeholder={t("description")} />
-              </Form.Item>
-              <Form.Item
-                name="apps"
-                rules={[{ required: true }]}
-                label={t("admin:nApps")}
-              >
-                <InputNumber placeholder={t("admin:nApps")} />
-              </Form.Item>
-              <Form.Item name="features" label={t("admin:features")}>
-                <Select
-                  allowClear
-                  mode="multiple"
-                  placeholder={t("admin:features")}
-                >
-                  {connectionToNodes(plans?.features)?.map((feat) => (
-                    <Option key={feat.id} value={feat.id}>
-                      {feat.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name="active"
-                label={t("isActive")}
-                valuePropName="checked"
-              >
-                <Switch />
-              </Form.Item>
-              <div style={{ marginBottom: 24 }}>
-                <Text type="secondary">{t("admin:warningNewPlan")}</Text>
-              </div>
+              <Title className={styles.title} level={2}>
+                {t("admin:newPlanInfo")}
+              </Title>
             </Col>
           </Row>
-          <Row gutter={[15, 15]}>
-            <Popconfirm
-              title={t("admin:warningCreateNewPlan")}
-              onConfirm={() => form.submit()}
-            >
-              <Button type="primary">{t("create")}</Button>
-            </Popconfirm>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Form
+                form={form}
+                initialValues={{
+                  active: false,
+                  apps: 1,
+                  builds: 1,
+                  description: "",
+                  features: [],
+                  name: "",
+                  type: "particular",
+                }}
+                onFinish={(values) => {
+                  createPlan({
+                    variables: { plan: { ...values } },
+                    update(cache, { data }) {
+                      if (data?.createPlan?.ok) {
+                        cache.modify({
+                          fields: {
+                            products(existing, { toReference }) {
+                              return {
+                                edges: [
+                                  ...existing.edges,
+                                  {
+                                    __typename: "StripeProductType",
+                                    node: toReference({
+                                      ...data.createPlan?.plan,
+                                    }),
+                                  },
+                                ],
+                              };
+                            },
+                          },
+                        });
+                        form.setFieldsValue({
+                          active: false,
+                          apps: 1,
+                          builds: 1,
+                          description: "",
+                          features: [],
+                          name: "",
+                          type: "particular",
+                        });
+                        message.success(t("admin:createPlanSuccessful"), 4);
+                        history.push("/planes");
+                      } else {
+                        message.error(
+                          t(
+                            `admin:errors.${data?.createPlan?.error}`,
+                            t("error")
+                          ),
+                          4
+                        );
+                      }
+                    },
+                  });
+                }}
+                validateMessages={{ required: t("client:requiredInput") }}
+              >
+                <Row gutter={[24, 0]}>
+                  <Col span={24} md={12}>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          label={t("name")}
+                          name="name"
+                          rules={[{ required: false }]}
+                        />
+                      </Col>
+                    </Row>
+                    <Row gutter={[24, 24]}>
+                      <Col span={12}>
+                        <TextField
+                          defaultValue={1}
+                          label={t("admin:nApps")}
+                          name="apps"
+                          rules={[{ required: true }]}
+                          type="number"
+                        />
+                      </Col>
+                      <Col span={12}>
+                        <TextField
+                          defaultValue={1}
+                          label={t("admin:nBuilds")}
+                          name="builds"
+                          rules={[{ required: true }]}
+                          type="number"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <MultiSelectField
+                          label={t("admin:features")}
+                          name="features"
+                          options={connectionToNodes(plans?.features)}
+                          wrapperClassName={styles.multiselect}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <SelectField
+                          label={t("admin:planType")}
+                          name="type"
+                          options={[
+                            { id: "particular", name: t("admin:particular") },
+                            { id: "business", name: t("admin:business") },
+                          ]}
+                          rules={[{ required: true }]}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={24} md={12}>
+                    <Row>
+                      <Col span={24}>
+                        <TextField
+                          label={t("description")}
+                          name="description"
+                          rows={9}
+                          rules={[{ required: true }]}
+                          type="textarea"
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Row>
+                      <Col span={24}>
+                        <div className={styles.activeContainer}>
+                          <span>{t("admin:activePlan")}</span>
+                          <Form.Item
+                            className={styles.active}
+                            name="active"
+                            valuePropName="checked"
+                          >
+                            <Switch />
+                          </Form.Item>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <Row>
+                      <Col className={styles.warning} span={24}>
+                        <Text type="secondary">
+                          {t("admin:warningNewPlan")}
+                        </Text>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <Row>
+                      <Col span={24}>
+                        <Popconfirm
+                          cancelButtonProps={{
+                            className: "button-default-default",
+                          }}
+                          onConfirm={() => form.submit()}
+                          title={t("admin:warningCreateNewPlan")}
+                        >
+                          <Button type="primary">
+                            {t("admin:createPlan")}
+                          </Button>
+                        </Popconfirm>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Form>
+            </Col>
           </Row>
-        </Form>
-      </Card>
+        </Card>
+      </Col>
       {creating && <LoadingFullScreen tip={t("admin:creatingPlan")} />}
-    </div>
+    </Row>
   );
 };
 

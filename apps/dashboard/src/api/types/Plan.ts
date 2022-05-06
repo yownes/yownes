@@ -46,7 +46,7 @@ export interface Plan_product_prices_edges_node {
   /**
    * The recurring components of a price such as `interval` and `usage_type`.
    */
-  recurring: any | null;
+  recurring: string | null;
   /**
    * The unit amount in cents to be charged, represented as a whole integer if possible. Null if a sub-cent precision is required.
    */
@@ -91,7 +91,7 @@ export interface Plan_product {
   /**
    * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
    */
-  metadata: any | null;
+  metadata: string | null;
   /**
    * Whether the product is currently available for purchase. Only applicable to products of `type=good`.
    */

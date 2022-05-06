@@ -10,8 +10,19 @@
   font-style: italic;
 }
 
+.empty {
+  display: block;
+  margin-top: 24px;
+}
+
 .icon {
   color: #4b4a4b;
   font-size: 1.5rem;
   width: 40px;
+}
+
+.overflow {
+  margin-top: 24px;
+  overflow-x: scroll;
+  overflow-y: hidden;
 }

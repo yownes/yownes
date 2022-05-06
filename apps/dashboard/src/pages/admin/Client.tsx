@@ -5,6 +5,7 @@ import {
   Col,
   Dropdown,
   Menu,
+  MenuProps,
   message,
   Popconfirm,
   Row,
@@ -14,53 +15,46 @@ import {
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useQuery, useMutation } from "@apollo/client";
 import { TFunction } from "i18next";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import {
-  BAN_USER,
-  CHANGE_VERIFIED,
-  DELETE_APP,
-  RESTORE_APP,
-  UNSUBSCRIBE,
-} from "../../api/mutations";
+import { DELETE_APP, RESTORE_APP } from "../../api/mutations";
 import { CLIENT } from "../../api/queries";
-import { BanUser, BanUserVariables } from "../../api/types/BanUser";
-import {
-  ChangeVerified,
-  ChangeVerifiedVariables,
-} from "../../api/types/ChangeVerified";
 import {
   Client as IClient,
   ClientVariables,
   Client_user_apps_edges_node,
 } from "../../api/types/Client";
 import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
-import { AccountAccountStatus } from "../../api/types/globalTypes";
 import { RestoreApp, RestoreAppVariables } from "../../api/types/RestoreApp";
-import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { Filter, getColumnFilterProps } from "../../lib/filterColumns";
 
 import { Loading, LoadingFullScreen } from "../../components/atoms";
 import {
-  ProfileInfo,
   AppsTable,
+  BanClient,
   BuildsTable,
   DeleteClient,
+  ProfileInfo,
   RestoreClient,
   VerifiedState,
+  VerifyClient,
 } from "../../components/molecules";
 import { getBuildsForCustomer } from "../../components/molecules/BuildsTable";
 import {
   ClientSubscriptionData,
+  CustomerData,
+  InvoicesData,
   PaymentMethod,
 } from "../../components/organisms";
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 interface ClientProps {
   id: string;
 }
+
+type MenuItemProps = MenuProps["items"];
 
 function getDeleteFilters(t: TFunction) {
   let filters: Filter[] = [];
@@ -92,14 +86,6 @@ const Client = () => {
   const { data, loading } = useQuery<IClient, ClientVariables>(CLIENT, {
     variables: { id },
   });
-  const [banUser, { loading: banning }] = useMutation<
-    BanUser,
-    BanUserVariables
-  >(BAN_USER);
-  const [changeVerified, { loading: verifiying }] = useMutation<
-    ChangeVerified,
-    ChangeVerifiedVariables
-  >(CHANGE_VERIFIED);
   const [deleteApp, { loading: deleting }] = useMutation<
     DeleteApp,
     DeleteAppVariables
@@ -108,219 +94,70 @@ const Client = () => {
     RestoreApp,
     RestoreAppVariables
   >(RESTORE_APP);
-  const [unsubscribe, { loading: unsubscribing }] = useMutation<
-    Unsubscribe,
-    UnsubscribeVariables
-  >(UNSUBSCRIBE);
 
   if (loading) return <Loading />;
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="ban">
-        <Popconfirm
-          cancelText={t("cancel")}
-          okText={
-            data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? t("admin:unban")
-              : t("admin:ban")
-          }
-          title={
-            <Trans
-              i18nKey={
-                data?.user?.accountStatus === AccountAccountStatus.BANNED
-                  ? "warnings.unban"
-                  : data?.user?.subscription
-                  ? data?.user?.apps && data?.user?.apps.edges.length > 0
-                    ? "warnings.banSubsApps"
-                    : "warnings.banSubsNoApps"
-                  : data?.user?.apps && data?.user?.apps.edges.length > 0
-                  ? "warnings.banNoSubsApps"
-                  : "warnings.banNoSubsNoApps"
-              }
-              ns="admin"
-            >
-              <strong></strong>
-              <p></p>
-            </Trans>
-          }
-          onConfirm={() => {
-            setIsOverlayVisible(false);
-            if (data?.user) {
-              if (data.user.subscription) {
-                unsubscribe({
-                  variables: { userId: data?.user?.id, atPeriodEnd: false },
-                  update(cache, { data: unsubs }) {
-                    if (unsubs?.dropOut?.ok && data.user) {
-                      cache.modify({
-                        id: cache.identify({
-                          ...data?.user,
-                        }),
-                        fields: {
-                          accountStatus: () => AccountAccountStatus.REGISTERED,
-                          subscription: () => null,
-                        },
-                      });
-                    }
-                  },
-                }).then(() => {
-                  banUser({
-                    variables: {
-                      userId: data.user!!.id,
-                      ban:
-                        data?.user?.accountStatus !==
-                        AccountAccountStatus.BANNED,
-                    },
-                    update(cache, { data: banData }) {
-                      if (banData?.banUser?.ok) {
-                        cache.modify({
-                          id: cache.identify({ ...data.user }),
-                          fields: {
-                            accountStatus(prev: AccountAccountStatus) {
-                              return prev === AccountAccountStatus.BANNED
-                                ? AccountAccountStatus.REGISTERED
-                                : AccountAccountStatus.BANNED;
-                            },
-                          },
-                        });
-                        data?.user?.accountStatus ===
-                        AccountAccountStatus.BANNED
-                          ? message.success(
-                              t("admin:unbanAccountSuccessful"),
-                              4
-                            )
-                          : message.success(t("admin:banAccountSuccessful"), 4);
-                      } else {
-                        message.error(banData?.banUser?.error, 4);
-                      }
-                    },
-                  });
-                });
-              } else {
-                banUser({
-                  variables: {
-                    userId: data.user!!.id,
-                    ban:
-                      data?.user?.accountStatus !== AccountAccountStatus.BANNED,
-                  },
-                  update(cache, { data: banData }) {
-                    if (banData?.banUser?.ok) {
-                      cache.modify({
-                        id: cache.identify({ ...data.user }),
-                        fields: {
-                          accountStatus(prev: AccountAccountStatus) {
-                            return prev === AccountAccountStatus.BANNED
-                              ? AccountAccountStatus.REGISTERED
-                              : AccountAccountStatus.BANNED;
-                          },
-                        },
-                      });
-                      data?.user?.accountStatus === AccountAccountStatus.BANNED
-                        ? message.success(t("admin:unbanAccountSuccessful"), 4)
-                        : message.success(t("admin:banAccountSuccessful"), 4);
-                    } else {
-                      message.error(banData?.banUser?.error, 4);
-                    }
-                  },
-                });
-              }
-            }
-          }}
-        >
-          <Text type="danger" style={{ display: "flex", flex: 1 }}>
-            {data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? t("admin:unbanAccount")
-              : t("admin:banAccount")}
-          </Text>
-        </Popconfirm>
-      </Menu.Item>
-      {data?.user && (
-        <Menu.Item key="verify">
-          <Popconfirm
-            cancelText={t("cancel")}
-            okText={
-              data?.user?.verified ? t("admin:unverify") : t("admin:verify")
-            }
-            title={
-              <Trans
-                i18nKey={
-                  data.user.verified ? "warnings.unverify" : "warnings.verify"
-                }
-                ns="admin"
-              >
-                <strong></strong>
-                <p></p>
-              </Trans>
-            }
-            placement="left"
-            onConfirm={() => {
-              setIsOverlayVisible(false);
-              changeVerified({
-                variables: { userId: id, verify: !data.user?.verified },
-                update(cache, { data: changeVerifiedData }) {
-                  if (changeVerifiedData?.changeVerified?.ok) {
-                    cache.modify({
-                      id: cache.identify({ ...data.user }),
-                      fields: {
-                        verified: () => !data.user?.verified,
-                      },
-                    });
-                  }
-                },
-              })
-                .then((res) => {
-                  if (res.data?.changeVerified?.ok) {
-                    data.user?.verified
-                      ? message.success(t("admin:unverifyAccountSuccessful"), 4)
-                      : message.success(t("admin:verifyAccountSuccessful"), 4);
-                  } else {
-                    message.error(res.data?.changeVerified?.error, 4);
-                  }
-                })
-                .catch((err) => message.error(t("unknownError"), 4));
-            }}
-          >
-            <Text type="danger" style={{ display: "flex", flex: 1 }}>
-              {data?.user?.verified
-                ? t("admin:unverifyAccount")
-                : t("admin:verifyAccount")}
-            </Text>
-          </Popconfirm>
-        </Menu.Item>
-      )}
-      {data?.user?.isActive && (
-        <Menu.Item key="delete">
-          <DeleteClient id={id} menuVisible={setIsOverlayVisible} />
-        </Menu.Item>
-      )}
-      {!data?.user?.isActive && (
-        <Menu.Item key="delete">
-          <RestoreClient id={id} menuVisible={setIsOverlayVisible} />
-        </Menu.Item>
-      )}
-    </Menu>
-  );
+  const items: MenuItemProps = [
+    {
+      key: "ban",
+      label: <BanClient data={data} menuVisible={setIsOverlayVisible} />,
+    },
+    data?.user
+      ? {
+          key: "verify",
+          label: <VerifyClient data={data} menuVisible={setIsOverlayVisible} />,
+        }
+      : null,
+    data?.user?.isActive
+      ? {
+          key: "delete",
+          label: (
+            <DeleteClient
+              data={data}
+              id={id}
+              menuVisible={setIsOverlayVisible}
+            />
+          ),
+        }
+      : null,
+    data?.user?.isActive
+      ? {
+          key: "restore",
+          label: <RestoreClient id={id} menuVisible={setIsOverlayVisible} />,
+        }
+      : null,
+  ];
+
   const profieActions = (
     <Dropdown
-      overlay={menu}
+      overlay={<Menu items={items} />}
       trigger={["click"]}
       visible={isOverlayVisible}
       onVisibleChange={setIsOverlayVisible}
     >
-      <Button shape="circle" icon={<EllipsisOutlined></EllipsisOutlined>} />
+      <Button
+        className="button-default-default"
+        shape="circle"
+        icon={<EllipsisOutlined style={{ color: "#232323" }} />}
+      />
     </Dropdown>
   );
 
   return (
-    <>
-      <Row gutter={[20, 20]}>
-        <Col span={24} style={{ minWidth: 550 }}>
+    <Col
+      xs={{ span: 22, offset: 1 }}
+      sm={{ span: 20, offset: 2 }}
+      md={{ span: 18, offset: 3 }}
+      lg={{ span: 16, offset: 4 }}
+    >
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
           <Card>
             <Row gutter={10}>
               <Col span={24}>
                 <ProfileInfo
                   profile={data?.user}
-                  action={profieActions}
+                  extra={profieActions}
                   verified
                 />
               </Col>
@@ -329,18 +166,30 @@ const Client = () => {
         </Col>
         <Col></Col>
       </Row>
-      <Row gutter={[20, 20]}>
-        <Col span={24} style={{ minWidth: 550 }}>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <CustomerData customer={data?.user} />
+        </Col>
+        <Col></Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
           <ClientSubscriptionData client={data?.user} />
         </Col>
         <Col></Col>
       </Row>
-      <Row gutter={[20, 20]}>
-        <Col span={24} style={{ minWidth: 550 }}>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <InvoicesData userId={data?.user?.id!!} />
+        </Col>
+        <Col></Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
           <Card>
             <Row gutter={10}>
               <Col span={24}>
-                <Title level={3}>{t("paymentMethod")}</Title>
+                <Title level={2}>{t("paymentMethod")}</Title>
                 <PaymentMethod
                   customer={data?.user?.customer}
                   staff
@@ -352,10 +201,10 @@ const Client = () => {
         </Col>
         <Col></Col>
       </Row>
-      <Row gutter={[20, 20]}>
-        <Col xl={12} lg={24} md={24} sm={24} style={{ minWidth: 550 }}>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
           <Card>
-            <Title level={3}>{t("admin:apps")}</Title>
+            <Title level={2}>{t("admin:apps")}</Title>
             <AppsTable
               dataSource={data?.user?.apps}
               columns={[
@@ -366,7 +215,9 @@ const Client = () => {
                     if (!record.isActive) {
                       return (
                         <Popconfirm
-                          title={t("admin:warningRestoreApp")}
+                          cancelButtonProps={{
+                            className: "button-default-default",
+                          }}
                           onConfirm={() =>
                             restoreApp({
                               variables: {
@@ -398,6 +249,7 @@ const Client = () => {
                               },
                             })
                           }
+                          title={t("admin:warningRestoreApp")}
                         >
                           <Button type="link">{t("admin:restoreApp")}</Button>
                         </Popconfirm>
@@ -405,7 +257,9 @@ const Client = () => {
                     }
                     return (
                       <Popconfirm
-                        title={t("admin:warnings.app")}
+                        cancelButtonProps={{
+                          className: "button-default-default",
+                        }}
                         onConfirm={() => {
                           deleteApp({
                             variables: {
@@ -431,6 +285,7 @@ const Client = () => {
                             },
                           });
                         }}
+                        title={t("admin:warnings.app")}
                       >
                         <Button danger type="link">
                           {t("admin:deleteApp")}
@@ -448,29 +303,16 @@ const Client = () => {
             />
           </Card>
         </Col>
-        <Col xl={12} lg={24} md={24} sm={24} style={{ minWidth: 550 }}>
+        <Col span={24}>
           <Card>
-            <Title level={3}>{t("admin:builds")}</Title>
+            <Title level={2}>{t("admin:builds")}</Title>
             <BuildsTable dataSource={getBuildsForCustomer(data?.user)} />
           </Card>
         </Col>
       </Row>
-      {banning &&
-        (data?.user?.accountStatus === AccountAccountStatus.BANNED ? (
-          <LoadingFullScreen tip={t("admin:unbanning")} />
-        ) : (
-          <LoadingFullScreen tip={t("admin:banning")} />
-        ))}
       {deleting && <LoadingFullScreen tip={t("admin:deleting")} />}
       {restoring && <LoadingFullScreen tip={t("admin:restoring")} />}
-      {unsubscribing && <LoadingFullScreen tip={t("admin:unsubscribing")} />}
-      {verifiying &&
-        (data?.user?.verified ? (
-          <LoadingFullScreen tip={t("admin:unverifying")} />
-        ) : (
-          <LoadingFullScreen tip={t("admin:verifying")} />
-        ))}
-    </>
+    </Col>
   );
 };
 

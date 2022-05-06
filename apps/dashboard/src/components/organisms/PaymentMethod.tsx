@@ -8,13 +8,11 @@ import {
   Modal,
   Popconfirm,
   Row,
-  Space,
-  Typography,
   message,
+  Tag,
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
-import { PaymentMethod as PaymentMethodType } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
@@ -39,15 +37,16 @@ import {
 } from "../../api/types/RemovePaymentMethod";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { colors } from "../../lib/colors";
+import { normalize } from "../../lib/normalize";
 
 import { CreateCreditCard, EditCreditCard } from "./";
 import { LoadingFullScreen } from "../atoms";
-import { AlertWithLink, CreditCard, SelectableCreditCard } from "../molecules";
-
+import { AlertWithLink, CreditCard } from "../molecules";
 import { ICreditCardStripe } from "../molecules/CreditCard";
 
+import styles from "./PaymentMethod.module.css";
+
 message.config({ maxCount: 1 });
-const { Text } = Typography;
 
 interface PaymentMethodProps {
   customer:
@@ -82,15 +81,10 @@ const PaymentMethod = ({
       ? [{ query: CLIENT, variables: { id: userId } }]
       : [{ query: MY_PAYMENT_METHODS }],
   });
-  const [
-    removePaymentMethod,
-    { data: removeData, loading: removing },
-  ] = useMutation<RemovePaymentMethod, RemovePaymentMethodVariables>(
-    REMOVE_PAYMENT_METHOD
-  );
-  const [tempPaymentMethod, setTempPaymentMethod] = useState<
-    PaymentMethodType[] | undefined
-  >([]);
+  const [removePaymentMethod, { data: removeData, loading: removing }] =
+    useMutation<RemovePaymentMethod, RemovePaymentMethodVariables>(
+      REMOVE_PAYMENT_METHOD
+    );
   const [paymentMethod, setPaymentMethod] = useState<
     | MyPaymentMethods_me_customer_paymentMethods_edges_node
     | Client_user_customer_paymentMethods_edges_node
@@ -129,39 +123,35 @@ const PaymentMethod = ({
     (customer?.paymentMethods &&
       customer?.defaultPaymentMethod &&
       JSON.parse(
-        connectionToNodes(customer?.paymentMethods)
-          .find(
+        normalize(
+          connectionToNodes(customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId === customer?.defaultPaymentMethod?.stripeId
-          )
-          ?.card.replace(/None/g, "null")
-          .replace(/True/g, "true")
-          .replace(/False/g, "false")
-          .replace(/'/g, '"')!!
+          )?.card!!
+        )
       )) ||
     undefined;
 
   return (
-    <Row gutter={[20, 20]}>
+    <Row gutter={[24, 24]}>
       <Col span={24}>
         {card && new Date(card.exp_year, card.exp_month) < new Date() && (
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {staff ? (
               <Col>
                 <Alert
                   message={t("expiredPayment.admin")}
                   showIcon
-                  style={{ marginBottom: 24, marginTop: 8 }}
+                  style={{ marginBottom: 20, marginTop: 24 }}
                   type="error"
                 />
               </Col>
             ) : (
-              <Col span={24}>
+              <Col>
                 <Alert
-                  description={t("expiredPayment.help")}
                   message={t("expiredPayment.message")}
                   showIcon
-                  style={{ marginBottom: 12, marginTop: 12 }}
+                  style={{ marginBottom: 20, marginTop: 4 }}
                   type="error"
                 />
               </Col>
@@ -169,22 +159,28 @@ const PaymentMethod = ({
             <Col></Col>
           </Row>
         )}
-        <Space wrap>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
           {customer ? (
             customer?.paymentMethods.edges.length > 0 ? (
               connectionToNodes(customer?.paymentMethods).map((node) => {
                 const creditcard: ICreditCardStripe = JSON.parse(
-                  node.card
-                    .replace(/None/g, "null")
-                    .replace(/True/g, "true")
-                    .replace(/False/g, "false")
-                    .replace(/'/g, '"')
+                  normalize(node.card!!)
                 );
+                const expired =
+                  new Date(creditcard.exp_year, creditcard.exp_month) <
+                  new Date();
                 return (
                   <Card
                     bodyStyle={{
                       padding: 0,
-                      marginBottom: 10,
+                      marginBottom: 20,
+                      marginTop: 4,
                     }}
                     bordered={false}
                     key={node.stripeId}
@@ -206,15 +202,64 @@ const PaymentMethod = ({
                       }}
                     >
                       <CreditCard
-                        data={node.card}
+                        data={node.card!!}
                         billing={node.billingDetails}
                       />
                     </div>
-                    <Space size="middle">
-                      {node.stripeId !==
-                      customer?.defaultPaymentMethod?.stripeId ? (
-                        <>
+                    {node.stripeId !==
+                    customer?.defaultPaymentMethod?.stripeId ? (
+                      <div
+                        style={{
+                          alignItems: "center",
+                          display: "flex",
+                          flex: 1,
+                          flexWrap: "wrap",
+                          justifyContent: "space-between",
+                          padding: "0px 7px",
+                        }}
+                      >
+                        {!expired ? (
+                          <Popconfirm
+                            cancelButtonProps={{
+                              className: "button-default-default",
+                            }}
+                            onConfirm={(e) => {
+                              addPayment({
+                                variables: {
+                                  isDefault: true,
+                                  paymentMethodId: cardId!!,
+                                  userId: userId,
+                                },
+                                update(cache, { data: newData }) {
+                                  if (newData?.addPaymentMethod?.error) {
+                                    message.error(
+                                      t(
+                                        `admin:errors.${newData?.addPaymentMethod?.error}`
+                                      ),
+                                      4
+                                    );
+                                  }
+                                },
+                              });
+                              setisUpdated(true);
+                            }}
+                            title={t("client:warnings.cardDefault")}
+                          >
+                            <Tag
+                              className={styles.clickable}
+                              onClick={() => setCardId(node.stripeId)}
+                            >
+                              {t("client:asDefault")}
+                            </Tag>
+                          </Popconfirm>
+                        ) : (
+                          <Tag color={colors.tagRed}>
+                            {t("expiredPayment.card")}
+                          </Tag>
+                        )}
+                        <div>
                           <Button
+                            className={styles.editIcon}
                             icon={<EditOutlined />}
                             onClick={() => {
                               setPaymentMethod(node);
@@ -222,14 +267,17 @@ const PaymentMethod = ({
                             }}
                           />
                           <Popconfirm
+                            cancelButtonProps={{
+                              className: "button-default-default",
+                            }}
                             cancelText={t("cancel")}
                             okText={t("delete")}
-                            title={t("client:warnings.card")}
-                            placement="topLeft"
                             onConfirm={() => {
                               if (node.stripeId) {
                                 removePaymentMethod({
-                                  variables: { paymentMethodId: node.stripeId },
+                                  variables: {
+                                    paymentMethodId: node.stripeId,
+                                  },
                                   update(cache, { data: newData }) {
                                     if (
                                       newData?.detachPaymentMethod?.ok &&
@@ -246,55 +294,42 @@ const PaymentMethod = ({
                                 });
                               }
                             }}
+                            placement="left"
+                            title={t("client:warnings.card")}
                           >
-                            <Button danger icon={<DeleteOutlined />} />
+                            <Button
+                              className={styles.deleteIcon}
+                              danger
+                              icon={<DeleteOutlined />}
+                            />
                           </Popconfirm>
-                          {new Date(
-                            creditcard.exp_year,
-                            creditcard.exp_month
-                          ) >= new Date() && (
-                            <Popconfirm
-                              onConfirm={(e) => {
-                                addPayment({
-                                  variables: {
-                                    isDefault: true,
-                                    paymentMethodId: cardId!!,
-                                    userId: userId,
-                                  },
-                                  update(cache, { data: newData }) {
-                                    if (newData?.addPaymentMethod?.error) {
-                                      message.error(
-                                        t(
-                                          `admin:errors.${newData?.addPaymentMethod?.error}`
-                                        ),
-                                        4
-                                      );
-                                    }
-                                  },
-                                });
-                                setisUpdated(true);
-                              }}
-                              title={t("client:warnings.cardDefault")}
-                            >
-                              <Button onClick={() => setCardId(node.stripeId)}>
-                                {t("client:asDefault")}
-                              </Button>
-                            </Popconfirm>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            icon={<EditOutlined />}
-                            onClick={() => {
-                              setPaymentMethod(node);
-                              setisModalUpdateOpen(true);
-                            }}
-                          />
-                          <Text strong>({t("client:defaultCard")})</Text>
-                        </>
-                      )}
-                    </Space>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          alignItems: "center",
+                          display: "flex",
+                          flex: 1,
+                          flexWrap: "wrap",
+                          justifyContent: "space-between",
+                          padding: "0px 7px",
+                        }}
+                      >
+                        <Tag color={expired ? colors.tagRed : colors.tagGreen}>
+                          {t("client:defaultCard")}
+                          {expired && ` (${t("expiredPayment.expired")})`}
+                        </Tag>
+                        <Button
+                          className={styles.editIcon}
+                          icon={<EditOutlined />}
+                          onClick={() => {
+                            setPaymentMethod(node);
+                            setisModalUpdateOpen(true);
+                          }}
+                        />
+                      </div>
+                    )}
                   </Card>
                 );
               })
@@ -302,27 +337,15 @@ const PaymentMethod = ({
               <Alert message={t("noPaymentMethods")} showIcon type="warning" />
             )
           ) : location.pathname === "/checkout" ? (
-            tempPaymentMethod &&
-            tempPaymentMethod.map((temp) => (
-              <>
-                <Card
-                  bodyStyle={{
-                    padding: 0,
-                    marginBottom: 10,
-                  }}
-                  bordered={false}
-                  key={temp.id}
-                >
-                  <SelectableCreditCard
-                    data={temp}
-                    onSelected={() => setSelectedId(temp.id)}
-                    selected={temp.id === selectedId}
-                  />
-                </Card>
-              </>
-            ))
+            <Alert message={t("noCustomer")} showIcon type="warning" />
           ) : staff ? (
-            <Alert message={t("noPaymentMethods")} showIcon type="warning" />
+            <div style={{ paddingTop: 20 }}>
+              <Alert
+                message={t("noPaymentMethodsAdmin")}
+                showIcon
+                type="warning"
+              />
+            </div>
           ) : (
             <AlertWithLink
               buttonText={t("client:subscribe")}
@@ -331,19 +354,25 @@ const PaymentMethod = ({
               link="/checkout"
             />
           )}
-        </Space>
+        </div>
       </Col>
       <Col span={24}>
         <Button
+          className={
+            !customer && location.pathname !== "/checkout"
+              ? undefined
+              : "button-default-primary"
+          }
           disabled={!customer && location.pathname !== "/checkout"}
           onClick={() => setisModalCreateOpen(true)}
-          type="primary"
+          type="ghost"
         >
           {t("client:addPaymentMethod")}
         </Button>
       </Col>
       <Modal
         centered
+        destroyOnClose
         footer={null}
         onCancel={handleCancelCreate}
         title={t("client:addPaymentMethod")}
@@ -351,12 +380,13 @@ const PaymentMethod = ({
       >
         <CreateCreditCard
           form={formCreate}
+          onCancel={handleCancelCreate}
           onCreated={(paymentMethod, isDefault) => {
             if (customer) {
               addPayment({
                 variables: {
                   isDefault: isDefault,
-                  paymentMethodId: paymentMethod!!.id,
+                  paymentMethodId: paymentMethod ?? "",
                   userId: userId,
                 },
                 update(cache, { data: newData }) {
@@ -369,15 +399,7 @@ const PaymentMethod = ({
                 },
               });
             } else {
-              if (paymentMethod) {
-                onCreated && onCreated(paymentMethod.id);
-                setTempPaymentMethod((tempPaymentMethod) => [
-                  ...(tempPaymentMethod ?? []),
-                  paymentMethod,
-                ]);
-                setSelectedId(paymentMethod.id);
-                formCreate.resetFields();
-              }
+              message.error(t("noCustomerError"), 4);
             }
             setisAdded(true);
             setisModalCreateOpen(false);
@@ -395,6 +417,7 @@ const PaymentMethod = ({
         {isModalUpdateOpen && (
           <EditCreditCard
             form={formUpdate}
+            onCancel={handleCancelUpdate}
             onEdited={() => {
               setisModalUpdateOpen(false);
             }}

@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import {
-  Button,
-  Divider,
-  Form,
-  FormInstance,
-  Input,
-  InputNumber,
-  message,
-  Select,
-  Space,
-} from "antd";
+import { Button, Col, Form, FormInstance, message, Row } from "antd";
 import { useMutation } from "@apollo/client";
-import { Elements, useStripe } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 
 import { UPDATE_PAYMENT_METHOD } from "../../api/mutations";
@@ -23,16 +11,15 @@ import {
   UpdatePaymentMethod,
   UpdatePaymentMethodVariables,
 } from "../../api/types/UpdatePaymentMethod";
+import { normalize } from "../../lib/normalize";
 
+import { TextField } from "../atoms";
 import { Errors, SmallCreditCard } from "../molecules";
 
-import * as Countries from "../../data/countries.json";
-
 message.config({ maxCount: 1 });
-const { Option } = Select;
 
 interface ICreditCard {
-  brand: "visa" | "maestro" | "mastercard";
+  brand: "visa" | "maestro" | "mastercard" | "amex";
   checks: {
     address_line1_check?: string;
     address_postal_code_check?: string;
@@ -44,84 +31,43 @@ interface ICreditCard {
 }
 
 interface IBillingDetails {
-  address: {
-    city: string;
-    country: string;
-    line1: string;
-    postal_code: string;
-    state: string;
-  };
-  email: string;
   name: string;
-  phone: string;
 }
 
 interface IMetadata {
   document_id?: string;
 }
 
-enum Language {
-  en = "en",
-  es = "es",
-  fr = "fr",
-  ca = "ca",
-  de = "de",
-}
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK_TEST);
-
 interface EditCreditCardProps {
   form?: FormInstance;
   payment: MyPaymentMethods_me_customer_paymentMethods_edges_node;
+  onCancel: () => void;
   onEdited: () => void;
   staff?: boolean;
   userId: string;
 }
 
-const EditCreditCardContainer = (props: EditCreditCardProps) => {
-  return (
-    <Elements stripe={stripePromise}>
-      <EditCreditCard {...props} />
-    </Elements>
-  );
-};
-
 const EditCreditCard = ({
   form,
   payment,
+  onCancel,
   onEdited,
   staff,
   userId,
 }: EditCreditCardProps) => {
   const [isUpdated, setIsUpdated] = useState(false); // eslint-disable-next-line
   const [errs, setErrs] = useState("");
-  const stripe = useStripe();
-  const { t, i18n } = useTranslation(["translation", "client"]);
-  const country = i18n.language.split("-")[0] as Language;
-  const language = Language[country] ?? "es";
+  const { t } = useTranslation(["translation", "client"]);
 
-  const normalizedBilling = payment.billingDetails
-    ?.replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-  const billingData: IBillingDetails = JSON.parse(normalizedBilling ?? "{}");
-
-  const normalizedCard = payment.card
-    ?.replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-  const cardData: ICreditCard = JSON.parse(normalizedCard ?? "{}");
-
-  const normalizedMetadata = payment.metadata
-    ? payment.metadata
-        .replace(/None/g, "null")
-        .replace(/True/g, "true")
-        .replace(/False/g, "false")
-        .replace(/'/g, '"')
-    : "{}";
-  const metadataData: IMetadata = JSON.parse(normalizedMetadata ?? "{}");
+  const billingData: IBillingDetails = JSON.parse(
+    normalize(payment.billingDetails) ?? "{}"
+  );
+  const cardData: ICreditCard = JSON.parse(
+    payment.card ? normalize(payment.card) : "{}"
+  );
+  const metadataData: IMetadata = JSON.parse(
+    payment.metadata ? normalize(payment.metadata) : "{}"
+  );
 
   const [updatePaymentMethod, { data: dataUpdate, loading: loadingUpdate }] =
     useMutation<UpdatePaymentMethod, UpdatePaymentMethodVariables>(
@@ -138,13 +84,6 @@ const EditCreditCard = ({
       month: cardData.exp_month,
       year: cardData.exp_year,
       name: billingData?.name,
-      email: billingData?.email,
-      billingDirection: billingData?.address?.line1,
-      country: billingData?.address?.country,
-      province: billingData?.address?.state,
-      city: billingData?.address?.city,
-      phone: billingData?.phone,
-      documentId: metadataData.document_id,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -164,20 +103,9 @@ const EditCreditCard = ({
         month: cardData.exp_month,
         year: cardData.exp_year,
         name: billingData?.name,
-        email: billingData?.email,
-        direction: billingData?.address?.line1,
-        country: billingData?.address?.country,
-        state: billingData?.address?.state,
-        city: billingData?.address?.city,
-        phone: billingData?.phone,
-        documentId: metadataData.document_id,
       }}
-      validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
+      onChange={() => setErrs("")}
       onFinish={async (values) => {
-        if (!stripe) {
-          console.log("!stripe");
-          return;
-        }
         updatePaymentMethod({
           variables: {
             id: payment.id,
@@ -185,21 +113,10 @@ const EditCreditCard = ({
             payment: {
               billingDetails: {
                 name: values.name,
-                email: values.email,
-                phone: values.phone,
-                address: {
-                  line1: values.direction,
-                  city: values.city,
-                  country: values.country,
-                  state: values.state,
-                },
               },
               card: {
                 expMonth: values.month,
                 expYear: values.year,
-              },
-              metadata: {
-                documentId: values.documentId,
               },
             },
           },
@@ -209,106 +126,87 @@ const EditCreditCard = ({
               setIsUpdated(true);
             } else {
               data?.updatePaymentMethod?.error &&
-                setErrs(data.updatePaymentMethod.error);
+                setErrs(
+                  t(
+                    `client:errors.${data.updatePaymentMethod.error}`,
+                    t("error")
+                  )
+                );
             }
           })
           .catch((err) => setErrs(t("unknownError")));
       }}
-      onFocus={() => setErrs("")}
+      validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
     >
       <SmallCreditCard data={payment.card} />
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Form.Item
-          name="month"
-          rules={[{ required: true }]}
-          label={t("expiration")}
-          style={{ marginBottom: 0 }}
-        >
-          <InputNumber
+      <TextField
+        defaultValue={billingData?.name}
+        label={t("fullName")}
+        name="name"
+        rules={[{ required: true }]}
+      />
+      <Row gutter={[24, 24]}>
+        <Col span={12}>
+          <TextField
+            defaultValue={cardData.exp_month}
+            label={t("monthHelp")}
             max={12}
             min={1}
-            placeholder={t("monthUp")}
-            style={{ width: "100%" }}
+            maxLength={2}
+            minLength={1}
+            name="month"
+            rules={[{ required: true }]}
+            type="number"
           />
-        </Form.Item>
-        <Form.Item
-          name="year"
-          rules={[{ required: true }]}
-          style={{ marginBottom: 0 }}
-        >
-          <InputNumber
+        </Col>
+        <Col span={12}>
+          <TextField
+            defaultValue={cardData.exp_year}
+            label={t("yearHelp")}
+            max={new Date().getFullYear() + 20}
             min={new Date().getFullYear()}
-            placeholder={t("yearUp")}
-            style={{ width: "100%" }}
+            maxLength={4}
+            minLength={4}
+            name="year"
+            rules={[{ required: true }]}
+            type="number"
           />
-        </Form.Item>
-      </div>
-      <Divider />
-      <Form.Item name="name" rules={[{ required: true }]} label={t("fullName")}>
-        <Input autoFocus placeholder={t("fullName")} />
-      </Form.Item>
-      <Form.Item name="email" rules={[{ required: true }]} label={t("email")}>
-        <Input placeholder={t("email")} type="email" />
-      </Form.Item>
-      <Form.Item
-        name="direction"
-        rules={[{ required: true }]}
-        label={t("location")}
-      >
-        <Input placeholder={t("location")} />
-      </Form.Item>
-      <Form.Item
-        name="country"
-        rules={[{ required: true }]}
-        label={t("country")}
-      >
-        <Select
-          optionFilterProp="children"
-          placeholder={t("country")}
-          showSearch
-        >
-          {Object.entries(Countries.countries).map(([key, value]) => (
-            <Option key={key} value={key}>
-              {value[language] ?? value.es}
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="state"
-        rules={[{ required: true }]}
-        label={t("province")}
-      >
-        <Input placeholder={t("province")} />
-      </Form.Item>
-      <Form.Item name="city" rules={[{ required: true }]} label={t("city")}>
-        <Input placeholder={t("city")} />
-      </Form.Item>
-      <Form.Item name="phone" label={t("phone")}>
-        <Input placeholder={t("phone")} />
-      </Form.Item>
-      <Form.Item name="documentId" label={t("documentId")}>
-        <Input placeholder={t("documentId")} />
-      </Form.Item>
-      <Errors
-        errors={{
-          nonFieldErrors: errs
-            ? [{ message: errs || "", code: "error" }]
-            : undefined,
-        }}
-      />
-      <Space direction="vertical" size="middle">
-        <Button
-          loading={loadingUpdate}
-          htmlType="submit"
-          type="primary"
-          size="large"
-        >
-          {t("client:updatePaymentMethod")}
-        </Button>
-      </Space>
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        {errs && (
+          <Col span={24}>
+            <Errors
+              errors={{
+                nonFieldErrors: errs
+                  ? [{ message: errs ?? "", code: "error" }]
+                  : undefined,
+              }}
+            />
+          </Col>
+        )}
+        <Col span={24}>
+          <Row gutter={[8, 24]} justify="end">
+            <Col>
+              <Button className="button-default-default" onClick={onCancel}>
+                {t("cancel")}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                loading={loadingUpdate}
+                htmlType="submit"
+                type="primary"
+                size="large"
+              >
+                {t("client:updatePaymentMethod")}
+              </Button>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     </Form>
   );
 };
 
-export default EditCreditCardContainer;
+export default EditCreditCard;

@@ -6,12 +6,12 @@ import {
   Col,
   message,
   Modal,
-  Popconfirm,
   Row,
   Tag,
   Tooltip,
   Typography,
 } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@apollo/client";
 import addDays from "date-fns/addDays";
 import first from "lodash/first";
@@ -27,7 +27,6 @@ import {
 } from "../../api/mutations";
 import {
   APPS,
-  INVOICES,
   MY_ACCOUNT,
   MY_PAYMENT_METHODS,
   PLANS,
@@ -41,7 +40,6 @@ import {
   PlanInterval,
   SubscriptionStatus,
 } from "../../api/types/globalTypes";
-import { Invoices, InvoicesVariables } from "../../api/types/Invoices";
 import {
   MyAccount,
   MyAccount_me_subscription_invoices_edges_node,
@@ -69,6 +67,7 @@ import {
   UpdateSubscriptionVariables,
 } from "../../api/types/UpdateSubscription";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { normalize } from "../../lib/normalize";
 import { dateTime, longDate } from "../../lib/parseDate";
 
 import { ChangeSubscription } from "./";
@@ -78,12 +77,12 @@ import {
   AlertWithLink,
   SubscriptionInfo,
   SubscriptionState,
-  SubscriptionTable,
 } from "../molecules";
 import { ICreditCardStripe } from "../molecules/CreditCard";
 
 import styles from "./SubscriptionData.module.css";
 
+const { confirm } = Modal;
 const { Text, Title } = Typography;
 
 const SubscriptionData = () => {
@@ -96,13 +95,8 @@ const SubscriptionData = () => {
     variables: { is_active: true },
   });
   const { data, loading } = useQuery<MyAccount>(MY_ACCOUNT);
-  const { data: invoicesData, loading: loadingInvoices } = useQuery<
-    Invoices,
-    InvoicesVariables
-  >(INVOICES, { variables: { userId: data?.me?.id ?? "" } });
-  const { data: paymentMethods } = useQuery<MyPaymentMethods>(
-    MY_PAYMENT_METHODS
-  );
+  const { data: paymentMethods } =
+    useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
   const { data: plansData, loading: loadingPlans } = useQuery<Plans>(PLANS);
   const { data: subscriptionsData, loading: loadingSubscriptions } = useQuery<
     Subscriptions,
@@ -113,18 +107,17 @@ const SubscriptionData = () => {
 
   const [activeApps, setActiveApps] = useState<number>(0);
   const [amount, setAmount] = useState<number | null | undefined>(null);
+  const [currency, setCurrency] = useState<string | undefined>(undefined);
   const [interval, setInterval] = useState<PlanInterval>(PlanInterval.MONTH);
-  const [invoices, setInvoices] = useState<
-    MyAccount_me_subscription_invoices_edges_node[]
-  >();
+  const [invoices, setInvoices] =
+    useState<MyAccount_me_subscription_invoices_edges_node[]>();
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [isResubscribed, setIsResubscribed] = useState(false);
   const [isUnsubscribed, setIsUnsubscribed] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
-  const [features, setFeatures] = useState<
-    Plans_products_edges_node_features_edges_node[]
-  >();
+  const [features, setFeatures] =
+    useState<Plans_products_edges_node_features_edges_node[]>();
   const [modalStep, setModalStep] = useState(false);
   const [plan, setPlan] = useState<Plans_products_edges_node>();
   const [planId, setPlanId] = useState<string>();
@@ -146,20 +139,16 @@ const SubscriptionData = () => {
       },
     ],
   };
-  const [
-    unsubscribe,
-    { loading: unsubscribing, data: unsubscribeData },
-  ] = useMutation<Unsubscribe, UnsubscribeVariables>(
-    UNSUBSCRIBE,
-    REFETCH_UPCOMING
-  );
-  const [
-    resubscribe,
-    { loading: resubscribing, data: resubscribeData },
-  ] = useMutation<Resubscribe, ResubscribeVariables>(
-    RESUBSCRIBE,
-    REFETCH_UPCOMING
-  );
+  const [unsubscribe, { loading: unsubscribing, data: unsubscribeData }] =
+    useMutation<Unsubscribe, UnsubscribeVariables>(
+      UNSUBSCRIBE,
+      REFETCH_UPCOMING
+    );
+  const [resubscribe, { loading: resubscribing, data: resubscribeData }] =
+    useMutation<Resubscribe, ResubscribeVariables>(
+      RESUBSCRIBE,
+      REFETCH_UPCOMING
+    );
   const [
     updateSubscription,
     { loading: updating, data: updateSubscriptionData, reset },
@@ -196,16 +185,13 @@ const SubscriptionData = () => {
     (paymentMethods?.me?.customer?.paymentMethods &&
       paymentMethods?.me?.customer?.defaultPaymentMethod &&
       JSON.parse(
-        connectionToNodes(paymentMethods?.me?.customer?.paymentMethods)
-          .find(
+        normalize(
+          connectionToNodes(paymentMethods?.me?.customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId ===
               paymentMethods?.me?.customer?.defaultPaymentMethod?.stripeId
-          )
-          ?.card.replace(/None/g, "null")
-          .replace(/True/g, "true")
-          .replace(/False/g, "false")
-          .replace(/'/g, '"')!!
+          )?.card!!
+        )
       )) ||
     undefined;
   const expired = card
@@ -285,20 +271,24 @@ const SubscriptionData = () => {
         .filter((price) => price.active)
         .find(
           (price) =>
-            JSON.parse(price.recurring).interval.toUpperCase() === interval
+            JSON.parse(normalize(price.recurring!!)).interval.toUpperCase() ===
+            interval
         );
       setAmount(price?.unitAmount);
+      setCurrency(price?.currency);
       setPriceId(price?.stripeId);
     }
   }, [interval, plan]);
   useEffect(() => {
     if (data?.me?.subscription?.plan) {
       const priceInterval = JSON.parse(
-        data?.me?.subscription?.plan.product?.prices.edges.find(
-          (price) =>
-            price?.node &&
-            price?.node.stripeId === data?.me?.subscription?.plan?.stripeId
-        )?.node?.recurring
+        normalize(
+          data?.me?.subscription?.plan.product?.prices.edges.find(
+            (price) =>
+              price?.node &&
+              price?.node.stripeId === data?.me?.subscription?.plan?.stripeId
+          )?.node?.recurring!!
+        )
       ).interval;
       if (priceInterval) {
         setInterval(priceInterval.toUpperCase());
@@ -309,23 +299,22 @@ const SubscriptionData = () => {
   if (
     loading ||
     loadingData ||
-    loadingInvoices ||
     loadingPlans ||
     loadingSubscriptions ||
     loadingUpcoming
   )
     return (
       <Card>
-        <Title level={3}>{t("client:subscriptionData")}</Title>
+        <Title level={2}>{t("client:subscriptionData")}</Title>
         <Loading />
       </Card>
     );
 
   return (
-    <Row gutter={[20, 20]}>
+    <Row gutter={[24, 24]}>
       <Col span={24}>
         <Card>
-          <Title className={styles.header} level={3}>
+          <Title className={styles.header} level={2}>
             {t("client:subscriptionData")}
             {data?.me?.subscription && (
               <Text className={styles.tag}>
@@ -341,7 +330,7 @@ const SubscriptionData = () => {
               </Text>
             )}
           </Title>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {
               // TODO: Mensaje error renovación, fecha siguiente intento
               // y permitir intentarlo en este momento
@@ -373,7 +362,7 @@ const SubscriptionData = () => {
               )
             }
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {
               // TODO: Permitir intentar de nuevo con otro método de pago
               data?.me?.subscription?.status ===
@@ -426,7 +415,7 @@ const SubscriptionData = () => {
               )
             }
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {data?.me?.subscription &&
               data?.me?.subscription?.plan &&
               (data.me.subscription.status === SubscriptionStatus.ACTIVE ||
@@ -439,10 +428,10 @@ const SubscriptionData = () => {
                 />
               )}
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
               data.me.subscription.cancelAtPeriodEnd && (
-                <div className={styles.paddingTop}>
+                <div className={styles.paddingTop24}>
                   <AlertWithConfirm
                     buttonText={t("client:reSubscribe")}
                     confirmText={
@@ -467,7 +456,7 @@ const SubscriptionData = () => {
                 </div>
               )}
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {(!data?.me?.subscription ||
               (data.me.subscription.status === SubscriptionStatus.ACTIVE &&
                 data.me.subscription.cancelAtPeriodEnd) ||
@@ -476,7 +465,7 @@ const SubscriptionData = () => {
               (data?.me?.subscription &&
               data.me.subscription.status === SubscriptionStatus.ACTIVE &&
               data.me.subscription.cancelAtPeriodEnd ? (
-                <div className={styles.paddingTop}>
+                <div className={styles.paddingTop24}>
                   <AlertWithConfirm
                     buttonText={t("client:subscribe")}
                     confirmText={
@@ -505,7 +494,7 @@ const SubscriptionData = () => {
                 />
               ))}
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {data?.me?.subscription?.status ===
               SubscriptionStatus.INCOMPLETE_EXPIRED && (
               <AlertWithLink
@@ -515,40 +504,45 @@ const SubscriptionData = () => {
               />
             )}
           </Row>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[24, 24]}>
             {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
               data.me.subscription.cancelAtPeriodEnd === false && (
-                <div className={styles.padding}>
-                  {!expired ? (
-                    <Button
-                      onClick={() => {
-                        data?.me?.subscription?.plan &&
-                          setInterval(
-                            JSON.parse(
-                              data?.me?.subscription?.plan.product?.prices.edges.find(
-                                (price) =>
-                                  price?.node &&
-                                  price?.node.stripeId ===
-                                    data?.me?.subscription?.plan?.stripeId
-                              )?.node?.recurring
-                            ).interval.toUpperCase()
-                          );
-                        setPlanId(data?.me?.subscription?.plan?.product?.id);
-                        setModalStep(false);
-                        setIsModalUpdateOpen(!isModalUpdateOpen);
-                      }}
-                      type="default"
-                    >
-                      {t("client:changeSubscription")}
-                    </Button>
-                  ) : (
-                    <Tooltip title={t("client:changeSubscriptionDisabled")}>
-                      <Button disabled type="default">
+                <Col>
+                  <div className={styles.paddingTop24}>
+                    {!expired ? (
+                      <Button
+                        className="button-default-default"
+                        onClick={() => {
+                          data?.me?.subscription?.plan &&
+                            setInterval(
+                              JSON.parse(
+                                normalize(
+                                  data?.me?.subscription?.plan.product?.prices.edges.find(
+                                    (price) =>
+                                      price?.node &&
+                                      price?.node.stripeId ===
+                                        data?.me?.subscription?.plan?.stripeId
+                                  )?.node?.recurring!!
+                                )
+                              ).interval.toUpperCase()
+                            );
+                          setPlanId(data?.me?.subscription?.plan?.product?.id);
+                          setModalStep(false);
+                          setIsModalUpdateOpen(!isModalUpdateOpen);
+                        }}
+                        type="default"
+                      >
                         {t("client:changeSubscription")}
                       </Button>
-                    </Tooltip>
-                  )}
-                </div>
+                    ) : (
+                      <Tooltip title={t("client:changeSubscriptionDisabled")}>
+                        <Button disabled type="default">
+                          {t("client:changeSubscription")}
+                        </Button>
+                      </Tooltip>
+                    )}
+                  </div>
+                </Col>
               )}
             {((data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
               data.me.subscription.cancelAtPeriodEnd === false) ||
@@ -556,106 +550,110 @@ const SubscriptionData = () => {
                 SubscriptionStatus.INCOMPLETE ||
               data?.me?.subscription?.status ===
                 SubscriptionStatus.PAST_DUE) && (
-              <Popconfirm
-                cancelText={t("cancel")}
-                okText={t("confirm")}
-                title={
-                  <Trans
-                    i18nKey={
-                      data?.me?.subscription?.status ===
-                      SubscriptionStatus.INCOMPLETE
-                        ? "warnings.cancelSubscriptionIncompleteNow"
-                        : data?.me?.subscription?.status ===
-                          SubscriptionStatus.PAST_DUE
-                        ? appsData?.apps && appsData?.apps?.edges.length > 0
-                          ? "warnings.cancelSubscriptionPastDueNowApps"
-                          : "warnings.cancelSubscriptionPastDueNowNoApps"
-                        : appsData?.apps && appsData?.apps?.edges.length > 0
-                        ? "warnings.cancelSubscription"
-                        : "warnings.cancelSubscriptionNoApps"
-                    }
-                    ns="client"
-                    values={{
-                      date: dateTime(
-                        new Date(data.me.subscription.currentPeriodEnd)
-                      ),
-                    }}
-                  >
-                    <strong></strong>
-                    <p></p>
-                    <p></p>
-                  </Trans>
-                }
-                placement="left"
-                onConfirm={() => {
-                  if (data?.me?.id) {
-                    unsubscribe({
-                      variables: {
-                        userId: data?.me?.id,
-                        atPeriodEnd:
-                          data?.me?.subscription?.status ===
-                          SubscriptionStatus.ACTIVE
-                            ? true
-                            : false,
-                      },
-                      update(cache, { data: result }) {
-                        if (result?.dropOut?.ok && data.me) {
-                          if (
-                            data?.me?.subscription?.status !==
-                            SubscriptionStatus.ACTIVE
-                          ) {
-                            cache.modify({
-                              id: cache.identify({
-                                ...data?.me,
-                              }),
-                              fields: {
-                                accountStatus: () =>
-                                  result.dropOut?.accountStatus ||
-                                  AccountAccountStatus.REGISTERED,
-                                subscription: () => null,
+              <Col>
+                <div className={styles.paddingTop24}>
+                  <Button
+                    danger
+                    onClick={() => {
+                      confirm({
+                        icon: <ExclamationCircleOutlined />,
+                        title: t("client:warnings.cancelSubscriptionTitle"),
+                        content: (
+                          <Trans
+                            i18nKey={
+                              data?.me?.subscription?.status ===
+                              SubscriptionStatus.INCOMPLETE
+                                ? "warnings.cancelSubscriptionIncompleteNow"
+                                : data?.me?.subscription?.status ===
+                                  SubscriptionStatus.PAST_DUE
+                                ? appsData?.apps &&
+                                  appsData?.apps?.edges.length > 0
+                                  ? "warnings.cancelSubscriptionPastDueNowApps"
+                                  : "warnings.cancelSubscriptionPastDueNowNoApps"
+                                : appsData?.apps &&
+                                  appsData?.apps?.edges.length > 0
+                                ? "warnings.cancelSubscription"
+                                : "warnings.cancelSubscriptionNoApps"
+                            }
+                            ns="client"
+                            values={{
+                              date: dateTime(
+                                new Date(
+                                  data.me?.subscription?.currentPeriodEnd
+                                )
+                              ),
+                            }}
+                          >
+                            <p></p>
+                            <p></p>
+                          </Trans>
+                        ),
+                        cancelButtonProps: {
+                          className: "button-default-default",
+                        },
+                        cancelText: t("close"),
+                        okButtonProps: {
+                          autoFocus: false,
+                          danger: true,
+                          type: "default",
+                        },
+                        okText: t("client:cancelSubscriptionConfirm"),
+                        onOk: () => {
+                          if (data?.me?.id) {
+                            unsubscribe({
+                              variables: {
+                                userId: data?.me?.id,
+                                atPeriodEnd:
+                                  data?.me?.subscription?.status ===
+                                  SubscriptionStatus.ACTIVE
+                                    ? true
+                                    : false,
+                              },
+                              update(cache, { data: result }) {
+                                if (result?.dropOut?.ok && data.me) {
+                                  if (
+                                    data?.me?.subscription?.status !==
+                                    SubscriptionStatus.ACTIVE
+                                  ) {
+                                    cache.modify({
+                                      id: cache.identify({
+                                        ...data?.me,
+                                      }),
+                                      fields: {
+                                        accountStatus: () =>
+                                          result.dropOut?.accountStatus ||
+                                          AccountAccountStatus.REGISTERED,
+                                        subscription: () => null,
+                                      },
+                                    });
+                                  } else {
+                                    cache.modify({
+                                      id: cache.identify({
+                                        ...data?.me,
+                                      }),
+                                      fields: {
+                                        accountStatus: () =>
+                                          result.dropOut?.accountStatus ||
+                                          AccountAccountStatus.REGISTERED,
+                                      },
+                                    });
+                                  }
+                                }
                               },
                             });
-                          } else {
-                            cache.modify({
-                              id: cache.identify({
-                                ...data?.me,
-                              }),
-                              fields: {
-                                accountStatus: () =>
-                                  result.dropOut?.accountStatus ||
-                                  AccountAccountStatus.REGISTERED,
-                              },
-                            });
+                            setIsUnsubscribed(true);
                           }
-                        }
-                      },
-                    });
-                    setIsUnsubscribed(true);
-                  }
-                }}
-              >
-                <div className={styles.padding}>
-                  <Button danger type="default">
+                        },
+                      });
+                    }}
+                    type="default"
+                  >
                     {t("client:cancelSubscription")}
                   </Button>
                 </div>
-              </Popconfirm>
+              </Col>
             )}
           </Row>
-          {subscriptions &&
-            (subscriptions?.length > 1 ||
-              (subscriptions.length === 1 &&
-                (subscriptions[0].status === SubscriptionStatus.CANCELED ||
-                  subscriptions[0].status ===
-                    SubscriptionStatus.INCOMPLETE_EXPIRED))) && (
-              <Row gutter={[20, 20]}>
-                <SubscriptionTable
-                  invoices={connectionToNodes(invoicesData?.invoices)}
-                  plans={plansData}
-                  subscriptions={subscriptions}
-                />
-              </Row>
-            )}
         </Card>
       </Col>
       <Modal
@@ -692,6 +690,7 @@ const SubscriptionData = () => {
           },
         }}
         cancelButtonProps={{
+          className: "button-default-default",
           onClick: () => {
             if (modalStep) {
               reset();
@@ -705,6 +704,7 @@ const SubscriptionData = () => {
         <ChangeSubscription
           activeApps={activeApps}
           amount={amount}
+          currency={currency}
           currentProductId={data?.me?.subscription?.plan?.product?.id}
           error={
             updateSubscriptionData?.updateSubscription?.error
@@ -719,7 +719,7 @@ const SubscriptionData = () => {
           loading={loadingPlans}
           onChangeInterval={setInterval}
           onChangePlan={(plan) => setPlanId(plan)}
-          plan={plan}
+          plan={plan ?? data?.me?.subscription?.plan?.product ?? undefined}
           planId={planId}
           plansFeatures={connectionToNodes(plansData?.features)}
           products={products || []}

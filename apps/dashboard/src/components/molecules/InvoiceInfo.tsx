@@ -10,7 +10,7 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import { DownloadOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
 import addDays from "date-fns/addDays";
 import differenceInHours from "date-fns/differenceInHours";
@@ -29,10 +29,18 @@ import {
 import { PayInvoice, PayInvoiceVariables } from "../../api/types/PayInvoice";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
+import { normalize } from "../../lib/normalize";
 import { dateTime, getPeriod } from "../../lib/parseDate";
 
-import { AlertWithConfirm, InvoiceState, PaymentsTable } from "./";
+import {
+  AlertWithConfirm,
+  Descriptions,
+  InvoiceState,
+  PaymentsTable,
+} from "./";
 import { LoadingFullScreen } from "../atoms";
+
+import styles from "./InvoiceInfo.module.css";
 
 const { Text, Title } = Typography;
 
@@ -60,6 +68,13 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
     }
   }, [isPaid, payInvoiceData, t]);
 
+  const address = invoice.customer.address
+    ? JSON.parse(normalize(invoice.customer.address))
+    : undefined;
+  const direction = address
+    ? `${address.line1}, ${address.city} - ${address.state} (${address.country})`
+    : t("noDirection");
+
   const period = (
     value:
       | MyAccount_me_subscription_invoices_edges_node_invoiceitems_edges_node
@@ -78,8 +93,8 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
     if (!samePeriod) {
       return (
         <>
-          <Divider dashed style={{ marginBottom: 10, marginTop: 10 }} />
-          <Row>
+          <Divider className={styles.periodDivider} />
+          <Row className={styles.periodContainer}>
             <Col span={12}>
               <Text type="secondary">
                 {getPeriod(
@@ -100,22 +115,15 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
       <Row>
         <Col span={12}>
           <Row justify="start">
-            <Title level={5}>
-              {t("invoiceNumber", {
-                num: invoice.number || t("draft").toLocaleLowerCase(),
-              })}
-              <Text type="secondary">
-                {"  "}({invoice.stripeId})
-              </Text>
-            </Title>
+            <Title level={5}>{t("invoiceDetails")}</Title>
           </Row>
         </Col>
         <Col span={12}>
           <Row justify="end">
             <Button
+              className="button-default-primary"
               download
               href={invoice.invoicePdf}
-              icon={<DownloadOutlined />}
               type="default"
             >
               {t("downloadInvoice")}
@@ -123,109 +131,58 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Row>
         </Col>
       </Row>
-      <Divider orientation="left" style={{ marginBottom: 30, marginTop: 20 }}>
-        {t("summary")}
-      </Divider>
-      <Row style={{ marginBottom: 10 }}>
-        <Col span={12}>
-          <Row>
-            <Col flex="1">
-              <Text type="secondary">{t("invoicedTo")}</Text>
-            </Col>
-            <Col flex="2">
-              <Text>{invoice.customer.email}</Text>
-            </Col>
-          </Row>
-        </Col>
-        <Col span={12}>
-          <Row>
-            <Col flex="1">
-              <Text type="secondary">{t("state")}</Text>
-            </Col>
-            <Col flex="2">
-              <InvoiceState state={invoice.status} />
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <Row style={{ marginBottom: 10 }}>
-        <Col span={12}>
-          <Row>
-            <Col flex="1">
-              <Text type="secondary">{t("name")}</Text>
-            </Col>
-            <Col flex="2">
-              {invoice.customer.name ?? (
-                <Text type="secondary">{t("noName")}</Text>
-              )}
-            </Col>
-          </Row>
-        </Col>
-        <Col span={12}>
-          <Row>
-            <Col flex="1">
-              <Text type="secondary">{t("billingReason")}</Text>
-            </Col>
-            <Col flex="2">
-              <Text>
-                {t(`InvoiceBillingReasonShort.${invoice.billingReason}`)}
-              </Text>
-            </Col>
-          </Row>
+      <Row className={styles.detailsContainer}>
+        <Col span={24}>
+          <Descriptions
+            items={[
+              {
+                title: t("invoicedTo"),
+                description: invoice.customer.name ?? t("noName"),
+              },
+              {
+                title: t("state"),
+                description: <InvoiceState state={invoice.status} />,
+              },
+              {
+                title: t("direction"),
+                description: direction,
+              },
+              {
+                title: t("billingReason"),
+                description: t(
+                  `InvoiceBillingReasonShort.${invoice.billingReason}`
+                ),
+              },
+            ]}
+          />
         </Col>
       </Row>
-      <Row style={{ marginBottom: 10 }}>
-        <Col span={12}>
-          <Row>
-            <Col flex="1">
-              <Text type="secondary">{t("direction")}</Text>
-            </Col>
-            <Col flex="2">
-              {invoice.customer.address ?? (
-                <Text type="secondary">{t("noDirection")}</Text>
-              )}
-            </Col>
-          </Row>
-        </Col>
-        <Col span={12}>
-          <Row>
-            <Col flex="1">
-              <Text type="secondary">{t("")}</Text>
-            </Col>
-            <Col flex="2">
-              <Text></Text>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <div style={{ margin: 50 }} />
-      <Row justify="start">
+      <Row className={styles.summaryContainer} justify="start">
         <Col span={14}>
           <Row justify="start">
-            <Text>{t("descriptionUPPER")}</Text>
+            <Text>{t("summary")}</Text>
           </Row>
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <Text>{t("quantityUPPER")}</Text>
+            <Text>{t("quantity")}</Text>
           </Row>
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <Text>{t("unitPriceUPPER")}</Text>
+            <Text>{t("unitPrice")}</Text>
           </Row>
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <Text>{t("amountUPPER")}</Text>
+            <Text>{t("amount")}</Text>
           </Row>
         </Col>
       </Row>
       {connectionToNodes(invoice.invoiceitems).map((value, index, array) => (
         <div key={`${new Date()}${value.id}`}>
           {period(value, index, array)}
-          <Divider dashed style={{ marginBottom: 10, marginTop: 10 }} />
-          <Row justify="start">
+          <Row className={styles.summaryDetails} justify="start">
             <Col span={14}>
               <Row justify="start">
                 <Text>
@@ -270,8 +227,8 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Row>
         </div>
       ))}
-      <Divider dashed style={{ marginBottom: 10, marginTop: 10 }} />
-      <Row justify="start" style={{ marginBottom: 10 }}>
+      <Divider className={styles.amountDivider} />
+      <Row className={styles.amountContainer} justify="start">
         <Col span={20}>
           <Row justify="end">
             <Text>{t("subtotal")}</Text>
@@ -290,7 +247,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
         </Col>
       </Row>
       {invoice.tax && (
-        <Row justify="start" style={{ marginBottom: 10 }}>
+        <Row className={styles.amountContainer} justify="start">
           <Col span={20}>
             <Row justify="end">
               <Text type="secondary">
@@ -316,7 +273,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Col>
         </Row>
       )}
-      <Row justify="start" style={{ marginBottom: 10 }}>
+      <Row className={styles.amountContainer} justify="start">
         <Col span={20}>
           <Row justify="end">
             <Text>{t("total")}</Text>
@@ -324,7 +281,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <Text>
+            <Text className={styles.totalAmount} strong>
               {invoice.total.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -337,11 +294,13 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
       {invoice.startingBalance !== null &&
       invoice.endingBalance !== null &&
       invoice.startingBalance - invoice.endingBalance !== 0 ? (
-        <Row justify="start" style={{ marginBottom: 10 }}>
+        <Row className={styles.amountContainer} justify="start">
           <Col span={20}>
             <Row align="middle" justify="end">
               <Tooltip title={t("apliedBalanceInfo")}>
-                <InfoCircleOutlined style={{ marginRight: 8 }} />
+                <div className={styles.icon}>
+                  <InfoCircleOutlined />
+                </div>
               </Tooltip>
               <Text type="secondary">{t("appliedBalance")}</Text>
             </Row>
@@ -363,7 +322,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
         </Row>
       ) : null}
       {invoice.amountPaid && invoice.amountPaid > 0 ? (
-        <Row justify="start" style={{ marginBottom: 10 }}>
+        <Row className={styles.amountContainer} justify="start">
           <Col span={20}>
             <Row justify="end">
               <Text type="secondary">{t("amountPaid")}</Text>
@@ -383,7 +342,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Col>
         </Row>
       ) : null}
-      <Row justify="start" style={{ marginBottom: 10 }}>
+      <Row className={styles.amountContainer} justify="start">
         <Col span={20}>
           <Row justify="end">
             <Text>{t("amountRemaining")}</Text>
@@ -402,11 +361,17 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
           </Row>
         </Col>
       </Row>
-      <Divider orientation="left" style={{ marginBottom: 30, marginTop: 30 }}>
-        {t("payments")}
-      </Divider>
+      <Row className={styles.paymentsContainer}>
+        <Col span={24}>
+          <Row justify="start">
+            <Title className={styles.paymentsTitle} level={5}>
+              {t("invoicePayments")}
+            </Title>
+          </Row>
+        </Col>
+      </Row>
       {invoice.nextPaymentAttempt && invoice.status === InvoiceStatus.DRAFT ? (
-        <div style={{ display: "flex", marginBottom: 30 }}>
+        <div className={styles.nextPaymentContainer}>
           <Alert
             message={t("paymentAttempt", {
               amount:
@@ -423,7 +388,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
         </div>
       ) : (
         invoice.nextPaymentAttempt && (
-          <div style={{ display: "flex", marginBottom: 30 }}>
+          <div className={styles.nextPaymentContainer}>
             {staff ? (
               <Alert
                 message={t("nextPaymentAttempt", {
@@ -476,7 +441,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
                 onConfirm={() => {
                   payInvoice({
                     variables: {
-                      invoiceId: invoice.stripeId || "",
+                      invoiceId: invoice.stripeId ?? "",
                     },
                     update(cache, { data: payData }) {
                       if (payData?.payInvoice?.ok) {

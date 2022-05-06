@@ -44,7 +44,7 @@ export interface SubscriptionBasicData_invoices_edges_node_charges_edges_node_pa
   /**
    * Additional information for payment methods of type `card`
    */
-  card: any | null;
+  card: string | null;
 }
 
 export interface SubscriptionBasicData_invoices_edges_node_charges_edges_node {
@@ -113,7 +113,7 @@ export interface SubscriptionBasicData_invoices_edges_node_customer {
   /**
    * The customer's address.
    */
-  address: any | null;
+  address: string | null;
   /**
    * Current balance (in cents), if any, being stored on the customer's account. If negative, the customer has credit to apply to the next invoice. If positive, the customer has an amount owed that will be added to the next invoice. The balance does not refer to any unpaid invoices; it solely takes into account amounts that have yet to be successfully applied to any invoice. This balance is only taken into account for recurring billing purposes (i.e., subscriptions, invoices, invoice items).
    */
@@ -202,7 +202,7 @@ export interface SubscriptionBasicData_invoices_edges_node_paymentIntent_payment
   /**
    * Additional information for payment methods of type `card`
    */
-  card: any | null;
+  card: string | null;
 }
 
 export interface SubscriptionBasicData_invoices_edges_node_paymentIntent {
@@ -214,11 +214,31 @@ export interface SubscriptionBasicData_invoices_edges_node_paymentIntent {
   /**
    * The payment error encountered in the previous PaymentIntent confirmation.
    */
-  lastPaymentError: any | null;
+  lastPaymentError: string | null;
   /**
    * Payment method used in this PaymentIntent.
    */
   paymentMethod: SubscriptionBasicData_invoices_edges_node_paymentIntent_paymentMethod | null;
+}
+
+export interface SubscriptionBasicData_invoices_edges_node_subscription_plan_product {
+  __typename: "StripeProductType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  /**
+   * The product's name, meant to be displayable to the customer. Applicable to both `service` and `good` types.
+   */
+  name: string;
+}
+
+export interface SubscriptionBasicData_invoices_edges_node_subscription_plan {
+  __typename: "StripePlanType";
+  /**
+   * The product whose pricing this plan determines.
+   */
+  product: SubscriptionBasicData_invoices_edges_node_subscription_plan_product | null;
 }
 
 export interface SubscriptionBasicData_invoices_edges_node_subscription {
@@ -227,6 +247,10 @@ export interface SubscriptionBasicData_invoices_edges_node_subscription {
    * The ID of the object.
    */
   id: string;
+  /**
+   * The plan associated with this subscription. This value will be `null` for multi-plan subscriptions
+   */
+  plan: SubscriptionBasicData_invoices_edges_node_subscription_plan | null;
   /**
    * The status of this subscription.
    */

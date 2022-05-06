@@ -1,7 +1,16 @@
+.overflow {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
 .row {
   cursor: pointer;
 }
 
 .table {
   min-width: 900px;
+}
+
+.title {
+  margin-bottom: 24px !important;
 }

@@ -15,6 +15,7 @@ export interface Clients_users_edges_node_apps_edges_node {
    * The ID of the object.
    */
   id: string;
+  isActive: boolean | null;
 }
 
 export interface Clients_users_edges_node_apps_edges {

@@ -1,10 +1,11 @@
 import React from "react";
-import { Button, Form, Input, Typography } from "antd";
+import { Button, Form, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { Link, Redirect, useLocation } from "react-router-dom";
 
 import { useAuth } from "../../lib/auth";
 
+import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 import Auth from "../../components/templates/Auth";
 
@@ -30,37 +31,42 @@ const Login = () => {
     <Auth image="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>{t("welcome")}</h1>
-        <p>
+        <div className={styles.description}>
           <Text type="secondary">{t("welcomeDescription")}</Text>
-        </p>
-        <Errors errors={errors} fields={["email", "password"]} />
+        </div>
         <Form
           onFinish={(values) => {
             login?.({ password: values.password, email: values.email });
           }}
         >
-          <Form.Item
+          <TextField
+            autofocus
+            label={t("translation:email")}
             name="email"
-            rules={[
-              { required: true, message: t("required.email") },
-              { type: "email", message: t("required.validEmail") },
-            ]}
-          >
-            <Input placeholder={t("translation:email")} />
-          </Form.Item>
-          <Form.Item
+            rules={[{ required: true, message: t("required.email") }]}
+            type="email"
+          />
+          <TextField
+            label={t("password")}
             name="password"
             rules={[{ required: true, message: t("required.password") }]}
-          >
-            <Input.Password placeholder={t("password")} />
-          </Form.Item>
-          <p>
-            <Link to={`/auth/password`} className={styles.rightAlign}>
-              {t("forgotPassword")}
-            </Link>
-          </p>
+            type="password"
+          />
+          {errors && (
+            <div className={styles.errors}>
+              <Errors errors={errors} fields={["email", "password"]} />
+            </div>
+          )}
+          <div className={styles.rightAlign}>
+            <Link to={`/auth/password`}>{t("forgotPassword")}</Link>
+          </div>
           <div className={styles.buttons}>
-            <Button block type="ghost" onClick={() => clear?.()}>
+            <Button
+              block
+              type="ghost"
+              className="button-default-default"
+              onClick={() => clear?.()}
+            >
               <Link to={`/auth/register`} style={{ display: "block" }}>
                 {t("createAccount")}
               </Link>
@@ -72,7 +78,7 @@ const Login = () => {
               disabled={loadingAuth}
               loading={loadingAuth}
             >
-              {t("connect")}
+              {t("login")}
             </Button>
           </div>
         </Form>

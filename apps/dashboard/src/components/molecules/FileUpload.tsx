@@ -109,7 +109,7 @@ const ImageUpload = ({
           ref={uploadElement}
           className={`${styles.upload} ${
             size === "large" && styles.uploadLarge
-          }`}
+          } ${!file && styles.logo}`}
           htmlFor="fileupload"
           onDragOver={(ev) => ev.preventDefault()}
           onDragEnter={() => {
@@ -145,32 +145,35 @@ const ImageUpload = ({
           }}
         >
           {file ? (
-            <img
-              src={filePreview.file as string}
-              alt={alt ? alt : t("logo")}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-            />
+            <div className={styles.imageContainer}>
+              <img
+                alt={alt ? alt : t("logo")}
+                className={styles.image}
+                src={filePreview.file as string}
+              />
+            </div>
           ) : (
-            <UploadButton loading={filePreview.loading}>
-              {uploadMessage ? uploadMessage : t("uploadLogo")}
-            </UploadButton>
+            <div className={styles.uploadButton}>
+              <UploadButton loading={filePreview.loading}>
+                {uploadMessage ? uploadMessage : t("uploadLogo")}
+              </UploadButton>
+            </div>
           )}
         </label>
         {file && (
           <Popconfirm
+            cancelButtonProps={{ className: "button-default-default" }}
             cancelText={t("cancel")}
             okText={t("delete")}
-            title={confirmMessage ? confirmMessage : t("client:warnings.logo")}
             onConfirm={() => {
               onDeleteClicked();
               reset(inputRef);
             }}
+            title={confirmMessage ? confirmMessage : t("client:warnings.logo")}
           >
-            <Button icon={<DeleteOutlined />} danger />
+            <span className={styles.deleteButton}>
+              <Button danger icon={<DeleteOutlined />} />
+            </span>
           </Popconfirm>
         )}
       </div>

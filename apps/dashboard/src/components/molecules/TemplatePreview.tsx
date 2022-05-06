@@ -1,21 +1,35 @@
 import React from "react";
 
+import { colors } from "../../lib/colors";
+
 import styles from "./TemplatePreview.module.css";
 
 interface TemplatePreviewProps {
-  name: string;
   image: string;
+  name: string;
+  selected: boolean;
 }
 
-const TemplatePreview = ({ name, image }: TemplatePreviewProps) => {
+const TemplatePreview = ({ image, name, selected }: TemplatePreviewProps) => {
   return (
-    <div className={styles.container}>
-      <img
-        className={styles.image}
-        src={image}
-        alt={`Template preview for ${name}`}
-      />
-      <span className={styles.name}>{name}</span>
+    <div>
+      <div
+        className={`${styles.imageContainer} ${
+          selected && styles.imageSelected
+        }`}
+      >
+        {image ? (
+          <img className={styles.image} src={image} />
+        ) : (
+          <div className={styles.noImage}></div>
+        )}
+      </div>
+      <div
+        className={styles.name}
+        style={{ color: selected ? colors.green : undefined }}
+      >
+        {name}
+      </div>
     </div>
   );
 };

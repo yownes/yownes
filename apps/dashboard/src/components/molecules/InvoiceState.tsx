@@ -3,6 +3,7 @@ import { Tag, Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { InvoiceStatus } from "../../api/types/globalTypes";
+import { colors } from "../../lib/colors";
 
 interface InvoiceStateProps {
   state: InvoiceStatus | null;
@@ -10,11 +11,11 @@ interface InvoiceStateProps {
 }
 
 const COLORS = {
-  DRAFT: "default",
-  OPEN: "orange",
-  PAID: "green",
-  UNCOLLECTIBLE: "red",
-  VOID: "default",
+  DRAFT: colors.tagDefault,
+  OPEN: colors.tagOrange,
+  PAID: colors.tagGreen,
+  UNCOLLECTIBLE: colors.tagRed,
+  VOID: colors.tagDefault,
 };
 
 const InvoiceState = ({ state, tooltip }: InvoiceStateProps) => {

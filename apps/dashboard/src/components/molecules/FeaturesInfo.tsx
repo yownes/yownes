@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  Card,
+  Col,
   Form,
-  Input,
   message,
   Popconfirm,
+  Row,
   Table,
   Typography,
 } from "antd";
@@ -30,7 +32,9 @@ import {
   UpdateFeatureVariables,
 } from "../../api/types/UpdateFeature";
 
-import { LoadingFullScreen } from "../atoms";
+import { LoadingFullScreen, TextField } from "../atoms";
+
+import styles from "./FeaturesInfo.module.css";
 
 const { Title } = Typography;
 
@@ -59,21 +63,23 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const { t } = useTranslation(["translation", "admin"]);
+
   return (
     <td {...restProps}>
       {editing ? (
-        <Form.Item
+        <TextField
+          autofocus
+          defaultValue={record.name}
+          label={title}
           name={dataIndex}
-          style={{ margin: 0 }}
           rules={[
             {
               required: true,
               message: t("admin:requiredInput"),
             },
           ]}
-        >
-          <Input />
-        </Form.Item>
+          wrapperClassName={styles.input}
+        />
       ) : (
         children
       )}
@@ -86,9 +92,8 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
   const [formFeatures] = Form.useForm();
   const [editingId, setEditingId] = useState("");
   const [deletingId, setDeletingId] = useState("");
-  const [dataSource, setDataSource] = useState<
-    Plan_product_features_edges_node[]
-  >();
+  const [dataSource, setDataSource] =
+    useState<Plan_product_features_edges_node[]>();
   const isEditing = (record: Plan_product_features_edges_node) =>
     record.id === editingId;
   const [createFeature, { loading: creating }] = useMutation<
@@ -256,24 +261,26 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
             {record.id === "1" ? (
               <>
                 <Popconfirm
-                  title={t("admin:warningCreateFeature")}
+                  cancelButtonProps={{ className: "button-default-default" }}
                   onConfirm={() => formFeatures.submit()}
+                  title={t("admin:warningCreateFeature")}
                 >
-                  <Button type="link">{t("add")}</Button>
+                  <Button type="link">{t("admin:createFeature")}</Button>
                 </Popconfirm>
-                <Button type="link" onClick={discard}>
+                <Button danger type="link" onClick={discard}>
                   {t("cancel")}
                 </Button>
               </>
             ) : (
               <>
                 <Popconfirm
-                  title={t("admin:warningSaveChanges")}
+                  cancelButtonProps={{ className: "button-default-default" }}
                   onConfirm={() => save(record)}
+                  title={t("admin:warningSaveChanges")}
                 >
                   <Button type="link">{t("save")}</Button>
                 </Popconfirm>
-                <Button type="link" onClick={cancel}>
+                <Button danger type="link" onClick={cancel}>
                   {t("cancel")}
                 </Button>
               </>
@@ -289,9 +296,10 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
               {t("edit")}
             </Button>
             <Popconfirm
-              title={t("admin:warningDeleteFeature")}
-              onConfirm={() => del(record)}
+              cancelButtonProps={{ className: "button-default-default" }}
               onCancel={() => cancel()}
+              onConfirm={() => del(record)}
+              title={t("admin:warningDeleteFeature")}
               visible={deletingId !== "" && deletingId === record.id}
             >
               <Button
@@ -328,43 +336,64 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
     };
   });
   return (
-    <div style={{ marginBottom: 20, marginTop: 0, minWidth: 750 }}>
-      <Title level={3}>{t("admin:features")}</Title>
-      <Button
-        disabled={editingId !== "" || deletingId !== ""}
-        onClick={() => add()}
-        style={{ marginBottom: 15 }}
-        type="primary"
-      >
-        {t("admin:newFeature")}
-      </Button>
-      <Form form={formFeatures} component={false} onFinish={() => create()}>
-        <Table
-          columns={mergedColumns}
-          components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-          dataSource={dataSource}
-          locale={{ emptyText: t("admin:noFeatures") }}
-          rowClassName="editable-row"
-          rowKey={(row) => row.id}
-          pagination={{
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              t("paginationItems", {
-                first: range[0],
-                last: range[1],
-                total: total,
-              }),
-          }}
-        />
-      </Form>
-      {creating && <LoadingFullScreen tip={t("admin:creatingFeature")} />}
-      {deleting && <LoadingFullScreen tip={t("admin:deletingFeature")} />}
-      {updating && <LoadingFullScreen tip={t("admin:updatingFeature")} />}
-    </div>
+    <Card>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Title className={styles.title} level={2}>
+            {t("admin:planFeatures")}
+            <div
+              style={{
+                position: "relative",
+                float: "right",
+              }}
+            >
+              <Button
+                className="button-default-primary"
+                disabled={editingId !== "" || deletingId !== ""}
+                onClick={() => add()}
+              >
+                {t("admin:newFeature")}
+              </Button>
+            </div>
+          </Title>
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Form form={formFeatures} component={false} onFinish={() => create()}>
+            <Table
+              columns={mergedColumns}
+              components={{
+                body: {
+                  cell: EditableCell,
+                },
+              }}
+              dataSource={dataSource}
+              locale={{ emptyText: t("admin:noFeatures") }}
+              rowClassName={(row) =>
+                row.id === "1" || row.id === editingId
+                  ? styles.editingRow
+                  : "editable-row"
+              }
+              rowKey={(row) => row.id}
+              pagination={{
+                showSizeChanger: true,
+                showTotal: (total, range) =>
+                  t("paginationItems", {
+                    first: range[0],
+                    last: range[1],
+                    total: total,
+                    item: t("features"),
+                  }),
+              }}
+            />
+          </Form>
+          {creating && <LoadingFullScreen tip={t("admin:creatingFeature")} />}
+          {deleting && <LoadingFullScreen tip={t("admin:deletingFeature")} />}
+          {updating && <LoadingFullScreen tip={t("admin:updatingFeature")} />}
+        </Col>
+      </Row>
+    </Card>
   );
 };
 

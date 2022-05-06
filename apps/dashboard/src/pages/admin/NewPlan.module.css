@@ -1,0 +1,18 @@
+.active {
+  display: inline-block !important;
+  margin-left: 16px !important;
+}
+
+.activeContainer {
+  align-items: baseline;
+  display: flex;
+}
+
+.inputNumber {
+  width: 50% !important;
+}
+
+.title,
+.warning {
+  margin-bottom: 24px !important;
+}

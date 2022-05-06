@@ -24,8 +24,9 @@ const DeleteAccount = () => {
   if (loading || loadingApps) return <Loading />;
 
   return (
-    <>
+    <div style={{ paddingTop: 20 }}>
       <Popconfirm
+        cancelButtonProps={{ className: "button-default-default" }}
         cancelText={t("cancel")}
         okText={t("delete")}
         title={
@@ -54,16 +55,20 @@ const DeleteAccount = () => {
         </Button>
       </Popconfirm>
       <Modal
-        visible={confirmPassword}
-        title={t("client:deleteAccount")}
+        destroyOnClose
+        footer={null}
         onCancel={() => {
           setConfirmPassword(false);
         }}
-        footer={null}
+        title={t("client:deleteAccountTitle")}
+        visible={confirmPassword}
       >
-        <ProfileDangerZone confirmPassword={confirmPassword} />
+        <ProfileDangerZone
+          confirmPassword={confirmPassword}
+          onCancel={() => setConfirmPassword(false)}
+        />
       </Modal>
-    </>
+    </div>
   );
 };
 

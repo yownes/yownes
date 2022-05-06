@@ -29,9 +29,6 @@ export interface AppPayments_app {
 }
 
 export interface AppPayments {
-  /**
-   * The ID of the object
-   */
   app: AppPayments_app | null;
 }
 

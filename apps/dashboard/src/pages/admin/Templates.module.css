@@ -1,8 +1,19 @@
+.icon {
+  color: #4b4a4b;
+  font-size: 1.5rem;
+  width: 40px;
+}
+
 .inactive {
   background-color: #f8f8f8;
   cursor: pointer;
   font-style: italic;
   opacity: 0.7;
+}
+
+.overflow {
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 .row {
@@ -11,4 +22,8 @@
 
 .table {
   min-width: 700px;
+}
+
+.title {
+  margin-bottom: 24px !important;
 }

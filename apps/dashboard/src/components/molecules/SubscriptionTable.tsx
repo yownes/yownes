@@ -10,7 +10,7 @@ import { Plans, Plans_features_edges_node } from "../../api/types/Plans";
 import { Subscriptions_subscriptions_edges_node } from "../../api/types/Subscriptions";
 import connectionToNodes from "../../lib/connectionToNodes";
 
-import { ExpandIcon, InvoicesTable, SubscriptionState } from "./";
+import { InvoicesTable, SubscriptionState } from "./";
 
 import styles from "./SubscriptionTable.module.css";
 
@@ -88,93 +88,96 @@ const SubscriptionTable = ({
       },
     ];
   return (
-    <Collapse className={styles.collapse} ghost>
-      <Panel
-        header={t("showPreviousSubscriptions", {
-          num: subscriptions.length,
-        })}
-        key="subscriptions"
-      >
-        <Col span="24">
-          <Table
-            columns={columnsSubscriptions}
-            dataSource={subscriptions}
-            expandable={{
-              expandIcon: ({ expanded, onExpand, record }) => (
-                <ExpandIcon
-                  expanded={expanded}
-                  onExpand={onExpand}
-                  record={record}
-                />
-              ),
-              expandRowByClick: true,
-              expandedRowRender: (record) => (
-                <Card>
-                  <p>
-                    <Text type="secondary">{t("description")}:</Text>
-                    <Text className={styles.description}>
-                      {record.plan?.product?.description}
-                    </Text>
-                  </p>
-                  <p>
-                    <Text type="secondary">{t("features")}:</Text>
-                    {connectionToNodes(record.plan?.product?.features).map(
-                      (feat) => {
-                        return (
-                          <Text
-                            key={`${record.stripeId}${feat.id}`}
-                            className={styles.features}
-                          >
-                            {"· "}
-                            {
-                              connectionToNodes(plans?.features)
-                                ?.filter<Plans_features_edges_node>(notNull)
-                                .find((f) => f?.id === feat.id)?.name
-                            }
-                          </Text>
-                        );
-                      }
-                    )}
-                  </p>
-                  <>
-                    <Text type="secondary">{t("invoices")}:</Text>
-                    <InvoicesTable
-                      invoices={
-                        invoices
-                          ? invoices.filter(
-                              (inv) =>
-                                inv.subscription?.stripeId === record.stripeId
-                            )
-                          : []
-                      }
-                    />
-                  </>
-                </Card>
-              ),
-              expandedRowKeys: expandedRow,
-              onExpand: (expanded, record) =>
-                expanded
-                  ? setExpandedRow([record.created])
-                  : setExpandedRow([]),
-            }}
-            locale={{ emptyText: t("noSubscriptions") }}
-            pagination={{
-              showSizeChanger: true,
-              showTotal: (total, range) =>
-                t("paginationItems", {
-                  first: range[0],
-                  last: range[1],
-                  total: total,
-                }),
-            }}
-            rowClassName={(row) =>
-              expandedRow.includes(row.created) ? styles.expandedRow : ""
-            }
-            rowKey={(row) => row.created}
-          />
-        </Col>
-      </Panel>
-    </Collapse>
+    <div className={styles.overflow}>
+      <Collapse className={styles.collapse} ghost>
+        <Panel
+          header={t("showPreviousSubscriptions", {
+            num: subscriptions.length,
+          })}
+          key="subscriptions"
+        >
+          <Col span="24">
+            <Table
+              columns={columnsSubscriptions}
+              dataSource={subscriptions}
+              expandable={{
+                expandIcon: undefined,
+                expandIconColumnIndex: -1,
+                expandRowByClick: true,
+                expandedRowRender: (record) => (
+                  <div className={styles.expandedContent}>
+                    <Card>
+                      <p>
+                        <Text type="secondary">{t("description")}:</Text>
+                        <Text className={styles.description}>
+                          {record.plan?.product?.description}
+                        </Text>
+                      </p>
+                      <p>
+                        <Text type="secondary">{t("features")}:</Text>
+                        {connectionToNodes(record.plan?.product?.features).map(
+                          (feat) => {
+                            return (
+                              <Text
+                                key={`${record.stripeId}${feat.id}`}
+                                className={styles.features}
+                              >
+                                {"· "}
+                                {
+                                  connectionToNodes(plans?.features)
+                                    ?.filter<Plans_features_edges_node>(notNull)
+                                    .find((f) => f?.id === feat.id)?.name
+                                }
+                              </Text>
+                            );
+                          }
+                        )}
+                      </p>
+                      <>
+                        <Text type="secondary">{t("invoices")}:</Text>
+                        <InvoicesTable
+                          invoices={
+                            invoices
+                              ? invoices.filter(
+                                  (inv) =>
+                                    inv.subscription?.stripeId ===
+                                    record.stripeId
+                                )
+                              : []
+                          }
+                        />
+                      </>
+                    </Card>
+                  </div>
+                ),
+                expandedRowKeys: expandedRow,
+                onExpand: (expanded, record) =>
+                  expanded
+                    ? setExpandedRow([record.created])
+                    : setExpandedRow([]),
+              }}
+              locale={{ emptyText: t("noSubscriptions") }}
+              pagination={{
+                showSizeChanger: true,
+                showTotal: (total, range) =>
+                  t("paginationItems", {
+                    first: range[0],
+                    last: range[1],
+                    total: total,
+                    item: t("subscriptions"),
+                  }),
+              }}
+              rowClassName={(row) =>
+                expandedRow.includes(row.created)
+                  ? styles.expandedRow
+                  : styles.row
+              }
+              rowKey={(row) => row.created}
+            />
+          </Col>
+        </Panel>
+      </Collapse>
+    </div>
   );
 };
 

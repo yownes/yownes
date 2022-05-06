@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Collapse,
-  Form,
-  Input,
-  message,
-  Space,
-  Typography,
-} from "antd";
+import { Button, Col, Form, message, Row, Typography } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
@@ -19,11 +11,11 @@ import {
   ModifyAppPaymentVariables,
 } from "../../api/types/ModifyAppPayment";
 
-import { Loading, LoadingFullScreen } from "../atoms";
+import { Loading, LoadingFullScreen, TextField } from "../atoms";
 import { Errors } from "../molecules";
 
 message.config({ maxCount: 1 });
-const { Paragraph, Title } = Typography;
+const { Text, Title } = Typography;
 
 interface AppPaymentProps {
   appId: string;
@@ -40,15 +32,13 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
       },
     }
   );
-  const [
-    updatePayment,
-    { data: mutationData, loading: updating },
-  ] = useMutation<ModifyAppPayment, ModifyAppPaymentVariables>(
-    MODIFY_APP_PAYMENT,
-    {
-      refetchQueries: [{ query: APP_PAYMENTS, variables: { id: appId } }],
-    }
-  );
+  const [updatePayment, { data: mutationData, loading: updating }] =
+    useMutation<ModifyAppPayment, ModifyAppPaymentVariables>(
+      MODIFY_APP_PAYMENT,
+      {
+        refetchQueries: [{ query: APP_PAYMENTS, variables: { id: appId } }],
+      }
+    );
   useEffect(() => {
     if (mutationData?.modifyPaymentMethodApp?.error) {
       setErrs(mutationData.modifyPaymentMethodApp.error);
@@ -64,10 +54,14 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
 
   return (
     <>
-      <Title level={3}>{t("collectMethod")}</Title>
-      <Paragraph>{t("keysDescription")}</Paragraph>
-      <Collapse>
-        <Collapse.Panel key="stripe" header="Stripe">
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Title level={2}>{t("collectMethod")}</Title>
+        </Col>
+        <Col span={24}>
+          <Text type="secondary">{t("keysDescription")}</Text>
+        </Col>
+        <Col span={24}>
           <Form
             initialValues={data?.app?.paymentMethod ?? undefined}
             onChange={() => setErrs(undefined)}
@@ -81,36 +75,36 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
             }}
             validateMessages={{ required: t("requiredInput") }}
           >
-            <Form.Item
-              name="stripeTestPublic"
+            <TextField
+              defaultValue={data?.app?.paymentMethod?.stripeTestPublic}
               label={t("testPublicKey")}
+              name="stripeTestPublic"
               rules={[{ required: true }]}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name="stripeTestSecret"
+              type="password"
+            />
+            <TextField
+              defaultValue={data?.app?.paymentMethod?.stripeTestSecret}
               label={t("testPrivateKey")}
+              name="stripeTestSecret"
               rules={[{ required: true }]}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name="stripeProdPublic"
+              type="password"
+            />
+            <TextField
+              defaultValue={data?.app?.paymentMethod?.stripeProdPublic}
               label={t("prodPublicKey")}
+              name="stripeProdPublic"
               rules={[{ required: true }]}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name="stripeProdSecret"
+              type="password"
+            />
+            <TextField
+              defaultValue={data?.app?.paymentMethod?.stripeProdSecret}
               label={t("prodPrivateKey")}
+              name="stripeProdSecret"
               rules={[{ required: true }]}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Space direction="vertical" size="middle">
-              {errs && (
+              type="password"
+            />
+            {errs && (
+              <div style={{ paddingBottom: 24 }}>
                 <Errors
                   errors={{
                     nonFieldErrors: [
@@ -121,15 +115,15 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
                     ],
                   }}
                 />
-              )}
-              <Button loading={updating} htmlType="submit" type="primary">
-                {t("updateStripeKeys")}
-              </Button>
-            </Space>
+              </div>
+            )}
+            <Button loading={updating} htmlType="submit" type="primary">
+              {t("updateStripeKeys")}
+            </Button>
           </Form>
-        </Collapse.Panel>
-      </Collapse>
-      {updating && <LoadingFullScreen tip={t("updatingStripeKeys")} />}
+        </Col>
+        {updating && <LoadingFullScreen tip={t("updatingStripeKeys")} />}
+      </Row>
     </>
   );
 };

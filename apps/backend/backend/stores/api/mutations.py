@@ -12,7 +12,7 @@ from backend.graphql.types import Return
 from ..api.types import (BuildType, PaymentMethodAppInput, 
                          StoreAppInput, StoreAppType, 
                          TemplateInput, TemplateType)
-from ..models import Build, BuildStatus, Config, PaymentMethod, StoreApp, Template
+from ..models import Build, BuildStatus, PaymentMethod, StoreApp, Template
 from .. import utils
 
 import logging
@@ -45,25 +45,6 @@ def _update_store_app_custom_fields(store_app_object, info, data):
     StoreApp.objects.filter(pk=store_app_object.pk).update(**data)
 
 
-class UpdateBuildsLimit(graphene.Mutation):
-    class Arguments:
-        limit = graphene.Int(required=True)
-
-    Output = Return
-
-    @login_required
-    def mutate(self, info, limit):
-        try:
-            limit_object = Config.objects.all().first()
-            if limit_object is None:
-                config_object = Config.objects.create(limit=limit)
-            else:
-                config_object = Config.objects.filter(pk=limit_object.pk).update(limit=limit)
-            return Return(ok=True)
-        except:
-            return Return(ok=False, error=Error.UPDATE_LIMIT_ERROR.value)
-
-
 class GenerateAppMutation(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
@@ -90,9 +71,13 @@ class GenerateAppMutation(graphene.Mutation):
         current_apps = StoreApp.objects.filter(customer=info.context.user, is_active=True).count()
         if current_apps > allowed_apps: # not available apps
             return GenerateAppMutation(ok=False, error=Error.NOT_AVAILABLE_APPS.value)
+        try:
+            allowed_builds = int(json.loads(str(info.context.user.subscription.plan.product.metadata).replace("\'", "\""))["allowed_builds"])
+        except:
+            allowed_builds = 1
         builds = Build.objects.filter(app=Node.get_node_from_global_id(info, id))
-        current_builds = utils._current_builds(builds)
-        if current_builds <= 0: # not available builds
+        available_builds = utils._available_builds(builds, allowed_builds)
+        if available_builds <= 0: # not available builds
             return GenerateAppMutation(ok=False, error=Error.NOT_AVAILABLE_BUILDS.value)
         if utils._has_build_in_progress(builds): # has build in progress
             return GenerateAppMutation(ok=False, error=Error.HAS_BUILD_IN_PROGRESS.value)
@@ -159,6 +144,7 @@ class UpdateStoreAppMutation(graphene.Mutation):
             return Return(ok=False, error=Error.NO_RECURSE.value)
         if info.context.user != store_app_object.customer:
             return Return(ok=False, error=Error.NOT_YOUR_RECURSE.value)
+        #TODO: comprobar que las apps y builds son válidos
         _update_store_app_custom_fields(store_app_object, info, data)
         return Return(ok=True)
 

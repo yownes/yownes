@@ -1,5 +1,14 @@
 import React from "react";
-import { Button, Table, TableColumnsType } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Table,
+  TableColumnsType,
+  Typography,
+} from "antd";
+import { FileImageOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
@@ -20,6 +29,8 @@ import { Loading } from "../../components/atoms";
 import { VerifiedState } from "../../components/molecules";
 
 import styles from "./Templates.module.css";
+
+const { Title } = Typography;
 
 function getVerifiedStatusFilters() {
   let filters: Filter[] = [];
@@ -44,15 +55,30 @@ const Templates = () => {
 
   const columns: TableColumnsType<Templates_templates_edges_node> = [
     {
+      title: t("admin:templatePreview"),
+      dataIndex: "previewImg",
+      key: "preview",
+      render: (logo) =>
+        logo ? (
+          <img
+            src={logo}
+            alt={t("admin:templatePreview")}
+            width={40}
+            height={40}
+            style={{ objectFit: "contain" }}
+          />
+        ) : (
+          <FileImageOutlined className={styles.icon} />
+        ),
+    },
+    {
       title: t("name"),
       dataIndex: "name",
       key: "name",
-      render: (name, record) => (
-        <Link to={`/templates/${record.id}`}>{name}</Link>
-      ),
+      render: (name) => name,
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["name"],
-        t("admin:search", { data: t("name") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -63,10 +89,10 @@ const Templates = () => {
       title: t("admin:templateId"),
       dataIndex: "id",
       key: "id",
-      render: (id) => <Link to={`/templates/${id}`}>{id}</Link>,
+      render: (id) => id,
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["id"],
-        t("admin:search", { data: t("admin:templateId") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -78,10 +104,10 @@ const Templates = () => {
       dataIndex: ["url"],
       key: "url",
       render: (url) => url,
-      ellipsis: true,
+      // ellipsis: true, // hace que las otras Cols tengan el mismo tamaño
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["url"],
-        t("admin:search", { data: t("admin:templateUrl") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -95,7 +121,7 @@ const Templates = () => {
       render: (snack) => snack,
       ...getColumnSearchProps<Templates_templates_edges_node>(
         ["snack"],
-        t("admin:search", { data: t("admin:snack") }),
+        t("admin:search"),
         t("search"),
         t("reset"),
         false
@@ -117,33 +143,62 @@ const Templates = () => {
     },
   ];
   return (
-    <div>
-      <Link to="/templates/new">
-        <Button style={{ marginBottom: 15 }} type="primary">
-          {t("admin:newTemplate")}
-        </Button>
-      </Link>
-      <Table
-        className={styles.table}
-        columns={columns}
-        dataSource={dataSource}
-        locale={{ emptyText: t("admin:noTemplates") }}
-        onRow={(record) => {
-          return { onClick: () => history.push(`/templates/${record.id}`) };
-        }}
-        pagination={{
-          showSizeChanger: true,
-          showTotal: (total, range) =>
-            t("paginationItems", {
-              first: range[0],
-              last: range[1],
-              total: total,
-            }),
-        }}
-        rowClassName={(row) => (!row.isActive ? styles.inactive : styles.row)}
-        rowKey={(row) => row.id}
-      />
-    </div>
+    <Row gutter={[24, 24]}>
+      <Col span={24}>
+        <Card>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <Title className={styles.title} level={2}>
+                {t("admin:templates")}
+                <div
+                  style={{
+                    position: "relative",
+                    float: "right",
+                  }}
+                >
+                  <Link to="/templates/new">
+                    <Button className="button-default-primary">
+                      {t("admin:newTemplate")}
+                    </Button>
+                  </Link>
+                </div>
+              </Title>
+            </Col>
+          </Row>
+          <Row gutter={[24, 24]}>
+            <Col span={24}>
+              <div className={styles.overflow}>
+                <Table
+                  className={styles.table}
+                  columns={columns}
+                  dataSource={dataSource}
+                  locale={{ emptyText: t("admin:noTemplates") }}
+                  onRow={(record) => {
+                    return {
+                      onClick: () => history.push(`/templates/${record.id}`),
+                    };
+                  }}
+                  pagination={{
+                    showSizeChanger: true,
+                    showTotal: (total, range) =>
+                      t("paginationItems", {
+                        first: range[0],
+                        last: range[1],
+                        total: total,
+                        item: t("admin:templates"),
+                      }),
+                  }}
+                  rowClassName={(row) =>
+                    !row.isActive ? styles.inactive : styles.row
+                  }
+                  rowKey={(row) => row.id}
+                />
+              </div>
+            </Col>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 

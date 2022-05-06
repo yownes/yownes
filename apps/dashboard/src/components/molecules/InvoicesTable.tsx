@@ -20,7 +20,8 @@ const { Text } = Typography;
 interface InovicesTableProps {
   invoices:
     | MyAccount_me_subscription_invoices_edges_node[]
-    | Invoices_invoices_edges_node[];
+    | Invoices_invoices_edges_node[]
+    | undefined;
 }
 
 const InvoicesTable = ({ invoices }: InovicesTableProps) => {
@@ -32,16 +33,16 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
   > = [
     {
       title: t("amount"),
-      dataIndex: ["total"],
+      dataIndex: "total",
       key: "total",
       render: (total: number, row) => (
-        <Text strong>
+        <>
           {total.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}
           {currencySymbol(row.currency)}
-        </Text>
+        </>
       ),
     },
     {
@@ -56,59 +57,75 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
       title: t("invoice"),
       dataIndex: "number",
       key: "invoice",
-      render: (number: string) => <Text strong>{number || t("draft")}</Text>,
+      render: (number: string) => number || t("draft"),
     },
     {
-      title: t("created"),
+      title: t("date"),
       dataIndex: "created",
       key: "started",
-      render: (created) => <Text>{shortDateTime(new Date(created))}</Text>,
+      render: (created) => shortDateTime(new Date(created)),
+    },
+    {
+      title: t("plan"),
+      dataIndex: ["subscription", "plan", "product", "name"],
+      key: "plan",
+      render: (plan) => plan,
     },
   ];
 
-  return (
-    <Table
-      columns={columns}
-      dataSource={invoices}
-      expandable={{
-        expandIcon: ({ expanded, onExpand, record }) => (
-          <Badge
-            dot
-            style={
-              record.status === InvoiceStatus.OPEN ? {} : { display: "none" }
-            }
-          >
-            <ExpandIcon
-              expanded={expanded}
-              onExpand={onExpand}
-              record={record}
-            />
-          </Badge>
-        ),
-        expandRowByClick: true,
-        expandedRowRender: (record) => (
-          <InvoiceInfo invoice={record} staff={data?.me?.isStaff} />
-        ),
-        expandedRowKeys: expandedRow,
-        onExpand: (expanded, record) =>
-          expanded ? setExpandedRow([record.created]) : setExpandedRow([]),
-      }}
-      locale={{ emptyText: t("noInvoices") }}
-      pagination={{
-        showSizeChanger: true,
-        showTotal: (total, range) =>
-          t("paginationItems", {
-            first: range[0],
-            last: range[1],
-            total: total,
-          }),
-      }}
-      rowClassName={(row) =>
-        expandedRow.includes(row.created) ? styles.expandedRow : ""
-      }
-      rowKey={(row) => row.created}
-      style={{ marginTop: 20 }}
-    />
+  return invoices?.length > 0 ? (
+    <div className={styles.overflow}>
+      <Table
+        columns={columns}
+        dataSource={invoices}
+        expandable={{
+          expandIcon: () => undefined,
+          expandIconColumnIndex: -1,
+          // expandIcon: ({ expanded, onExpand, record }) => (
+          //   <Badge
+          //     dot
+          //     style={
+          //       record.status === InvoiceStatus.OPEN ? {} : { display: "none" }
+          //     }
+          //   >
+          //     <ExpandIcon
+          //       expanded={expanded}
+          //       onExpand={onExpand}
+          //       record={record}
+          //     />
+          //   </Badge>
+          // ),
+          expandRowByClick: true,
+          expandedRowRender: (record) => (
+            <div className={styles.expandedContent}>
+              <InvoiceInfo invoice={record} staff={data?.me?.isStaff} />
+            </div>
+          ),
+
+          expandedRowKeys: expandedRow,
+          onExpand: (expanded, record) =>
+            expanded ? setExpandedRow([record.created]) : setExpandedRow([]),
+        }}
+        locale={{ emptyText: t("noInvoices") }}
+        pagination={{
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            t("paginationItems", {
+              first: range[0],
+              last: range[1],
+              total: total,
+              item: t("invoices"),
+            }),
+        }}
+        rowClassName={(row) =>
+          expandedRow.includes(row.created) ? styles.expandedRow : styles.row
+        }
+        rowKey={(row) => row.created}
+        style={{ marginTop: 20 }}
+      />
+    </div>
+  ) : (
+    <Text type="secondary">{t("noInvoices")}</Text>
   );
 };
 

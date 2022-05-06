@@ -1,6 +1,5 @@
 import React from "react";
-import { Radio, Typography } from "antd";
-import { RightCircleOutlined } from "@ant-design/icons";
+import { Col, Row, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
@@ -27,33 +26,32 @@ const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
   if (loading) return <Loading />;
 
   const templates = connectionToNodes(data?.templates);
+
   return (
-    <div className={styles.container}>
-      <Title level={4}>{t("template")}</Title>
-      <Radio.Group
-        value={value ?? templates[0]?.id}
-        onChange={(e) => onChange(e.target.value)}
-        style={{ overflowX: "scroll", display: "flex" }}
-      >
-        {templates.map((template) => (
-          <Radio.Button
-            value={template.id}
-            key={template.id}
-            style={{ height: "auto" }}
-          >
-            <TemplatePreview
-              name={template.name ?? ""}
-              image={template.previewImg ?? ""}
-            />
-          </Radio.Button>
-        ))}
-      </Radio.Group>
-      <div className={styles.overlay}>
-        <span className={styles.arrow}>
-          <RightCircleOutlined style={{ fontSize: "16px", color: "#333" }} />
-        </span>
-      </div>
-    </div>
+    <>
+      <Row gutter={[24, 24]}>
+        <Col span={24}>
+          <Title level={5}>{t("template")}</Title>
+        </Col>
+        <Col span={24}>
+          <div className={styles.templatesContainer}>
+            {templates.map((template) => (
+              <div
+                className={styles.previewContainer}
+                key={template.id}
+                onClick={() => onChange(template.id)}
+              >
+                <TemplatePreview
+                  image={template.previewImg ?? ""}
+                  name={template.name ?? ""}
+                  selected={template.id === value ?? templates[0]?.id}
+                />
+              </div>
+            ))}
+          </div>
+        </Col>
+      </Row>
+    </>
   );
 };
 

@@ -4,6 +4,8 @@
 @font-family: "Ubuntu", Sans-serif, "Ubuntu Mono";
 
 // --- Colors ---
+@disabled-color: #c6c6c6;
+@text-color-secondary: #636363;
 @green-base: #27c272;
 @red-base: #e72e2e;
 // > Primary
@@ -13,18 +15,34 @@
 // > Warning
 @warning-color: #f5cb35;
 
-// --- Buttons ---
+// --- Alert ---
+@alert-warning-border-color: #f5cb35;
+@alert-warning-bg-color: #fef7e0;
+@alert-warning-icon-color: #f5cb35;
+
+// --- Button ---
 @btn-border-radius-base: 40px;
 @btn-border-radius-sm: 40px;
+@btn-disable-bg: transparent;
+@btn-disable-border: @disabled-color;
 @btn-font-weight: 500;
 @btn-height-base: 40px;
 @btn-height-sm: 32px;
 @btn-primary-color: #4b4a4b;
 @btn-padding-horizontal-base: 24px;
 @btn-padding-horizontal-sm: 12px;
+@btn-primary-shadow: none;
+@btn-shadow: none;
+@btn-text-shadow: none;
 
-// Descriptions
-@descriptions-bg: #c6c6c6;
+// --- Card ---
+@card-radius: 20px;
+
+// --- Descriptions ---
+@descriptions-bg: transparent;
+
+// --- Divider ---
+@divider-color: rgba(0, 0, 0, 0.2);
 
 // Link
 @link-color: #328f5e;
@@ -34,11 +52,25 @@
 @menu-item-active-border-width: 10px;
 @menu-item-font-size: 16px;
 
+// --- Pagination ---
+@pagination-item-bg-active: #b7f4d4;
+@pagination-item-bg: #ededed;
+
+// --- Radio ---
+@radio-dot-color: @link-color;
+
 // --- Table ---
-@table-header-bg: #232323;
-@table-header-color: @primary-color;
-@table-header-sort-bg: #636363;
+@table-border-color: rgba(0, 0, 0, 0.2);
+@table-header-bg: transparent;
+@table-header-color: #232323;
+@table-header-sort-bg: #ededed;
 @table-row-hover-bg: #ebfbf3;
 @table-selected-row-bg: #636363;
+@table-expanded-row-bg: #fff;
+
+// --- Tag ---
+@tag-default-bg: #ededed;
+@tag-default-color: #232323;
+@tag-font-size: 14px;
 
 @body-background: #fff;
