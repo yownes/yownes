@@ -149,7 +149,7 @@ const EditCreditCard = ({
         <Col span={12}>
           <TextField
             defaultValue={cardData.exp_month}
-            label={t("monthUp")}
+            label={t("monthHelp")}
             max={12}
             min={1}
             maxLength={2}
@@ -162,7 +162,8 @@ const EditCreditCard = ({
         <Col span={12}>
           <TextField
             defaultValue={cardData.exp_year}
-            label={t("yearUp")}
+            label={t("yearHelp")}
+            max={new Date().getFullYear() + 20}
             min={new Date().getFullYear()}
             maxLength={4}
             minLength={4}

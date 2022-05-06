@@ -21,6 +21,11 @@
   width: 100%;
 }
 
+/* Container */
+.container {
+  margin-bottom: 20px;
+}
+
 /* Input, Textarea */
 .pure-material-textfield-outlined > input,
 .pure-material-textfield-outlined > .input,

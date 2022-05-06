@@ -18,6 +18,7 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   rows?: number;
   rules?: Rule[];
+  single?: boolean;
   small?: boolean;
   type?: "email" | "number" | "password" | "text" | "textarea" | "url";
   value?: number | string;
@@ -37,6 +38,7 @@ const TextField = ({
   name,
   rows,
   rules,
+  single,
   small,
   type,
   value,
@@ -45,7 +47,48 @@ const TextField = ({
 }: TextFieldProps) => {
   const required = rules?.find((r) => r.hasOwnProperty("required"));
 
-  return (
+  return single ? (
+    <div className="container">
+      <label
+        className={`pure-material-textfield-outlined ${
+          small ? "pure-material-textfield-outlined--small" : ""
+        } ${false ? "pure-material-textfield-outlined-error" : ""}`}
+      >
+        {children ? (
+          <div className="input">{children}</div>
+        ) : type === "textarea" ? (
+          <textarea
+            autoFocus={autofocus}
+            defaultValue={defaultValue}
+            disabled={disabled}
+            maxLength={props.maxLength ?? undefined}
+            minLength={props.maxLength ?? undefined}
+            name={name}
+            placeholder=" "
+            rows={rows}
+            value={value ?? ""}
+          />
+        ) : (
+          <input
+            autoFocus={autofocus}
+            type={type ?? "text"}
+            disabled={disabled}
+            name={name}
+            placeholder=" "
+            defaultValue={defaultValue}
+            max={max ?? undefined}
+            min={min ? min : type === "number" ? 0 : undefined}
+            value={value ?? ""}
+            {...props}
+          />
+        )}
+        <span>
+          {required && "* "}
+          {label}
+        </span>
+      </label>
+    </div>
+  ) : (
     <Form.Item
       className={wrapperClassName}
       dependencies={dependencies}

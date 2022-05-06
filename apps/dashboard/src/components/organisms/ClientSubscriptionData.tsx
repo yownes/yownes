@@ -6,6 +6,7 @@ import {
   Col,
   Dropdown,
   Menu,
+  MenuProps,
   Row,
   Tag,
   Typography,
@@ -56,6 +57,8 @@ const { Text, Title } = Typography;
 interface ClientSubscriptionDataProps {
   client: Client_user | null | undefined;
 }
+
+type MenuItemProps = MenuProps["items"];
 
 const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
   const { t } = useTranslation(["translation", "admin"]);
@@ -123,25 +126,31 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
   const pastDue = client?.subscription?.status === SubscriptionStatus.PAST_DUE;
   const disabled = !(active || incomplete || pastDue || cancelAtEnd);
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="change">
+  const items: MenuItemProps = [
+    {
+      key: "change",
+      label: (
         <ChangeSubscriptionClient
           data={client}
           menuVisible={setIsOverlayVisible}
         />
-      </Menu.Item>
-      <Menu.Item disabled={disabled} key="cancel">
+      ),
+    },
+    {
+      key: "cancel",
+      label: (
         <CancelSubscriptionClient
           data={client}
           menuVisible={setIsOverlayVisible}
         />
-      </Menu.Item>
-    </Menu>
-  );
+      ),
+      disabled,
+    },
+  ];
+
   const actions = (
     <Dropdown
-      overlay={menu}
+      overlay={<Menu items={items} />}
       trigger={["click"]}
       visible={isOverlayVisible}
       onVisibleChange={setIsOverlayVisible}

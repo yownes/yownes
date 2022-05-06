@@ -50,6 +50,7 @@ export function getColumnSearchProps<T>(
               handleSearch(confirm);
             }
           }}
+          single
           style={{ width: 188 }}
         />
         <Space>

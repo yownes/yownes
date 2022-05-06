@@ -29,7 +29,7 @@
   "feature": "Característica",
   "noFeatures": "Ninguna Característica que mostrar",
   "date": "Fecha",
-  "search": "Buscar {{data}}",
+  "search": "Buscar",
   "errors": {
     "100": "Error desconocido",
     "112": "Error al intentar crear el plan",

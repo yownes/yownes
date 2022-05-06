@@ -5,6 +5,7 @@ import {
   Col,
   Dropdown,
   Menu,
+  MenuProps,
   message,
   Popconfirm,
   Row,
@@ -53,6 +54,8 @@ interface ClientProps {
   id: string;
 }
 
+type MenuItemProps = MenuProps["items"];
+
 function getDeleteFilters(t: TFunction) {
   let filters: Filter[] = [];
   filters.push({
@@ -94,31 +97,40 @@ const Client = () => {
 
   if (loading) return <Loading />;
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="ban">
-        <BanClient data={data} menuVisible={setIsOverlayVisible} />
-      </Menu.Item>
-      {data?.user && (
-        <Menu.Item key="verify">
-          <VerifyClient data={data} menuVisible={setIsOverlayVisible} />
-        </Menu.Item>
-      )}
-      {data?.user?.isActive && (
-        <Menu.Item key="delete">
-          <DeleteClient data={data} id={id} menuVisible={setIsOverlayVisible} />
-        </Menu.Item>
-      )}
-      {!data?.user?.isActive && (
-        <Menu.Item key="delete">
-          <RestoreClient id={id} menuVisible={setIsOverlayVisible} />
-        </Menu.Item>
-      )}
-    </Menu>
-  );
+  const items: MenuItemProps = [
+    {
+      key: "ban",
+      label: <BanClient data={data} menuVisible={setIsOverlayVisible} />,
+    },
+    data?.user
+      ? {
+          key: "verify",
+          label: <VerifyClient data={data} menuVisible={setIsOverlayVisible} />,
+        }
+      : null,
+    data?.user?.isActive
+      ? {
+          key: "delete",
+          label: (
+            <DeleteClient
+              data={data}
+              id={id}
+              menuVisible={setIsOverlayVisible}
+            />
+          ),
+        }
+      : null,
+    data?.user?.isActive
+      ? {
+          key: "restore",
+          label: <RestoreClient id={id} menuVisible={setIsOverlayVisible} />,
+        }
+      : null,
+  ];
+
   const profieActions = (
     <Dropdown
-      overlay={menu}
+      overlay={<Menu items={items} />}
       trigger={["click"]}
       visible={isOverlayVisible}
       onVisibleChange={setIsOverlayVisible}

@@ -112,7 +112,3 @@
 #multiselect:valid:focus ~ .select-label {
   color: rgba(var(--clr-text-link, 0, 0, 0));
 }
-
-select option {
-  display: none;
-}

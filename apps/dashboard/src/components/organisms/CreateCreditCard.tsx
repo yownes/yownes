@@ -80,7 +80,7 @@ const CreateCreditCard = ({
       <Row gutter={[24, 24]}>
         <Col span={9}>
           <TextField
-            label={t("monthUp")}
+            label={t("monthHelp")}
             max={12}
             min={1}
             maxLength={2}
@@ -92,7 +92,7 @@ const CreateCreditCard = ({
         </Col>
         <Col span={9}>
           <TextField
-            label={t("yearUp")}
+            label={t("yearHelp")}
             min={new Date().getFullYear()}
             maxLength={4}
             minLength={4}

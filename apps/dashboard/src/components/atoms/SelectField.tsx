@@ -45,7 +45,7 @@ const SelectField = ({
           value={value}
           onChange={onChange}
         >
-          {defaultEmpty && <option value="" disabled></option>}
+          {defaultEmpty && <option key="0" disabled value=""></option>}
           {options.map((o) => (
             <option key={o.id} disabled={o.disabled ?? undefined} value={o.id}>
               {o.name}
