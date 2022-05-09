@@ -4,9 +4,8 @@ import { useQuery } from "@apollo/client";
 import { Trans, useTranslation } from "react-i18next";
 
 import { APPS, MY_ACCOUNT } from "../../api/queries";
-import { Apps, AppsVariables } from "../../api/types/Apps";
-import { MyAccount } from "../../api/types/MyAccount";
-
+import type { Apps, AppsVariables } from "../../api/types/Apps";
+import type { MyAccount } from "../../api/types/MyAccount";
 import { Loading } from "../atoms";
 import { ProfileDangerZone } from "../organisms";
 
@@ -21,7 +20,9 @@ const DeleteAccount = () => {
     variables: { is_active: true },
   });
 
-  if (loading || loadingApps) return <Loading />;
+  if (loading || loadingApps) {
+    return <Loading />;
+  }
 
   return (
     <div style={{ paddingTop: 20 }}>
@@ -42,8 +43,8 @@ const DeleteAccount = () => {
             }
             ns="client"
           >
-            <strong></strong>
-            <p></p>
+            <strong />
+            <p />
           </Trans>
         }
         onConfirm={() => {

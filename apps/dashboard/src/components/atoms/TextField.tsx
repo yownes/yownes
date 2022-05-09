@@ -1,7 +1,8 @@
-import React, { ReactNode } from "react";
+import React from "react";
+import type { ReactNode } from "react";
 import { Form } from "antd";
-import { Rule } from "antd/lib/form";
-import { NamePath } from "antd/lib/form/interface";
+import type { Rule } from "antd/lib/form";
+import type { NamePath } from "antd/lib/form/interface";
 
 import "./TextField.css";
 

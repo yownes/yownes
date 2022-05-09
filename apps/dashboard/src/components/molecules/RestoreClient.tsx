@@ -5,15 +5,18 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { DELETE_CLIENT } from "../../api/mutations";
 import { CLIENT } from "../../api/queries";
-import { Client as IClient, ClientVariables } from "../../api/types/Client";
-import {
+import type {
+  Client as IClient,
+  ClientVariables,
+} from "../../api/types/Client";
+import type {
   DeleteClient as IDeleteClient,
   DeleteClientVariables,
 } from "../../api/types/DeleteClient";
-import { Errors as IErrors } from "../../lib/auth";
+import type { Errors as IErrors } from "../../lib/auth";
+import { Loading, LoadingFullScreen } from "../atoms";
 
 import { Errors } from ".";
-import { Loading, LoadingFullScreen } from "../atoms";
 
 const { Text } = Typography;
 
@@ -34,7 +37,9 @@ const RestoreClient = ({ id, menuVisible }: RestoreClientProps) => {
     DeleteClientVariables
   >(DELETE_CLIENT);
 
-  if (!data?.user) return <Loading />;
+  if (!data?.user) {
+    return <Loading />;
+  }
 
   return (
     <>

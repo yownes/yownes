@@ -9,9 +9,8 @@ import {
   AccountAccountStatus,
   SubscriptionStatus,
 } from "../../api/types/globalTypes";
-import { MyAccount } from "../../api/types/MyAccount";
-import { Plans_products_edges_node_prices_edges_node } from "../../api/types/Plans";
-
+import type { MyAccount } from "../../api/types/MyAccount";
+import type { Plans_products_edges_node_prices_edges_node } from "../../api/types/Plans";
 import { Loading } from "../../components/atoms";
 import { CheckoutForm } from "../../components/molecules";
 import { CustomerData, RateTable } from "../../components/organisms";
@@ -87,8 +86,8 @@ const Checkout = () => {
         <Col span={24}>
           {current === 0 && (
             <RateTable
-              onPlanSelected={(plan: CheckoutLocationState) => {
-                setPlan(plan);
+              onPlanSelected={(p: CheckoutLocationState) => {
+                setPlan(p);
                 setCurrent(1);
               }}
             />
@@ -99,8 +98,8 @@ const Checkout = () => {
           {current === 2 && (
             <CheckoutForm
               plan={plan!}
-              onSubscribed={(status) => {
-                setStatus(status);
+              onSubscribed={(s) => {
+                setStatus(s);
                 setCurrent(3);
               }}
             />
@@ -143,7 +142,7 @@ const Checkout = () => {
                       </Button>
                     </Link>
                   }
-                ></Result>
+                />
               </Card>
             </Col>
           )}

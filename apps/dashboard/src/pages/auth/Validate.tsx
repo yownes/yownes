@@ -6,15 +6,14 @@ import { Link, useParams } from "react-router-dom";
 
 import { VERIFY_ACCOUNT } from "../../api/mutations";
 import { MY_ACCOUNT } from "../../api/queries";
-import {
+import type {
   VerifyAccount,
   VerifyAccountVariables,
 } from "../../api/types/VerifyAccount";
-
 import { LoadingFullScreen } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 
-interface ValidateParamTypes {
+interface ValidateParamTypes extends Record<string, string> {
   token: string;
 }
 
@@ -28,7 +27,7 @@ const Validate = () => {
     refetchQueries: [{ query: MY_ACCOUNT }],
   });
   useEffect(() => {
-    verifyAccount({ variables: { token: location.token } });
+    verifyAccount({ variables: { token: location.token ?? "" } });
   }, [location.token, verifyAccount]);
   if (loading) {
     return <LoadingFullScreen tip={t("verifying")} />;
@@ -44,7 +43,7 @@ const Validate = () => {
               <Button type="primary">{t("translation:goDashboard")}</Button>
             </Link>
           }
-        ></Result>
+        />
       )}
       {data?.verifyAccount?.errors && (
         <Result
@@ -56,7 +55,7 @@ const Validate = () => {
               <Button type="primary">{t("translation:goDashboard")}</Button>
             </Link>
           }
-        ></Result>
+        />
       )}
     </Card>
   );

@@ -1,4 +1,5 @@
-import React, { CSSProperties } from "react";
+import React from "react";
+import type { CSSProperties } from "react";
 import { Alert, Button, Typography } from "antd";
 import { Link } from "react-router-dom";
 

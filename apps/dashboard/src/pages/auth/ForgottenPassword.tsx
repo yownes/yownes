@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState } from "react";
 import { Form, Button, notification, Typography, Col } from "antd";
 import { useMutation } from "@apollo/client";
@@ -5,12 +6,11 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { SEND_PASSWORD_RESET_EMAIL } from "../../api/mutations";
-import {
+import type {
   SendPasswordResetEmail,
   SendPasswordResetEmailVariables,
 } from "../../api/types/SendPasswordResetEmail";
-import { Errors as IErrors } from "../../lib/auth";
-
+import type { Errors as IErrors } from "../../lib/auth";
 import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 import Auth from "../../components/templates/Auth";
@@ -70,7 +70,7 @@ const ForgottenPassword = () => {
           )}
           <div className={styles.buttons}>
             <Button block className="button-default-default" type="ghost">
-              <Link to={`/auth/login`} style={{ display: "block" }}>
+              <Link to={"/auth/login"} style={{ display: "block" }}>
                 {t("login")}
               </Link>
             </Button>

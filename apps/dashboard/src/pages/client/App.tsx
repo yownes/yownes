@@ -16,27 +16,29 @@ import { Trans, useTranslation } from "react-i18next";
 import { useParams, useHistory, Redirect } from "react-router-dom";
 
 import { DELETE_APP, GENERATE_APP, UPDATE_APP } from "../../api/mutations";
-import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
+import type { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
 import { APP, APPS, APP_OWNER_ACTIVE, MY_ACCOUNT } from "../../api/queries";
-import {
+import type {
   App as IApp,
   AppVariables,
   App_app,
   App_app_builds_edges_node,
 } from "../../api/types/App";
-import { Apps, AppsVariables } from "../../api/types/Apps";
-import { AppOwnerActive } from "../../api/types/AppOwnerActive";
-import { GenerateApp, GenerateAppVariables } from "../../api/types/GenerateApp";
+import type { Apps, AppsVariables } from "../../api/types/Apps";
+import type { AppOwnerActive } from "../../api/types/AppOwnerActive";
+import type {
+  GenerateApp,
+  GenerateAppVariables,
+} from "../../api/types/GenerateApp";
+import type { StoreAppInput } from "../../api/types/globalTypes";
 import {
   AccountAccountStatus,
   BuildBuildStatus,
-  StoreAppInput,
 } from "../../api/types/globalTypes";
-import { MyAccount } from "../../api/types/MyAccount";
-import { UpdateApp, UpdateAppVariables } from "../../api/types/UpdateApp";
+import type { MyAccount } from "../../api/types/MyAccount";
+import type { UpdateApp, UpdateAppVariables } from "../../api/types/UpdateApp";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { normalize } from "../../lib/normalize";
-
 import { Loading, LoadingFullScreen } from "../../components/atoms";
 import { AppInfo } from "../../components/molecules";
 import {
@@ -45,13 +47,13 @@ import {
   ColorPicker,
   TemplateSelector,
 } from "../../components/organisms";
+import { getAppBuildState } from "../../lib/appBuildState";
 
 import styles from "./App.module.css";
-import { getAppBuildState } from "../../lib/appBuildState";
 
 const { Title } = Typography;
 
-interface AppParamTypes {
+interface AppParamTypes extends Record<string, string | undefined> {
   appId?: string;
 }
 
@@ -109,7 +111,7 @@ function countCurrentBuilds(
   builds: App_app_builds_edges_node[],
   date: Date | undefined
 ) {
-  let currentBuilds = date
+  const currentBuilds = date
     ? filter(
         builds,
         (build) => addYearToDate(date, -1) <= build.date && build.date <= date
@@ -158,7 +160,9 @@ const App = () => {
   >(UPDATE_APP);
 
   useEffect(() => {
-    setAppBuildStatus(getAppBuildState(data?.app!!));
+    if (data?.app) {
+      setAppBuildStatus(getAppBuildState(data.app));
+    }
   }, [data?.app]);
   useEffect(() => {
     if (data?.app) {
@@ -207,14 +211,16 @@ const App = () => {
         parseInt(
           JSON.parse(
             normalize(accountData?.me?.subscription?.plan?.product?.metadata)
-          ).allowed_apps
+          ).allowed_apps,
+          10
         )
       );
       setBuildsLimit(
         parseInt(
           JSON.parse(
             normalize(accountData?.me?.subscription?.plan?.product?.metadata)
-          ).allowed_builds
+          ).allowed_builds,
+          10
         )
       );
     }
@@ -231,10 +237,19 @@ const App = () => {
   );
   const remainingBuilds = buildsLimit - currentBuilds;
 
-  if (loadingAccount || loadingApps || loadingOwnerActive || !state || loading)
+  if (
+    loadingAccount ||
+    loadingApps ||
+    loadingOwnerActive ||
+    !state ||
+    loading
+  ) {
     return <Loading />;
+  }
 
-  if (notYourRecurse) return <Redirect to="/profile" />;
+  if (notYourRecurse) {
+    return <Redirect to="/profile" />;
+  }
 
   return (
     <>
@@ -244,7 +259,7 @@ const App = () => {
             <Col span={24}>
               <Card>
                 <AppInfo
-                  app={data?.app!!}
+                  app={data?.app ?? undefined}
                   build={{
                     limit: buildsLimit,
                     remaining: remainingBuilds,
@@ -265,7 +280,7 @@ const App = () => {
                     </Col>
                     <Col span={24}>
                       <TemplateSelector
-                        value={state.template!!}
+                        value={state.template!}
                         onChange={(selected) => {
                           setState((val) => ({
                             ...val,
@@ -276,7 +291,7 @@ const App = () => {
                     </Col>
                     <Col span={24}>
                       <ColorPicker
-                        value={state.color!!}
+                        value={state.color!}
                         onChange={(selected) => {
                           setState((val) => ({
                             ...val,
@@ -319,7 +334,7 @@ const App = () => {
                           }
                           updateApp({
                             variables: {
-                              id: data?.app?.id!!,
+                              id: data?.app?.id ?? "",
                               data: dataApp,
                             },
                             update(cache, { data: result }) {
@@ -371,8 +386,8 @@ const App = () => {
                           }
                           ns="client"
                         >
-                          <strong></strong>
-                          <p></p>
+                          <strong />
+                          <p />
                         </Trans>
                       }
                     >
@@ -432,9 +447,9 @@ const App = () => {
                           }
                           ns="client"
                         >
-                          <strong></strong>
-                          <p></p>
-                          <p></p>
+                          <strong />
+                          <p />
+                          <p />
                           <p>{{ num: remainingBuilds }}</p>
                         </Trans>
                       }
@@ -583,15 +598,15 @@ const App = () => {
             okText={t("delete")}
             title={
               <Trans i18nKey="warnings.app" ns="client">
-                <strong></strong>
-                <p></p>
+                <strong />
+                <p />
               </Trans>
             }
             onConfirm={() => {
               deleteApp({
-                variables: { id: appId!! },
-                update(cache, { data }) {
-                  if (data?.deleteApp?.ok) {
+                variables: { id: appId! },
+                update(cache, { data: del }) {
+                  if (del?.deleteApp?.ok) {
                     cache.evict({
                       id: cache.identify({
                         __typename: "StoreAppType",
@@ -603,7 +618,7 @@ const App = () => {
                     history.replace("/profile");
                   } else {
                     message.error(
-                      t(`client:errors.${data?.deleteApp?.error}`) || "Error",
+                      t(`client:errors.${del?.deleteApp?.error}`) || "Error",
                       4
                     );
                   }

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Col, Form, FormInstance, Row } from "antd";
+import { Button, Checkbox, Col, Form, Row } from "antd";
+import type { FormInstance } from "antd";
 import { useMutation } from "@apollo/client";
-import { StripeError } from "@stripe/stripe-js";
+import type { StripeError } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 
 import { CREATE_PAYMENT_METHOD } from "../../api/mutations";
-import {
+import type {
   CreatePaymentMethod,
   CreatePaymentMethodVariables,
 } from "../../api/types/CreatePaymentMethod";
-
 import { TextField } from "../atoms";
 import { Errors } from "../molecules";
 
@@ -61,7 +61,7 @@ const CreateCreditCard = ({
           },
         });
       }}
-      validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
+      validateMessages={{ required: t("client:requiredInput") }}
     >
       <TextField
         autofocus

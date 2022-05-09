@@ -21,7 +21,7 @@ const TemplatePreview = ({ image, name, selected }: TemplatePreviewProps) => {
         {image ? (
           <img className={styles.image} src={image} />
         ) : (
-          <div className={styles.noImage}></div>
+          <div className={styles.noImage} />
         )}
       </div>
       <div

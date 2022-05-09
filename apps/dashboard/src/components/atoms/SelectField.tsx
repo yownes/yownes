@@ -1,6 +1,6 @@
 import React from "react";
 import { Form } from "antd";
-import { Rule } from "antd/lib/form";
+import type { Rule } from "antd/lib/form";
 
 import "./SelectField.css";
 
@@ -45,7 +45,7 @@ const SelectField = ({
           value={value}
           onChange={onChange}
         >
-          {defaultEmpty && <option key="0" disabled value=""></option>}
+          {defaultEmpty && <option key="0" disabled value="" />}
           {options.map((o) => (
             <option key={o.id} disabled={o.disabled ?? undefined} value={o.id}>
               {o.name}

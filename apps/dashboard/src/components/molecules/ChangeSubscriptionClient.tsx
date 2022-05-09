@@ -6,20 +6,19 @@ import { useTranslation } from "react-i18next";
 
 import { UPDATE_SUBSCRIPTION } from "../../api/mutations";
 import { CLIENT, PLANS, UPCOMING_INVOICE } from "../../api/queries";
-import { Client_user } from "../../api/types/Client";
+import type { Client_user } from "../../api/types/Client";
 import { PlanInterval, SubscriptionStatus } from "../../api/types/globalTypes";
-import {
+import type {
   Plans,
   Plans_products_edges_node,
   Plans_products_edges_node_features_edges_node,
 } from "../../api/types/Plans";
-import {
+import type {
   UpdateSubscription,
   UpdateSubscriptionVariables,
 } from "../../api/types/UpdateSubscription";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { normalize } from "../../lib/normalize";
-
 import { LoadingFullScreen } from "../atoms";
 import { ChangeSubscription } from "../organisms";
 
@@ -102,10 +101,10 @@ const ChangeSubscriptionClient = ({
   useEffect(() => {
     if (plan?.prices) {
       const price = connectionToNodes(plan.prices)
-        .filter((price) => price.active)
+        .filter((p) => p.active)
         .find(
-          (price) =>
-            JSON.parse(normalize(price.recurring!!)).interval.toUpperCase() ===
+          (p) =>
+            JSON.parse(normalize(p.recurring!)).interval.toUpperCase() ===
             interval
         );
       setAmount(price?.unitAmount);
@@ -118,10 +117,9 @@ const ChangeSubscriptionClient = ({
       const priceInterval = JSON.parse(
         normalize(
           data.subscription.plan.product?.prices.edges.find(
-            (price) =>
-              price?.node &&
-              price?.node.stripeId === data.subscription?.plan?.stripeId
-          )?.node?.recurring!!
+            (p) =>
+              p?.node && p?.node.stripeId === data.subscription?.plan?.stripeId
+          )?.node?.recurring!
         )
       ).interval;
       if (priceInterval) {
@@ -138,14 +136,15 @@ const ChangeSubscriptionClient = ({
         setIsUpdated(false);
       }
     }
-  }, [isUpdated, updateSubscriptionData?.updateSubscription]);
+  }, [isUpdated, showModal, t, updateSubscriptionData?.updateSubscription]);
 
-  if (!data)
+  if (!data) {
     return (
       <Text disabled style={{ display: "flex", flex: 1 }} type="danger">
         {t("admin:cancelClientSubscription")}
       </Text>
     );
+  }
 
   const active =
     data?.subscription?.status === SubscriptionStatus.ACTIVE &&
@@ -234,7 +233,7 @@ const ChangeSubscriptionClient = ({
           interval={interval}
           loading={loadingPlans}
           onChangeInterval={setInterval}
-          onChangePlan={(plan) => setPlanId(plan)}
+          onChangePlan={(p) => setPlanId(p)}
           plan={plan ?? data.subscription?.plan?.product ?? undefined}
           planId={planId}
           plansFeatures={connectionToNodes(plansData?.features)}

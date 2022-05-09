@@ -3,16 +3,17 @@ import { Col, Form, message, Row, Tooltip, Typography } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
-import { App_app } from "../../api/types/App";
-import { BuildBuildStatus, StoreAppInput } from "../../api/types/globalTypes";
+import type { App_app } from "../../api/types/App";
+import type { StoreAppInput } from "../../api/types/globalTypes";
+import { BuildBuildStatus } from "../../api/types/globalTypes";
 import { getAppBuildState } from "../../lib/appBuildState";
 import { colors } from "../../lib/colors";
 import { longDate } from "../../lib/parseDate";
-
-import { BuildState, ImageUpload } from "./";
 import { TextField } from "../atoms";
 
 import styles from "./AppInfo.module.css";
+
+import { BuildState, ImageUpload } from ".";
 
 message.config({ maxCount: 1 });
 const { Text, Title } = Typography;

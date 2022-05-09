@@ -12,14 +12,16 @@ import {
 } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
 import { CREATE_PLAN } from "../../api/mutations";
 import { PLANS } from "../../api/queries";
-import { CreatePlan, CreatePlanVariables } from "../../api/types/CreatePlan";
-import { Plans } from "../../api/types/Plans";
+import type {
+  CreatePlan,
+  CreatePlanVariables,
+} from "../../api/types/CreatePlan";
+import type { Plans } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
-
 import {
   Loading,
   LoadingFullScreen,
@@ -42,7 +44,9 @@ const NewPlan = () => {
     CreatePlanVariables
   >(CREATE_PLAN);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Row gutter={[24, 24]}>

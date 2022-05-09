@@ -1,10 +1,10 @@
+/* eslint-disable max-len */
 import React from "react";
 import { Button, Form, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { Link, Redirect, useLocation } from "react-router-dom";
 
 import { useAuth } from "../../lib/auth";
-
 import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 import Auth from "../../components/templates/Auth";
@@ -13,16 +13,10 @@ import styles from "./auth.module.css";
 
 const { Text } = Typography;
 
-interface LocationState {
-  from: {
-    pathname: string;
-  };
-}
-
 const Login = () => {
-  const location = useLocation<LocationState>();
+  const location = useLocation();
   const { t } = useTranslation(["auth", "translation"]);
-  let { from } = location.state || { from: { pathname: "/" } };
+  const from = location.state || { from: { pathname: "/" } };
   const { login, loadingAuth, isAuthenticated, errors, clear } = useAuth();
   if (isAuthenticated) {
     return <Redirect to={from} />;
@@ -58,7 +52,7 @@ const Login = () => {
             </div>
           )}
           <div className={styles.rightAlign}>
-            <Link to={`/auth/password`}>{t("forgotPassword")}</Link>
+            <Link to={"/auth/password"}>{t("forgotPassword")}</Link>
           </div>
           <div className={styles.buttons}>
             <Button
@@ -67,7 +61,7 @@ const Login = () => {
               className="button-default-default"
               onClick={() => clear?.()}
             >
-              <Link to={`/auth/register`} style={{ display: "block" }}>
+              <Link to={"/auth/register"} style={{ display: "block" }}>
                 {t("createAccount")}
               </Link>
             </Button>

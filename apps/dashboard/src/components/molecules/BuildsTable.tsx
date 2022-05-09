@@ -1,22 +1,22 @@
 import React from "react";
-import { Table, Typography, TableColumnsType } from "antd";
+import { Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import forIn from "lodash/forIn";
 import { useTranslation } from "react-i18next";
 
-import { Builds_builds_edges_node } from "../../api/types/Builds";
-import { Client_user } from "../../api/types/Client";
+import type { Builds_builds_edges_node } from "../../api/types/Builds";
+import type { Client_user } from "../../api/types/Client";
 import { BuildBuildStatus } from "../../api/types/globalTypes";
 import connectionToNodes from "../../lib/connectionToNodes";
+import type { Filter } from "../../lib/filterColumns";
 import {
-  Filter,
   getColumnFilterProps,
   getColumnSearchProps,
 } from "../../lib/filterColumns";
 
-import { BuildState } from "./";
-import { BuildState as BuildStateVisualizer } from "../../components/molecules";
-
 import styles from "./BuildsTable.module.css";
+
+import { BuildState as BuildStateVisualizer, BuildState } from ".";
 
 const { Paragraph, Text } = Typography;
 
@@ -25,10 +25,10 @@ interface BuildsTableProps {
 }
 
 function getBuildStatusFilters() {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   forIn(BuildBuildStatus, (value) => {
     filters.push({
-      text: <BuildStateVisualizer state={value}></BuildStateVisualizer>,
+      text: <BuildStateVisualizer state={value} />,
       value: value,
     });
   });
@@ -42,7 +42,7 @@ export function getBuildsForCustomer(
     return [];
   }
   const nodes = connectionToNodes(user.apps);
-  let all: Builds_builds_edges_node[] = [];
+  const all: Builds_builds_edges_node[] = [];
   nodes.forEach((app) => {
     const buildNodes =
       connectionToNodes(app.builds).map((build) => ({
@@ -91,14 +91,14 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
         t("search"),
         t("reset")
       ),
-      sorter: (a, b) => a.app!!.name.localeCompare(b.app!!.name),
+      sorter: (a, b) => a.app!.name.localeCompare(b.app!.name),
     },
     {
       title: t("state"),
       dataIndex: "buildStatus",
       key: "state",
       render: (state: BuildBuildStatus) => {
-        return <BuildState state={state}></BuildState>;
+        return <BuildState state={state} />;
       },
       ...getColumnFilterProps<Builds_builds_edges_node>(
         ["buildStatus"],

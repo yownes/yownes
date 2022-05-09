@@ -1,4 +1,4 @@
-import { RoutePath } from "../components/organisms/Router";
+import type { RoutePath } from "../components/organisms/Router";
 import Builds from "../pages/admin/Builds";
 import Client from "../pages/admin/Client";
 import Clients from "../pages/admin/Clients";

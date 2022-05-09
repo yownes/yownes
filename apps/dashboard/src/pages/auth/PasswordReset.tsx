@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState } from "react";
 import { Button, Form, Result, Typography } from "antd";
 import { useMutation } from "@apollo/client";
@@ -6,12 +7,11 @@ import { Link, useParams } from "react-router-dom";
 
 import { PASSWORD_RESET } from "../../api/mutations";
 import { MY_ACCOUNT } from "../../api/queries";
-import {
+import type {
   PasswordReset as IPasswordReset,
   PasswordResetVariables,
 } from "../../api/types/PasswordReset";
-import { Errors as IErrors } from "../../lib/auth";
-
+import type { Errors as IErrors } from "../../lib/auth";
 import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 import Auth from "../../components/templates/Auth";
@@ -20,7 +20,7 @@ import styles from "./auth.module.css";
 
 const { Text } = Typography;
 
-interface PasswordResetParamTypes {
+interface PasswordResetParamTypes extends Record<string, string> {
   token: string;
 }
 
@@ -46,21 +46,21 @@ const PasswordReset = () => {
             </div>
             <Form
               form={formNewPassword}
-              onFinish={(values) => {
+              onFinish={() => {
                 passwordReset({
                   variables: {
-                    token: location.token,
+                    token: location.token ?? "",
                     newPassword1: formNewPassword.getFieldValue("newPassword1"),
                     newPassword2: formNewPassword.getFieldValue("newPassword2"),
                   },
-                  update(cache, { data }) {
-                    if (data?.passwordReset?.success) {
+                  update(cache, { data: reset }) {
+                    if (reset?.passwordReset?.success) {
                       formNewPassword.setFieldsValue({
                         newPassword1: "",
                         newPassword2: "",
                       });
                     } else {
-                      setErrors(data?.passwordReset?.errors);
+                      setErrors(reset?.passwordReset?.errors);
                     }
                   },
                 });
@@ -106,7 +106,7 @@ const PasswordReset = () => {
               )}
               <div className={styles.buttons}>
                 <Button block className="button-default-default" type="ghost">
-                  <Link to={`/auth/login`} style={{ display: "block" }}>
+                  <Link to={"/auth/login"} style={{ display: "block" }}>
                     {t("login")}
                   </Link>
                 </Button>
@@ -134,7 +134,7 @@ const PasswordReset = () => {
                 <Button type="primary">{t("login")}</Button>
               </Link>
             }
-          ></Result>
+          />
         )}
       </div>
     </Auth>

@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-
-import { Button, Col, Form, FormInstance, message, Row } from "antd";
+import { Button, Col, Form, message, Row } from "antd";
+import type { FormInstance } from "antd";
 import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { UPDATE_PAYMENT_METHOD } from "../../api/mutations";
 import { CLIENT, MY_PAYMENT_METHODS } from "../../api/queries";
-import { MyPaymentMethods_me_customer_paymentMethods_edges_node } from "../../api/types/MyPaymentMethods";
-import {
+import type { MyPaymentMethods_me_customer_paymentMethods_edges_node } from "../../api/types/MyPaymentMethods";
+import type {
   UpdatePaymentMethod,
   UpdatePaymentMethodVariables,
 } from "../../api/types/UpdatePaymentMethod";
 import { normalize } from "../../lib/normalize";
-
 import { TextField } from "../atoms";
 import { Errors, SmallCreditCard } from "../molecules";
 
@@ -55,7 +54,7 @@ const EditCreditCard = ({
   staff,
   userId,
 }: EditCreditCardProps) => {
-  const [isUpdated, setIsUpdated] = useState(false); // eslint-disable-next-line
+  const [isUpdated, setIsUpdated] = useState(false);
   const [errs, setErrs] = useState("");
   const { t } = useTranslation(["translation", "client"]);
 
@@ -109,7 +108,7 @@ const EditCreditCard = ({
         updatePaymentMethod({
           variables: {
             id: payment.id,
-            paymentMethodId: payment.stripeId!!,
+            paymentMethodId: payment.stripeId!,
             payment: {
               billingDetails: {
                 name: values.name,
@@ -134,9 +133,9 @@ const EditCreditCard = ({
                 );
             }
           })
-          .catch((err) => setErrs(t("unknownError")));
+          .catch(() => setErrs(t("unknownError")));
       }}
-      validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
+      validateMessages={{ required: t("client:requiredInput") }}
     >
       <SmallCreditCard data={payment.card} />
       <TextField

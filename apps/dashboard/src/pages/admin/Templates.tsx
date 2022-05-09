@@ -1,30 +1,22 @@
 import React from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Table,
-  TableColumnsType,
-  Typography,
-} from "antd";
+import { Button, Card, Col, Row, Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 
 import { TEMPLATES } from "../../api/queries";
-import {
+import type {
   Templates as ITemplates,
   Templates_templates_edges_node,
 } from "../../api/types/Templates";
 import connectionToNodes from "../../lib/connectionToNodes";
+import type { Filter } from "../../lib/filterColumns";
 import {
-  Filter,
   getColumnFilterProps,
   getColumnSearchProps,
 } from "../../lib/filterColumns";
-
 import { Loading } from "../../components/atoms";
 import { VerifiedState } from "../../components/molecules";
 
@@ -33,7 +25,7 @@ import styles from "./Templates.module.css";
 const { Title } = Typography;
 
 function getVerifiedStatusFilters() {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   filters.push({
     text: <VerifiedState verified={true} />,
     value: true,
@@ -51,7 +43,9 @@ const Templates = () => {
   const { data, loading } = useQuery<ITemplates>(TEMPLATES);
   const dataSource = connectionToNodes(data?.templates);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   const columns: TableColumnsType<Templates_templates_edges_node> = [
     {

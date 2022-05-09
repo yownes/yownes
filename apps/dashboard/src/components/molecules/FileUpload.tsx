@@ -1,10 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  ReactNode,
-  RefObject,
-} from "react";
+import React, { useState, useEffect, useRef } from "react";
+import type { ReactNode, RefObject } from "react";
 import { Button, Popconfirm } from "antd";
 import {
   DeleteOutlined,
@@ -64,7 +59,7 @@ const ImageUpload = ({
   });
   const inputRef = useRef<HTMLInputElement>(null);
   const uploadElement = useRef<HTMLLabelElement>(null);
-  const fileToPreview = (file: Blob) => {
+  const fileToPreview = (f: Blob) => {
     const reader = new FileReader();
     setFilePreview({
       ...filePreview,
@@ -76,7 +71,7 @@ const ImageUpload = ({
         file: reader.result,
       });
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(f);
   };
 
   useEffect(() => {
@@ -97,8 +92,8 @@ const ImageUpload = ({
           accept="image/png"
           onChange={({ target: { validity, files } }) => {
             if (files && validity.valid) {
-              const [file] = Array.from(files);
-              onChange?.(file);
+              const [f] = Array.from(files);
+              onChange?.(f);
             }
           }}
           hidden
@@ -129,17 +124,17 @@ const ImageUpload = ({
               for (let i = 0; i < ev.dataTransfer.items.length; i++) {
                 // If dropped items aren't files, reject them
                 if (ev.dataTransfer.items[i].kind === "file") {
-                  const file = ev.dataTransfer.items[i].getAsFile();
-                  if (file) {
-                    onChange?.(file);
+                  const f = ev.dataTransfer.items[i].getAsFile();
+                  if (f) {
+                    onChange?.(f);
                   }
                 }
               }
             } else {
               // Use DataTransfer interface to access the file(s)
               for (let i = 0; i < ev.dataTransfer.files.length; i++) {
-                const file = ev.dataTransfer.files[i];
-                onChange?.(file);
+                const f = ev.dataTransfer.files[i];
+                onChange?.(f);
               }
             }
           }}

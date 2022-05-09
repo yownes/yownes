@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 import { PLANS } from "../../api/queries";
 import { PlanInterval } from "../../api/types/globalTypes";
-import {
+import type {
   Plans,
   Plans_features_edges_node,
   Plans_products_edges_node,
@@ -16,10 +16,9 @@ import {
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { normalize } from "../../lib/normalize";
-
 import { Loading } from "../atoms";
 import { RateSelection } from "../molecules";
-import { CheckoutLocationState } from "../../pages/client/Checkout";
+import type { CheckoutLocationState } from "../../pages/client/Checkout";
 
 import styles from "./RateTable.module.css";
 
@@ -48,11 +47,10 @@ function selectPlan(
   name: string
 ): CheckoutLocationState {
   const plan = prices
-    .filter((plan) => plan.active)
+    .filter((p) => p.active)
     .find(
-      (plan) =>
-        JSON.parse(normalize(plan.recurring!!)).interval.toUpperCase() ===
-        interval
+      (p) =>
+        JSON.parse(normalize(p.recurring!)).interval.toUpperCase() === interval
     );
   if (plan) {
     return {
@@ -87,27 +85,28 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
   const { data, loading } = useQuery<Plans>(PLANS);
   const [interval, setInterval] = useState(PlanInterval.MONTH);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   const plans = orderBy(
     connectionToNodes(data?.products),
     [
-      (item) => JSON.parse(normalize(item.metadata!!)).plan_type,
+      (item) => JSON.parse(normalize(item.metadata!)).plan_type,
       (item) =>
         connectionToNodes(item.prices)
           .filter((price) => price.active)
           .find(
             (price) =>
-              JSON.parse(
-                normalize(price.recurring!!)
-              ).interval.toUpperCase() === interval
+              JSON.parse(normalize(price.recurring!)).interval.toUpperCase() ===
+              interval
           )?.unitAmount,
     ],
     ["desc", "asc"]
   );
 
   const plansByType = orderBy(
-    groupBy(plans, (p) => JSON.parse(normalize(p.metadata!!)).plan_type),
+    groupBy(plans, (p) => JSON.parse(normalize(p.metadata!)).plan_type),
     "desc"
   );
   console.log(plansByType);
@@ -129,10 +128,10 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
       };
     });
   const apps = plans.map((plan) => ({
-    [plan.id]: JSON.parse(normalize(plan.metadata!!)).allowed_apps,
+    [plan.id]: JSON.parse(normalize(plan.metadata!)).allowed_apps,
   }));
   const builds = plans.map((plan) => ({
-    [plan.id]: JSON.parse(normalize(plan.metadata!!)).allowed_builds,
+    [plan.id]: JSON.parse(normalize(plan.metadata!)).allowed_builds,
   }));
   dataSource.push(
     {
@@ -164,14 +163,16 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
     align: "center" as const,
     key: rate.id,
     dataIndex: rate.id,
-    render(text: any, record: Plans_features_edges_node, index: number) {
-      return typeof text === "string" ? (
-        text
-      ) : text ? (
-        <CheckOutlined style={{ fontSize: 14, color: "#61db9b" }} />
-      ) : (
-        <CloseOutlined style={{ fontSize: 14, color: "#dd0000" }} />
-      );
+    render(text?: string | boolean) {
+      if (typeof text === "string") {
+        return text;
+      } else {
+        if (text) {
+          return <CheckOutlined style={{ fontSize: 14, color: "#61db9b" }} />;
+        } else {
+          return <CloseOutlined style={{ fontSize: 14, color: "#dd0000" }} />;
+        }
+      }
     },
   });
 
@@ -210,19 +211,19 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
                     ),
                     width: "20%",
                   },
-                  ...plansByType.map((p, i) => {
+                  ...plansByType.map((p) => {
                     return {
                       title: (
                         <Divider className={styles.divider}>
                           {t(
                             `subscriptionType.${
-                              JSON.parse(normalize(p[0].metadata!!)).plan_type
+                              JSON.parse(normalize(p[0].metadata!)).plan_type
                             }`
                           )}
                         </Divider>
                       ),
                       children: [
-                        ...p.map((rate, i) => {
+                        ...p.map((rate) => {
                           console.log("rate", rate);
                           return plan(rate);
                         }),
@@ -232,7 +233,6 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
                 ]}
                 locale={{ emptyText: t("client:noPlans") }}
                 pagination={false}
-                //scroll={{ x: 1500 /*, y: "40vh"*/ }}
                 dataSource={plans.length > 0 ? dataSource : []}
                 className={styles.table}
               />

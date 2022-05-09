@@ -5,12 +5,14 @@ import { useTranslation } from "react-i18next";
 
 import { MODIFY_APP_PAYMENT } from "../../api/mutations";
 import { APP_PAYMENTS } from "../../api/queries";
-import { AppPayments, AppPaymentsVariables } from "../../api/types/AppPayments";
-import {
+import type {
+  AppPayments,
+  AppPaymentsVariables,
+} from "../../api/types/AppPayments";
+import type {
   ModifyAppPayment,
   ModifyAppPaymentVariables,
 } from "../../api/types/ModifyAppPayment";
-
 import { Loading, LoadingFullScreen, TextField } from "../atoms";
 import { Errors } from "../molecules";
 
@@ -50,7 +52,9 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
     }
   }, [mutationData, t]);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

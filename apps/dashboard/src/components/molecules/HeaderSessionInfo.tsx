@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Dropdown, Menu, MenuProps, Modal, Grid } from "antd";
+import { Button, Dropdown, Menu, Modal, Grid } from "antd";
+import type { MenuProps } from "antd";
 import { EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";

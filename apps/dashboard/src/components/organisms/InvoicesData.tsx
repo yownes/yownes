@@ -3,14 +3,13 @@ import { Card, Col, message, Row, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
-import { Invoices, InvoicesVariables } from "../../api/types/Invoices";
+import type { Invoices, InvoicesVariables } from "../../api/types/Invoices";
 import { INVOICES } from "../../api/queries";
-
 import { Loading } from "../atoms";
 import { InvoicesTable } from "../molecules";
+import connectionToNodes from "../../lib/connectionToNodes";
 
 import styles from "./InvoicesData.module.css";
-import connectionToNodes from "../../lib/connectionToNodes";
 
 const { Title } = Typography;
 
@@ -27,13 +26,14 @@ const InvoicesData = ({ userId }: InvoicesDataProps) => {
 
   message.config({ maxCount: 1 });
 
-  if (loadingInvoices)
+  if (loadingInvoices) {
     return (
       <Card>
         <Title level={2}>{t("invoices")}</Title>
         <Loading />
       </Card>
     );
+  }
 
   return (
     <Row gutter={[24, 24]}>

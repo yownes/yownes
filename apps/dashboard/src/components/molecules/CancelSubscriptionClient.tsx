@@ -5,20 +5,26 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { RESUBSCRIBE, UNSUBSCRIBE } from "../../api/mutations";
 import { UPCOMING_INVOICE } from "../../api/queries";
-import { Client_user } from "../../api/types/Client";
+import type { Client_user } from "../../api/types/Client";
 import {
   AccountAccountStatus,
   SubscriptionStatus,
 } from "../../api/types/globalTypes";
-import { Resubscribe, ResubscribeVariables } from "../../api/types/Resubscribe";
-import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
-import { Errors as IErrors } from "../../lib/auth";
+import type {
+  Resubscribe,
+  ResubscribeVariables,
+} from "../../api/types/Resubscribe";
+import type {
+  Unsubscribe,
+  UnsubscribeVariables,
+} from "../../api/types/Unsubscribe";
+import type { Errors as IErrors } from "../../lib/auth";
 import { dateTime } from "../../lib/parseDate";
-
-import { Errors } from "./";
 import { LoadingFullScreen } from "../atoms";
 
 import styles from "./CancelSubscriptionClient.module.css";
+
+import { Errors } from ".";
 
 message.config({ maxCount: 1 });
 const { Text } = Typography;
@@ -79,12 +85,13 @@ const CancelSubscriptionClient = ({
     }
   }, [isUnsubscribed, t, unsubscribeData]);
 
-  if (!data)
+  if (!data) {
     return (
       <Text disabled style={{ display: "flex", flex: 1 }} type="danger">
         {t("admin:cancelClientSubscription")}
       </Text>
     );
+  }
 
   const active =
     data?.subscription?.status === SubscriptionStatus.ACTIVE &&
@@ -132,7 +139,7 @@ const CancelSubscriptionClient = ({
           {cancelAtEnd ? (
             <Col span={24}>
               <Trans i18nKey={"warnings.unCancelSubscription"} ns="admin">
-                <span></span>
+                <span />
               </Trans>
             </Col>
           ) : (
@@ -156,8 +163,8 @@ const CancelSubscriptionClient = ({
                   ),
                 }}
               >
-                <p></p>
-                <p></p>
+                <p />
+                <p />
               </Trans>
               {active && (
                 <p className={styles.finalize}>

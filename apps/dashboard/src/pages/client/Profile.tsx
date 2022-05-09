@@ -6,15 +6,17 @@ import { useHistory } from "react-router-dom";
 
 import { RESUBSCRIBE } from "../../api/mutations";
 import { APPS, MY_ACCOUNT, UPCOMING_INVOICE } from "../../api/queries";
-import { Apps, AppsVariables } from "../../api/types/Apps";
+import type { Apps, AppsVariables } from "../../api/types/Apps";
 import {
   AccountAccountStatus,
   SubscriptionStatus,
 } from "../../api/types/globalTypes";
-import { MyAccount } from "../../api/types/MyAccount";
-import { Resubscribe, ResubscribeVariables } from "../../api/types/Resubscribe";
+import type { MyAccount } from "../../api/types/MyAccount";
+import type {
+  Resubscribe,
+  ResubscribeVariables,
+} from "../../api/types/Resubscribe";
 import { normalize } from "../../lib/normalize";
-
 import { Loading, LoadingFullScreen, Space } from "../../components/atoms";
 import {
   AppTable,
@@ -64,13 +66,16 @@ const Profile = () => {
       setAllowedApps(
         parseInt(
           JSON.parse(normalize(data?.me?.subscription?.plan?.product?.metadata))
-            .allowed_apps
+            .allowed_apps,
+          10
         )
       );
     }
   }, [data]);
 
-  if (loading || loadingData) return <Loading />;
+  if (loading || loadingData) {
+    return <Loading />;
+  }
 
   return (
     <Col
@@ -89,7 +94,7 @@ const Profile = () => {
               type="warning"
             />
           </Col>
-          <Col></Col>
+          <Col />
         </Row>
       )}
       <Row gutter={[24, 24]}>
@@ -102,7 +107,7 @@ const Profile = () => {
                 <Placeholder
                   claim={t("client:subscribeNow")}
                   cta={{ title: t("client:subscribe"), link: "/checkout" }}
-                ></Placeholder>
+                />
               </>
             )}
             {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
@@ -131,8 +136,8 @@ const Profile = () => {
                             i18nKey={"warnings.unCancelSubscription"}
                             ns="client"
                           >
-                            <strong></strong>
-                            <p></p>
+                            <strong />
+                            <p />
                           </Trans>
                         }
                       >
@@ -181,7 +186,7 @@ const Profile = () => {
               <Placeholder
                 claim={t("client:addAppClaim")}
                 cta={{ title: t("client:addNewApp"), link: "/app/new" }}
-              ></Placeholder>
+              />
             )}
           </Card>
         </Col>

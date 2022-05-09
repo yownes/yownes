@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import {
   Button,
   Card,
@@ -18,20 +19,19 @@ import {
   DELETE_FEATURE,
   UPDATE_FEATURE,
 } from "../../api/mutations";
-import {
+import type {
   CreateFeature,
   CreateFeatureVariables,
 } from "../../api/types/CreateFeature";
-import {
+import type {
   DeleteFeature,
   DeleteFeatureVariables,
 } from "../../api/types/DeleteFeature";
-import { Plan_product_features_edges_node } from "../../api/types/Plan";
-import {
+import type { Plan_product_features_edges_node } from "../../api/types/Plan";
+import type {
   UpdateFeature,
   UpdateFeatureVariables,
 } from "../../api/types/UpdateFeature";
-
 import { LoadingFullScreen, TextField } from "../atoms";
 
 import styles from "./FeaturesInfo.module.css";
@@ -45,11 +45,11 @@ interface FeaturesInfoProps {
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
-  title: any;
+  title: string;
   inputType: "text";
   record: Plan_product_features_edges_node;
   index: number;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -197,7 +197,7 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
     setEditingId("");
     setDeletingId("");
     if (dataSource) {
-      let data = dataSource && [...dataSource];
+      const data = dataSource && [...dataSource];
       data.splice(data.map((item) => item.id).indexOf("1"), 1);
       setDataSource(data);
     }
@@ -254,7 +254,7 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
       title: t("admin:action"),
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: Plan_product_features_edges_node) => {
+      render: (_: string, record: Plan_product_features_edges_node) => {
         const editable = isEditing(record);
         return editable ? (
           <span>

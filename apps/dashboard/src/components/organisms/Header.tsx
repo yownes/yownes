@@ -1,20 +1,20 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { useEffect } from "react";
+import type { ReactNode } from "react";
 import { Col, notification, Row, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useLocation } from "react-router-dom";
 
 import { ME, MY_PAYMENT_METHODS } from "../../api/queries";
-import { Me } from "../../api/types/Me";
-import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
+import type { Me } from "../../api/types/Me";
+import type { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import adminroutes from "../../lib/adminRoutes";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { normalize } from "../../lib/normalize";
 import clientRoutes from "../../lib/routes";
-
 import { NewLogo } from "../atoms";
 import { HeaderSessionInfo } from "../molecules";
-import { ICreditCardStripe } from "../molecules/CreditCard";
+import type { ICreditCardStripe } from "../molecules/CreditCard";
 
 import styles from "./Header.module.css";
 
@@ -42,7 +42,7 @@ const Header = ({ menu }: HeaderProps) => {
             (payment) =>
               payment.stripeId ===
               paymentsData?.me?.customer?.defaultPaymentMethod?.stripeId
-          )?.card!!
+          )?.card!
         )
       )) ||
     undefined;

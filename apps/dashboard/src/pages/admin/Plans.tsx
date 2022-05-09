@@ -1,31 +1,23 @@
 import React from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Table,
-  TableColumnsType,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Card, Col, Row, Table, Tooltip, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
-import { TFunction, useTranslation } from "react-i18next";
+import type { TFunction } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 
 import { PLANS } from "../../api/queries";
-import {
+import type {
   Plans as IPlans,
   Plans_products_edges_node,
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
+import type { Filter } from "../../lib/filterColumns";
 import {
-  Filter,
   getColumnFilterProps,
   getColumnSearchProps,
 } from "../../lib/filterColumns";
 import { normalize } from "../../lib/normalize";
-
 import { Loading } from "../../components/atoms";
 import { FeaturesInfo, VerifiedState } from "../../components/molecules";
 
@@ -34,7 +26,7 @@ import styles from "./Plans.module.css";
 const { Text, Title } = Typography;
 
 function getPlanTypeFilters(t: TFunction) {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   filters.push({
     text: <Text>{t("admin:particular")}</Text>,
     value: "particular",
@@ -47,7 +39,7 @@ function getPlanTypeFilters(t: TFunction) {
 }
 
 function getVerifiedStatusFilters() {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   filters.push({
     text: <VerifiedState verified={true} />,
     value: true,
@@ -65,7 +57,9 @@ const Plans = () => {
   const { data, loading } = useQuery<IPlans>(PLANS);
   const dataSource = connectionToNodes(data?.products);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   const columns: TableColumnsType<Plans_products_edges_node> = [
     {
@@ -110,14 +104,16 @@ const Plans = () => {
       ),
       sorter: (a, b) =>
         parseInt(
-          JSON.parse(normalize(a.metadata!!)).plan_type
-            ? JSON.parse(normalize(a.metadata!!)).plan_type
-            : 0
+          JSON.parse(normalize(a.metadata!)).plan_type
+            ? JSON.parse(normalize(a.metadata!)).plan_type
+            : 0,
+          10
         ) -
         parseInt(
-          JSON.parse(normalize(b.metadata!!)).plan_type
-            ? JSON.parse(normalize(b.metadata!!)).plan_type
-            : 0
+          JSON.parse(normalize(b.metadata!)).plan_type
+            ? JSON.parse(normalize(b.metadata!)).plan_type
+            : 0,
+          10
         ),
     },
     {
@@ -127,14 +123,16 @@ const Plans = () => {
       render: (metadata) => JSON.parse(normalize(metadata)).allowed_apps,
       sorter: (a, b) =>
         parseInt(
-          JSON.parse(normalize(a.metadata!!)).allowed_apps
-            ? JSON.parse(normalize(a.metadata!!)).allowed_apps
-            : 0
+          JSON.parse(normalize(a.metadata!)).allowed_apps
+            ? JSON.parse(normalize(a.metadata!)).allowed_apps
+            : 0,
+          10
         ) -
         parseInt(
-          JSON.parse(normalize(b.metadata!!)).allowed_apps
-            ? JSON.parse(normalize(b.metadata!!)).allowed_apps
-            : 0
+          JSON.parse(normalize(b.metadata!)).allowed_apps
+            ? JSON.parse(normalize(b.metadata!)).allowed_apps
+            : 0,
+          10
         ),
     },
     {
@@ -144,14 +142,16 @@ const Plans = () => {
       render: (metadata) => JSON.parse(normalize(metadata)).allowed_builds,
       sorter: (a, b) =>
         parseInt(
-          JSON.parse(normalize(a.metadata!!)).allowed_builds
-            ? JSON.parse(normalize(a.metadata!!)).allowed_builds
-            : 0
+          JSON.parse(normalize(a.metadata!)).allowed_builds
+            ? JSON.parse(normalize(a.metadata!)).allowed_builds
+            : 0,
+          10
         ) -
         parseInt(
-          JSON.parse(normalize(b.metadata!!)).allowed_builds
-            ? JSON.parse(normalize(b.metadata!!)).allowed_builds
-            : 0
+          JSON.parse(normalize(b.metadata!)).allowed_builds
+            ? JSON.parse(normalize(b.metadata!)).allowed_builds
+            : 0,
+          10
         ),
     },
     {

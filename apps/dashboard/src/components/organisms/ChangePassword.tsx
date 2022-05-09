@@ -2,13 +2,13 @@ import React, { useEffect } from "react";
 import { Button, Col, Form, Row, Typography, message } from "antd";
 import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
+
 import { PASSWORD_CHANGE } from "../../api/mutations";
-import {
+import type {
   PasswordChange,
   PasswordChangeVariables,
 } from "../../api/types/PasswordChange";
 import { useAuth } from "../../lib/auth";
-
 import { LoadingFullScreen, TextField } from "../atoms";
 import { Errors } from "../molecules";
 
@@ -50,15 +50,15 @@ const ChangePassword = () => {
               variables: {
                 ...values,
               },
-            }).then(({ data }) => {
+            }).then(({ data: change }) => {
               if (
-                data?.passwordChange?.success &&
-                data?.passwordChange?.token &&
-                data?.passwordChange?.refreshToken
+                change?.passwordChange?.success &&
+                change?.passwordChange?.token &&
+                change?.passwordChange?.refreshToken
               ) {
                 setNewToken?.(
-                  data.passwordChange.token,
-                  data.passwordChange.refreshToken
+                  change.passwordChange.token,
+                  change.passwordChange.refreshToken
                 );
               }
             });
@@ -71,7 +71,7 @@ const ChangePassword = () => {
               <TextField
                 label={t("oldPassword")}
                 name="oldPassword"
-                error={form.getFieldError("oldPassword")}
+                // error={form.getFieldError("oldPassword")}
                 rules={[{ required: true, message: t("required.oldPassword") }]}
                 type="password"
               />

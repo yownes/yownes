@@ -1,16 +1,17 @@
 import React, { useMemo } from "react";
-import { Table, TableColumnsType, Typography } from "antd";
+import { Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-import { Apps_apps, Apps_apps_edges_node } from "../../api/types/Apps";
+import type { Apps_apps, Apps_apps_edges_node } from "../../api/types/Apps";
 import { getAppBuildState } from "../../lib/appBuildState";
 import connectionToNodes from "../../lib/connectionToNodes";
 
-import { BuildState } from "./";
-
 import styles from "./AppTable.module.css";
+
+import { BuildState } from ".";
 
 const { Text } = Typography;
 
@@ -52,7 +53,7 @@ const AppTable = ({ dataSource, columns }: AppTableProps) => {
         dataIndex: "builds",
         key: "state",
         render: (_, record) => {
-          return <BuildState state={getAppBuildState(record)}></BuildState>;
+          return <BuildState state={getAppBuildState(record)} />;
         },
       },
     ];

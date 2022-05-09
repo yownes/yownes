@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
 import { MY_ACCOUNT } from "../api/queries";
-import { MyAccount } from "../api/types/MyAccount";
+import type { MyAccount } from "../api/types/MyAccount";
 
 const NotFound = () => {
   const { t } = useTranslation();

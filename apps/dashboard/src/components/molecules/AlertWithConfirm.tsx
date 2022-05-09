@@ -1,4 +1,5 @@
 import React from "react";
+import type { ReactNode } from "react";
 import { Alert, Button, Popconfirm, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
@@ -6,7 +7,7 @@ const { Text } = Typography;
 
 interface AlertWithConfirmProps {
   buttonText: string;
-  confirmText: string | JSX.Element;
+  confirmText: string | ReactNode;
   message: string[];
   onConfirm: () => void;
   style?: React.CSSProperties;
@@ -51,7 +52,7 @@ const AlertWithConfirm = ({
         showIcon
         style={style ?? {}}
         type={type || "warning"}
-      ></Alert>
+      />
     </div>
   );
 };

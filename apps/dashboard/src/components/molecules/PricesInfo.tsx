@@ -16,21 +16,27 @@ import isEqual from "lodash/isEqual";
 import { useTranslation } from "react-i18next";
 
 import { CREATE_PRICE, UPDATE_PRICE } from "../../api/mutations";
-import { CreatePrice, CreatePriceVariables } from "../../api/types/CreatePrice";
+import type {
+  CreatePrice,
+  CreatePriceVariables,
+} from "../../api/types/CreatePrice";
 import { PlanInterval } from "../../api/types/globalTypes";
-import {
+import type {
   Plan_product,
   Plan_product_prices_edges_node,
 } from "../../api/types/Plan";
-import { UpdatePrice, UpdatePriceVariables } from "../../api/types/UpdatePrice";
+import type {
+  UpdatePrice,
+  UpdatePriceVariables,
+} from "../../api/types/UpdatePrice";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { normalize } from "../../lib/normalize";
-
-import { VerifiedState } from "./";
 import { LoadingFullScreen, SelectField, TextField } from "../atoms";
-import { Option } from "../atoms/SelectField";
+import type { Option } from "../atoms/SelectField";
 
 import styles from "./PricesInfo.module.css";
+
+import { VerifiedState } from ".";
 
 const { Paragraph, Title } = Typography;
 
@@ -42,7 +48,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   dataSource: Plan_product_prices_edges_node[] | undefined;
-  title: any;
+  title: string;
   inputType: "number" | "select" | "text";
   record: Plan_product_prices_edges_node;
   index: number;
@@ -272,7 +278,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
     setEditingId("");
     setArchivingId("");
     if (dataSource) {
-      let data = dataSource && [...dataSource];
+      const data = dataSource && [...dataSource];
       data.splice(data.map((item) => item.id).indexOf("1"), 1);
       setDataSource(data);
     }
@@ -324,7 +330,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
       title: t("admin:action"),
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: Plan_product_prices_edges_node) => {
+      render: (_: string, record: Plan_product_prices_edges_node) => {
         const editable = isEditing(record);
         return editable ? (
           <span>

@@ -1,5 +1,6 @@
+import React from "react";
+import type { ReactNode } from "react";
 import { Button } from "antd";
-import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "./Placeholder.module.css";

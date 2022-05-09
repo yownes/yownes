@@ -1,9 +1,9 @@
 import React from "react";
-import { PaymentMethod } from "@stripe/stripe-js";
+import type { PaymentMethod } from "@stripe/stripe-js";
 
 import { colors } from "../../lib/colors";
 
-import { CreditCard } from "./";
+import { CreditCard } from ".";
 
 interface SelectableCreditCardProps {
   data: PaymentMethod;

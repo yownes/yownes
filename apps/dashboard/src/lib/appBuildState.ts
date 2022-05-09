@@ -1,6 +1,7 @@
-import { App_app } from "../api/types/App";
-import { Apps_apps_edges_node } from "../api/types/Apps";
+import type { App_app } from "../api/types/App";
+import type { Apps_apps_edges_node } from "../api/types/Apps";
 import { BuildBuildStatus } from "../api/types/globalTypes";
+
 import connectionToNodes from "./connectionToNodes";
 
 export function getAppBuildState(

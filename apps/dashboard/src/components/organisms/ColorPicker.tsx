@@ -2,8 +2,7 @@ import React from "react";
 import { Col, Radio, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
-import { StoreAppColorInput } from "../../api/types/globalTypes";
-
+import type { StoreAppColorInput } from "../../api/types/globalTypes";
 import { Color, TextField } from "../atoms";
 
 import styles from "./ColorPicker.module.css";

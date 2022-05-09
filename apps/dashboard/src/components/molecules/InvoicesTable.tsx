@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { Badge, Table, Typography, TableColumnsType } from "antd";
+import { Badge, Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
-import { InvoiceStatus } from "../../api/types/globalTypes";
-import { Invoices_invoices_edges_node } from "../../api/types/Invoices";
-import { Me } from "../../api/types/Me";
-import { MyAccount_me_subscription_invoices_edges_node } from "../../api/types/MyAccount";
+import type { InvoiceStatus } from "../../api/types/globalTypes";
+import type { Invoices_invoices_edges_node } from "../../api/types/Invoices";
+import type { Me } from "../../api/types/Me";
+import type { MyAccount_me_subscription_invoices_edges_node } from "../../api/types/MyAccount";
 import { ME } from "../../api/queries";
 import { currencySymbol } from "../../lib/currencySymbol";
 import { shortDateTime } from "../../lib/parseDate";
 
-import { ExpandIcon, InvoiceInfo, InvoiceState } from "./";
-
 import styles from "./InvoicesTable.module.css";
+
+import { ExpandIcon, InvoiceInfo, InvoiceState } from ".";
 
 const { Text } = Typography;
 
@@ -73,7 +74,7 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
     },
   ];
 
-  return invoices?.length > 0 ? (
+  return invoices && invoices?.length > 0 ? (
     <div className={styles.overflow}>
       <Table
         columns={columns}

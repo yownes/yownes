@@ -18,29 +18,27 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { PAY_INVOICE } from "../../api/mutations";
 import { InvoiceStatus } from "../../api/types/globalTypes";
-import {
+import type {
   Invoices_invoices_edges_node,
   Invoices_invoices_edges_node_invoiceitems_edges_node,
 } from "../../api/types/Invoices";
-import {
+import type {
   MyAccount_me_subscription_invoices_edges_node,
   MyAccount_me_subscription_invoices_edges_node_invoiceitems_edges_node,
 } from "../../api/types/MyAccount";
-import { PayInvoice, PayInvoiceVariables } from "../../api/types/PayInvoice";
+import type {
+  PayInvoice,
+  PayInvoiceVariables,
+} from "../../api/types/PayInvoice";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
 import { normalize } from "../../lib/normalize";
 import { dateTime, getPeriod } from "../../lib/parseDate";
-
-import {
-  AlertWithConfirm,
-  Descriptions,
-  InvoiceState,
-  PaymentsTable,
-} from "./";
 import { LoadingFullScreen } from "../atoms";
 
 import styles from "./InvoiceInfo.module.css";
+
+import { AlertWithConfirm, Descriptions, InvoiceState, PaymentsTable } from ".";
 
 const { Text, Title } = Typography;
 
@@ -415,9 +413,9 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
                 buttonText={t("client:payNow")}
                 confirmText={
                   <Trans i18nKey={"warnings.retryPayment"} ns="client">
-                    <strong></strong>
-                    <p></p>
-                    <p></p>
+                    <strong />
+                    <p />
+                    <p />
                   </Trans>
                 }
                 message={[

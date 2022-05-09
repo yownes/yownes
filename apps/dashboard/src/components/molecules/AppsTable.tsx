@@ -1,27 +1,27 @@
 import React, { useMemo } from "react";
-import { Table, Typography, TableColumnsType } from "antd";
+import { Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import forIn from "lodash/forIn";
 import { useTranslation } from "react-i18next";
 
-import { AppBasicData } from "../../api/types/AppBasicData";
-import {
+import type { AppBasicData } from "../../api/types/AppBasicData";
+import type {
   Client_user_apps,
   Client_user_apps_edges_node,
 } from "../../api/types/Client";
 import { BuildBuildStatus } from "../../api/types/globalTypes";
 import { getAppBuildState } from "../../lib/appBuildState";
 import connectionToNodes from "../../lib/connectionToNodes";
+import type { Filter } from "../../lib/filterColumns";
 import {
-  Filter,
   getColumnFilterProps,
   getColumnSearchProps,
 } from "../../lib/filterColumns";
 
-import { BuildState } from "./";
-import { BuildState as BuildStateVisualizer } from "../../components/molecules";
-
 import styles from "./AppsTable.module.css";
+
+import { BuildState as BuildStateVisualizer, BuildState } from ".";
 
 const { Text } = Typography;
 
@@ -31,10 +31,10 @@ interface AppsTableProps {
 }
 
 function getBuildStatusFilters() {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   forIn(BuildBuildStatus, (value) => {
     filters.push({
-      text: <BuildStateVisualizer state={value}></BuildStateVisualizer>,
+      text: <BuildStateVisualizer state={value} />,
       value: value,
     });
   });
@@ -80,7 +80,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
         dataIndex: "builds",
         key: "state",
         render: (_, record) => {
-          return <BuildState state={getAppBuildState(record)}></BuildState>;
+          return <BuildState state={getAppBuildState(record)} />;
         },
         ...getColumnFilterProps<Client_user_apps_edges_node>(
           ["builds", "edges", "_", "node", "buildStatus"],

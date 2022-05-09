@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect } from "react";
 import { Button, Card, Col, Form, message, Typography } from "antd";
-import { ApolloCache, FetchResult, useMutation } from "@apollo/client";
+import type { ApolloCache, FetchResult } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
 import { CREATE_APP } from "../../api/mutations";
-import { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
+import type { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
 import { colors } from "../../lib/colors";
-
-import { baseApp } from "./App";
 import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
+
+import { baseApp } from "./App";
 
 const { Title } = Typography;
 
@@ -26,9 +27,11 @@ const NewApp = () => {
 
   const update = useCallback(function (
     cache: ApolloCache<CreateApp>,
-    { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
+    {
+      data: app,
+    }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
   ) {
-    if (data?.createApp?.ok) {
+    if (app?.createApp?.ok) {
       cache.modify({
         fields: {
           apps(existing, { toReference }) {
@@ -37,7 +40,7 @@ const NewApp = () => {
                 ...existing.edges,
                 {
                   __typename: "StoreAppTypeEdge",
-                  node: toReference({ ...data.createApp?.storeApp }),
+                  node: toReference({ ...app.createApp?.storeApp }),
                 },
               ],
             };

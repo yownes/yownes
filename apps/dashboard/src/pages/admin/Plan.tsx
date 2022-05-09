@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from "react";
 import {
   Button,
@@ -16,12 +17,14 @@ import { useTranslation } from "react-i18next";
 
 import { UPDATE_PLAN } from "../../api/mutations";
 import { PLAN, PLANS } from "../../api/queries";
-import { Plan as IPlan, PlanVariables } from "../../api/types/Plan";
-import { Plans as IPlans } from "../../api/types/Plans";
-import { UpdatePlan, UpdatePlanVariables } from "../../api/types/UpdatePlan";
+import type { Plan as IPlan, PlanVariables } from "../../api/types/Plan";
+import type { Plans as IPlans } from "../../api/types/Plans";
+import type {
+  UpdatePlan,
+  UpdatePlanVariables,
+} from "../../api/types/UpdatePlan";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { normalize } from "../../lib/normalize";
-
 import {
   Loading,
   LoadingFullScreen,
@@ -35,7 +38,7 @@ import styles from "./Plan.module.css";
 
 const { Title } = Typography;
 
-interface PlanProps {
+interface PlanProps extends Record<string, string> {
   id: string;
 }
 
@@ -58,14 +61,16 @@ const Plan = () => {
     IPlan,
     PlanVariables
   >(PLAN, {
-    variables: { id },
+    variables: { id: id ?? "" },
   });
   const [updatePlan, { loading: updating }] = useMutation<
     UpdatePlan,
     UpdatePlanVariables
   >(UPDATE_PLAN);
 
-  if (loadingPlans || loadingPlan) return <Loading />;
+  if (loadingPlans || loadingPlan) {
+    return <Loading />;
+  }
 
   return (
     <Row gutter={[24, 24]}>
@@ -97,14 +102,15 @@ const Plan = () => {
                     (f) => f.id
                   ),
                   name: planData?.product?.name,
-                  type:
-                    JSON.parse(normalize(planData?.product?.metadata!!))
-                      .plan_type || "particular",
+                  type: planData?.product
+                    ? JSON.parse(normalize(planData.product.metadata!))
+                        .plan_type || "particular"
+                    : "particular",
                 }}
                 onFinish={(values: FormProps) => {
                   const dataPlan = { ...planData?.product };
                   updatePlan({
-                    variables: { id: id, plan: { ...values } },
+                    variables: { id: id ?? "", plan: { ...values } },
                     update(cache, { data }) {
                       if (data?.updatePlan?.ok) {
                         cache.modify({
@@ -215,8 +221,11 @@ const Plan = () => {
                         <SelectField
                           label={t("admin:planType")}
                           defaultValue={
-                            JSON.parse(normalize(planData?.product?.metadata!!))
-                              .plan_type || "particular"
+                            planData?.product
+                              ? JSON.parse(
+                                  normalize(planData.product.metadata!)
+                                ).plan_type || "particular"
+                              : "particular"
                           }
                           name="type"
                           options={[

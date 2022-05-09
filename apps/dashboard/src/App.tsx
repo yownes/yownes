@@ -6,7 +6,6 @@ import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
 import client from "./lib/apolloClient";
 import { AuthProvider } from "./lib/auth";
-
 import { Loading } from "./components/atoms";
 import { PrivateRoute } from "./components/molecules";
 import Auth from "./pages/auth";
@@ -26,7 +25,7 @@ function App() {
                 <Route path="/auth">
                   <Auth />
                 </Route>
-                <Route exact path={`/tos`}>
+                <Route path={"/tos"}>
                   <Tos />
                 </Route>
                 <PrivateRoute path="/">

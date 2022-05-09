@@ -3,8 +3,7 @@ import { Button, Col, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { currencySymbol } from "../../lib/currencySymbol";
-
-import { CheckoutLocationState } from "../../pages/client/Checkout";
+import type { CheckoutLocationState } from "../../pages/client/Checkout";
 
 import styles from "./RateSelection.module.css";
 

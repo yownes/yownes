@@ -6,11 +6,11 @@ import {
   Col,
   Dropdown,
   Menu,
-  MenuProps,
   Row,
   Tag,
   Typography,
 } from "antd";
+import type { MenuProps } from "antd";
 import { useQuery } from "@apollo/client";
 import { EllipsisOutlined } from "@ant-design/icons";
 import reverse from "lodash/reverse";
@@ -23,23 +23,22 @@ import {
   SUBSCRIPTIONS,
   UPCOMING_INVOICE,
 } from "../../api/queries";
-import { Client_user } from "../../api/types/Client";
+import type { Client_user } from "../../api/types/Client";
 import { InvoiceStatus, SubscriptionStatus } from "../../api/types/globalTypes";
-import { Invoices, InvoicesVariables } from "../../api/types/Invoices";
-import { MyAccount_me_subscription_invoices_edges_node } from "../../api/types/MyAccount";
-import { Plans } from "../../api/types/Plans";
-import {
+import type { Invoices, InvoicesVariables } from "../../api/types/Invoices";
+import type { MyAccount_me_subscription_invoices_edges_node } from "../../api/types/MyAccount";
+import type { Plans } from "../../api/types/Plans";
+import type {
   Subscriptions,
   SubscriptionsVariables,
   Subscriptions_subscriptions_edges_node,
 } from "../../api/types/Subscriptions";
-import {
+import type {
   UpcomingInvoice,
   UpcomingInvoiceVariables,
 } from "../../api/types/UpcomingInvoice";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { dateTime, longDate } from "../../lib/parseDate";
-
 import { Loading } from "../atoms";
 import {
   SubscriptionInfo,
@@ -107,13 +106,14 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
     loadingPlans ||
     loadingSubscriptions ||
     loadingUpcoming
-  )
+  ) {
     return (
       <Card>
         <Title level={2}>{t("admin:clientSubscriptionData")}</Title>
         <Loading />
       </Card>
     );
+  }
 
   const active =
     client?.subscription?.status === SubscriptionStatus.ACTIVE &&

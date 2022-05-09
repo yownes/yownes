@@ -2,7 +2,7 @@ import React from "react";
 import { Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
-import { StoreAppInput } from "../../api/types/globalTypes";
+import type { StoreAppInput } from "../../api/types/globalTypes";
 
 import styles from "./AppPreview.module.css";
 
@@ -21,7 +21,7 @@ const AppPreview = ({ id, app }: AppPreviewProps) => {
         <Title level={2}>{t("preview")}</Title>
       </div>
       <div className={styles.previewContainer}>
-        <div className={styles.preview}></div>
+        <div className={styles.preview} />
       </div>
     </div>
   );

@@ -1,16 +1,20 @@
-import React, { ReactNode } from "react";
+import React from "react";
+import type { ReactNode } from "react";
 import { Tag, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-import { AccountBasicData } from "../../api/types/AccountBasicData";
+import type { AccountBasicData } from "../../api/types/AccountBasicData";
 import { SubscriptionStatus } from "../../api/types/globalTypes";
-import { MyAccount } from "../../api/types/MyAccount";
+import type { MyAccount } from "../../api/types/MyAccount";
 import { MY_ACCOUNT } from "../../api/queries";
 import { currencySymbol } from "../../lib/currencySymbol";
 import { dateTime, differenceTime, longDate } from "../../lib/parseDate";
+import { Loading } from "../atoms";
+
+import type { description } from "./Descriptions";
 
 import {
   Descriptions,
@@ -18,9 +22,7 @@ import {
   TitleWithAction,
   UserState,
   VerifiedState,
-} from "./";
-import { description } from "./Descriptions";
-import { Loading } from "../atoms";
+} from ".";
 
 const { Paragraph } = Typography;
 

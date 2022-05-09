@@ -16,15 +16,14 @@ import { useParams } from "react-router-dom";
 
 import { UPDATE_TEMPLATE } from "../../api/mutations";
 import { TEMPLATE } from "../../api/queries";
-import {
+import type {
   Template as ITemplate,
   TemplateVariables,
 } from "../../api/types/Template";
-import {
+import type {
   UpdateTemplate,
   UpdateTemplateVariables,
 } from "../../api/types/UpdateTemplate";
-
 import { Loading, LoadingFullScreen, TextField } from "../../components/atoms";
 import { ImageUpload } from "../../components/molecules";
 
@@ -32,7 +31,7 @@ import styles from "./Template.module.css";
 
 const { Text, Title } = Typography;
 
-interface TemplateProps {
+interface TemplateProps extends Record<string, string> {
   id: string;
 }
 
@@ -41,14 +40,16 @@ const Template = () => {
   const { t } = useTranslation(["translation", "admin"]);
   const { id } = useParams<TemplateProps>();
   const { data, loading } = useQuery<ITemplate, TemplateVariables>(TEMPLATE, {
-    variables: { id },
+    variables: { id: id ?? "" },
   });
   const [updateTemplate, { loading: updating }] = useMutation<
     UpdateTemplate,
     UpdateTemplateVariables
   >(UPDATE_TEMPLATE);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Row gutter={[24, 24]}>
@@ -80,9 +81,9 @@ const Template = () => {
                 onFinish={(values) => {
                   const dataTemplate = { ...data?.template };
                   updateTemplate({
-                    variables: { id: id, template: { ...values } },
-                    update(cache, { data }) {
-                      if (data?.updateTemplate?.ok) {
+                    variables: { id: id ?? "", template: { ...values } },
+                    update(cache, { data: update }) {
+                      if (update?.updateTemplate?.ok) {
                         cache.modify({
                           id: cache.identify({ ...dataTemplate }),
                           fields: {
@@ -107,7 +108,7 @@ const Template = () => {
                       } else {
                         message.error(
                           t(
-                            `admin:errors.${data?.updateTemplate?.error}`,
+                            `admin:errors.${update?.updateTemplate?.error}`,
                             t("error")
                           ),
                           4

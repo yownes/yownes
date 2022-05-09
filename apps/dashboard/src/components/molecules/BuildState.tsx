@@ -2,7 +2,7 @@ import { Tag } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { BuildBuildStatus } from "../../api/types/globalTypes";
+import type { BuildBuildStatus } from "../../api/types/globalTypes";
 import { colors } from "../../lib/colors";
 
 interface BuildStateProps {

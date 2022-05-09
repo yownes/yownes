@@ -4,9 +4,8 @@ import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { TEMPLATES } from "../../api/queries";
-import { Templates } from "../../api/types/Templates";
+import type { Templates } from "../../api/types/Templates";
 import connectionToNodes from "../../lib/connectionToNodes";
-
 import { Loading } from "../atoms";
 import { TemplatePreview } from "../molecules";
 
@@ -23,7 +22,9 @@ const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
   const { t } = useTranslation("client");
   const { data, loading } = useQuery<Templates>(TEMPLATES);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   const templates = connectionToNodes(data?.templates);
 

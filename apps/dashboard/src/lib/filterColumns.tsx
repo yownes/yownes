@@ -3,9 +3,9 @@ import { Button, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import get from "lodash/get";
 
-import { colors } from "./colors";
-
 import { TextField } from "../components/atoms";
+
+import { colors } from "./colors";
 
 interface FilterDropdownProps {
   setSelectedKeys: (keys: string[]) => void;
@@ -90,7 +90,7 @@ export function getColumnFilterProps<T>(
   dataIndex: string[],
   filters: Filter[],
   position?: "first" | "last",
-  defaultValue?: any
+  defaultValue?: string | number | boolean
 ) {
   const index = dataIndex.indexOf("_");
   return {
@@ -99,7 +99,7 @@ export function getColumnFilterProps<T>(
       if (position === "first") {
       }
       if (position === "last") {
-        let data = dataIndex;
+        const data = dataIndex;
         data[index] = String(get(record, data.slice(0, index)).length - 1);
         const valuee = get(record, data) ?? defaultValue ?? "-";
         const regex = new RegExp(value as string, "i");

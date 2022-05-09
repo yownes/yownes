@@ -1,11 +1,12 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Col, Divider, Row, Select, Space, Switch, Typography } from "antd";
 import find from "lodash/find";
 import { useTranslation } from "react-i18next";
 
 import { PlanInterval } from "../../api/types/globalTypes";
-import { MyAccount_me_subscription_plan_product } from "../../api/types/MyAccount";
-import {
+import type { MyAccount_me_subscription_plan_product } from "../../api/types/MyAccount";
+import type {
   Plans_features_edges_node,
   Plans_products_edges_node,
   Plans_products_edges_node_features_edges_node,
@@ -13,7 +14,6 @@ import {
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
 import { normalize } from "../../lib/normalize";
-
 import { Loading } from "../atoms";
 import { Errors } from "../molecules";
 
@@ -80,13 +80,15 @@ const ChangeSubscription = ({
     if (find(products, (p) => p.id === currentProductId) !== undefined) {
       return undefined;
     }
-    const allowed = JSON.parse(normalize(plan?.metadata!!)).allowed_apps;
+    const allowed = plan
+      ? JSON.parse(normalize(plan.metadata!)).allowed_apps
+      : 0;
     const prices = connectionToNodes(plan?.prices);
     const price = prices
-      .filter((price) => price.active)
+      .filter((p) => p.active)
       .find(
-        (price) =>
-          JSON.parse(normalize(price.recurring!!)).interval.toUpperCase() ===
+        (p) =>
+          JSON.parse(normalize(p.recurring!)).interval.toUpperCase() ===
           interval
       );
 
@@ -127,13 +129,12 @@ const ChangeSubscription = ({
       </Select.Option>
     );
   };
-
-  return (
-    <Row gutter={[24, 24]}>
-      {!step ? (
-        loading ? (
-          <Loading />
-        ) : (
+  if (!step) {
+    if (loading) {
+      return <Loading />;
+    } else {
+      return (
+        <Row gutter={[24, 24]}>
           <Col span={24}>
             <Row gutter={[24, 24]}>
               <Col span={24}>
@@ -161,16 +162,17 @@ const ChangeSubscription = ({
                   {legacyOption()}
                   {products?.map((product) => {
                     const allowed = parseInt(
-                      JSON.parse(normalize(product.metadata!!)).allowed_apps
+                      JSON.parse(normalize(product.metadata!)).allowed_apps,
+                      10
                     );
                     const exceeded = activeApps ? allowed < activeApps : false;
                     const prices = connectionToNodes(product.prices);
                     const price = prices
-                      .filter((price) => price.active)
+                      .filter((p) => p.active)
                       .find(
-                        (price) =>
+                        (p) =>
                           JSON.parse(
-                            normalize(price.recurring!!)
+                            normalize(p.recurring!)
                           ).interval.toUpperCase() === interval
                       );
 
@@ -254,8 +256,12 @@ const ChangeSubscription = ({
               </Col>
             </Row>
           </Col>
-        )
-      ) : (
+        </Row>
+      );
+    }
+  } else {
+    return (
+      <Row gutter={[24, 24]}>
         <Col span={24}>
           <Row className={styles.font} gutter={[24, 24]}>
             <Col span={24}>
@@ -386,9 +392,9 @@ const ChangeSubscription = ({
             )}
           </Row>
         </Col>
-      )}
-    </Row>
-  );
+      </Row>
+    );
+  }
 };
 
 export default ChangeSubscription;

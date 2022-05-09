@@ -1,14 +1,15 @@
 import React from "react";
-import { Table, Typography, TableColumnsType } from "antd";
+import { Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import format from "date-fns/format";
 import es from "date-fns/locale/es";
 import { useTranslation } from "react-i18next";
 
-import { ChargeStatus } from "../../api/types/globalTypes";
-import { MyAccount_me_subscription_invoices_edges_node_charges_edges_node } from "../../api/types/MyAccount";
+import type { ChargeStatus } from "../../api/types/globalTypes";
+import type { MyAccount_me_subscription_invoices_edges_node_charges_edges_node } from "../../api/types/MyAccount";
 import { currencySymbol } from "../../lib/currencySymbol";
 
-import { Last4Card, PaymentState } from "./";
+import { Last4Card, PaymentState } from ".";
 
 const { Text } = Typography;
 
@@ -35,7 +36,7 @@ const PaymentsTable = ({ payments }: PaymentsTableProps) => {
         dataIndex: "status",
         key: "state",
         render: (state: ChargeStatus) => {
-          return <PaymentState state={state}></PaymentState>;
+          return <PaymentState state={state} />;
         },
       },
       {

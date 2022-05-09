@@ -1,4 +1,5 @@
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
+import type { ReactNode } from "react";
 import { Button, Popconfirm, Tooltip, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 

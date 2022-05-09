@@ -3,7 +3,7 @@
   "selectPaymentMethod": "Selecciona el método de pago",
   "selectPlan": "Selecciona tu plan",
   "changePlan": "Cambiar el plan",
-  "noPlans": "Ningún Plan",
+  "noPlans": "En estos momentos no hay ningún Plan disponible",
   "changeSubscription": "Cambiar la suscripción",
   "changeSubscriptionDisabled": "Actualiza tu método de pago",
   "selectNewPlan": "Seleccionar el nuevo plan",

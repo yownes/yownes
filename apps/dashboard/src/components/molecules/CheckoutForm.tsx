@@ -15,13 +15,13 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { SUBSCRIBE } from "../../api/mutations";
+import type { SubscriptionStatus } from "../../api/types/globalTypes";
 import {
   AccountAccountStatus,
   PlanInterval,
-  SubscriptionStatus,
 } from "../../api/types/globalTypes";
-import { MyAccount } from "../../api/types/MyAccount";
-import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
+import type { MyAccount } from "../../api/types/MyAccount";
+import type { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import {
   INVOICES,
   MY_ACCOUNT,
@@ -29,16 +29,15 @@ import {
   SUBSCRIPTIONS,
   UPCOMING_INVOICE,
 } from "../../api/queries";
-import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
+import type { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
 import { currencySymbol } from "../../lib/currencySymbol";
 import { normalize } from "../../lib/normalize";
 import connectionToNodes from "../../lib/connectionToNodes";
-
 import { Loading, LoadingFullScreen } from "../atoms";
-import { ICreditCardStripe } from "./CreditCard";
 import { PaymentMethod } from "../organisms";
-import { CheckoutLocationState } from "../../pages/client/Checkout";
+import type { CheckoutLocationState } from "../../pages/client/Checkout";
 
+import type { ICreditCardStripe } from "./CreditCard";
 import styles from "./CheckoutForm.module.css";
 
 const { confirm } = Modal;
@@ -93,7 +92,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
             (payment) =>
               payment.stripeId ===
               paymentMethods?.me?.customer?.defaultPaymentMethod?.stripeId
-          )?.card!!
+          )?.card!
         )
       )) ||
     undefined;
@@ -101,10 +100,12 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
     ? new Date(card?.exp_year, card?.exp_month) < new Date()
     : false;
   const interval = JSON.parse(
-    normalize(plan.recurring!!)
+    normalize(plan.recurring!)
   ).interval.toUpperCase();
 
-  if (loadingAccount || loadingPayments) return <Loading />;
+  if (loadingAccount || loadingPayments) {
+    return <Loading />;
+  }
 
   return (
     <Row gutter={[24, 24]}>
@@ -122,7 +123,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
               <PaymentMethod
                 customer={paymentMethods?.me?.customer}
                 onCreated={setPaymentMethodId}
-                userId={dataAccount?.me?.id!!}
+                userId={dataAccount?.me?.id!}
               />
             </Col>
           </Row>
@@ -217,7 +218,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                             createSubscription({
                               variables: {
                                 paymentMethodId,
-                                priceId: plan.stripeId!!,
+                                priceId: plan.stripeId!,
                               },
                               update(cache, { data }) {
                                 if (data?.subscribe?.ok) {

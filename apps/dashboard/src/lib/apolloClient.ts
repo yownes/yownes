@@ -2,6 +2,7 @@ import { ApolloClient, InMemoryCache, concat } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
+
 import { getToken } from "./auth";
 
 const cache = new InMemoryCache({

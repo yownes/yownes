@@ -5,30 +5,33 @@ import {
   Col,
   Dropdown,
   Menu,
-  MenuProps,
   message,
   Popconfirm,
   Row,
   Space,
   Typography,
 } from "antd";
+import type { MenuProps } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useQuery, useMutation } from "@apollo/client";
-import { TFunction } from "i18next";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { DELETE_APP, RESTORE_APP } from "../../api/mutations";
 import { CLIENT } from "../../api/queries";
-import {
+import type {
   Client as IClient,
   ClientVariables,
   Client_user_apps_edges_node,
 } from "../../api/types/Client";
-import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
-import { RestoreApp, RestoreAppVariables } from "../../api/types/RestoreApp";
-import { Filter, getColumnFilterProps } from "../../lib/filterColumns";
-
+import type { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
+import type {
+  RestoreApp,
+  RestoreAppVariables,
+} from "../../api/types/RestoreApp";
+import type { Filter } from "../../lib/filterColumns";
+import { getColumnFilterProps } from "../../lib/filterColumns";
 import { Loading, LoadingFullScreen } from "../../components/atoms";
 import {
   AppsTable,
@@ -57,7 +60,7 @@ interface ClientProps {
 type MenuItemProps = MenuProps["items"];
 
 function getDeleteFilters(t: TFunction) {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   filters.push({
     text: (
       <Space>
@@ -95,7 +98,9 @@ const Client = () => {
     RestoreAppVariables
   >(RESTORE_APP);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   const items: MenuItemProps = [
     {
@@ -164,25 +169,25 @@ const Client = () => {
             </Row>
           </Card>
         </Col>
-        <Col></Col>
+        <Col />
       </Row>
       <Row gutter={[24, 24]}>
         <Col span={24}>
           <CustomerData customer={data?.user} />
         </Col>
-        <Col></Col>
+        <Col />
       </Row>
       <Row gutter={[24, 24]}>
         <Col span={24}>
           <ClientSubscriptionData client={data?.user} />
         </Col>
-        <Col></Col>
+        <Col />
       </Row>
       <Row gutter={[24, 24]}>
         <Col span={24}>
-          <InvoicesData userId={data?.user?.id!!} />
+          <InvoicesData userId={data?.user ? data.user.id! : ""} />
         </Col>
-        <Col></Col>
+        <Col />
       </Row>
       <Row gutter={[24, 24]}>
         <Col span={24}>
@@ -193,13 +198,13 @@ const Client = () => {
                 <PaymentMethod
                   customer={data?.user?.customer}
                   staff
-                  userId={data?.user?.id!!}
+                  userId={data?.user ? data.user.id! : ""}
                 />
               </Col>
             </Row>
           </Card>
         </Col>
-        <Col></Col>
+        <Col />
       </Row>
       <Row gutter={[24, 24]}>
         <Col span={24}>
@@ -223,8 +228,8 @@ const Client = () => {
                               variables: {
                                 id: record.id,
                               },
-                              update(cache, { data }) {
-                                if (data?.restoreApp?.ok) {
+                              update(cache, { data: restore }) {
+                                if (restore?.restoreApp?.ok) {
                                   cache.modify({
                                     id: cache.identify({ ...record }),
                                     fields: {
@@ -240,7 +245,7 @@ const Client = () => {
                                 } else {
                                   message.error(
                                     t(
-                                      `admin:errors.${data?.restoreApp?.error}`,
+                                      `admin:errors.${restore?.restoreApp?.error}`,
                                       t("error")
                                     ),
                                     4
@@ -265,11 +270,11 @@ const Client = () => {
                             variables: {
                               id: record.id,
                             },
-                            update(cache, { data }) {
-                              if (data?.deleteApp?.ok) {
-                                const id = cache.identify({ ...record });
+                            update(cache, { data: del }) {
+                              if (del?.deleteApp?.ok) {
+                                const appId = cache.identify({ ...record });
                                 cache.evict({
-                                  id,
+                                  appId,
                                 });
                                 cache.gc();
                                 message.success(
@@ -278,7 +283,7 @@ const Client = () => {
                                 );
                               } else {
                                 message.error(
-                                  t(`admin:errors.${data?.deleteApp?.error}`),
+                                  t(`admin:errors.${del?.deleteApp?.error}`),
                                   4
                                 );
                               }

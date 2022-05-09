@@ -5,15 +5,18 @@ import { useTranslation } from "react-i18next";
 
 import { DELETE_ACCOUNT, UNSUBSCRIBE } from "../../api/mutations";
 import { MY_ACCOUNT } from "../../api/queries";
-import {
+import type {
   DeleteAccount,
   DeleteAccountVariables,
 } from "../../api/types/DeleteAccount";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
-import { MyAccount } from "../../api/types/MyAccount";
-import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
-import { Errors as IErrors, useAuth } from "../../lib/auth";
-
+import type { MyAccount } from "../../api/types/MyAccount";
+import type {
+  Unsubscribe,
+  UnsubscribeVariables,
+} from "../../api/types/Unsubscribe";
+import type { Errors as IErrors } from "../../lib/auth";
+import { useAuth } from "../../lib/auth";
 import { LoadingFullScreen, TextField } from "../atoms";
 import { Errors } from "../molecules";
 
@@ -39,7 +42,9 @@ const ProfileDangerZone = ({
     UnsubscribeVariables
   >(UNSUBSCRIBE);
 
-  if (!confirmPassword) return null;
+  if (!confirmPassword) {
+    return null;
+  }
 
   return (
     <>
@@ -64,11 +69,11 @@ const ProfileDangerZone = ({
             }).then((unsubs) => {
               deleteAccount({
                 variables: { password: values.password },
-              }).then(({ data }) => {
-                if (data?.deleteAccount?.success) {
+              }).then(({ data: del }) => {
+                if (del?.deleteAccount?.success) {
                   logout?.();
                 } else {
-                  setErrors(data?.deleteAccount?.errors);
+                  setErrors(del?.deleteAccount?.errors);
                 }
               });
               if (

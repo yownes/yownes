@@ -18,33 +18,32 @@ import { useLocation } from "react-router-dom";
 
 import { ADD_PAYMENT_METHOD, REMOVE_PAYMENT_METHOD } from "../../api/mutations";
 import { CLIENT, MY_PAYMENT_METHODS } from "../../api/queries";
-
-import {
+import type {
   AddPaymentMethod,
   AddPaymentMethodVariables,
 } from "../../api/types/AddPaymentMethod";
-import {
+import type {
   Client_user_customer,
   Client_user_customer_paymentMethods_edges_node,
 } from "../../api/types/Client";
-import {
+import type {
   MyPaymentMethods_me_customer,
   MyPaymentMethods_me_customer_paymentMethods_edges_node,
 } from "../../api/types/MyPaymentMethods";
-import {
+import type {
   RemovePaymentMethod,
   RemovePaymentMethodVariables,
 } from "../../api/types/RemovePaymentMethod";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { colors } from "../../lib/colors";
 import { normalize } from "../../lib/normalize";
-
-import { CreateCreditCard, EditCreditCard } from "./";
 import { LoadingFullScreen } from "../atoms";
 import { AlertWithLink, CreditCard } from "../molecules";
-import { ICreditCardStripe } from "../molecules/CreditCard";
+import type { ICreditCardStripe } from "../molecules/CreditCard";
 
 import styles from "./PaymentMethod.module.css";
+
+import { CreateCreditCard, EditCreditCard } from ".";
 
 message.config({ maxCount: 1 });
 
@@ -71,7 +70,6 @@ const PaymentMethod = ({
   const [isModalUpdateOpen, setisModalUpdateOpen] = useState(false);
   const [isAdded, setisAdded] = useState(false);
   const [isUpdated, setisUpdated] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const { t } = useTranslation(["translation", "client"]);
   const [addPayment, { data: paymentData, loading: changing }] = useMutation<
     AddPaymentMethod,
@@ -127,7 +125,7 @@ const PaymentMethod = ({
           connectionToNodes(customer?.paymentMethods).find(
             (payment) =>
               payment.stripeId === customer?.defaultPaymentMethod?.stripeId
-          )?.card!!
+          )?.card!
         )
       )) ||
     undefined;
@@ -156,7 +154,7 @@ const PaymentMethod = ({
                 />
               </Col>
             )}
-            <Col></Col>
+            <Col />
           </Row>
         )}
         <div
@@ -170,7 +168,7 @@ const PaymentMethod = ({
             customer?.paymentMethods.edges.length > 0 ? (
               connectionToNodes(customer?.paymentMethods).map((node) => {
                 const creditcard: ICreditCardStripe = JSON.parse(
-                  normalize(node.card!!)
+                  normalize(node.card!)
                 );
                 const expired =
                   new Date(creditcard.exp_year, creditcard.exp_month) <
@@ -202,7 +200,7 @@ const PaymentMethod = ({
                       }}
                     >
                       <CreditCard
-                        data={node.card!!}
+                        data={node.card!}
                         billing={node.billingDetails}
                       />
                     </div>
@@ -227,7 +225,7 @@ const PaymentMethod = ({
                               addPayment({
                                 variables: {
                                   isDefault: true,
-                                  paymentMethodId: cardId!!,
+                                  paymentMethodId: cardId!,
                                   userId: userId,
                                 },
                                 update(cache, { data: newData }) {
@@ -381,12 +379,12 @@ const PaymentMethod = ({
         <CreateCreditCard
           form={formCreate}
           onCancel={handleCancelCreate}
-          onCreated={(paymentMethod, isDefault) => {
+          onCreated={(pm, isDefault) => {
             if (customer) {
               addPayment({
                 variables: {
                   isDefault: isDefault,
-                  paymentMethodId: paymentMethod ?? "",
+                  paymentMethodId: pm ?? "",
                   userId: userId,
                 },
                 update(cache, { data: newData }) {
@@ -421,7 +419,7 @@ const PaymentMethod = ({
             onEdited={() => {
               setisModalUpdateOpen(false);
             }}
-            payment={paymentMethod!!}
+            payment={paymentMethod!}
             staff={staff}
             userId={userId}
           />

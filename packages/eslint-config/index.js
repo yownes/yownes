@@ -6,6 +6,10 @@ module.exports = {
     "prettier",
     "plugin:import/typescript",
   ],
+  env: {
+    browser: true,
+    node: true,
+  },
   rules: {
     quotes: [
       "error",
@@ -51,7 +55,7 @@ module.exports = {
     ],
     "jest/no-identical-title": 2,
     "jest/valid-expect": 2,
-    camelcase: ["error", { ignoreImports: true }],
+    camelcase: 0,
     "prefer-destructuring": 2,
     "no-nested-ternary": 2,
     "comma-dangle": 0,

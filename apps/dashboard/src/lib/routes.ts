@@ -1,4 +1,4 @@
-import { RoutePath } from "../components/organisms/Router";
+import type { RoutePath } from "../components/organisms/Router";
 import Validate from "../pages/auth/Validate";
 import App from "../pages/client/App";
 import Checkout from "../pages/client/Checkout";

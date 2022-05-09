@@ -1,23 +1,23 @@
 import React from "react";
-import { Card, Col, Row, Table, Typography, TableColumnsType } from "antd";
+import { Card, Col, Row, Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import forIn from "lodash/forIn";
 import { useTranslation } from "react-i18next";
 
 import { BUILDS } from "../../api/queries";
-import {
+import type {
   Builds as IBuilds,
   BuildsVariables,
   Builds_builds_edges_node,
 } from "../../api/types/Builds";
 import { BuildBuildStatus } from "../../api/types/globalTypes";
 import connectionToNodes from "../../lib/connectionToNodes";
+import type { Filter } from "../../lib/filterColumns";
 import {
-  Filter,
   getColumnFilterProps,
   getColumnSearchProps,
 } from "../../lib/filterColumns";
-
 import { Loading } from "../../components/atoms";
 import { BuildState as BuildStateVisualizer } from "../../components/molecules";
 
@@ -26,10 +26,10 @@ import styles from "./Builds.module.css";
 const { Paragraph, Title } = Typography;
 
 function getBuildStatusFilters() {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   forIn(BuildBuildStatus, (value) => {
     filters.push({
-      text: <BuildStateVisualizer state={value}></BuildStateVisualizer>,
+      text: <BuildStateVisualizer state={value} />,
       value: value,
     });
   });
@@ -40,7 +40,9 @@ const Builds = () => {
   const { t } = useTranslation(["translation", "admin"]);
   const { data, loading } = useQuery<IBuilds, BuildsVariables>(BUILDS);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   const columns: TableColumnsType<Builds_builds_edges_node> = [
     {
@@ -106,7 +108,7 @@ const Builds = () => {
       dataIndex: "buildStatus",
       key: "state",
       render: (state: BuildBuildStatus) => {
-        return <BuildStateVisualizer state={state}></BuildStateVisualizer>;
+        return <BuildStateVisualizer state={state} />;
       },
       ...getColumnFilterProps<Builds_builds_edges_node>(
         ["buildStatus"],

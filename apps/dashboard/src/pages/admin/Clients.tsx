@@ -1,21 +1,14 @@
 import React from "react";
-import {
-  Col,
-  Card,
-  Row,
-  Table,
-  TableColumnsType,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Col, Card, Row, Table, Tooltip, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import forIn from "lodash/forIn";
-import { TFunction } from "i18next";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 import { CLIENTS, PLANS } from "../../api/queries";
-import {
+import type {
   Clients as IClients,
   ClientsVariables,
   Clients_users_edges_node,
@@ -23,14 +16,13 @@ import {
   Clients_users_edges_node_subscription_plan_product,
 } from "../../api/types/Clients";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
-import { Plans } from "../../api/types/Plans";
+import type { Plans } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
+import type { Filter } from "../../lib/filterColumns";
 import {
-  Filter,
   getColumnFilterProps,
   getColumnSearchProps,
 } from "../../lib/filterColumns";
-
 import { Loading } from "../../components/atoms";
 import { UserState, VerifiedState } from "../../components/molecules";
 
@@ -45,18 +37,18 @@ interface IPlan {
 }
 
 function getAccountStatusFilters() {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   forIn(AccountAccountStatus, (value) => {
-    filters.push({ text: <UserState state={value}></UserState>, value: value });
+    filters.push({ text: <UserState state={value} />, value: value });
   });
   return filters;
 }
 
 function getSubscriptionFilters(plans: IPlan[], t: TFunction) {
-  let filters: Filter[] = [];
-  let active: Filter[] = [];
-  let inactive: Filter[] = [];
-  for (let plan of plans) {
+  const filters: Filter[] = [];
+  const active: Filter[] = [];
+  const inactive: Filter[] = [];
+  for (const plan of plans) {
     if (plan.active) {
       active.push({ text: plan.name, value: plan.id });
     } else {
@@ -74,7 +66,7 @@ function getSubscriptionFilters(plans: IPlan[], t: TFunction) {
 }
 
 function getVerifiedStatusFilters() {
-  let filters: Filter[] = [];
+  const filters: Filter[] = [];
   filters.push({
     text: <VerifiedState verified={true} />,
     value: true,
@@ -92,15 +84,17 @@ const Clients = () => {
   const { data, loading } = useQuery<IClients, ClientsVariables>(CLIENTS);
   const { data: plansData, loading: loadingPlans } = useQuery<Plans>(PLANS);
   const dataSource = connectionToNodes(data?.users).filter(
-    (data) => !data.isStaff
+    (user) => !user.isStaff
   );
 
-  if (loading || loadingPlans) return <Loading />;
+  if (loading || loadingPlans) {
+    return <Loading />;
+  }
 
-  const plans: IPlan[] = connectionToNodes(plansData?.products).map((data) => ({
-    id: data.id,
-    active: data.active ?? false,
-    name: data.name,
+  const plans: IPlan[] = connectionToNodes(plansData?.products).map((plan) => ({
+    id: plan.id,
+    active: plan.active ?? false,
+    name: plan.name,
   }));
 
   const columns: TableColumnsType<Clients_users_edges_node> = [

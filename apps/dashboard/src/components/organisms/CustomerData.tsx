@@ -5,18 +5,16 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 import { UPDATE_CUSTOMER } from "../../api/mutations";
-import { Client_user } from "../../api/types/Client";
-import { MyAccount_me } from "../../api/types/MyAccount";
-import {
+import type { Client_user } from "../../api/types/Client";
+import type { MyAccount_me } from "../../api/types/MyAccount";
+import type {
   UpdateCustomer,
   UpdateCustomerVariables,
 } from "../../api/types/UpdateCustomer";
 import { normalize } from "../../lib/normalize";
-
 import { LoadingFullScreen, SelectField, TextField } from "../atoms";
-import { Option } from "../atoms/SelectField";
+import type { Option } from "../atoms/SelectField";
 import { Errors } from "../molecules";
-
 import * as Countries from "../../data/countries.json";
 
 const { Title } = Typography;
@@ -84,7 +82,7 @@ const CustomerData = ({ customer, onFinish }: CustomerDataProps) => {
         onFinish && onFinish();
       }
     }
-  }, [updateData, isUpdated, t]);
+  }, [isUpdated, location.pathname, onFinish, t, updateData]);
 
   return (
     <Row gutter={[24, 24]}>

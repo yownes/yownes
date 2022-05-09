@@ -12,14 +12,13 @@ import {
 } from "antd";
 import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
 import { CREATE_TEMPLATE } from "../../api/mutations";
-import {
+import type {
   CreateTemplate,
   CreateTemplateVariables,
 } from "../../api/types/CreateTemplate";
-
 import { LoadingFullScreen, TextField } from "../../components/atoms";
 import { ImageUpload } from "../../components/molecules";
 

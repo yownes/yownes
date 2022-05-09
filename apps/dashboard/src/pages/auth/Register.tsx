@@ -1,10 +1,10 @@
+/* eslint-disable max-len */
 import React from "react";
 import { Form, Button, Checkbox, Typography } from "antd";
 import { Trans, useTranslation } from "react-i18next";
 import { Link, Redirect, useLocation } from "react-router-dom";
 
 import { useAuth } from "../../lib/auth";
-
 import { TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 import Auth from "../../components/templates/Auth";
@@ -13,16 +13,10 @@ import styles from "./auth.module.css";
 
 const { Text } = Typography;
 
-interface LocationState {
-  from: {
-    pathname: string;
-  };
-}
-
 const Register = () => {
-  const location = useLocation<LocationState>();
+  const location = useLocation();
   const { t } = useTranslation(["auth", "translation"]);
-  let { from } = location.state || { from: { pathname: "/" } };
+  const from = location.state || { from: { pathname: "/" } };
   const { register, loadingRegister, isAuthenticated, errors, clear } =
     useAuth();
   if (isAuthenticated) {
@@ -120,7 +114,7 @@ const Register = () => {
               type="ghost"
               onClick={() => clear?.()}
             >
-              <Link to={`/auth/login`}>{t("login")}</Link>
+              <Link to={"/auth/login"}>{t("login")}</Link>
             </Button>
             <Button
               block

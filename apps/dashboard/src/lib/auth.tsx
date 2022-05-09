@@ -3,11 +3,13 @@ import { useMutation, useLazyQuery, useApolloClient } from "@apollo/client";
 
 import { REFRESH_TOKEN, REGISTER, TOKEN_AUTH } from "../api/mutations";
 import { ME } from "../api/queries";
-import { Me, Me_me } from "../api/types/Me";
-import { RefreshToken, RefreshTokenVariables } from "../api/types/RefreshToken";
-import { Register, RegisterVariables } from "../api/types/Register";
-import { TokenAuth, TokenAuthVariables } from "../api/types/TokenAuth";
-
+import type { Me, Me_me } from "../api/types/Me";
+import type {
+  RefreshToken,
+  RefreshTokenVariables,
+} from "../api/types/RefreshToken";
+import type { Register, RegisterVariables } from "../api/types/Register";
+import type { TokenAuth, TokenAuthVariables } from "../api/types/TokenAuth";
 import { Loading } from "../components/atoms";
 
 export const TOKEN_KEY = "yownesToken";
@@ -166,11 +168,11 @@ function useAuthLogic(): IAuth {
     RefreshTokenVariables
   >(REFRESH_TOKEN);
   const [me] = useLazyQuery<Me>(ME, {
-    onCompleted({ me }) {
-      if (me) {
+    onCompleted({ me: m }) {
+      if (m) {
         dispatch({
           type: "LOGIN",
-          payload: { isAdmin: me?.isStaff, user: me },
+          payload: { isAdmin: m?.isStaff, user: m },
         });
       }
     },
@@ -228,8 +230,8 @@ function useAuthLogic(): IAuth {
     }, 200);
   }
 
-  function setNewToken(token: string, refreshToken: string) {
-    localStorage.setItem(TOKEN_KEY, refreshToken);
+  function setNewToken(token: string, refresh: string) {
+    localStorage.setItem(TOKEN_KEY, refresh);
     inMemoryToken = token;
   }
 

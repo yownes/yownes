@@ -4,8 +4,7 @@ import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { MY_ACCOUNT } from "../../api/queries";
-import { MyAccount } from "../../api/types/MyAccount";
-
+import type { MyAccount } from "../../api/types/MyAccount";
 import { Loading } from "../atoms";
 import { Descriptions } from "../molecules";
 
@@ -15,13 +14,14 @@ const AdminData = () => {
   const { t } = useTranslation(["translation", "client"]);
   const { data, loading } = useQuery<MyAccount>(MY_ACCOUNT);
 
-  if (loading)
+  if (loading) {
     return (
       <Card>
         <Title level={2}>{t("client:accountData")}</Title>
         <Loading />
       </Card>
     );
+  }
   return (
     <>
       {!data?.me?.verified && (
@@ -34,7 +34,7 @@ const AdminData = () => {
               type="warning"
             />
           </Col>
-          <Col></Col>
+          <Col />
         </Row>
       )}
       <Row>

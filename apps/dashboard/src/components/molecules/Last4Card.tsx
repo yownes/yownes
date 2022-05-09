@@ -2,8 +2,8 @@ import React from "react";
 import { CreditCardOutlined } from "@ant-design/icons";
 
 import { normalize } from "../../lib/normalize";
-
 import { MastercardIcon, VisaIcon } from "../atoms";
+
 interface Last4CardProps {
   data: string;
 }
@@ -14,7 +14,9 @@ interface ICard {
 }
 
 const Last4Card = ({ data }: Last4CardProps) => {
-  if (!data) return null;
+  if (!data) {
+    return null;
+  }
   const card: ICard = JSON.parse(normalize(data));
   return (
     <span style={{ marginRight: 10 }}>

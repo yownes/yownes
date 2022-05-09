@@ -5,21 +5,21 @@ import addHours from "date-fns/addHours";
 import { useTranslation } from "react-i18next";
 
 import { PlanInterval, SubscriptionStatus } from "../../api/types/globalTypes";
-import {
+import type {
   MyAccount_me_subscription,
   MyAccount_me_subscription_plan_product_features_edges_node,
 } from "../../api/types/MyAccount";
-import { UpcomingInvoice_upcominginvoice } from "../../api/types/UpcomingInvoice";
+import type { UpcomingInvoice_upcominginvoice } from "../../api/types/UpcomingInvoice";
 import { colors } from "../../lib/colors";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { currencySymbol } from "../../lib/currencySymbol";
 import { normalize } from "../../lib/normalize";
 import { dateTime, shortDate } from "../../lib/parseDate";
 
-import { Descriptions } from "./";
-import { description } from "./Descriptions";
-
+import type { description } from "./Descriptions";
 import styles from "./SubscriptionInfo.module.css";
+
+import { Descriptions } from ".";
 
 const { Text } = Typography;
 

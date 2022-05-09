@@ -4,15 +4,15 @@ import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { CHANGE_VERIFIED } from "../../api/mutations";
-import {
+import type {
   ChangeVerified,
   ChangeVerifiedVariables,
 } from "../../api/types/ChangeVerified";
-import { Client as IClient } from "../../api/types/Client";
-import { Errors as IErrors } from "../../lib/auth";
-
-import { Errors } from "./";
+import type { Client as IClient } from "../../api/types/Client";
+import type { Errors as IErrors } from "../../lib/auth";
 import { Loading, LoadingFullScreen } from "../atoms";
+
+import { Errors } from ".";
 
 const { Text } = Typography;
 
@@ -30,7 +30,9 @@ const VerifyClient = ({ data, menuVisible }: VerifyClientProps) => {
     ChangeVerifiedVariables
   >(CHANGE_VERIFIED);
 
-  if (!data?.user) return <Loading />;
+  if (!data?.user) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -123,7 +125,7 @@ const VerifyClient = ({ data, menuVisible }: VerifyClientProps) => {
                           });
                         }
                       })
-                      .catch((err) =>
+                      .catch(() =>
                         setErrors({
                           nonFieldErrors: [
                             {

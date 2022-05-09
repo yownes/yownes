@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import { Card, Col, Collapse, Table, Typography, TableColumnsType } from "antd";
+import { Card, Col, Collapse, Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 import { format } from "date-fns";
 import es from "date-fns/locale/es";
 import { useTranslation } from "react-i18next";
 
-import { SubscriptionStatus } from "../../api/types/globalTypes";
-import { MyAccount_me_subscription_invoices_edges_node } from "../../api/types/MyAccount";
-import { Plans, Plans_features_edges_node } from "../../api/types/Plans";
-import { Subscriptions_subscriptions_edges_node } from "../../api/types/Subscriptions";
+import type { SubscriptionStatus } from "../../api/types/globalTypes";
+import type { MyAccount_me_subscription_invoices_edges_node } from "../../api/types/MyAccount";
+import type { Plans, Plans_features_edges_node } from "../../api/types/Plans";
+import type { Subscriptions_subscriptions_edges_node } from "../../api/types/Subscriptions";
 import connectionToNodes from "../../lib/connectionToNodes";
 
-import { InvoicesTable, SubscriptionState } from "./";
-
 import styles from "./SubscriptionTable.module.css";
+
+import { InvoicesTable, SubscriptionState } from ".";
 
 const { Panel } = Collapse;
 const { Text } = Typography;
@@ -51,7 +52,7 @@ const SubscriptionTable = ({
         dataIndex: "status",
         key: "state",
         render: (state: SubscriptionStatus) => {
-          return <SubscriptionState state={state}></SubscriptionState>;
+          return <SubscriptionState state={state} />;
         },
       },
       {

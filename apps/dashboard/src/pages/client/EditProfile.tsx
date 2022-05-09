@@ -4,8 +4,7 @@ import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { MY_ACCOUNT, MY_PAYMENT_METHODS } from "../../api/queries";
-import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
-
+import type { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import { Loading } from "../../components/atoms";
 import { DeleteAccount } from "../../components/molecules";
 import {
@@ -16,7 +15,7 @@ import {
   PaymentMethod,
   SubscriptionData,
 } from "../../components/organisms";
-import { MyAccount } from "../../api/types/MyAccount";
+import type { MyAccount } from "../../api/types/MyAccount";
 
 const { Title } = Typography;
 
@@ -61,7 +60,7 @@ const EditProfile = () => {
               <Loading />
             </Card>
           ) : (
-            <InvoicesData userId={data?.me?.id!!} />
+            <InvoicesData userId={data?.me?.id ?? ""} />
           )}
         </Col>
         <Col span={24}>
@@ -74,7 +73,7 @@ const EditProfile = () => {
             ) : (
               <PaymentMethod
                 customer={data?.me?.customer}
-                userId={data?.me?.id!!}
+                userId={data?.me?.id ?? ""}
               />
             )}
           </Card>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "antd";
-import { TriggerEventHandler } from "rc-table/lib/interface";
+import type { TriggerEventHandler } from "rc-table/lib/interface";
 
 import styles from "./ExpandIcon.module.css";
 

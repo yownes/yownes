@@ -1,5 +1,6 @@
 import React from "react";
-import { Menu, MenuProps } from "antd";
+import { Menu } from "antd";
+import type { MenuProps } from "antd";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 

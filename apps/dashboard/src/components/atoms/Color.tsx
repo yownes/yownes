@@ -39,7 +39,7 @@ const Color = ({
           width: size,
         }}
         {...rest}
-      ></span>
+      />
       {noSelected ? null : (
         <span
           style={{
@@ -51,7 +51,7 @@ const Color = ({
             height: 6,
             width: 6,
           }}
-        ></span>
+        />
       )}
     </div>
   );

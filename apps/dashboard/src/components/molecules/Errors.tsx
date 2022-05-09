@@ -3,7 +3,7 @@ import { Typography } from "antd";
 import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 
-import { Errors as IErrors } from "../../lib/auth";
+import type { Errors as IErrors } from "../../lib/auth";
 
 const { Text } = Typography;
 

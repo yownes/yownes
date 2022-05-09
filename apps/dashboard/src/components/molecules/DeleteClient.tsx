@@ -4,17 +4,20 @@ import { useMutation } from "@apollo/client";
 import { Trans, useTranslation } from "react-i18next";
 
 import { DELETE_CLIENT, UNSUBSCRIBE } from "../../api/mutations";
-import { Client as IClient } from "../../api/types/Client";
-import {
+import type { Client as IClient } from "../../api/types/Client";
+import type {
   DeleteClient as IDeleteClient,
   DeleteClientVariables,
 } from "../../api/types/DeleteClient";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
-import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
-import { Errors as IErrors } from "../../lib/auth";
-
-import { Errors } from "./";
+import type {
+  Unsubscribe,
+  UnsubscribeVariables,
+} from "../../api/types/Unsubscribe";
+import type { Errors as IErrors } from "../../lib/auth";
 import { Loading, LoadingFullScreen } from "../atoms";
+
+import { Errors } from ".";
 
 const { Text } = Typography;
 
@@ -37,7 +40,9 @@ const DeleteClient = ({ data, id, menuVisible }: DeleteClientProps) => {
     UnsubscribeVariables
   >(UNSUBSCRIBE);
 
-  if (!data?.user) return <Loading />;
+  if (!data?.user) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -73,7 +78,7 @@ const DeleteClient = ({ data, id, menuVisible }: DeleteClientProps) => {
               }
               ns="admin"
             >
-              <p></p>
+              <p />
             </Trans>
           </Col>
           {errors && (
@@ -132,8 +137,8 @@ const DeleteClient = ({ data, id, menuVisible }: DeleteClientProps) => {
                                 });
                               }
                             },
-                          }).then(({ data }) => {
-                            if (data?.deleteClient?.ok) {
+                          }).then(({ data: del }) => {
+                            if (del?.deleteClient?.ok) {
                               setShowModal(false);
                               message.success(
                                 t("admin:deleteClientSuccessful"),
@@ -145,7 +150,7 @@ const DeleteClient = ({ data, id, menuVisible }: DeleteClientProps) => {
                                   {
                                     code: "delete_client_error",
                                     message: t(
-                                      `errors.${data?.deleteClient?.error}`,
+                                      `errors.${del?.deleteClient?.error}`,
                                       t("error")
                                     ),
                                   },

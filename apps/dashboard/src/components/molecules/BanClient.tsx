@@ -4,14 +4,17 @@ import { useMutation } from "@apollo/client";
 import { Trans, useTranslation } from "react-i18next";
 
 import { BAN_USER, UNSUBSCRIBE } from "../../api/mutations";
-import { BanUser, BanUserVariables } from "../../api/types/BanUser";
-import { Client as IClient } from "../../api/types/Client";
+import type { BanUser, BanUserVariables } from "../../api/types/BanUser";
+import type { Client as IClient } from "../../api/types/Client";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
-import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
-import { Errors as IErrors } from "../../lib/auth";
-
-import { Errors } from "./";
+import type {
+  Unsubscribe,
+  UnsubscribeVariables,
+} from "../../api/types/Unsubscribe";
+import type { Errors as IErrors } from "../../lib/auth";
 import { Loading, LoadingFullScreen } from "../atoms";
+
+import { Errors } from ".";
 
 const { Text } = Typography;
 
@@ -33,7 +36,9 @@ const BanClient = ({ data, menuVisible }: BanClientProps) => {
     UnsubscribeVariables
   >(UNSUBSCRIBE);
 
-  if (!data?.user) return <Loading />;
+  if (!data?.user) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -78,7 +83,7 @@ const BanClient = ({ data, menuVisible }: BanClientProps) => {
               }
               ns="admin"
             >
-              <p></p>
+              <p />
             </Trans>
           </Col>
           {errors && (
@@ -124,7 +129,7 @@ const BanClient = ({ data, menuVisible }: BanClientProps) => {
                         }).then(() => {
                           banUser({
                             variables: {
-                              userId: data.user!!.id,
+                              userId: data.user!.id,
                               ban:
                                 data?.user?.accountStatus !==
                                 AccountAccountStatus.BANNED,
@@ -176,7 +181,7 @@ const BanClient = ({ data, menuVisible }: BanClientProps) => {
                       } else {
                         banUser({
                           variables: {
-                            userId: data.user!!.id,
+                            userId: data.user!.id,
                             ban:
                               data?.user?.accountStatus !==
                               AccountAccountStatus.BANNED,
