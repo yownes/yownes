@@ -104,7 +104,7 @@ const NewPlan = () => {
                           type: "particular",
                         });
                         message.success(t("admin:createPlanSuccessful"), 4);
-                        history.push("/planes");
+                        history.push(`/planes/${data.createPlan?.plan?.id}`);
                       } else {
                         message.error(
                           t(

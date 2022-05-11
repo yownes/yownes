@@ -238,7 +238,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
         id: product?.id ?? "",
         price: {
           active: formPrices.getFieldValue("active") || false,
-          amount: formPrices.getFieldValue("unitAmount"),
+          amount: formPrices.getFieldValue("unitAmount") * 100,
           currency: formPrices.getFieldValue("currency"),
           interval: formPrices.getFieldValue("interval"),
         },
@@ -292,7 +292,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
       key: "amount",
       width: "25%",
       editable: true,
-      render: (amount: number) => amount,
+      render: (amount: number) => amount / 100,
     },
     {
       title: t("admin:currency"),
