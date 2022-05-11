@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Button,
   Card,
   Col,
@@ -38,7 +39,7 @@ import styles from "./PricesInfo.module.css";
 
 import { VerifiedState } from ".";
 
-const { Paragraph, Title } = Typography;
+const { Text, Title } = Typography;
 
 interface PricesInfoProps {
   product: Plan_product | null | undefined;
@@ -438,7 +439,20 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
       </Row>
       <Row gutter={[24, 24]}>
         <Col span={24}>
-          <Paragraph type="secondary">{t("admin:warnings.prices")}</Paragraph>
+          <Text className={styles.warning} type="secondary">
+            {t("admin:warnings.prices")}
+          </Text>
+          {connectionToNodes(product?.prices).find(
+            (p) => p.active
+          ) ? undefined : (
+            <div className={styles.alert}>
+              <Alert
+                message={t("admin:warnings.notActivePrices")}
+                showIcon
+                type="warning"
+              />
+            </div>
+          )}
           <Form
             form={formPrices}
             component={false}

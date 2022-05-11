@@ -22,7 +22,7 @@ const RateSelection = ({
   plan,
   onPlanSelected,
 }: RateSelectionProps) => {
-  const { t } = useTranslation("translation");
+  const { t } = useTranslation(["translation", "client"]);
 
   return (
     <Row gutter={[24, 24]}>
@@ -30,15 +30,24 @@ const RateSelection = ({
         <Row align="middle" style={{ flex: 1, flexDirection: "column" }}>
           <Text className={styles.name}>{title}</Text>
           {/* <Text className={styles.description}>{subtitle}</Text> */}
-          <Text className={styles.price}>
-            {plan.unitAmount
-              ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")
-              : "-"}
-            {currencySymbol(plan.currency ?? "")}
-          </Text>
+
+          {plan.unitAmount ? (
+            <Text className={styles.price}>
+              {(plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")}
+              {currencySymbol(plan.currency ?? "")}
+            </Text>
+          ) : (
+            <Text className={styles.noPrice}>
+              {t("client:notAvailablePlan")}
+            </Text>
+          )}
+
           <Text className={styles.tax}>{t("priceWithTaxes")}</Text>
           <Button
-            className={`${styles.button} button-default-primary`}
+            className={`${styles.button} ${
+              plan.active ? "button-default-primary" : undefined
+            }`}
+            disabled={!plan.active}
             onClick={() => onPlanSelected(plan)}
           >
             {t("select")}

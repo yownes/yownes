@@ -35,21 +35,25 @@ const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
           <Title level={5}>{t("template")}</Title>
         </Col>
         <Col span={24}>
-          <div className={styles.templatesContainer}>
-            {templates.map((template) => (
-              <div
-                className={styles.previewContainer}
-                key={template.id}
-                onClick={() => onChange(template.id)}
-              >
-                <TemplatePreview
-                  image={template.previewImg ?? ""}
-                  name={template.name ?? ""}
-                  selected={template.id === value ?? templates[0]?.id}
-                />
-              </div>
-            ))}
-          </div>
+          {templates.length > 0 ? (
+            <div className={styles.templatesContainer}>
+              {templates.map((template) => (
+                <div
+                  className={styles.previewContainer}
+                  key={template.id}
+                  onClick={() => onChange(template.id)}
+                >
+                  <TemplatePreview
+                    image={template.previewImg ?? ""}
+                    name={template.name ?? ""}
+                    selected={template.id === value ?? templates[0]?.id}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            t("noTemplates")
+          )}
         </Col>
       </Row>
     </>

@@ -76,7 +76,8 @@
     "cancelSubscriptionIncompleteNow": "<1>La suscripción caducará automáticamente 23 horas después del fallo en el pago inicial</1><2>Si la cancelas ahora, caducará de inmediato</2>",
     "cancelSubscriptionPastDueNowApps": "<1>Se cancelará automáticamente 7 días después del fallo en el pago de la renovación</1><2>Si la cancelas ahora, se cancelará de inmediato y se eliminarán sus apps de las tiendas de aplicaciones</2>",
     "cancelSubscriptionPastDueNowNoApps": "<1>Se cancelará automáticamente 7 días después del fallo en el pago de la renovación</1><2>Si la cancelas ahora, se cancelará de inmediato</2>",
-    "prices": "ATENCIÓN: Solo es posible tener activo  un precio por cada intervalo y no se podrá añadir uno nuevo que comparta intervalo con un precio activo. Para añadir un precio nuevo con un intervalo existente, archiva antes el que actualmente está activo para poder añadir el nuevo. No podrás desarchivar un precio si hay activo otro con el mismo intervalo."
+    "prices": "Solo es posible tener activo  un precio por cada intervalo y no se podrá añadir uno nuevo que comparta intervalo con un precio activo. Para añadir un precio nuevo con un intervalo existente, archiva antes el que actualmente está activo para poder añadir el nuevo. No podrás desarchivar un precio si hay activo otro con el mismo intervalo.",
+    "notActivePrices": "Un plan sin precios activos no se mostrará a los clientes en el listado de planes a los que se pueden suscribir."
   },
   "restoreApp": "Recuperar",
   "warningRestoreApp": "¿Recuperar la app?",
@@ -174,7 +175,7 @@
   "prices": "Precios",
   "newPrice": "Nuevo Precio",
   "createPrice": "Crear Precio",
-  "noPrices": "Ningún precio que mostrar",
+  "noPrices": "Ningún Precio que mostrar",
   "pricesInfo": "Información de los precios",
   "creatingPrice": "Creando el precio",
   "createPriceSuccessful": "Precio creado con éxito",

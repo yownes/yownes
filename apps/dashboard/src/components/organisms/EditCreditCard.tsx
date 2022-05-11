@@ -125,12 +125,7 @@ const EditCreditCard = ({
               setIsUpdated(true);
             } else {
               data?.updatePaymentMethod?.error &&
-                setErrs(
-                  t(
-                    `client:errors.${data.updatePaymentMethod.error}`,
-                    t("error")
-                  )
-                );
+                setErrs(data.updatePaymentMethod.error);
             }
           })
           .catch(() => setErrs(t("unknownError")));

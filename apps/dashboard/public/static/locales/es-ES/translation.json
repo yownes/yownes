@@ -73,6 +73,10 @@
   },
   "logout": "Cerrar sesión",
   "confirmLogout": "¿Deseas cerrar sesión?",
+  "registerNotification": {
+    "message": "¡Bienvenido a Yownes!",
+    "description": "Registro completado con éxito. A partir de ahora podrás crear la App móvil de tu tienda online"
+  },
   "cardNumber": "Número de la tarjeta",
   "cvc": "CVC",
   "cardNumberLow": "número de tarjeta",
@@ -172,7 +176,7 @@
   "invoice": "Factura",
   "invoices": "Facturas",
   "noInvoices": "Ninguna Factura que mostrar",
-  "invoiceDetails": "Detalles de factura:",
+  "invoiceDetails": "Detalles de la factura:",
   "invoiceNumber": "Factura {{num}}",
   "invoicePayments": "Pagos de la factura:",
   "draft": "Borrador",
@@ -183,7 +187,7 @@
   "pendingInvoices": "Facturas pendientes",
   "summary": "Resumen de la factura",
   "payments": "Pagos",
-  "noPayments": "Ningún pago que mostrar",
+  "noPayments": "Ningún Pago que mostrar",
   "downloadInvoice": "Descargar Factura",
   "downloadInvoiceName": "Factura-{{num}}.pdf",
   "invoicedTo": "Facturado a",

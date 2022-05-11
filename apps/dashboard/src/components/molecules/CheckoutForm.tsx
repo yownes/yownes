@@ -123,7 +123,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
               <PaymentMethod
                 customer={paymentMethods?.me?.customer}
                 onCreated={setPaymentMethodId}
-                userId={dataAccount?.me?.id!}
+                userId={dataAccount?.me?.id ?? ""}
               />
             </Col>
           </Row>
@@ -247,7 +247,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                                   );
                                 }
                               },
-                            });
+                            }).catch(() => message.error(t("unknownError"), 4));
                           },
                           title: t("client:warnings.confirmSubscription"),
                         });

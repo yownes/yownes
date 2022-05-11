@@ -53,7 +53,7 @@ import {
 
 const { Title } = Typography;
 
-interface ClientProps {
+interface ClientProps extends Record<string, string> {
   id: string;
 }
 
@@ -87,7 +87,7 @@ const Client = () => {
   const { id } = useParams<ClientProps>();
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const { data, loading } = useQuery<IClient, ClientVariables>(CLIENT, {
-    variables: { id },
+    variables: { id: id ?? "" },
   });
   const [deleteApp, { loading: deleting }] = useMutation<
     DeleteApp,
@@ -119,7 +119,7 @@ const Client = () => {
           label: (
             <DeleteClient
               data={data}
-              id={id}
+              id={id ?? ""}
               menuVisible={setIsOverlayVisible}
             />
           ),
@@ -128,7 +128,9 @@ const Client = () => {
     data?.user?.isActive
       ? {
           key: "restore",
-          label: <RestoreClient id={id} menuVisible={setIsOverlayVisible} />,
+          label: (
+            <RestoreClient id={id ?? ""} menuVisible={setIsOverlayVisible} />
+          ),
         }
       : null,
   ];
@@ -173,7 +175,7 @@ const Client = () => {
       </Row>
       <Row gutter={[24, 24]}>
         <Col span={24}>
-          <CustomerData customer={data?.user} />
+          <CustomerData customer={data?.user} staff />
         </Col>
         <Col />
       </Row>
@@ -194,7 +196,9 @@ const Client = () => {
           <Card>
             <Row gutter={10}>
               <Col span={24}>
-                <Title level={2}>{t("paymentMethod")}</Title>
+                <Title level={2} style={{ paddingBottom: 24 }}>
+                  {t("paymentMethod")}
+                </Title>
                 <PaymentMethod
                   customer={data?.user?.customer}
                   staff
@@ -274,7 +278,7 @@ const Client = () => {
                               if (del?.deleteApp?.ok) {
                                 const appId = cache.identify({ ...record });
                                 cache.evict({
-                                  appId,
+                                  id: appId,
                                 });
                                 cache.gc();
                                 message.success(

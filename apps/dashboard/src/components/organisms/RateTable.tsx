@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Col, Divider, Row, Switch, Table, Typography } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
@@ -67,7 +67,7 @@ function selectPlan(
       // eslint-disable-next-line no-useless-escape
       recurring: `{\"interval\": \"${PlanInterval.MONTH.toLowerCase()}\"}`,
       name,
-      active: true,
+      active: false,
     };
   }
 }
@@ -83,14 +83,25 @@ function notNull(
 const RateTable = ({ onPlanSelected }: RateTableProps) => {
   const { t } = useTranslation("client");
   const { data, loading } = useQuery<Plans>(PLANS);
+  const [products, setProducts] = useState<
+    Plans_products_edges_node[] | null
+  >();
   const [interval, setInterval] = useState(PlanInterval.MONTH);
+
+  useEffect(() => {
+    setProducts(
+      connectionToNodes(data?.products).filter((prod) =>
+        connectionToNodes(prod.prices).find((pri) => pri.active)
+      )
+    );
+  }, [data?.products]);
 
   if (loading) {
     return <Loading />;
   }
 
   const plans = orderBy(
-    connectionToNodes(data?.products),
+    products,
     [
       (item) => JSON.parse(normalize(item.metadata!)).plan_type,
       (item) =>
@@ -109,7 +120,6 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
     groupBy(plans, (p) => JSON.parse(normalize(p.metadata!)).plan_type),
     "desc"
   );
-  console.log(plansByType);
 
   const dataSource = connectionToNodes(data?.features)
     ?.filter<Plans_features_edges_node>(notNull)
@@ -224,7 +234,6 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
                       ),
                       children: [
                         ...p.map((rate) => {
-                          console.log("rate", rate);
                           return plan(rate);
                         }),
                       ],

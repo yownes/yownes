@@ -4,6 +4,7 @@
   "selectPlan": "Selecciona tu plan",
   "changePlan": "Cambiar el plan",
   "noPlans": "En estos momentos no hay ningún Plan disponible",
+  "notAvailablePlan": "No disponible",
   "changeSubscription": "Cambiar la suscripción",
   "changeSubscriptionDisabled": "Actualiza tu método de pago",
   "selectNewPlan": "Seleccionar el nuevo plan",

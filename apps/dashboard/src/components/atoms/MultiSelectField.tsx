@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Select, Tag } from "antd";
-import type {} from "antd";
 import type { Rule } from "antd/lib/form";
 
 import "./MultiSelectField.css";

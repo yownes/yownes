@@ -1,5 +1,14 @@
 import React from "react";
-import { Button, Card, Col, Row, Table, Tooltip, Typography } from "antd";
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Row,
+  Table,
+  Tooltip,
+  Typography,
+} from "antd";
 import type { TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import type { TFunction } from "react-i18next";
@@ -67,7 +76,13 @@ const Plans = () => {
       dataIndex: "name",
       key: "name",
       render: (name, record) => (
-        <Tooltip title={record.description}>{name}</Tooltip>
+        <Tooltip title={record.description}>
+          {connectionToNodes(record.prices).find((p) => p.active) ? (
+            name
+          ) : (
+            <Badge dot>{name}</Badge>
+          )}
+        </Tooltip>
       ),
       ...getColumnSearchProps<Plans_products_edges_node>(
         ["name"],

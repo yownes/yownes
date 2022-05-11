@@ -38,23 +38,25 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
           <Title level={5}>{t("color")}</Title>
         </Col>
         <Col span={24}>
-          <Row>
-            {defaultColors.map((color) => (
-              <Color
-                color={color}
-                key={color}
-                onClick={() =>
-                  onChange({
-                    color,
-                    text: (value?.text as TextColor) ?? "white",
-                  })
-                }
-                pointer
-                selected={color === value?.color ?? defaultColors[0]}
-                size={28}
-              />
-            ))}
-          </Row>
+          {defaultColors.length > 0 && (
+            <Row>
+              {defaultColors.map((color) => (
+                <Color
+                  color={color}
+                  key={color}
+                  onClick={() =>
+                    onChange({
+                      color,
+                      text: (value?.text as TextColor) ?? "white",
+                    })
+                  }
+                  pointer
+                  selected={color === value?.color ?? defaultColors[0]}
+                  size={28}
+                />
+              ))}
+            </Row>
+          )}
           <Row>
             <div className={styles.customColorContainer}>
               <TextField

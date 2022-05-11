@@ -26,6 +26,14 @@
   font-weight: bold;
   line-height: 44px;
 }
+
+.noPrice {
+  color: #61db9b !important;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 44px;
+}
+
 .tax {
   color: #636363 !important;
   font-family: "Ubuntu Mono" !important;

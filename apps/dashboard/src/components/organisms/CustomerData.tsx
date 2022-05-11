@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 import { UPDATE_CUSTOMER } from "../../api/mutations";
+import { CLIENT, MY_ACCOUNT } from "../../api/queries";
 import type { Client_user } from "../../api/types/Client";
 import type { MyAccount_me } from "../../api/types/MyAccount";
 import type {
@@ -30,6 +31,7 @@ enum Language {
 interface CustomerDataProps {
   customer: Client_user | MyAccount_me | null | undefined;
   onFinish?: () => void;
+  staff?: boolean;
 }
 
 interface IAddress {
@@ -43,7 +45,7 @@ interface IMetadata {
   document_id?: string;
 }
 
-const CustomerData = ({ customer, onFinish }: CustomerDataProps) => {
+const CustomerData = ({ customer, onFinish, staff }: CustomerDataProps) => {
   const location = useLocation();
   const { t, i18n } = useTranslation(["translation", "client"]);
   const [errs, setErrs] = useState("");
@@ -51,7 +53,11 @@ const CustomerData = ({ customer, onFinish }: CustomerDataProps) => {
   const [updateCustomer, { data: updateData, loading: updating }] = useMutation<
     UpdateCustomer,
     UpdateCustomerVariables
-  >(UPDATE_CUSTOMER);
+  >(UPDATE_CUSTOMER, {
+    refetchQueries: staff
+      ? [{ query: CLIENT, variables: { id: customer?.id } }]
+      : [{ query: MY_ACCOUNT }],
+  });
   const country = i18n.language.split("-")[0] as Language;
   const language = Language[country] ?? "es";
   const countries: Option[] = [];
@@ -237,6 +243,7 @@ const CustomerData = ({ customer, onFinish }: CustomerDataProps) => {
                     </Form.Item> */}
                     <SelectField
                       label={t("country")}
+                      defaultEmpty
                       defaultValue={addressData.country}
                       name="country"
                       options={countries}
