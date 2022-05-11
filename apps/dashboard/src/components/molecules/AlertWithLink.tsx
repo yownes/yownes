@@ -4,6 +4,7 @@ import { Alert, Button, Typography } from "antd";
 import { Link } from "react-router-dom";
 
 const { Text } = Typography;
+
 interface AlertWithLinkProps {
   buttonText: string;
   containerStyle?: CSSProperties;

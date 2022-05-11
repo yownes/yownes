@@ -104,7 +104,11 @@
   "saveChangesError": "Error al intentar guardar los cambios",
   "validate": {
     "message": "Tu cuenta no está validada todavía",
-    "description": "Comprueba tu correo electrónico en busca del link de validación"
+    "description": "Comprueba tu correo electrónico en busca del link de validación",
+    "resendEmail": "Reenviar",
+    "resendEmailWarning": "<1>¿Reenviar link?</1><2>Se enviará un nuevo mensaje a tu correo electrónico</2><3>Accede al link para verificar tu cuenta</3>",
+    "resending": "Reenviando el enlace",
+    "resendEmailSuccessful": "Enlace reenviado con éxito"
   },
   "addApp": "Nueva aplicación",
   "addNewApp": "Añadir App",
@@ -219,5 +223,6 @@
   "confirmDeleteAccount": "Eliminar definitivamente mi cuenta",
   "monthlyPayment": "Cargo mensual",
   "template": "Plantilla para la aplicación móvil",
+  "noTemplates": "Ninguna plantilla disponible en estos momentos",
   "preview": "Vista Previa"
 }

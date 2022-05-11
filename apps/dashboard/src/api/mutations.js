@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+
 import { INVOICE_FRAGMENT } from "./queries";
 
 /**
@@ -115,6 +116,15 @@ export const PASSWORD_RESET = gql`
       newPassword1: $newPassword1
       newPassword2: $newPassword2
     ) {
+      success
+      errors
+    }
+  }
+`;
+
+export const RESEND_ACTIVATION_EMAIL = gql`
+  mutation ResendActivationEmail($email: String!) {
+    resendActivationEmail(email: $email) {
       success
       errors
     }

@@ -2,6 +2,7 @@ import React from "react";
 import { Alert, Button, Typography } from "antd";
 
 const { Text } = Typography;
+
 interface AlertWithButtonProps {
   buttonText: string;
   message: string[];

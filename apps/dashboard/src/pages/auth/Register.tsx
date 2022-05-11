@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React from "react";
-import { Form, Button, Checkbox, Typography } from "antd";
+import { Button, Checkbox, Form, Typography } from "antd";
 import { Trans, useTranslation } from "react-i18next";
 import { Link, Redirect, useLocation } from "react-router-dom";
 
@@ -16,11 +16,11 @@ const { Text } = Typography;
 const Register = () => {
   const location = useLocation();
   const { t } = useTranslation(["auth", "translation"]);
-  const from = location.state || { from: { pathname: "/" } };
+  const to = location.state || { from: { pathname: "/" } };
   const { register, loadingRegister, isAuthenticated, errors, clear } =
     useAuth();
   if (isAuthenticated) {
-    return <Redirect to={from} />;
+    return <Redirect to={to} />; // TODO: state new: true para comprobar Profile mensaje bienvenida
   }
   return (
     <Auth image="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">

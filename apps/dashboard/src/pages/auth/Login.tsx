@@ -16,10 +16,10 @@ const { Text } = Typography;
 const Login = () => {
   const location = useLocation();
   const { t } = useTranslation(["auth", "translation"]);
-  const from = location.state || { from: { pathname: "/" } };
+  const to = location.state || { from: { pathname: "/" } };
   const { login, loadingAuth, isAuthenticated, errors, clear } = useAuth();
   if (isAuthenticated) {
-    return <Redirect to={from} />;
+    return <Redirect to={to} />;
   }
   return (
     <Auth image="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">

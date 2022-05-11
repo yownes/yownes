@@ -6,8 +6,10 @@ import { useTranslation } from "react-i18next";
 const { Text } = Typography;
 
 interface AlertWithConfirmProps {
+  big?: boolean;
   buttonText: string;
   confirmText: string | ReactNode;
+  description?: string[];
   message: string[];
   onConfirm: () => void;
   style?: React.CSSProperties;
@@ -15,8 +17,10 @@ interface AlertWithConfirmProps {
 }
 
 const AlertWithConfirm = ({
+  big,
   buttonText,
   confirmText,
+  description,
   message,
   onConfirm,
   style,
@@ -24,7 +28,7 @@ const AlertWithConfirm = ({
 }: AlertWithConfirmProps) => {
   const { t } = useTranslation();
   return (
-    <div style={{ padding: "0px 15px 0px 7.5px" }}>
+    <div style={big ? {} : { padding: "0px 15px 0px 7.5px" }}>
       <Alert
         action={
           <Popconfirm
@@ -39,6 +43,18 @@ const AlertWithConfirm = ({
               {buttonText}
             </Button>
           </Popconfirm>
+        }
+        className="alert-with-confirm"
+        description={
+          description ? (
+            <div style={{ margin: "5px 10px" }}>
+              {description.map((d) => (
+                <Text key={d} style={{ display: "block" }}>
+                  {d}
+                </Text>
+              ))}
+            </div>
+          ) : undefined
         }
         message={
           <div style={{ margin: "5px 10px" }}>

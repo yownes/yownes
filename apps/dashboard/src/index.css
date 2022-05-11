@@ -43,6 +43,10 @@ h5 {
   font-size: 16px !important;
 }
 
+.alert-with-confirm > .ant-alert-action {
+  align-self: center;
+}
+
 .ant-alert {
   border-radius: 12px !important;
 }
@@ -72,6 +76,10 @@ h5 {
 
 .ant-alert-with-description {
   border-radius: 20px !important;
+}
+
+.ant-badge {
+  color: inherit !important;
 }
 
 .ant-btn-dangerous.ant-btn-default {

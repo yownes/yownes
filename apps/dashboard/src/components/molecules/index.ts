@@ -23,6 +23,7 @@ export { default as InvoiceInfo } from "./InvoiceInfo";
 export { default as InvoicesTable } from "./InvoicesTable";
 export { default as InvoiceState } from "./InvoiceState";
 export { default as Last4Card } from "./Last4Card";
+export { default as NotVerifiedAlert } from "./NotVerifiedAlert";
 export { default as PaymentsTable } from "./PaymentsTable";
 export { default as PaymentState } from "./PaymentState";
 export { default as Placeholder } from "./Placeholder";

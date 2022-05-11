@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { MY_ACCOUNT } from "../../api/queries";
 import type { MyAccount } from "../../api/types/MyAccount";
 import { Loading } from "../atoms";
-import { Descriptions } from "../molecules";
+import { Descriptions, NotVerifiedAlert } from "../molecules";
 
 const { Title } = Typography;
 
@@ -28,12 +28,7 @@ const AccountData = () => {
       {!data?.me?.verified && (
         <Row gutter={[24, 24]}>
           <Col span={24}>
-            <Alert
-              showIcon
-              message={t("client:validate.message")}
-              description={t("client:validate.description")}
-              type="warning"
-            />
+            <NotVerifiedAlert email={data?.me?.email ?? ""} />
           </Col>
           <Col />
         </Row>

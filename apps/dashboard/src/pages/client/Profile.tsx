@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Card, Col, message, Popconfirm, Row } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  message,
+  notification,
+  Popconfirm,
+  Row,
+} from "antd";
 import { useMutation, useQuery } from "@apollo/client";
 import { Trans, useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import { RESUBSCRIBE } from "../../api/mutations";
 import { APPS, MY_ACCOUNT, UPCOMING_INVOICE } from "../../api/queries";
@@ -23,14 +31,17 @@ import {
   Placeholder,
   TitleWithAction,
   ProfileInfo,
+  NotVerifiedAlert,
 } from "../../components/molecules";
 
 import "../../index.css";
 
 message.config({ maxCount: 1 });
+notification.config({ maxCount: 1 });
 
 const Profile = () => {
   const history = useHistory();
+  const location = useLocation();
   const [allowedApps, setAllowedApps] = useState(1);
   const [isResubscribed, setIsResubscribed] = useState(false);
   const { t } = useTranslation(["translation", "client"]);
@@ -72,6 +83,15 @@ const Profile = () => {
       );
     }
   }, [data]);
+  useEffect(() => {
+    if (location.state) {
+      notification.success({
+        description: t("registerNotification.description"),
+        duration: 0,
+        message: t("registerNotification.message"),
+      });
+    }
+  }, [location.state, t]);
 
   if (loading || loadingData) {
     return <Loading />;
@@ -87,12 +107,7 @@ const Profile = () => {
       {!data?.me?.verified && (
         <Row gutter={[24, 24]}>
           <Col span={24}>
-            <Alert
-              showIcon
-              message={t("client:validate.message")}
-              description={t("client:validate.description")}
-              type="warning"
-            />
+            <NotVerifiedAlert email={data?.me?.email ?? ""} />
           </Col>
           <Col />
         </Row>
