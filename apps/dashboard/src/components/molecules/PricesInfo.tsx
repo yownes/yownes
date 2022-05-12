@@ -439,9 +439,6 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
       </Row>
       <Row gutter={[24, 24]}>
         <Col span={24}>
-          <Text className={styles.warning} type="secondary">
-            {t("admin:warnings.prices")}
-          </Text>
           {connectionToNodes(product?.prices).find(
             (p) => p.active
           ) ? undefined : (
@@ -453,6 +450,9 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
               />
             </div>
           )}
+          <Text className={styles.warning} type="secondary">
+            {t("admin:warnings.prices")}
+          </Text>
           <Form
             form={formPrices}
             component={false}

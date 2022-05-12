@@ -135,6 +135,7 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
           menuVisible={setIsOverlayVisible}
         />
       ),
+      disabled: !client?.subscription,
     },
     {
       key: "cancel",

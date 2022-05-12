@@ -107,12 +107,6 @@ const Client = () => {
       key: "ban",
       label: <BanClient data={data} menuVisible={setIsOverlayVisible} />,
     },
-    data?.user
-      ? {
-          key: "verify",
-          label: <VerifyClient data={data} menuVisible={setIsOverlayVisible} />,
-        }
-      : null,
     data?.user?.isActive
       ? {
           key: "delete",
@@ -125,12 +119,18 @@ const Client = () => {
           ),
         }
       : null,
-    data?.user?.isActive
+    !data?.user?.isActive
       ? {
           key: "restore",
           label: (
             <RestoreClient id={id ?? ""} menuVisible={setIsOverlayVisible} />
           ),
+        }
+      : null,
+    data?.user
+      ? {
+          key: "verify",
+          label: <VerifyClient data={data} menuVisible={setIsOverlayVisible} />,
         }
       : null,
   ];

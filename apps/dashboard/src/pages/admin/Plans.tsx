@@ -20,6 +20,7 @@ import type {
   Plans as IPlans,
   Plans_products_edges_node,
 } from "../../api/types/Plans";
+import { colors } from "../../lib/colors";
 import connectionToNodes from "../../lib/connectionToNodes";
 import type { Filter } from "../../lib/filterColumns";
 import {
@@ -80,7 +81,9 @@ const Plans = () => {
           {connectionToNodes(record.prices).find((p) => p.active) ? (
             name
           ) : (
-            <Badge dot>{name}</Badge>
+            <Badge color={colors.tagYellow} dot>
+              {name}
+            </Badge>
           )}
         </Tooltip>
       ),

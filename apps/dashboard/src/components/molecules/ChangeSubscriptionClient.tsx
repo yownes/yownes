@@ -138,10 +138,10 @@ const ChangeSubscriptionClient = ({
     }
   }, [isUpdated, showModal, t, updateSubscriptionData?.updateSubscription]);
 
-  if (!data) {
+  if (!data || !data.subscription) {
     return (
       <Text disabled style={{ display: "flex", flex: 1 }} type="danger">
-        {t("admin:cancelClientSubscription")}
+        {t("admin:changeClientSubscription")}
       </Text>
     );
   }

@@ -85,7 +85,7 @@ const CancelSubscriptionClient = ({
     }
   }, [isUnsubscribed, t, unsubscribeData]);
 
-  if (!data) {
+  if (!data || !data.subscription) {
     return (
       <Text disabled style={{ display: "flex", flex: 1 }} type="danger">
         {t("admin:cancelClientSubscription")}
