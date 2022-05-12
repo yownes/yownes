@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Col, Form, Row, Typography, message } from "antd";
 import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ const ChangePassword = () => {
   const [form] = Form.useForm();
   const { t } = useTranslation("client");
   const { setNewToken } = useAuth();
-  const [passwordChange, { data, loading }] = useMutation<
+  const [passwordChange, { data, loading, reset }] = useMutation<
     PasswordChange,
     PasswordChangeVariables
   >(PASSWORD_CHANGE);
@@ -29,9 +29,6 @@ const ChangePassword = () => {
     form.resetFields();
     message.success(t("changePasswordSuccessful"), 4);
   }
-  useEffect(() => {
-    console.log("form", form);
-  }, [form]);
 
   return (
     <Row gutter={[24, 24]}>
@@ -39,12 +36,9 @@ const ChangePassword = () => {
         <Title level={2} style={{ paddingBottom: 24 }}>
           {t("changePassword")}
         </Title>
-        <Errors
-          errors={data?.passwordChange?.errors}
-          fields={["oldPassword", "newPassword", "newPassword2"]}
-        />
         <Form
           form={form}
+          onChange={() => reset()}
           onFinish={(values) => {
             passwordChange({
               variables: {
@@ -63,21 +57,16 @@ const ChangePassword = () => {
               }
             });
           }}
-          onErrorCapture={(e) => console.log("errorcapture", e)}
-          onError={(e) => console.log("error", e)}
         >
-          <Row>
+          <Row gutter={[24, 0]}>
             <Col span={24}>
               <TextField
                 label={t("oldPassword")}
                 name="oldPassword"
-                // error={form.getFieldError("oldPassword")}
                 rules={[{ required: true, message: t("required.oldPassword") }]}
                 type="password"
               />
             </Col>
-          </Row>
-          <Row gutter={[24, 0]}>
             <Col span={24} md={12}>
               <TextField
                 label={t("newPassword")}
@@ -101,14 +90,26 @@ const ChangePassword = () => {
               />
             </Col>
           </Row>
-          <Button
-            htmlType="submit"
-            type="primary"
-            disabled={loading}
-            loading={loading}
-          >
-            {t("changePassword")}
-          </Button>
+          <Row gutter={[24, 24]}>
+            {data?.passwordChange?.errors && (
+              <Col span={24}>
+                <Errors
+                  errors={data?.passwordChange?.errors}
+                  fields={["oldPassword", "newPassword", "newPassword2"]}
+                />
+              </Col>
+            )}
+            <Col span={24}>
+              <Button
+                htmlType="submit"
+                type="primary"
+                disabled={loading}
+                loading={loading}
+              >
+                {t("changePassword")}
+              </Button>
+            </Col>
+          </Row>
         </Form>
         {loading && <LoadingFullScreen tip={t("changing")} />}
       </Col>
