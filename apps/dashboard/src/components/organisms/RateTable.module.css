@@ -20,7 +20,7 @@
 
 .table {
   background-color: transparent !important;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   table-layout: fixed;
   width: 100%;
