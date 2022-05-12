@@ -390,3 +390,8 @@ h5 {
   border-color: #82f2b7 !important;
   color: #82f2b7 !important;
 }
+
+.link-button,
+.link-button > button {
+  padding: 0px !important;
+}

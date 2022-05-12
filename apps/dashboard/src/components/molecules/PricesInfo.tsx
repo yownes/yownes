@@ -341,12 +341,22 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
                 onConfirm={() => formPrices.submit()}
                 title={t("admin:warningCreatePrice")}
               >
-                <Button style={{ padding: 0, marginRight: 16 }} type="link">
+                <Button
+                  className="link-button"
+                  style={{ padding: 0, marginRight: 16 }}
+                  type="link"
+                >
                   {t("admin:createPrice")}
                 </Button>
               </Popconfirm>
             )}
-            <Button style={{ padding: 0 }} danger type="link" onClick={discard}>
+            <Button
+              className="link-button"
+              style={{ padding: 0 }}
+              danger
+              type="link"
+              onClick={discard}
+            >
               {t("cancel")}
             </Button>
           </span>
@@ -366,6 +376,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
             visible={archivingId !== "" && archivingId === record.id}
           >
             <Button
+              className="link-button"
               style={{ padding: 0 }}
               danger={record.active}
               type="link"

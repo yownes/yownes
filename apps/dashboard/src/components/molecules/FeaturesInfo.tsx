@@ -257,64 +257,90 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
       render: (_: string, record: Plan_product_features_edges_node) => {
         const editable = isEditing(record);
         return editable ? (
-          <span>
-            {record.id === "1" ? (
-              <>
+          record.id === "1" ? (
+            <Row gutter={[24, 24]}>
+              <Col>
                 <Popconfirm
                   cancelButtonProps={{ className: "button-default-default" }}
                   onConfirm={() => formFeatures.submit()}
                   title={t("admin:warningCreateFeature")}
                 >
-                  <Button type="link">{t("admin:createFeature")}</Button>
+                  <Button className="link-button" type="link">
+                    {t("admin:createFeature")}
+                  </Button>
                 </Popconfirm>
-                <Button danger type="link" onClick={discard}>
+              </Col>
+              <Col>
+                <Button
+                  className="link-button"
+                  danger
+                  type="link"
+                  onClick={discard}
+                >
                   {t("cancel")}
                 </Button>
-              </>
-            ) : (
-              <>
+              </Col>
+            </Row>
+          ) : (
+            <Row gutter={[24, 24]}>
+              <Col>
                 <Popconfirm
                   cancelButtonProps={{ className: "button-default-default" }}
                   onConfirm={() => save(record)}
                   title={t("admin:warningSaveChanges")}
                 >
-                  <Button type="link">{t("save")}</Button>
+                  <Button className="link-button" type="link">
+                    {t("save")}
+                  </Button>
                 </Popconfirm>
-                <Button danger type="link" onClick={cancel}>
+              </Col>
+              <Col>
+                <Button
+                  className="link-button"
+                  danger
+                  type="link"
+                  onClick={cancel}
+                >
                   {t("cancel")}
                 </Button>
-              </>
-            )}
-          </span>
+              </Col>
+            </Row>
+          )
         ) : (
-          <span>
-            <Button
-              type="link"
-              disabled={editingId !== "" || deletingId !== ""}
-              onClick={() => edit(record)}
-            >
-              {t("edit")}
-            </Button>
-            <Popconfirm
-              cancelButtonProps={{ className: "button-default-default" }}
-              onCancel={() => cancel()}
-              onConfirm={() => del(record)}
-              title={t("admin:warningDeleteFeature")}
-              visible={deletingId !== "" && deletingId === record.id}
-            >
+          <Row gutter={[24, 24]}>
+            <Col>
               <Button
-                danger
+                className="link-button"
                 type="link"
-                disabled={
-                  (editingId !== "" || deletingId !== "") &&
-                  deletingId !== record.id
-                }
-                onClick={() => !deletingId && setDeletingId(record.id!)}
+                disabled={editingId !== "" || deletingId !== ""}
+                onClick={() => edit(record)}
               >
-                {t("delete")}
+                {t("edit")}
               </Button>
-            </Popconfirm>
-          </span>
+            </Col>
+            <Col>
+              <Popconfirm
+                cancelButtonProps={{ className: "button-default-default" }}
+                onCancel={() => cancel()}
+                onConfirm={() => del(record)}
+                title={t("admin:warningDeleteFeature")}
+                visible={deletingId !== "" && deletingId === record.id}
+              >
+                <Button
+                  className="link-button"
+                  danger
+                  type="link"
+                  disabled={
+                    (editingId !== "" || deletingId !== "") &&
+                    deletingId !== record.id
+                  }
+                  onClick={() => !deletingId && setDeletingId(record.id!)}
+                >
+                  {t("delete")}
+                </Button>
+              </Popconfirm>
+            </Col>
+          </Row>
         );
       },
     },

@@ -260,7 +260,9 @@ const Client = () => {
                           }
                           title={t("admin:warningRestoreApp")}
                         >
-                          <Button type="link">{t("admin:restoreApp")}</Button>
+                          <Button className="link-button" type="link">
+                            {t("admin:restoreApp")}
+                          </Button>
                         </Popconfirm>
                       );
                     }
@@ -296,7 +298,7 @@ const Client = () => {
                         }}
                         title={t("admin:warnings.app")}
                       >
-                        <Button danger type="link">
+                        <Button className="link-button" danger type="link">
                           {t("admin:deleteApp")}
                         </Button>
                       </Popconfirm>
