@@ -160,48 +160,54 @@ const EditableCell: React.FC<EditableCellProps> = ({
       );
       break;
     default:
-      undefined;
+      inputNode = undefined;
   }
   if (editing) {
     if (inputNode) {
-      return inputNode;
+      return <td {...restProps}>{inputNode}</td>;
     } else {
       if (dataIndex === "currency") {
         return (
-          <SelectField
-            label={t("admin:currency")}
-            defaultEmpty
-            name="currency"
-            options={[
-              { id: "eur", name: t("admin:euro") },
-              { id: "usd", name: t("admin:usd") },
-            ]}
-            rules={[{ required: true }]}
-            wrapperClassName={styles.input}
-          />
+          <td {...restProps}>
+            <SelectField
+              label={t("admin:currency")}
+              defaultEmpty
+              name="currency"
+              options={[
+                { id: "eur", name: t("admin:euro") },
+                { id: "usd", name: t("admin:usd") },
+              ]}
+              rules={[{ required: true }]}
+              wrapperClassName={styles.input}
+            />
+          </td>
         );
       }
       if (isEqual(dataIndex, ["recurring", "interval"])) {
         return (
-          <SelectField
-            defaultEmpty
-            label={t("admin:interval")}
-            name="interval"
-            options={intervals}
-            rules={[{ required: true }]}
-            wrapperClassName={styles.input}
-          />
+          <td {...restProps}>
+            <SelectField
+              defaultEmpty
+              label={t("admin:interval")}
+              name="interval"
+              options={intervals}
+              rules={[{ required: true }]}
+              wrapperClassName={styles.input}
+            />
+          </td>
         );
       }
       if (dataIndex === "active") {
         return (
-          <Form.Item
-            className={styles.switch}
-            name="active"
-            valuePropName="checked"
-          >
-            <Switch defaultChecked={false} />
-          </Form.Item>
+          <td {...restProps}>
+            <Form.Item
+              className={styles.switch}
+              name="active"
+              valuePropName="checked"
+            >
+              <Switch defaultChecked={false} />
+            </Form.Item>
+          </td>
         );
       }
     }
