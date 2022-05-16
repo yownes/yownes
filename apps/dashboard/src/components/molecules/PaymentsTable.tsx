@@ -61,16 +61,6 @@ const PaymentsTable = ({ payments }: PaymentsTableProps) => {
       dataSource={payments}
       locale={{ emptyText: t("noPayments") }}
       pagination={false}
-      // pagination={{
-      //   showSizeChanger: true,
-      //   showTotal: (total, range) =>
-      //     t("paginationItems", {
-      //       first: range[0],
-      //       last: range[1],
-      //       total: total,
-      //       item: t("admin:prices"),
-      //     }),
-      // }}
       rowKey={(row) => row.id}
     />
   ) : (

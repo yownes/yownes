@@ -14,6 +14,18 @@ interface DescriptionsProps {
   items: description[];
 }
 
+function handleClassName(cols: 1 | 2, i: number) {
+  if (cols === 2) {
+    if (i % 2) {
+      return styles.rightCol;
+    } else {
+      return styles.leftCol;
+    }
+  } else {
+    return undefined;
+  }
+}
+
 const Descriptions = ({ cols = 2, items }: DescriptionsProps) => {
   return (
     <>
@@ -21,15 +33,7 @@ const Descriptions = ({ cols = 2, items }: DescriptionsProps) => {
         {items.map((val, i) => {
           return (
             <Col key={i} span={cols === 2 ? 12 : 24}>
-              <Col
-                className={
-                  cols === 2
-                    ? i % 2
-                      ? styles.rightCol
-                      : styles.leftCol
-                    : undefined
-                }
-              >
+              <Col className={handleClassName(cols, i)}>
                 <span
                   className={`${styles.title} ${
                     (i === 0 || (i === 1 && cols === 2)) && styles.borderTop

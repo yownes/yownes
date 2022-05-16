@@ -5,7 +5,7 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { BAN_USER, UNSUBSCRIBE } from "../../api/mutations";
 import type { BanUser, BanUserVariables } from "../../api/types/BanUser";
-import type { Client as IClient } from "../../api/types/Client";
+import type { Client as IClient, Client_user } from "../../api/types/Client";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import type {
   Unsubscribe,
@@ -21,6 +21,26 @@ const { Text } = Typography;
 interface BanClientProps {
   data: IClient | undefined;
   menuVisible?: (visible: boolean) => void;
+}
+
+function handleWarning(user: Client_user) {
+  if (user.accountStatus === AccountAccountStatus.BANNED) {
+    return "warnings.unban";
+  } else {
+    if (user.subscription) {
+      if (user.apps && user.apps.edges.length > 0) {
+        return "warnings.banSubsApps";
+      } else {
+        return "warnings.banSubsNoApps";
+      }
+    } else {
+      if (user.apps && user.apps.edges.length > 0) {
+        return "warnings.banNoSubsApps";
+      } else {
+        ("warnings.banNoSubsNoApps");
+      }
+    }
+  }
 }
 
 const BanClient = ({ data, menuVisible }: BanClientProps) => {
@@ -69,20 +89,7 @@ const BanClient = ({ data, menuVisible }: BanClientProps) => {
       >
         <Row gutter={[24, 24]}>
           <Col span={24}>
-            <Trans
-              i18nKey={
-                data?.user?.accountStatus === AccountAccountStatus.BANNED
-                  ? "warnings.unban"
-                  : data?.user?.subscription
-                  ? data?.user?.apps && data?.user?.apps.edges.length > 0
-                    ? "warnings.banSubsApps"
-                    : "warnings.banSubsNoApps"
-                  : data?.user?.apps && data?.user?.apps.edges.length > 0
-                  ? "warnings.banNoSubsApps"
-                  : "warnings.banNoSubsNoApps"
-              }
-              ns="admin"
-            >
+            <Trans i18nKey={handleWarning(data.user)} ns="admin">
               <p />
             </Trans>
           </Col>

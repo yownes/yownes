@@ -1,11 +1,19 @@
-.clickable {
-  cursor: pointer;
+.alert {
+  margin-bottom: 20px;
+  margin-top: 4px;
 }
 
-.deleteIcon {
-  border-color: transparent !important;
+.alertAdmin {
+  margin-bottom: 20px;
+  margin-top: 24px;
 }
 
-.editIcon {
-  border-color: transparent !important;
+.alertNoPaymentsAdmin {
+  padding-top: 20px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }

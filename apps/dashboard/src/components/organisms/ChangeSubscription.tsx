@@ -1,6 +1,7 @@
 import React from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { Col, Divider, Row, Select, Space, Switch, Typography } from "antd";
+import { Col, Row, Select, Switch, Typography } from "antd";
+import type { TFunction } from "i18next";
 import find from "lodash/find";
 import { useTranslation } from "react-i18next";
 
@@ -48,6 +49,26 @@ interface ChangeSubscriptionProps {
   plansFeatures: (Plans_features_edges_node | null)[] | null | undefined;
   products: Plans_products_edges_node[];
   step: boolean;
+}
+
+function handleAllowedApps(
+  allowed: string | number,
+  t: TFunction,
+  features?: Plans_products_edges_node_features_edges_node[]
+) {
+  if (allowed === "1") {
+    if (features && features.length > 0) {
+      return `, ${allowed} ${t("includedApp")}`;
+    } else {
+      return `${allowed} ${t("includedApp")}`;
+    }
+  } else {
+    if (features && features.length > 0) {
+      return `, ${allowed} ${t("includedApps")}`;
+    } else {
+      return `${allowed} ${t("includedApps")}`;
+    }
+  }
 }
 
 const ChangeSubscription = ({
@@ -310,13 +331,7 @@ const ChangeSubscription = ({
                             </span>
                           );
                         })}
-                      {allowed_apps === "1"
-                        ? features && features.length > 0
-                          ? `, ${allowed_apps} ${t("includedApp")}`
-                          : `${allowed_apps} ${t("includedApp")}`
-                        : features && features.length > 0
-                        ? `, ${allowed_apps} ${t("includedApps")}`
-                        : `${allowed_apps} ${t("includedApps")}`}
+                      {handleAllowedApps(allowed_apps, t, features)}
                       {allowed_builds === "1"
                         ? ` (${allowed_builds} ${t("includedBuild")})`
                         : ` (${allowed_builds} ${t("includedBuilds")})`}

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Tag, Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import addHours from "date-fns/addHours";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -30,6 +31,42 @@ interface ProfileInfoProps {
   profile?: AccountBasicData | null;
   extra?: ReactNode;
   verified?: boolean;
+}
+
+function handleSubscription(
+  profile: AccountBasicData,
+  tooltip: ReactNode,
+  t: TFunction
+) {
+  if (profile?.subscription) {
+    if (
+      profile.subscription.cancelAtPeriodEnd ||
+      profile.subscription.cancelAt
+    ) {
+      return (
+        <>
+          <SubscriptionState
+            state={profile.subscription.status}
+            tooltip={tooltip}
+          />
+          <Tag>
+            {t("cancelAt", {
+              date: dateTime(new Date(profile.subscription.cancelAt)),
+            })}
+          </Tag>
+        </>
+      );
+    } else {
+      return (
+        <SubscriptionState
+          state={profile.subscription.status}
+          tooltip={tooltip}
+        />
+      );
+    }
+  } else {
+    return t("noSubscription");
+  }
 }
 
 const ProfileInfo = ({ profile, extra, verified }: ProfileInfoProps) => {
@@ -126,29 +163,9 @@ const ProfileInfo = ({ profile, extra, verified }: ProfileInfoProps) => {
   !data?.me.isStaff &&
     info.push({
       title: t("subscription"),
-      description: profile?.subscription ? (
-        profile.subscription.cancelAtPeriodEnd ||
-        profile.subscription.cancelAt ? (
-          <>
-            <SubscriptionState
-              state={profile.subscription.status}
-              tooltip={subscriptionInfo}
-            />
-            <Tag>
-              {t("cancelAt", {
-                date: dateTime(new Date(profile.subscription.cancelAt)),
-              })}
-            </Tag>
-          </>
-        ) : (
-          <SubscriptionState
-            state={profile.subscription.status}
-            tooltip={subscriptionInfo}
-          />
-        )
-      ) : (
-        t("noSubscription")
-      ),
+      description: profile
+        ? handleSubscription(profile, subscriptionInfo, t)
+        : undefined,
     });
 
   return (

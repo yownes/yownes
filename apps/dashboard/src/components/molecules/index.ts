@@ -32,7 +32,7 @@ export { default as PrivateRoute } from "./PrivateRoute";
 export { default as ProfileInfo } from "./ProfileInfo";
 export { default as RateSelection } from "./RateSelection";
 export { default as RestoreClient } from "./RestoreClient";
-export { default as SelectableCreditCard } from "./SelectableCreditCard";
+export { default as SelectableCard } from "./SelectableCard";
 export { default as SmallCreditCard } from "./SmallCreditCard";
 export { default as SubscriptionInfo } from "./SubscriptionInfo";
 export { default as SubscriptionState } from "./SubscriptionState";

@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@apollo/client";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 import { SUBSCRIBE } from "../../api/mutations";
@@ -46,6 +47,21 @@ const { Title, Text } = Typography;
 interface CheckoutFormProps {
   onSubscribed: (status: SubscriptionStatus | undefined) => void;
   plan: CheckoutLocationState;
+}
+
+function handleInterval(interval: PlanInterval, t: TFunction) {
+  switch (interval) {
+    case PlanInterval.DAY:
+      return t("daily");
+    case PlanInterval.WEEK:
+      return t("weekly");
+    case PlanInterval.MONTH:
+      return t("monthly");
+    case PlanInterval.YEAR:
+      return t("annual");
+    default:
+      return "-";
+  }
 }
 
 const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
@@ -122,7 +138,6 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
             <Col span={24}>
               <PaymentMethod
                 customer={paymentMethods?.me?.customer}
-                onCreated={setPaymentMethodId}
                 userId={dataAccount?.me?.id ?? ""}
               />
             </Col>
@@ -151,15 +166,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
               <Row justify="space-between">
                 <Text>{t("renewal")}</Text>
                 <Text className={styles.description} type="secondary">
-                  {interval === PlanInterval.DAY
-                    ? t("daily")
-                    : interval === PlanInterval.WEEK
-                    ? t("weekly")
-                    : interval === PlanInterval.MONTH
-                    ? t("monthly")
-                    : interval === PlanInterval.YEAR
-                    ? t("annual")
-                    : "-"}
+                  {handleInterval(interval, t)}
                 </Text>
               </Row>
             </Col>

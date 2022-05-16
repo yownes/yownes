@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Badge, Col, Tooltip, Typography } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import addHours from "date-fns/addHours";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 import { PlanInterval, SubscriptionStatus } from "../../api/types/globalTypes";
@@ -26,6 +27,41 @@ const { Text } = Typography;
 interface SubscriptionInfoProps {
   subscription: MyAccount_me_subscription | null | undefined;
   upcoming: UpcomingInvoice_upcominginvoice | null | undefined;
+}
+
+function handleAllowedApps(
+  allowed: string | number,
+  features: MyAccount_me_subscription_plan_product_features_edges_node[],
+  t: TFunction
+) {
+  if (allowed === "1") {
+    if (features.length > 0) {
+      return `, ${allowed} ${t("includedApp")}`;
+    } else {
+      return `${allowed} ${t("includedApp")}`;
+    }
+  } else {
+    if (features.length > 0) {
+      return `, ${allowed} ${t("includedApps")}`;
+    } else {
+      return `${allowed} ${t("includedApps")}`;
+    }
+  }
+}
+
+function handleInterval(interval: PlanInterval, t: TFunction) {
+  switch (interval) {
+    case PlanInterval.DAY:
+      return `${t("renewal")} ${t("daily").toLocaleLowerCase()}`;
+    case PlanInterval.WEEK:
+      return `${t("renewal")} ${t("weekly").toLocaleLowerCase()}`;
+    case PlanInterval.MONTH:
+      return `${t("renewal")} ${t("monthly").toLocaleLowerCase()}`;
+    case PlanInterval.YEAR:
+      return `${t("renewal")} ${t("annual").toLocaleLowerCase()}`;
+    default:
+      return "-";
+  }
 }
 
 const SubscriptionInfo = ({
@@ -74,13 +110,7 @@ const SubscriptionInfo = ({
                   </span>
                 );
               })}
-              {allowed_apps === "1"
-                ? features.length > 0
-                  ? `, ${allowed_apps} ${t("includedApp")}`
-                  : `${allowed_apps} ${t("includedApp")}`
-                : features.length > 0
-                ? `, ${allowed_apps} ${t("includedApps")}`
-                : `${allowed_apps} ${t("includedApps")}`}
+              {handleAllowedApps(allowed_apps, features, t)}
               {allowed_builds === "1"
                 ? ` (${allowed_builds} ${t("includedBuild")})`
                 : ` (${allowed_builds} ${t("includedBuilds")})`}
@@ -105,16 +135,7 @@ const SubscriptionInfo = ({
     });
     info.push({
       title: t("interval"),
-      description:
-        subscription.plan.interval === PlanInterval.DAY
-          ? `${t("renewal")} ${t("daily").toLocaleLowerCase()}`
-          : subscription.plan.interval === PlanInterval.WEEK
-          ? `${t("renewal")} ${t("weekly").toLocaleLowerCase()}`
-          : subscription.plan.interval === PlanInterval.MONTH
-          ? `${t("renewal")} ${t("monthly").toLocaleLowerCase()}`
-          : subscription.plan.interval === PlanInterval.YEAR
-          ? `${t("renewal")} ${t("annual").toLocaleLowerCase()}`
-          : "-",
+      description: handleInterval(subscription.plan.interval, t),
     });
     info.push({
       title: (

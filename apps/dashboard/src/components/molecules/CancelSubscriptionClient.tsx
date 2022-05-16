@@ -34,6 +34,26 @@ interface CancelSubscriptionClientProps {
   menuVisible?: (visible: boolean) => void;
 }
 
+function handleWarning(user: Client_user) {
+  if (user.subscription?.status === SubscriptionStatus.INCOMPLETE) {
+    return "warnings.cancelSubscriptionIncompleteNow";
+  } else {
+    if (user.subscription?.status === SubscriptionStatus.PAST_DUE) {
+      if (user.apps && user.apps.edges.length > 0) {
+        return "warnings.cancelSubscriptionPastDueNowApps";
+      } else {
+        return "warnings.cancelSubscriptionPastDueNowNoApps";
+      }
+    } else {
+      if (user.apps && user.apps.edges.length > 0) {
+        return "warnings.cancelSubscription";
+      } else {
+        return "warnings.cancelSubscriptionNoApps";
+      }
+    }
+  }
+}
+
 const CancelSubscriptionClient = ({
   data,
   menuVisible,
@@ -145,17 +165,7 @@ const CancelSubscriptionClient = ({
           ) : (
             <Col span={24}>
               <Trans
-                i18nKey={
-                  incomplete
-                    ? "warnings.cancelSubscriptionIncompleteNow"
-                    : pastDue
-                    ? data.apps && data.apps.edges.length > 0
-                      ? "warnings.cancelSubscriptionPastDueNowApps"
-                      : "warnings.cancelSubscriptionPastDueNowNoApps"
-                    : data?.apps && data.apps.edges.length > 0
-                    ? "warnings.cancelSubscription"
-                    : "warnings.cancelSubscriptionNoApps"
-                }
+                i18nKey={handleWarning(data)}
                 ns="admin"
                 values={{
                   date: dateTime(

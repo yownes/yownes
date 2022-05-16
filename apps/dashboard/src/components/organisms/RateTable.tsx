@@ -165,7 +165,6 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
       <RateSelection
         key={rate.id}
         title={rate.name}
-        subtitle={rate.description ?? "-"}
         plan={selectPlan(connectionToNodes(rate.prices), interval, rate.name)}
         onPlanSelected={onPlanSelected}
       />

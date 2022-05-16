@@ -10,18 +10,12 @@ import styles from "./RateSelection.module.css";
 const { Text, Title } = Typography;
 
 interface RateSelectionProps {
-  subtitle?: string;
   title: string;
   plan: CheckoutLocationState;
   onPlanSelected: (plan: CheckoutLocationState) => void;
 }
 
-const RateSelection = ({
-  subtitle,
-  title,
-  plan,
-  onPlanSelected,
-}: RateSelectionProps) => {
+const RateSelection = ({ title, plan, onPlanSelected }: RateSelectionProps) => {
   const { t } = useTranslation(["translation", "client"]);
 
   return (
@@ -29,8 +23,6 @@ const RateSelection = ({
       <Col span={24} style={{ display: "flex", flexDirection: "row" }}>
         <Row align="middle" style={{ flex: 1, flexDirection: "column" }}>
           <Text className={styles.name}>{title}</Text>
-          {/* <Text className={styles.description}>{subtitle}</Text> */}
-
           {plan.unitAmount ? (
             <Text className={styles.price}>
               {(plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")}

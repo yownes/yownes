@@ -256,8 +256,8 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
       key: "action",
       render: (_: string, record: Plan_product_features_edges_node) => {
         const editable = isEditing(record);
-        return editable ? (
-          record.id === "1" ? (
+        if (editable) {
+          return record.id === "1" ? (
             <Row gutter={[24, 24]}>
               <Col>
                 <Popconfirm
@@ -305,8 +305,9 @@ const FeaturesInfo = ({ features }: FeaturesInfoProps) => {
                 </Button>
               </Col>
             </Row>
-          )
-        ) : (
+          );
+        }
+        return (
           <Row gutter={[24, 24]}>
             <Col>
               <Button

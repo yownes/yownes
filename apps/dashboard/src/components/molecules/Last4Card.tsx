@@ -13,6 +13,16 @@ interface ICard {
   last4: string;
 }
 
+function handleBrand(brand: string) {
+  if (brand === "mastercard") {
+    return <MastercardIcon />;
+  } else if (brand === "visa") {
+    return <VisaIcon />;
+  } else {
+    return <CreditCardOutlined style={{ color: "#808080", marginBottom: 2 }} />;
+  }
+}
+
 const Last4Card = ({ data }: Last4CardProps) => {
   if (!data) {
     return null;
@@ -20,13 +30,7 @@ const Last4Card = ({ data }: Last4CardProps) => {
   const card: ICard = JSON.parse(normalize(data));
   return (
     <span style={{ marginRight: 10 }}>
-      {card.brand === "mastercard" ? (
-        <MastercardIcon />
-      ) : card.brand === "visa" ? (
-        <VisaIcon />
-      ) : (
-        <CreditCardOutlined style={{ color: "#808080", marginBottom: 2 }} />
-      )}
+      {handleBrand(card.brand)}
       <span style={{ marginLeft: 5, marginRight: 3 }}>{" **** "}</span>
       {card.last4}
     </span>

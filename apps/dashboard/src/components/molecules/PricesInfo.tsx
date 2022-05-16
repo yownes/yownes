@@ -13,6 +13,7 @@ import {
   Typography,
 } from "antd";
 import { useMutation } from "@apollo/client";
+import type { TFunction } from "i18next";
 import isEqual from "lodash/isEqual";
 import { useTranslation } from "react-i18next";
 
@@ -56,6 +57,55 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
 }
 
+function handleClassName(row: Plan_product_prices_edges_node) {
+  if (row.id === "1") {
+    return styles.editingRow;
+  } else {
+    if (!row.active) {
+      return styles.inactive;
+    } else {
+      return "editable-row";
+    }
+  }
+}
+
+function handleInputType(dataIndex: string | string[]) {
+  if (dataIndex === "unitAmount") {
+    return "number";
+  } else {
+    if (
+      isEqual(dataIndex, ["recurring", "interval"]) ||
+      dataIndex === "currency"
+    ) {
+      return "select";
+    } else {
+      if (dataIndex === "active") {
+        return "switch";
+      } else {
+        return "text";
+      }
+    }
+  }
+}
+
+function handleInterval(
+  interval: "day" | "week" | "month" | "year",
+  t: TFunction
+) {
+  switch (interval.toUpperCase()) {
+    case PlanInterval.DAY:
+      return t("daily");
+    case PlanInterval.WEEK:
+      return t("weekly");
+    case PlanInterval.MONTH:
+      return t("monthly");
+    case PlanInterval.YEAR:
+      return t("annual");
+    default:
+      return "-";
+  }
+}
+
 const EditableCell: React.FC<EditableCellProps> = ({
   editing,
   dataIndex,
@@ -83,67 +133,81 @@ const EditableCell: React.FC<EditableCellProps> = ({
         ) !== undefined,
     })
   );
-
-  const inputNode =
-    inputType === "number" ? (
-      <TextField
-        autofocus={dataIndex === "unitAmount"}
-        label={title}
-        name={dataIndex}
-        rules={[{ required: true }]}
-        type="number"
-        wrapperClassName={styles.input}
-      />
-    ) : inputType === "text" ? (
-      <TextField
-        autofocus={dataIndex === "unitAmount"}
-        label={title}
-        name={dataIndex}
-        rules={[{ required: true }]}
-        type="text"
-        wrapperClassName={styles.input}
-      />
-    ) : null;
-  return (
-    <td {...restProps}>
-      {editing
-        ? inputNode
-          ? inputNode
-          : (dataIndex === "currency" && (
-              <SelectField
-                label={t("admin:currency")}
-                defaultEmpty
-                name="currency"
-                options={[
-                  { id: "eur", name: t("admin:euro") },
-                  { id: "usd", name: t("admin:usd") },
-                ]}
-                rules={[{ required: true }]}
-                wrapperClassName={styles.input}
-              />
-            )) ||
-            (isEqual(dataIndex, ["recurring", "interval"]) && (
-              <SelectField
-                defaultEmpty
-                label={t("admin:interval")}
-                name="interval"
-                options={intervals}
-                rules={[{ required: true }]}
-                wrapperClassName={styles.input}
-              />
-            )) ||
-            (dataIndex === "active" && (
-              <Form.Item
-                className={styles.switch}
-                name="active"
-                valuePropName="checked"
-              >
-                <Switch defaultChecked={false} />
-              </Form.Item>
-            ))
-        : children}
-    </td>
-  );
+  let inputNode;
+  switch (inputType) {
+    case "number":
+      inputNode = (
+        <TextField
+          autofocus={dataIndex === "unitAmount"}
+          label={title}
+          name={dataIndex}
+          rules={[{ required: true }]}
+          type="number"
+          wrapperClassName={styles.input}
+        />
+      );
+      break;
+    case "text":
+      inputNode = (
+        <TextField
+          autofocus={dataIndex === "unitAmount"}
+          label={title}
+          name={dataIndex}
+          rules={[{ required: true }]}
+          type="text"
+          wrapperClassName={styles.input}
+        />
+      );
+      break;
+    default:
+      undefined;
+  }
+  if (editing) {
+    if (inputNode) {
+      return inputNode;
+    } else {
+      if (dataIndex === "currency") {
+        return (
+          <SelectField
+            label={t("admin:currency")}
+            defaultEmpty
+            name="currency"
+            options={[
+              { id: "eur", name: t("admin:euro") },
+              { id: "usd", name: t("admin:usd") },
+            ]}
+            rules={[{ required: true }]}
+            wrapperClassName={styles.input}
+          />
+        );
+      }
+      if (isEqual(dataIndex, ["recurring", "interval"])) {
+        return (
+          <SelectField
+            defaultEmpty
+            label={t("admin:interval")}
+            name="interval"
+            options={intervals}
+            rules={[{ required: true }]}
+            wrapperClassName={styles.input}
+          />
+        );
+      }
+      if (dataIndex === "active") {
+        return (
+          <Form.Item
+            className={styles.switch}
+            name="active"
+            valuePropName="checked"
+          >
+            <Switch defaultChecked={false} />
+          </Form.Item>
+        );
+      }
+    }
+  } else {
+    return <td {...restProps}>{children}</td>;
+  }
 };
 
 const PricesInfo = ({ product }: PricesInfoProps) => {
@@ -308,16 +372,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
       key: "interval",
       width: "25%",
       editable: true,
-      render: (i: "day" | "week" | "month" | "year") =>
-        i.toUpperCase() === PlanInterval.DAY
-          ? t("daily")
-          : i.toUpperCase() === PlanInterval.WEEK
-          ? t("weekly")
-          : i.toUpperCase() === PlanInterval.MONTH
-          ? t("monthly")
-          : i.toUpperCase() === PlanInterval.YEAR
-          ? t("annual")
-          : "-",
+      render: (i: "day" | "week" | "month" | "year") => handleInterval(i, t),
     },
     {
       title: t("isActive"),
@@ -410,15 +465,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
       ...col,
       onCell: (record: Plan_product_prices_edges_node) => ({
         record,
-        inputType:
-          col.dataIndex === "unitAmount"
-            ? "number"
-            : isEqual(col.dataIndex, ["recurring", "interval"]) ||
-              col.dataIndex === "currency"
-            ? "select"
-            : col.dataIndex === "active"
-            ? "switch"
-            : "text",
+        inputType: handleInputType(col.dataIndex),
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -480,13 +527,7 @@ const PricesInfo = ({ product }: PricesInfoProps) => {
               }}
               dataSource={dataSource}
               locale={{ emptyText: t("admin:noPrices") }}
-              rowClassName={(row) =>
-                row.id === "1"
-                  ? styles.editingRow
-                  : !row.active
-                  ? styles.inactive
-                  : "editable-row"
-              }
+              rowClassName={(row) => handleClassName(row)}
               rowKey={(row) => row.id}
               pagination={false}
             />

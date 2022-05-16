@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Col, message, Modal, Row, Typography } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import { DELETE_CLIENT } from "../../api/mutations";
 import { CLIENT } from "../../api/queries";

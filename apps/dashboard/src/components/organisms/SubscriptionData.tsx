@@ -94,6 +94,26 @@ import { ChangeSubscription } from ".";
 const { confirm } = Modal;
 const { Text, Title } = Typography;
 
+function handleWarning(apps: number, status?: SubscriptionStatus) {
+  if (status === SubscriptionStatus.INCOMPLETE) {
+    return "warnings.cancelSubscriptionIncompleteNow";
+  } else {
+    if (status === SubscriptionStatus.PAST_DUE) {
+      if (apps > 0) {
+        return "warnings.cancelSubscriptionPastDueNowApps";
+      } else {
+        return "warnings.cancelSubscriptionPastDueNowNoApps";
+      }
+    } else {
+      if (apps > 0) {
+        return "warnings.cancelSubscription";
+      } else {
+        return "warnings.cancelSubscriptionNoApps";
+      }
+    }
+  }
+}
+
 const SubscriptionData = () => {
   const history = useHistory();
   const { t } = useTranslation(["translation", "client"]);
@@ -569,21 +589,10 @@ const SubscriptionData = () => {
                         title: t("client:warnings.cancelSubscriptionTitle"),
                         content: (
                           <Trans
-                            i18nKey={
-                              data?.me?.subscription?.status ===
-                              SubscriptionStatus.INCOMPLETE
-                                ? "warnings.cancelSubscriptionIncompleteNow"
-                                : data?.me?.subscription?.status ===
-                                  SubscriptionStatus.PAST_DUE
-                                ? appsData?.apps &&
-                                  appsData?.apps?.edges.length > 0
-                                  ? "warnings.cancelSubscriptionPastDueNowApps"
-                                  : "warnings.cancelSubscriptionPastDueNowNoApps"
-                                : appsData?.apps &&
-                                  appsData?.apps?.edges.length > 0
-                                ? "warnings.cancelSubscription"
-                                : "warnings.cancelSubscriptionNoApps"
-                            }
+                            i18nKey={handleWarning(
+                              appsData?.apps ? appsData?.apps?.edges.length : 0,
+                              data?.me?.subscription?.status
+                            )}
                             ns="client"
                             values={{
                               date: dateTime(

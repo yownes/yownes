@@ -9,6 +9,25 @@ import type { MyAccount } from "../../api/types/MyAccount";
 import { Loading } from "../atoms";
 import { ProfileDangerZone } from "../organisms";
 
+function handleWarning(user?: MyAccount, apps?: Apps) {
+  if (!user) {
+    return "";
+  }
+  if (user?.me?.subscription) {
+    if (apps?.apps && apps?.apps?.edges.length > 0) {
+      return "warnings.accountSubsApps";
+    } else {
+      return "warnings.accountSubsNoApps";
+    }
+  } else {
+    if (apps?.apps && apps?.apps?.edges.length > 0) {
+      return "warnings.accountNoSubsApps";
+    } else {
+      return "warnings.accountNoSubsNoApps";
+    }
+  }
+}
+
 const DeleteAccount = () => {
   const { t } = useTranslation(["translation", "client"]);
   const [confirmPassword, setConfirmPassword] = useState(false);
@@ -31,18 +50,7 @@ const DeleteAccount = () => {
         cancelText={t("cancel")}
         okText={t("delete")}
         title={
-          <Trans
-            i18nKey={
-              data?.me?.subscription
-                ? appsData?.apps && appsData?.apps?.edges.length > 0
-                  ? "warnings.accountSubsApps"
-                  : "warnings.accountSubsNoApps"
-                : appsData?.apps && appsData?.apps?.edges.length > 0
-                ? "warnings.accountNoSubsApps"
-                : "warnings.accountNoSubsNoApps"
-            }
-            ns="client"
-          >
+          <Trans i18nKey={handleWarning(data, appsData)} ns="client">
             <strong />
             <p />
           </Trans>

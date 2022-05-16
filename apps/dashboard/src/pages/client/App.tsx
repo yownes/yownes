@@ -10,6 +10,7 @@ import {
   Typography,
 } from "antd";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import type { TFunction } from "i18next";
 import filter from "lodash/filter";
 import find from "lodash/find";
 import { Trans, useTranslation } from "react-i18next";
@@ -118,6 +119,62 @@ function countCurrentBuilds(
       )
     : [];
   return currentBuilds.length;
+}
+
+function handleTooltip(
+  allowedApps: number,
+  allowUpdates: boolean,
+  appBuildStatus: BuildBuildStatus,
+  apps: number,
+  appLimitExceded: boolean,
+  buildsLimit: number,
+  buildLimitExceded: boolean,
+  remainingBuilds: number,
+  subscription: boolean,
+  t: TFunction,
+  status?: AccountAccountStatus
+) {
+  if (status === AccountAccountStatus.BANNED) {
+    return t("client:bannedAccount");
+  } else {
+    if (!subscription) {
+      return t("client:notSubscribedAccount");
+    } else {
+      if (appLimitExceded && apps > allowedApps) {
+        return t("client:appsLimitExceded", {
+          limit: allowedApps,
+        });
+      } else {
+        if (buildLimitExceded && remainingBuilds <= 0) {
+          return t("client:buildsLimitExceded", {
+            limit: buildsLimit,
+          });
+        } else {
+          if (
+            allowUpdates &&
+            appBuildStatus !== BuildBuildStatus.STALLED &&
+            appBuildStatus !== BuildBuildStatus.PUBLISHED
+          ) {
+            return t("client:updateInProgress");
+          } else {
+            return undefined;
+          }
+        }
+      }
+    }
+  }
+}
+
+function handleWarning(apps: number, status: BuildBuildStatus) {
+  if (status === BuildBuildStatus.QUEUED) {
+    return "warnings.saveApply";
+  } else {
+    if (apps === 0) {
+      return "warnings.saveNotApplyFirst";
+    } else {
+      return "warnings.saveNotApplyNoFirst";
+    }
+  }
 }
 
 const App = () => {
@@ -377,13 +434,10 @@ const App = () => {
                       }}
                       title={
                         <Trans
-                          i18nKey={
-                            appBuildStatus === BuildBuildStatus.QUEUED
-                              ? "warnings.saveApply"
-                              : data?.app?.builds.edges.length === 0
-                              ? "warnings.saveNotApplyFirst"
-                              : "warnings.saveNotApplyNoFirst"
-                          }
+                          i18nKey={handleWarning(
+                            data?.app?.builds.edges.length ?? 0,
+                            appBuildStatus
+                          )}
                           ns="client"
                         >
                           <strong />
@@ -494,27 +548,19 @@ const App = () => {
                       }}
                     >
                       <Tooltip
-                        title={
-                          accountData?.me?.accountStatus ===
-                          AccountAccountStatus.BANNED
-                            ? t("client:bannedAccount")
-                            : !accountData?.me?.subscription
-                            ? t("client:notSubscribedAccount")
-                            : appLimitExceded &&
-                              (appsData?.apps?.edges.length ?? 0) > allowedApps
-                            ? t("client:appsLimitExceded", {
-                                limit: allowedApps,
-                              })
-                            : buildLimitExceded && remainingBuilds <= 0
-                            ? t("client:buildsLimitExceded", {
-                                limit: buildsLimit,
-                              })
-                            : allowUpdates &&
-                              appBuildStatus !== BuildBuildStatus.STALLED &&
-                              appBuildStatus !== BuildBuildStatus.PUBLISHED
-                            ? t("client:updateInProgress")
-                            : ""
-                        }
+                        title={handleTooltip(
+                          allowedApps,
+                          allowUpdates,
+                          appBuildStatus,
+                          appsData?.apps?.edges.length ?? 0,
+                          appLimitExceded,
+                          buildsLimit,
+                          buildLimitExceded,
+                          remainingBuilds,
+                          accountData?.me?.subscription ? true : false,
+                          t,
+                          accountData?.me?.accountStatus
+                        )}
                         visible={
                           (appLimitExceded &&
                             (appsData?.apps?.edges.length ?? 0) >

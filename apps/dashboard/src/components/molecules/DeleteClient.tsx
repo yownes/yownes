@@ -27,6 +27,25 @@ interface DeleteClientProps {
   menuVisible?: (visible: boolean) => void;
 }
 
+function handleWarning(client: IClient) {
+  if (!client.user) {
+    return "";
+  }
+  if (client.user.subscription) {
+    if (client.user.apps && client.user.apps?.edges.length > 0) {
+      return "warnings.deleteSubsApps";
+    } else {
+      return "warnings.deleteSubsNoApps";
+    }
+  } else {
+    if (client.user.apps && client.user.apps?.edges.length > 0) {
+      return "warnings.deleteNoSubsApps";
+    } else {
+      return "warnings.deleteNoSubsNoApps";
+    }
+  }
+}
+
 const DeleteClient = ({ data, id, menuVisible }: DeleteClientProps) => {
   const { t } = useTranslation(["translation", "admin"]);
   const [showModal, setShowModal] = useState(false);
@@ -66,18 +85,7 @@ const DeleteClient = ({ data, id, menuVisible }: DeleteClientProps) => {
       >
         <Row gutter={[24, 24]}>
           <Col span={24}>
-            <Trans
-              i18nKey={
-                data.user.subscription
-                  ? data.user.apps && data.user.apps?.edges.length > 0
-                    ? "warnings.deleteSubsApps"
-                    : "warnings.deleteSubsNoApps"
-                  : data.user.apps && data.user.apps?.edges.length > 0
-                  ? "warnings.deleteNoSubsApps"
-                  : "warnings.deleteNoSubsNoApps"
-              }
-              ns="admin"
-            >
+            <Trans i18nKey={handleWarning(data)} ns="admin">
               <p />
             </Trans>
           </Col>
