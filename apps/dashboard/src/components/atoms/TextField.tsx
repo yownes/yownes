@@ -26,6 +26,28 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   wrapperClassName?: string;
 }
 
+function handleMin(
+  type:
+    | "number"
+    | "email"
+    | "password"
+    | "text"
+    | "textarea"
+    | "url"
+    | undefined,
+  min?: number
+) {
+  if (min) {
+    return min;
+  } else {
+    if (type === "number") {
+      return 0;
+    } else {
+      return undefined;
+    }
+  }
+}
+
 const TextField = ({
   autofocus,
   children,
@@ -55,9 +77,8 @@ const TextField = ({
           small ? "pure-material-textfield-outlined--small" : ""
         } ${false ? "pure-material-textfield-outlined-error" : ""}`}
       >
-        {children ? (
-          <div className="input">{children}</div>
-        ) : type === "textarea" ? (
+        {children && <div className="input">{children}</div>}
+        {!children && type === "textarea" ? (
           <textarea
             autoFocus={autofocus}
             defaultValue={defaultValue}
@@ -78,7 +99,7 @@ const TextField = ({
             placeholder=" "
             defaultValue={defaultValue}
             max={max ?? undefined}
-            min={min ? min : type === "number" ? 0 : undefined}
+            min={handleMin(type, min)}
             value={value ?? ""}
             {...props}
           />
@@ -102,9 +123,8 @@ const TextField = ({
             small ? "pure-material-textfield-outlined--small" : ""
           } ${false ? "pure-material-textfield-outlined-error" : ""}`}
         >
-          {children ? (
-            <div className="input">{children}</div>
-          ) : type === "textarea" ? (
+          {children && <div className="input">{children}</div>}
+          {!children && type === "textarea" ? (
             <textarea
               autoFocus={autofocus}
               defaultValue={defaultValue}
@@ -123,7 +143,7 @@ const TextField = ({
               placeholder=" "
               defaultValue={defaultValue}
               max={max ?? undefined}
-              min={min ? min : type === "number" ? 0 : undefined}
+              min={handleMin(type, min)}
               value={value}
               {...props}
             />
