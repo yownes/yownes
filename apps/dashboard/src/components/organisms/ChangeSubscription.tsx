@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { Col, Row, Select, Switch, Typography } from "antd";
 import type { TFunction } from "i18next";
@@ -34,13 +34,17 @@ interface ChangeSubscriptionProps {
   activeApps: number;
   amount: number | null | undefined;
   currency: string | undefined;
-  currentProductId: string | undefined;
+  currentProduct:
+    | Plans_products_edges_node
+    | MyAccount_me_subscription_plan_product
+    | undefined;
   error: string | null | undefined;
   features: Plans_products_edges_node_features_edges_node[] | undefined;
   interval: PlanInterval;
   loading: boolean;
   onChangeInterval: Dispatch<SetStateAction<PlanInterval>>;
   onChangePlan: (plan: string) => void;
+  onDisable: (disable: boolean) => void;
   plan:
     | Plans_products_edges_node
     | MyAccount_me_subscription_plan_product
@@ -71,17 +75,46 @@ function handleAllowedApps(
   }
 }
 
+function handleSwitch(
+  checked: boolean,
+  id: string,
+  onChangeInterval: Dispatch<SetStateAction<PlanInterval>>,
+  onDisable: (disable: boolean) => void,
+  products: Plans_products_edges_node[]
+) {
+  const prod = products.find((p) => p.id === id);
+  const prices = connectionToNodes(prod?.prices);
+  const price = prices
+    .filter((pr) => pr.active)
+    .find(
+      (p) =>
+        JSON.parse(normalize(p.recurring!)).interval.toUpperCase() ===
+        (checked ? PlanInterval.MONTH : PlanInterval.YEAR)
+    );
+  if (!price) {
+    onDisable(true);
+  } else {
+    onDisable(false);
+  }
+  if (checked) {
+    onChangeInterval(PlanInterval.MONTH);
+  } else {
+    onChangeInterval(PlanInterval.YEAR);
+  }
+}
+
 const ChangeSubscription = ({
   activeApps,
   amount,
   currency,
-  currentProductId,
+  currentProduct,
   error,
   features,
   interval,
   loading,
   onChangeInterval,
   onChangePlan,
+  onDisable,
   plan,
   planId,
   plansFeatures,
@@ -89,6 +122,13 @@ const ChangeSubscription = ({
   step,
 }: ChangeSubscriptionProps) => {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (currentProduct?.id === plan?.id) {
+      onDisable(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentProduct?.id, plan?.id]);
 
   const allowed_apps = plan?.metadata
     ? JSON.parse(normalize(plan.metadata)).allowed_apps || 1
@@ -98,13 +138,13 @@ const ChangeSubscription = ({
     : 1;
 
   const legacyOption = () => {
-    if (find(products, (p) => p.id === currentProductId) !== undefined) {
+    if (find(products, (p) => p.id === currentProduct?.id) !== undefined) {
       return undefined;
     }
-    const allowed = plan
-      ? JSON.parse(normalize(plan.metadata!)).allowed_apps
+    const allowed = currentProduct
+      ? JSON.parse(normalize(currentProduct.metadata!)).allowed_apps
       : 0;
-    const prices = connectionToNodes(plan?.prices);
+    const prices = connectionToNodes(currentProduct?.prices);
     const price = prices
       .filter((p) => p.active)
       .find(
@@ -112,17 +152,23 @@ const ChangeSubscription = ({
           JSON.parse(normalize(p.recurring!)).interval.toUpperCase() ===
           interval
       );
-
+    if (!price) {
+      return undefined;
+    }
     return (
-      <Select.Option disabled key={currentProductId} value={currentProductId}>
+      <Select.Option
+        disabled
+        key={currentProduct?.id}
+        value={currentProduct?.id}
+      >
         <Row justify="space-between">
           <Row gutter={10} justify="start">
             <Col>
               <Text className={`${styles.disabled} ${styles.strong}`}>
-                {plan?.name}{" "}
+                {currentProduct?.name}{" "}
               </Text>
             </Col>
-            {plan?.metadata && (
+            {currentProduct?.metadata && (
               <Col>
                 <Text className={`${styles.disabled} ${styles.strong}`}>
                   {"("}
@@ -161,11 +207,15 @@ const ChangeSubscription = ({
               <Col span={24}>
                 <div className={styles.switch}>
                   <Switch
-                    checked={interval === PlanInterval.MONTH}
+                    defaultChecked={interval === PlanInterval.MONTH}
                     onChange={(checked) =>
-                      checked
-                        ? onChangeInterval(PlanInterval.MONTH)
-                        : onChangeInterval(PlanInterval.YEAR)
+                      handleSwitch(
+                        checked,
+                        planId ?? "",
+                        onChangeInterval,
+                        onDisable,
+                        products
+                      )
                     }
                   />
                   <span className={styles.switchLabel}>
@@ -176,7 +226,7 @@ const ChangeSubscription = ({
               <Col span={24}>
                 <Select
                   className={styles.select}
-                  defaultValue={currentProductId}
+                  defaultValue={currentProduct?.id}
                   onChange={onChangePlan}
                   value={planId}
                 >
@@ -196,7 +246,9 @@ const ChangeSubscription = ({
                             normalize(p.recurring!)
                           ).interval.toUpperCase() === interval
                       );
-
+                    if (!price) {
+                      return undefined;
+                    }
                     return (
                       <Select.Option
                         disabled={exceeded}
@@ -263,12 +315,12 @@ const ChangeSubscription = ({
                 <Row gutter={[24, 16]}>
                   <Col span={24}>
                     <Text type="secondary">
-                      {t("client:warnings.changeSubscription")}
+                      {t("admin:warnings.changeSubscription")}
                     </Text>
                   </Col>
                   <Col span={24}>
                     <Text type="secondary">
-                      {t("client:warnings.appsNow", {
+                      {t("admin:warnings.appsNow", {
                         num: activeApps,
                       })}
                     </Text>

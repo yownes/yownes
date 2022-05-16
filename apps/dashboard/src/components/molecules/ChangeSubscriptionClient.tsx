@@ -40,6 +40,7 @@ const ChangeSubscriptionClient = ({
   const [activeApps, setActiveApps] = useState<number>(0);
   const [amount, setAmount] = useState<number | null | undefined>(null);
   const [currency, setCurrency] = useState<string | undefined>(undefined);
+  const [disable, setDisable] = useState(false);
   const [features, setFeatures] =
     useState<Plans_products_edges_node_features_edges_node[]>();
   const [interval, setInterval] = useState<PlanInterval>(PlanInterval.MONTH);
@@ -186,6 +187,7 @@ const ChangeSubscriptionClient = ({
         okText={modalStep ? t("confirm") : t("next")}
         okButtonProps={{
           loading: updating,
+          disabled: disable,
           onClick: () => {
             if (modalStep) {
               if (data.subscription?.stripeId && priceId) {
@@ -220,7 +222,7 @@ const ChangeSubscriptionClient = ({
           activeApps={activeApps}
           amount={amount}
           currency={currency}
-          currentProductId={data.subscription?.plan?.product?.id}
+          currentProduct={data.subscription?.plan?.product ?? undefined}
           error={
             updateSubscriptionData?.updateSubscription?.error
               ? t(
@@ -233,7 +235,11 @@ const ChangeSubscriptionClient = ({
           interval={interval}
           loading={loadingPlans}
           onChangeInterval={setInterval}
-          onChangePlan={(p) => setPlanId(p)}
+          onChangePlan={(p) => {
+            setDisable(false);
+            setPlanId(p);
+          }}
+          onDisable={(d) => setDisable(d)}
           plan={plan ?? data.subscription?.plan?.product ?? undefined}
           planId={planId}
           plansFeatures={connectionToNodes(plansData?.features)}

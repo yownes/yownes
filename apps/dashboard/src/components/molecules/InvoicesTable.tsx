@@ -4,7 +4,7 @@ import type { TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
-import type { InvoiceStatus } from "../../api/types/globalTypes";
+import { InvoiceStatus } from "../../api/types/globalTypes";
 import type { Invoices_invoices_edges_node } from "../../api/types/Invoices";
 import type { Me } from "../../api/types/Me";
 import type { MyAccount_me_subscription_invoices_edges_node } from "../../api/types/MyAccount";
@@ -37,20 +37,23 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
       dataIndex: "total",
       key: "total",
       render: (total: number, row) => (
-        <>
+        <Badge
+          dot
+          style={row.status === InvoiceStatus.OPEN ? {} : { display: "none" }}
+        >
           {total.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}
           {currencySymbol(row.currency)}
-        </>
+        </Badge>
       ),
     },
     {
       title: t("state"),
       dataIndex: "status",
       key: "state",
-      render: (state: InvoiceStatus) => {
+      render: (state) => {
         return <InvoiceState state={state} />;
       },
     },
@@ -58,7 +61,7 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
       title: t("invoice"),
       dataIndex: "number",
       key: "invoice",
-      render: (number: string) => number || t("draft"),
+      render: (number) => number || t("draft"),
     },
     {
       title: t("date"),
@@ -82,20 +85,6 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
         expandable={{
           expandIcon: () => undefined,
           expandIconColumnIndex: -1,
-          // expandIcon: ({ expanded, onExpand, record }) => (
-          //   <Badge
-          //     dot
-          //     style={
-          //       record.status === InvoiceStatus.OPEN ? {} : { display: "none" }
-          //     }
-          //   >
-          //     <ExpandIcon
-          //       expanded={expanded}
-          //       onExpand={onExpand}
-          //       record={record}
-          //     />
-          //   </Badge>
-          // ),
           expandRowByClick: true,
           expandedRowRender: (record) => (
             <div className={styles.expandedContent}>
