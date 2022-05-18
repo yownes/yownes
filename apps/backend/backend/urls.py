@@ -45,7 +45,7 @@ if settings.DEBUG:
     else:
         urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]
 
-    urlpatterns += static("/media/", document_root=settings.MEDIA_ROOT) + [
+    urlpatterns += static("media/", document_root=settings.MEDIA_ROOT) + [
         url(r"^static/(?P<path>.*)$", serve),
         path("admin/", admin.site.urls),
     ]
