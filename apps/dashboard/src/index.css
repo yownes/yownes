@@ -395,3 +395,33 @@ h5 {
 .link-button > button {
   padding: 0px !important;
 }
+
+.select-field {
+  border: 1px solid rgba(var(--clr-text-darker, 0, 0, 0));
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100% !important;
+}
+
+.select-field > div.ant-select-selector {
+  border-color: transparent !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  height: 53px !important;
+  padding: 11px !important;
+  transition: none !important;
+}
+
+.select-field.ant-select-focused > div.ant-select-selector {
+  padding: 10px !important;
+  height: 51px !important;
+  transition: none !important;
+}
+
+.select-field:hover {
+  border: 1px solid rgba(var(--clr-primary, 0, 0, 0));
+}
+
+.select-field.ant-select-focused {
+  border: 2px solid rgba(var(--clr-text-link, 0, 0, 0)) !important;
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import type { ReactNode } from "react";
 import { Form } from "antd";
 import type { Rule } from "antd/lib/form";
 
@@ -6,14 +7,14 @@ import "./SelectField.css";
 
 export interface Option {
   id: string | number;
-  name: string;
+  name: string | ReactNode;
   disabled?: boolean;
 }
 
 interface SelectFieldProps {
   defaultEmpty?: boolean;
   defaultValue?: string;
-  label: string;
+  label?: string;
   name: string;
   options: Option[];
   rules?: Rule[];
@@ -52,10 +53,12 @@ const SelectField = ({
             </option>
           ))}
         </select>
-        <label className="select-label">
-          {required && "* "}
-          {label}
-        </label>
+        {label && (
+          <label className="select-label">
+            {required && "* "}
+            {label}
+          </label>
+        )}
       </div>
     </Form.Item>
   );

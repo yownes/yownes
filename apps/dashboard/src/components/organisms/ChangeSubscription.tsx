@@ -225,7 +225,7 @@ const ChangeSubscription = ({
               </Col>
               <Col span={24}>
                 <Select
-                  className={styles.select}
+                  className="select-field"
                   defaultValue={currentProduct?.id}
                   onChange={onChangePlan}
                   value={planId}
@@ -315,12 +315,12 @@ const ChangeSubscription = ({
                 <Row gutter={[24, 16]}>
                   <Col span={24}>
                     <Text type="secondary">
-                      {t("admin:warnings.changeSubscription")}
+                      {t("client:warnings.changeSubscription")}
                     </Text>
                   </Col>
                   <Col span={24}>
                     <Text type="secondary">
-                      {t("admin:warnings.appsNow", {
+                      {t("client:warnings.appsNow", {
                         num: activeApps,
                       })}
                     </Text>
