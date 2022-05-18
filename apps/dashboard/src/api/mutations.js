@@ -444,6 +444,14 @@ export const UPDATE_TEMPLATE = gql`
     updateTemplate(templateId: $id, data: $template) {
       ok
       error
+      template {
+        id
+        isActive
+        name
+        previewImg
+        url
+        snack
+      }
     }
   }
 `;

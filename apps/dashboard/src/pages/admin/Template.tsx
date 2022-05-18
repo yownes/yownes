@@ -84,26 +84,6 @@ const Template = () => {
                     variables: { id: id ?? "", template: { ...values } },
                     update(cache, { data: update }) {
                       if (update?.updateTemplate?.ok) {
-                        cache.modify({
-                          id: cache.identify({ ...dataTemplate }),
-                          fields: {
-                            isActive() {
-                              return values.isActive;
-                            },
-                            name() {
-                              return values.name;
-                            },
-                            previewImg() {
-                              return values.previewImg;
-                            },
-                            url() {
-                              return values.url;
-                            },
-                            snack() {
-                              return values.snack;
-                            },
-                          },
-                        });
                         message.success(t("admin:updateTemplateSuccessful"), 4);
                       } else {
                         message.error(

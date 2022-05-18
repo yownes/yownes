@@ -9,10 +9,30 @@ import { TemplateInput } from "./globalTypes";
 // GraphQL mutation operation: UpdateTemplate
 // ====================================================
 
+export interface UpdateTemplate_updateTemplate_template {
+  __typename: "TemplateType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  isActive: boolean;
+  name: string;
+  previewImg: string | null;
+  /**
+   * Link to Git repository of the template
+   */
+  url: string | null;
+  /**
+   * Expo Snack ID
+   */
+  snack: string | null;
+}
+
 export interface UpdateTemplate_updateTemplate {
-  __typename: "Return";
+  __typename: "UpdateTemplateMutation";
   ok: boolean | null;
   error: string | null;
+  template: UpdateTemplate_updateTemplate_template | null;
 }
 
 export interface UpdateTemplate {
