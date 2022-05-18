@@ -262,7 +262,9 @@ class UpdateTemplateMutation(graphene.Mutation):
         template_id = graphene.ID(required=True)
         data = TemplateInput(required=True)
 
-    Output = Return
+    ok = graphene.Boolean()
+    error = graphene.String()
+    template = graphene.Field(TemplateType)
 
     @staff_member_required
     def mutate(self, info, template_id, data):
@@ -274,7 +276,7 @@ class UpdateTemplateMutation(graphene.Mutation):
             }
         template_object = Node.get_node_from_global_id(info, template_id)
         if not template_object:
-            return Return(ok=False, error=Error.NO_RECURSE.value)
+            return UpdateTemplateMutation(ok=False, error=Error.NO_RECURSE.value)
         try:
             template_object.preview_img = data.preview_img
             template_object.name = data.name
@@ -283,7 +285,6 @@ class UpdateTemplateMutation(graphene.Mutation):
             template_object.snack = data.snack
             template_object.is_active = data.is_active
             template_object.save()
-
-            return Return(ok=True)
+            return UpdateTemplateMutation(ok=True, template=template_object)
         except:
-            return Return(ok=False, error=Error.UPDATE_TEMPLATE_ERROR.value)
+            return UpdateTemplateMutation(ok=False, error=Error.UPDATE_TEMPLATE_ERROR.value)
