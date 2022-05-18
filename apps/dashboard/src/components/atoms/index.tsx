@@ -1,3 +1,4 @@
+export { default as AmexIcon } from "./AmexIcon";
 export { default as Color } from "./Color";
 export { default as Loading } from "./Loading";
 export { default as LoadingFullScreen } from "./LoadingFullScreen";

@@ -79,7 +79,6 @@ const Template = () => {
                   snack: data?.template?.snack,
                 }}
                 onFinish={(values) => {
-                  const dataTemplate = { ...data?.template };
                   updateTemplate({
                     variables: { id: id ?? "", template: { ...values } },
                     update(cache, { data: update }) {

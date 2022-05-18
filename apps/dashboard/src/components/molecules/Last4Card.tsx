@@ -2,7 +2,7 @@ import React from "react";
 import { CreditCardOutlined } from "@ant-design/icons";
 
 import { normalize } from "../../lib/normalize";
-import { MastercardIcon, VisaIcon } from "../atoms";
+import { AmexIcon, MastercardIcon, VisaIcon } from "../atoms";
 
 interface Last4CardProps {
   data: string;
@@ -18,6 +18,8 @@ function handleBrand(brand: string) {
     return <MastercardIcon />;
   } else if (brand === "visa") {
     return <VisaIcon />;
+  } else if (brand === "amex") {
+    return <AmexIcon />;
   } else {
     return <CreditCardOutlined style={{ color: "#808080", marginBottom: 2 }} />;
   }
