@@ -188,6 +188,7 @@
   "summary": "Resumen de la factura",
   "payments": "Pagos",
   "noPayments": "Ningún Pago que mostrar",
+  "download": "Descargar",
   "downloadInvoice": "Descargar Factura",
   "downloadInvoiceName": "Factura-{{num}}.pdf",
   "invoicedTo": "Facturado a",

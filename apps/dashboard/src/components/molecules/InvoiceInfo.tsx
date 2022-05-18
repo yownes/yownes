@@ -5,6 +5,7 @@ import {
   Card,
   Col,
   Divider,
+  Grid,
   message,
   Row,
   Tooltip,
@@ -50,6 +51,7 @@ interface InvoiceInfoProps {
 }
 
 const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
+  const { md } = Grid.useBreakpoint();
   const { t } = useTranslation();
   const [isPaid, setIsPaid] = useState(false);
   const [payInvoice, { data: payInvoiceData, loading: paying }] = useMutation<
@@ -124,7 +126,7 @@ const InvoiceInfo = ({ invoice, staff }: InvoiceInfoProps) => {
               href={invoice.invoicePdf}
               type="default"
             >
-              {t("downloadInvoice")}
+              {md ? t("downloadInvoice") : t("download")}
             </Button>
           </Row>
         </Col>
