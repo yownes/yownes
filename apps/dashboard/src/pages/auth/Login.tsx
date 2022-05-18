@@ -37,12 +37,14 @@ const Login = () => {
             autofocus
             label={t("translation:email")}
             name="email"
+            onFocus={() => clear?.()}
             rules={[{ required: true, message: t("required.email") }]}
             type="email"
           />
           <TextField
             label={t("password")}
             name="password"
+            onFocus={() => clear?.()}
             rules={[{ required: true, message: t("required.password") }]}
             type="password"
           />

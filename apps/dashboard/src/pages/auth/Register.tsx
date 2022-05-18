@@ -43,6 +43,7 @@ const Register = () => {
             autofocus
             label={t("translation:userName")}
             name="username"
+            onFocus={() => clear?.()}
             rules={[
               { required: true, message: t("required.username") },
               { min: 2, message: t("required.min", { num: 2 }) },
@@ -51,12 +52,14 @@ const Register = () => {
           <TextField
             label={t("translation:email")}
             name="email"
+            onFocus={() => clear?.()}
             rules={[{ required: true, message: t("required.email") }]}
             type="email"
           />
           <TextField
             label={t("password")}
             name="password"
+            onFocus={() => clear?.()}
             rules={[
               { required: true, message: t("required.password") },
               {
@@ -70,6 +73,7 @@ const Register = () => {
             label={t("confirmPassword")}
             dependencies={["password"]}
             name="confirmPassword"
+            onFocus={() => clear?.()}
             rules={[
               { required: true, message: t("required.passwordMatch") },
               ({ getFieldValue }) => ({
@@ -85,6 +89,7 @@ const Register = () => {
           />
           <Form.Item
             name="agreement"
+            onFocus={() => clear?.()}
             valuePropName="checked"
             rules={[
               {

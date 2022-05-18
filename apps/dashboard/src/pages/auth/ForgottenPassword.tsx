@@ -38,7 +38,7 @@ const ForgottenPassword = () => {
           form={formReset}
           onFinish={(values) => {
             sendPasswordResetEmail({
-              variables: { email: "values.email" },
+              variables: { email: values.email },
               update(cache, { data: resetemail }) {
                 if (resetemail?.sendPasswordResetEmail?.success) {
                   notification.destroy();
