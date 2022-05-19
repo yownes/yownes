@@ -33,7 +33,7 @@ class BanUserMutation(graphene.Mutation):
                 'ywns.test1@gmail.com',
                 [user_object.email],
                 fail_silently=False,
-                html_message=render_to_string("custom/ban.html", { "username": user_object.username })
+                html_message=render_to_string("custom/account_banned.html", { "username": user_object.username })
             )
             return Return(ok=True)
         user_object.account_status = AccountStatus.REGISTERED
@@ -44,7 +44,7 @@ class BanUserMutation(graphene.Mutation):
             'ywns.test1@gmail.com',
             [user_object.email],
             fail_silently=False,
-            html_message=render_to_string("custom/unban.html", { "username": user_object.username })
+            html_message=render_to_string("custom/account_unbanned.html", { "username": user_object.username })
         )
         return Return(ok=True)
 
@@ -71,7 +71,7 @@ class ChangeVerifiedMutation(graphene.Mutation):
                 'ywns.test1@gmail.com',
                 [user_object.email],
                 fail_silently=False,
-                html_message=render_to_string("custom/verify.html", { "username": user_object.username })
+                html_message=render_to_string("custom/account_verified.html", { "username": user_object.username })
             )
             return Return(ok=True)
         user_object.verified = verify
@@ -101,7 +101,7 @@ class DeleteClientMutation(graphene.Mutation):
                 'ywns.test1@gmail.com',
                 [user_object.email],
                 fail_silently=False,
-                html_message=render_to_string("custom/del_client.html", { "username": user_object.username })
+                html_message=render_to_string("custom/account_deleted.html", { "username": user_object.username })
             )
             return Return(ok=True)
         user_object.is_active = active
