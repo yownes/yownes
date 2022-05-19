@@ -98,6 +98,12 @@ def customer_subscription_updated_webhook(event, **kwargs):
                 account_object.save()
             if prev_subscription_object["status"] == "incomplete" and subscription_object["status"] == "active":
                 logging.warning("INCOMPLETE --> ACTIVE")
+                if account_object.account_status != AccountStatus.BANNED:
+                    logging.warning("No está ban, poner en PAID_ACCOUNT")
+                    account_object.account_status = AccountStatus.PAID_ACCOUNT
+                    account_object.save()
+                else:
+                    logging.warning("Está ban, mantener BAN")
         
     logging.warning(subscription_id)
     logging.warning(subscription)

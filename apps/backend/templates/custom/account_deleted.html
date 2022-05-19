@@ -84,8 +84,10 @@
     }
   </style>
   <style type="text/css">
-    body {
-      text-align: center;
+    .b_b {
+      text-decoration: underline;
+      text-decoration-color: #61DB9B;
+      text-decoration-thickness: 4px;
     }
   </style>
 </head>
@@ -131,20 +133,39 @@
             <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
               <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
               <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" class="b_b" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                        <div style="font-family:Ubuntu;font-size:39px;line-height:1;text-align:center;color:#232323;">{{ username }}</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
-                      <td style="background-color:#61db9b;border-radius:50px;vertical-align:top;padding:50px;">
+                      <td style="background-color:#FF8181;border-radius:20px;vertical-align:top;padding:10px;">
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                           <tbody>
                             <tr>
                               <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                <div style="font-family:Ubuntu Mono;font-size:36px;line-height:1;text-align:center;color:#232323;">Bienvenido</div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                <div style="font-family:Ubuntu;font-size:39px;line-height:1;text-align:center;color:#232323;">{{ user.username }}</div>
+                                <div style="font-family:Ubuntu Mono;font-size:36px;line-height:1;text-align:center;color:#232323;">Tu cuenta ha sido eliminada</div>
                               </td>
                             </tr>
                           </tbody>
@@ -172,36 +193,7 @@
                   <tbody>
                     <tr>
                       <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family:Ubuntu;font-size:18px;line-height:1;text-align:center;color:#000000;">Acabas de registrarte en el servicio Yownes de creación de aplicaciones</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-    <div style="margin:0px auto;max-width:600px;">
-      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-        <tbody>
-          <tr>
-            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
-              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
-                  <tbody>
-                    <tr>
-                      <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family:Ubuntu;font-size:14px;line-height:1;text-align:center;color:#000000;">Para confirmar el registro haz click en el siguiente enlace:</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
-                        <div style="font-family:Ubuntu;font-size:14px;line-height:1;text-align:center;color:#328F5E;"><a href={{ protocol }}://{{ domain }}/{{ path }}/{{ token }} style="color: #328F5E; text-decoration: none">Confirmar Registro</a></div>
+                        <div style="font-family:Ubuntu;font-size:14px;line-height:1;text-align:center;color:#000000;">Si cree que ha sido un error, por favor, póngase en contacto con nuestro equipo</div>
                       </td>
                     </tr>
                   </tbody>
@@ -230,7 +222,7 @@
                     </tr>
                     <tr>
                       <td align="center" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
-                        <div style="font-family:Ubuntu;font-size:10px;line-height:1;text-align:center;color:#8C8C8C;">Puedes consultar nuestra política de privacidad <a href="http://www.yownes.com/#" style="color: #8C8C8C; text-decoration: underline;">aquí</a></div>
+                        <div style="font-family:Ubuntu;font-size:10px;line-height:1;text-align:center;color:#8C8C8C;">Puedes consultar nuestra política de privacidad <a href="http://www.yownes.com/#" style="color: #8C8C8C;">aquí</a></div>
                       </td>
                     </tr>
                   </tbody>
