@@ -3,6 +3,7 @@ import { Card, Col, Row, Table, Typography } from "antd";
 import type { TableColumnsType } from "antd";
 import { useQuery } from "@apollo/client";
 import forIn from "lodash/forIn";
+import reverse from "lodash/reverse";
 import { useTranslation } from "react-i18next";
 
 import { BUILDS } from "../../api/queries";
@@ -135,7 +136,7 @@ const Builds = () => {
                 <Table
                   className={styles.table}
                   columns={columns}
-                  dataSource={connectionToNodes(data?.builds)}
+                  dataSource={reverse(connectionToNodes(data?.builds))}
                   locale={{ emptyText: t("noBuilds") }}
                   pagination={{
                     showSizeChanger: true,
