@@ -173,8 +173,8 @@ const Plan = () => {
                         />
                       </Col>
                     </Row>
-                    <Row gutter={[24, 24]}>
-                      <Col span={12}>
+                    <Row gutter={[24, 0]}>
+                      <Col sm={12} span={24}>
                         <TextField
                           label={t("admin:nApps")}
                           defaultValue={
@@ -188,7 +188,7 @@ const Plan = () => {
                           type="number"
                         />
                       </Col>
-                      <Col span={12}>
+                      <Col sm={12} span={24}>
                         <TextField
                           label={t("admin:nBuilds")}
                           defaultValue={
