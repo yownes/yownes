@@ -6,6 +6,7 @@ from graphene.relay import Node
 from graphql_jwt.decorators import login_required, staff_member_required
 
 from backend.errors import Error
+from graphql_auth.models import UserStatus
 from backend.graphql.types import Return
 
 from ..models import AccountStatus
@@ -54,17 +55,20 @@ class ChangeVerifiedMutation(graphene.Mutation):
         user_id = graphene.ID(required=True)
         verify = graphene.Boolean(required=True)
 
-    Output = Return
+    ok = graphene.Boolean()
+    error = graphene.String()
+    verified = graphene.Boolean()
 
     @staff_member_required
     @login_required
     def mutate(self, info, user_id, verify):
         user_object = Node.get_node_from_global_id(info, user_id)
-        if not user_object:
-            return Return(ok=False, error=Error.NO_RECURSE.value)
+        user_status_object = UserStatus.objects.get(user=user_object)
+        if not user_object or not user_status_object:
+            return ChangeVerifiedMutation(ok=False, error=Error.NO_RECURSE.value)
         if verify:
-            user_object.verified = verify
-            user_object.save()
+            user_status_object.verified = verify
+            user_status_object.save()
             send_mail(
                 'VERIFICACIÓN',
                 'Tu cuenta ha sido verificada con éxito.',
@@ -73,10 +77,10 @@ class ChangeVerifiedMutation(graphene.Mutation):
                 fail_silently=False,
                 html_message=render_to_string("custom/account_verified.html", { "username": user_object.username })
             )
-            return Return(ok=True)
-        user_object.verified = verify
-        user_object.save()
-        return Return(ok=True)
+            return ChangeVerifiedMutation(ok=True, verified=verify)
+        user_status_object.verified = verify
+        user_status_object.save()
+        return ChangeVerifiedMutation(ok=True, verified=verify)
 
 
 class DeleteClientMutation(graphene.Mutation):
