@@ -8,9 +8,10 @@
 // ====================================================
 
 export interface ChangeVerified_changeVerified {
-  __typename: "Return";
+  __typename: "ChangeVerifiedMutation";
   ok: boolean | null;
   error: string | null;
+  verified: boolean | null;
 }
 
 export interface ChangeVerified {

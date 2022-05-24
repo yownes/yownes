@@ -238,6 +238,7 @@ export const CHANGE_VERIFIED = gql`
     changeVerified(verify: $verify, userId: $userId) {
       ok
       error
+      verified
     }
   }
 `;

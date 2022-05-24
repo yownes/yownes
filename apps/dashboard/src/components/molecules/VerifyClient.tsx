@@ -91,22 +91,18 @@ const VerifyClient = ({ data, menuVisible }: VerifyClientProps) => {
                           cache.modify({
                             id: cache.identify({ ...data.user }),
                             fields: {
-                              verified: () => !data.user?.verified,
+                              verified: () =>
+                                changeVerifiedData.changeVerified?.verified,
                             },
                           });
-                        }
-                      },
-                    })
-                      .then((res) => {
-                        if (res.data?.changeVerified?.ok) {
                           setShowModal(false);
-                          data.user?.verified
+                          changeVerifiedData.changeVerified.verified
                             ? message.success(
-                                t("admin:unverifyAccountSuccessful"),
+                                t("admin:verifyAccountSuccessful"),
                                 4
                               )
                             : message.success(
-                                t("admin:verifyAccountSuccessful"),
+                                t("admin:unverifyAccountSuccessful"),
                                 4
                               );
                         } else {
@@ -117,26 +113,26 @@ const VerifyClient = ({ data, menuVisible }: VerifyClientProps) => {
                                   ? "unverify_client_error"
                                   : "verify_client_error",
                                 message: t(
-                                  `errors.${res.data?.changeVerified?.error}`,
+                                  `errors.${changeVerifiedData?.changeVerified?.error}`,
                                   t("error")
                                 ),
                               },
                             ],
                           });
                         }
+                      },
+                    }).catch(() =>
+                      setErrors({
+                        nonFieldErrors: [
+                          {
+                            code: data?.user?.verified
+                              ? "unverify_client_error"
+                              : "verify_client_error",
+                            message: t("unknownError"),
+                          },
+                        ],
                       })
-                      .catch(() =>
-                        setErrors({
-                          nonFieldErrors: [
-                            {
-                              code: data?.user?.verified
-                                ? "unverify_client_error"
-                                : "verify_client_error",
-                              message: t("unknownError"),
-                            },
-                          ],
-                        })
-                      );
+                    );
                   }}
                 >
                   {data?.user?.verified
