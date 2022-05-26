@@ -1,9 +1,9 @@
 import djstripe
 import logging
 import stripe
-from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from djstripe import webhooks
-from graphene.relay import Node
 
 @webhooks.handler("customer.subscription.created")
 def customer_subscription_created_webhook(event, **kwargs):
@@ -29,7 +29,6 @@ def customer_subscription_created_webhook(event, **kwargs):
             account_object.account_status = AccountStatus.REGISTERED
             account_object.save()
     logging.warning("< < OK CUSTOMER SUSCRIPTION CREATED WEBHOOK > >")
-    # return HttpResponse(status=200)
 
 @webhooks.handler("customer.subscription.deleted")
 def customer_subscription_deleted_webhook(event, **kwargs):
@@ -55,7 +54,6 @@ def customer_subscription_deleted_webhook(event, **kwargs):
         account_object.save()
     logging.warning(subscription_id)
     logging.warning("< < OK CUSTOMER SUSCRIPTION DELETED WEBHOOK > >")
-    # return HttpResponse(status=200)
 
 @webhooks.handler("customer.subscription.updated")
 def customer_subscription_updated_webhook(event, **kwargs):
@@ -78,6 +76,15 @@ def customer_subscription_updated_webhook(event, **kwargs):
             logging.warning("CURRENT_STATUS --> %s", subscription_object["status"])
             if prev_subscription_object["status"] == "active" and subscription_object["status"] == "past_due":
                 logging.warning("ACTIVE --> PAST_DUE")
+                #TODO: vencida caducada fallo en la renovacion (enviar mail)
+                send_mail(
+                    '[Yownes] Suscripción vencida',
+                    'Fallo en la renovación de tu suscripción.',
+                    'ywns.test1@gmail.com',
+                    [account_object.email],
+                    fail_silently=False,
+                    html_message=render_to_string("custom/invoice_past_due.html", { "username": account_object.username })
+                )
             if prev_subscription_object["status"] == "past_due" and subscription_object["status"] == "incomplete_expired":
                 logging.warning("PAST_DUE --> INCOMPLETE_EXPIRED")
                 if account_object.account_status != AccountStatus.BANNED:
@@ -96,6 +103,15 @@ def customer_subscription_updated_webhook(event, **kwargs):
                     logging.warning("Está ban, mantener BAN")
                 account_object.subscription = None
                 account_object.save()
+                #TODO: caducada, no se pago en las primeras 23h desde alta (enviar mail)
+                send_mail(
+                    '[Yownes] Suscripción caducada',
+                    'No se completó el pago inicial.',
+                    'ywns.test1@gmail.com',
+                    [account_object.email],
+                    fail_silently=False,
+                    html_message=render_to_string("custom/invoice_incomplete_expired.html", { "username": account_object.username })
+                )
             if prev_subscription_object["status"] == "incomplete" and subscription_object["status"] == "active":
                 logging.warning("INCOMPLETE --> ACTIVE")
                 if account_object.account_status != AccountStatus.BANNED:
@@ -108,4 +124,3 @@ def customer_subscription_updated_webhook(event, **kwargs):
     logging.warning(subscription_id)
     logging.warning(subscription)
     logging.warning("< < OK CUSTOMER SUSCRIPTION UPDATED WEBHOOK > >")
-    # return HttpResponse(status=200)

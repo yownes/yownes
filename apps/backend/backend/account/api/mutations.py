@@ -29,7 +29,7 @@ class BanUserMutation(graphene.Mutation):
             user_object.account_status = AccountStatus.BANNED.value
             user_object.save()
             send_mail(
-                'BAN',
+                '[Yownes] Cuenta baneada',
                 'Tu cuenta ha sido baneada.',
                 'ywns.test1@gmail.com',
                 [user_object.email],
@@ -40,7 +40,7 @@ class BanUserMutation(graphene.Mutation):
         user_object.account_status = AccountStatus.REGISTERED
         user_object.save()
         send_mail(
-            'DESBAN',
+            '[Yownes] Cuenta desbaneada',
             'Tu cuenta ha sido desbaneada.',
             'ywns.test1@gmail.com',
             [user_object.email],
@@ -70,7 +70,7 @@ class ChangeVerifiedMutation(graphene.Mutation):
             user_status_object.verified = verify
             user_status_object.save()
             send_mail(
-                'VERIFICACIÓN',
+                '[Yownes] Cuenta verificada',
                 'Tu cuenta ha sido verificada con éxito.',
                 'ywns.test1@gmail.com',
                 [user_object.email],
@@ -100,7 +100,7 @@ class DeleteClientMutation(graphene.Mutation):
             user_object.is_active = active
             user_object.save()
             send_mail(
-                'ELIMINACIÓN',
+                '[Yownes] Cuenta eliminada',
                 'Tu cuenta ha sido eliminada.',
                 'ywns.test1@gmail.com',
                 [user_object.email],
