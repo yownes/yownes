@@ -79,7 +79,7 @@ const HeaderSessionInfo = ({ email, staff }: HeaderSessionInfoProps) => {
 
   return (
     <div className={styles.container}>
-      {screens.md && (
+      {screens.xl && (
         <div className={styles.info}>
           <span className={styles.title}>
             <Link to="/profile">{email}</Link>
