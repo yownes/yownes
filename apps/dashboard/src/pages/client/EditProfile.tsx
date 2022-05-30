@@ -73,7 +73,7 @@ const EditProfile = () => {
             ) : (
               <PaymentMethod
                 customer={data?.me?.customer}
-                userId={data?.me?.id ?? ""}
+                user={accountData?.me}
               />
             )}
           </Card>

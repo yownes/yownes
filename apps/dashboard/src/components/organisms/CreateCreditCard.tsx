@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Checkbox, Col, Form, Row } from "antd";
 import type { FormInstance } from "antd";
 import { useMutation } from "@apollo/client";
-import type { StripeError } from "@stripe/stripe-js";
+import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 
 import { CREATE_PAYMENT_METHOD } from "../../api/mutations";
@@ -17,18 +17,20 @@ interface CreateCreditCardProps {
   onCancel: () => void;
   onCreated: (paymentMethod: string | undefined, isDefault: boolean) => void;
   form?: FormInstance;
+  userId: string;
 }
 
 const CreateCreditCard = ({
   onCancel,
   onCreated,
   form,
+  userId,
 }: CreateCreditCardProps) => {
-  const [errs, setErrs] = useState<StripeError>();
+  const [errs, setErrs] = useState("");
   const [isDefault, setIsDefault] = useState(true);
   const { t } = useTranslation(["translation", "client"]);
 
-  const [createPayment, { data: createData, loading: creating }] = useMutation<
+  const [createPayment, { loading: creating }] = useMutation<
     CreatePaymentMethod,
     CreatePaymentMethodVariables
   >(CREATE_PAYMENT_METHOD);
@@ -36,7 +38,7 @@ const CreateCreditCard = ({
   return (
     <Form
       form={form}
-      onChange={() => setErrs(undefined)}
+      onChange={() => setErrs("")}
       onFinish={async (values) => {
         createPayment({
           variables: {
@@ -51,10 +53,21 @@ const CreateCreditCard = ({
                 name: values.name,
               },
             },
+            userId: userId,
           },
           update(cache, { data }) {
             if (data?.createPaymentMethod?.error) {
-              setErrs(t(`admin:errors.${data?.createPaymentMethod?.error}`));
+              setErrs(
+                t(
+                  `client:errors.${data?.createPaymentMethod?.error}`,
+                  t("error")
+                )
+              );
+              i18n.exists(`client:errors.${data?.createPaymentMethod?.error}`)
+                ? setErrs(
+                    t(`client:errors.${data?.createPaymentMethod?.error}`)
+                  )
+                : setErrs(data.createPaymentMethod.error);
             } else {
               onCreated(data?.createPaymentMethod?.id ?? "", isDefault);
             }
@@ -126,8 +139,8 @@ const CreateCreditCard = ({
           <Col span={24}>
             <Errors
               errors={{
-                nonFieldErrors: errs?.type
-                  ? [{ message: errs?.message ?? "", code: errs.type }]
+                nonFieldErrors: errs
+                  ? [{ message: errs ?? "", code: "error" }]
                   : undefined,
               }}
             />

@@ -276,7 +276,7 @@ export const ADD_PAYMENT_METHOD = gql`
   mutation AddPaymentMethod(
     $isDefault: Boolean
     $paymentMethodId: ID!
-    $userId: ID
+    $userId: ID!
   ) {
     addPaymentMethod(
       isDefault: $isDefault
@@ -290,8 +290,8 @@ export const ADD_PAYMENT_METHOD = gql`
 `;
 
 export const CREATE_PAYMENT_METHOD = gql`
-  mutation CreatePaymentMethod($payment: CreatePaymentInput!) {
-    createPaymentMethod(payment: $payment) {
+  mutation CreatePaymentMethod($payment: CreatePaymentInput!, $userId: ID!) {
+    createPaymentMethod(payment: $payment, userId: $userId) {
       ok
       error
       id
@@ -304,11 +304,13 @@ export const UPDATE_PAYMENT_METHOD = gql`
     $id: ID!
     $paymentMethodId: ID!
     $payment: PaymentInput!
+    $userId: ID!
   ) {
     updatePaymentMethod(
       id: $id
       paymentMethodId: $paymentMethodId
       payment: $payment
+      userId: $userId
     ) {
       ok
       error
@@ -317,8 +319,8 @@ export const UPDATE_PAYMENT_METHOD = gql`
 `;
 
 export const REMOVE_PAYMENT_METHOD = gql`
-  mutation RemovePaymentMethod($paymentMethodId: ID!) {
-    detachPaymentMethod(paymentMethodId: $paymentMethodId) {
+  mutation RemovePaymentMethod($paymentMethodId: ID!, $userId: ID!) {
+    detachPaymentMethod(paymentMethodId: $paymentMethodId, userId: $userId) {
       ok
       error
     }

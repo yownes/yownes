@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Form, message, Row } from "antd";
 import type { FormInstance } from "antd";
 import { useMutation } from "@apollo/client";
+import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 
 import { UPDATE_PAYMENT_METHOD } from "../../api/mutations";
@@ -33,10 +34,6 @@ interface IBillingDetails {
   name: string;
 }
 
-interface IMetadata {
-  document_id?: string;
-}
-
 interface EditCreditCardProps {
   form?: FormInstance;
   payment: MyPaymentMethods_me_customer_paymentMethods_edges_node;
@@ -63,9 +60,6 @@ const EditCreditCard = ({
   );
   const cardData: ICreditCard = JSON.parse(
     payment.card ? normalize(payment.card) : "{}"
-  );
-  const metadataData: IMetadata = JSON.parse(
-    payment.metadata ? normalize(payment.metadata) : "{}"
   );
 
   const [updatePaymentMethod, { data: dataUpdate, loading: loadingUpdate }] =
@@ -118,14 +112,20 @@ const EditCreditCard = ({
                 expYear: values.year,
               },
             },
+            userId: userId,
           },
         })
           .then(({ data }) => {
             if (data?.updatePaymentMethod?.ok) {
               setIsUpdated(true);
             } else {
-              data?.updatePaymentMethod?.error &&
-                setErrs(data.updatePaymentMethod.error);
+              if (data?.updatePaymentMethod?.error) {
+                i18n.exists(`client:errors.${data?.updatePaymentMethod?.error}`)
+                  ? setErrs(
+                      t(`client:errors.${data?.updatePaymentMethod?.error}`)
+                    )
+                  : setErrs(data.updatePaymentMethod.error);
+              }
             }
           })
           .catch(() => setErrs(t("unknownError")));

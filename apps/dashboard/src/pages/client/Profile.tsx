@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Button,
   Card,
   Col,
@@ -9,6 +10,7 @@ import {
   Row,
 } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
+import type { TFunction } from "i18next";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 
@@ -19,7 +21,7 @@ import {
   AccountAccountStatus,
   SubscriptionStatus,
 } from "../../api/types/globalTypes";
-import type { MyAccount } from "../../api/types/MyAccount";
+import type { MyAccount, MyAccount_me } from "../../api/types/MyAccount";
 import type {
   Resubscribe,
   ResubscribeVariables,
@@ -38,6 +40,20 @@ import "../../index.css";
 
 message.config({ maxCount: 1 });
 notification.config({ maxCount: 1 });
+
+function handleTooltip(allowedApps: number, t: TFunction, me?: MyAccount_me) {
+  if (me?.accountStatus === AccountAccountStatus.BANNED) {
+    return t("client:errors.105");
+  } else {
+    if (me?.subscription) {
+      return t("client:appsLimitExceded", {
+        limit: allowedApps,
+      });
+    } else {
+      return t("client:subscribeAppClaim");
+    }
+  }
+}
 
 const Profile = () => {
   const history = useHistory();
@@ -112,6 +128,19 @@ const Profile = () => {
           <Col />
         </Row>
       )}
+      {data?.me?.accountStatus === AccountAccountStatus.BANNED && (
+        <Row gutter={[24, 24]}>
+          <Col span={24}>
+            <Alert
+              description={t("client:bannedAccountDescription")}
+              message={t("client:bannedAccountMessage")}
+              showIcon
+              type="warning"
+            />
+          </Col>
+          <Col />
+        </Row>
+      )}
       <Row gutter={[24, 24]}>
         <Col span={24}>
           <Card>
@@ -177,19 +206,20 @@ const Profile = () => {
                     napps: appsData?.apps?.edges.length ?? 0,
                   })}
                   action={{
-                    action: () => history.push("/app/new"),
+                    action: () =>
+                      data?.me?.accountStatus === AccountAccountStatus.BANNED
+                        ? undefined
+                        : history.push("/app/new"),
                     disabled:
+                      data?.me?.accountStatus === AccountAccountStatus.BANNED ||
                       (appsData?.apps?.edges.length ?? 0) >= allowedApps,
                     label: t("client:addNewApp"),
                     buttonClassName: "button-default-primary",
                   }}
                   tooltip={{
-                    title: data?.me?.subscription
-                      ? t("client:appsLimitExceded", {
-                          limit: allowedApps,
-                        })
-                      : t("client:subscribeAppClaim"),
+                    title: handleTooltip(allowedApps, t, data?.me ?? undefined),
                     visible:
+                      data?.me?.accountStatus === AccountAccountStatus.BANNED ||
                       (appsData?.apps?.edges.length ?? 0) >= allowedApps ||
                       (!data?.me?.subscription &&
                         (appsData?.apps?.edges.length ?? 0) >= 1),
@@ -200,7 +230,14 @@ const Profile = () => {
             ) : (
               <Placeholder
                 claim={t("client:addAppClaim")}
-                cta={{ title: t("client:addNewApp"), link: "/app/new" }}
+                cta={{
+                  title: t("client:addNewApp"),
+                  link: "/app/new",
+                  disabled:
+                    data?.me?.accountStatus === AccountAccountStatus.BANNED
+                      ? true
+                      : false,
+                }}
               />
             )}
           </Card>

@@ -8,10 +8,6 @@
   margin-top: 24px;
 }
 
-.alertNoPaymentsAdmin {
-  padding-top: 20px;
-}
-
 .cards {
   display: flex;
   flex-wrap: wrap;

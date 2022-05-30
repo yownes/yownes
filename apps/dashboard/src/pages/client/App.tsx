@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Button,
   Card,
   Col,
@@ -314,6 +315,20 @@ const App = () => {
         <Col span={16}>
           <Row gutter={[24, 24]}>
             <Col span={24}>
+              {accountData?.me?.accountStatus ===
+                AccountAccountStatus.BANNED && (
+                <Row gutter={[24, 24]}>
+                  <Col span={24}>
+                    <Alert
+                      description={t("client:bannedAccountDescription")}
+                      message={t("client:bannedAccountMessage")}
+                      showIcon
+                      type="warning"
+                    />
+                  </Col>
+                  <Col />
+                </Row>
+              )}
               <Card>
                 <AppInfo
                   app={data?.app ?? undefined}
@@ -446,8 +461,18 @@ const App = () => {
                       }
                     >
                       <Tooltip
-                        title={t("client:noChanges")}
-                        visible={appsAreEqual(state, data?.app) && allowChanges}
+                        title={
+                          accountData?.me?.accountStatus ===
+                          AccountAccountStatus.BANNED
+                            ? t("client:errors.105")
+                            : t("client:noChanges")
+                        }
+                        visible={
+                          (appsAreEqual(state, data?.app) ||
+                            accountData?.me?.accountStatus ===
+                              AccountAccountStatus.BANNED) &&
+                          allowChanges
+                        }
                       >
                         <div
                           onMouseEnter={() => {
@@ -459,12 +484,17 @@ const App = () => {
                         >
                           <Button
                             className={
-                              !appsAreEqual(state, data?.app)
+                              !appsAreEqual(state, data?.app) &&
+                              accountData?.me?.accountStatus !==
+                                AccountAccountStatus.BANNED
                                 ? "button-default-primary"
                                 : undefined
                             }
                             disabled={
-                              appsAreEqual(state, data?.app) || updating
+                              appsAreEqual(state, data?.app) ||
+                              updating ||
+                              accountData?.me?.accountStatus ===
+                                AccountAccountStatus.BANNED
                             }
                             loading={updating}
                             type="ghost"
@@ -638,50 +668,52 @@ const App = () => {
             </div>
           </Row>
         </Col>
-        <Col span={24}>
-          <Popconfirm
-            cancelText={t("cancel")}
-            okText={t("delete")}
-            title={
-              <Trans i18nKey="warnings.app" ns="client">
-                <strong />
-                <p />
-              </Trans>
-            }
-            onConfirm={() => {
-              deleteApp({
-                variables: { id: appId! },
-                update(cache, { data: del }) {
-                  if (del?.deleteApp?.ok) {
-                    cache.evict({
-                      id: cache.identify({
-                        __typename: "StoreAppType",
-                        id: appId,
-                      }),
-                    });
-                    cache.gc();
-                    message.success(t("client:deleteAppSuccessful"), 4);
-                    history.replace("/profile");
-                  } else {
-                    message.error(
-                      t(`client:errors.${del?.deleteApp?.error}`) || "Error",
-                      4
-                    );
-                  }
-                },
-              });
-            }}
-          >
-            <Button
-              disabled={deleting}
-              loading={deleting}
-              type="primary"
-              danger
+        {accountData?.me?.accountStatus !== AccountAccountStatus.BANNED && (
+          <Col span={24}>
+            <Popconfirm
+              cancelText={t("cancel")}
+              okText={t("delete")}
+              title={
+                <Trans i18nKey="warnings.app" ns="client">
+                  <strong />
+                  <p />
+                </Trans>
+              }
+              onConfirm={() => {
+                deleteApp({
+                  variables: { id: appId! },
+                  update(cache, { data: del }) {
+                    if (del?.deleteApp?.ok) {
+                      cache.evict({
+                        id: cache.identify({
+                          __typename: "StoreAppType",
+                          id: appId,
+                        }),
+                      });
+                      cache.gc();
+                      message.success(t("client:deleteAppSuccessful"), 4);
+                      history.replace("/profile");
+                    } else {
+                      message.error(
+                        t(`client:errors.${del?.deleteApp?.error}`) || "Error",
+                        4
+                      );
+                    }
+                  },
+                });
+              }}
             >
-              {t("client:deleteApp")}
-            </Button>
-          </Popconfirm>
-        </Col>
+              <Button
+                disabled={deleting}
+                loading={deleting}
+                type="primary"
+                danger
+              >
+                {t("client:deleteApp")}
+              </Button>
+            </Popconfirm>
+          </Col>
+        )}
       </Row>
       {deleting && <LoadingFullScreen tip={t("client:deletingApp")} />}
       {generating && (

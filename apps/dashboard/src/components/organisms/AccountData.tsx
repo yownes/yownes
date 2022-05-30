@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { MY_ACCOUNT } from "../../api/queries";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
 import type { MyAccount } from "../../api/types/MyAccount";
 import { Loading } from "../atoms";
 import { Descriptions, NotVerifiedAlert } from "../molecules";
@@ -29,6 +30,19 @@ const AccountData = () => {
         <Row gutter={[24, 24]}>
           <Col span={24}>
             <NotVerifiedAlert email={data?.me?.email ?? ""} />
+          </Col>
+          <Col />
+        </Row>
+      )}
+      {data?.me?.accountStatus === AccountAccountStatus.BANNED && (
+        <Row gutter={[24, 24]}>
+          <Col span={24}>
+            <Alert
+              description={t("client:bannedAccountDescription")}
+              message={t("client:bannedAccountMessage")}
+              showIcon
+              type="warning"
+            />
           </Col>
           <Col />
         </Row>

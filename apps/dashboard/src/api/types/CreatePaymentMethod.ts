@@ -22,4 +22,5 @@ export interface CreatePaymentMethod {
 
 export interface CreatePaymentMethodVariables {
   payment: CreatePaymentInput;
+  userId: string;
 }

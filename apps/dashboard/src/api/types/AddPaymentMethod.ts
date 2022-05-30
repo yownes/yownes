@@ -20,5 +20,5 @@ export interface AddPaymentMethod {
 export interface AddPaymentMethodVariables {
   isDefault?: boolean | null;
   paymentMethodId: string;
-  userId?: string | null;
+  userId: string;
 }

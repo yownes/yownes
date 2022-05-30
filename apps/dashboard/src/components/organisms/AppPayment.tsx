@@ -4,15 +4,17 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import { MODIFY_APP_PAYMENT } from "../../api/mutations";
-import { APP_PAYMENTS } from "../../api/queries";
+import { APP_PAYMENTS, MY_ACCOUNT } from "../../api/queries";
 import type {
   AppPayments,
   AppPaymentsVariables,
 } from "../../api/types/AppPayments";
+import type { MyAccount } from "../../api/types/MyAccount";
 import type {
   ModifyAppPayment,
   ModifyAppPaymentVariables,
 } from "../../api/types/ModifyAppPayment";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
 import { Loading, LoadingFullScreen, TextField } from "../atoms";
 import { Errors } from "../molecules";
 
@@ -34,6 +36,8 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
       },
     }
   );
+  const { data: accountData, loading: loadingAccount } =
+    useQuery<MyAccount>(MY_ACCOUNT);
   const [updatePayment, { data: mutationData, loading: updating }] =
     useMutation<ModifyAppPayment, ModifyAppPaymentVariables>(
       MODIFY_APP_PAYMENT,
@@ -52,7 +56,7 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
     }
   }, [mutationData, t]);
 
-  if (loading) {
+  if (loading || loadingAccount) {
     return <Loading />;
   }
 
@@ -121,7 +125,14 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
                 />
               </div>
             )}
-            <Button loading={updating} htmlType="submit" type="primary">
+            <Button
+              disabled={
+                accountData?.me?.accountStatus === AccountAccountStatus.BANNED
+              }
+              loading={updating}
+              htmlType="submit"
+              type="primary"
+            >
               {t("updateStripeKeys")}
             </Button>
           </Form>

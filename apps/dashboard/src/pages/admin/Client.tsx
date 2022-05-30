@@ -202,7 +202,7 @@ const Client = () => {
                 <PaymentMethod
                   customer={data?.user?.customer}
                   staff
-                  userId={data?.user ? data.user.id! : ""}
+                  user={data?.user}
                 />
               </Col>
             </Row>

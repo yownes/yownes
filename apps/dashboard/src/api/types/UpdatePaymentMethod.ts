@@ -23,4 +23,5 @@ export interface UpdatePaymentMethodVariables {
   id: string;
   paymentMethodId: string;
   payment: PaymentInput;
+  userId: string;
 }

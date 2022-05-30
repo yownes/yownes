@@ -11,9 +11,12 @@ import type {
   AddPaymentMethodVariables,
 } from "../../api/types/AddPaymentMethod";
 import type {
+  Client_user,
   Client_user_customer,
   Client_user_customer_paymentMethods_edges_node,
 } from "../../api/types/Client";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
+import type { MyAccount_me } from "../../api/types/MyAccount";
 import type { MyPaymentMethods_me_customer } from "../../api/types/MyPaymentMethods";
 import type {
   RemovePaymentMethod,
@@ -32,7 +35,7 @@ interface SelectableCardProps {
   onEdit: () => void;
   payment: Client_user_customer_paymentMethods_edges_node;
   staff: boolean;
-  userId: string;
+  user: MyAccount_me | Client_user | undefined;
 }
 
 function handleBorder(pId: string, dId: string, card: ICreditCardStripe) {
@@ -52,7 +55,7 @@ const SelectableCard = ({
   onEdit,
   payment,
   staff,
-  userId,
+  user,
 }: SelectableCardProps) => {
   const [cardId, setCardId] = useState<string>("");
   const [isUpdated, setisUpdated] = useState(false);
@@ -63,7 +66,7 @@ const SelectableCard = ({
     AddPaymentMethodVariables
   >(ADD_PAYMENT_METHOD, {
     refetchQueries: staff
-      ? [{ query: CLIENT, variables: { id: userId } }]
+      ? [{ query: CLIENT, variables: { id: user?.id } }]
       : [{ query: MY_PAYMENT_METHODS }],
   });
   const [removePaymentMethod, { data: removeData, loading: removing }] =
@@ -124,81 +127,106 @@ const SelectableCard = ({
           }}
         >
           {!expired ? (
-            <Popconfirm
-              cancelButtonProps={{
-                className: "button-default-default",
-              }}
-              onConfirm={(e) => {
-                addPayment({
-                  variables: {
-                    isDefault: true,
-                    paymentMethodId: cardId,
-                    userId: userId,
-                  },
-                  update(cache, { data: newData }) {
-                    if (newData?.addPaymentMethod?.error) {
-                      message.error(
-                        t(`admin:errors.${newData?.addPaymentMethod?.error}`),
-                        4
-                      );
+            <>
+              {!staff &&
+              user?.accountStatus ===
+                AccountAccountStatus.BANNED ? undefined : (
+                <Popconfirm
+                  cancelButtonProps={{
+                    className: "button-default-default",
+                  }}
+                  onConfirm={(e) => {
+                    addPayment({
+                      variables: {
+                        isDefault: true,
+                        paymentMethodId: cardId,
+                        userId: user?.id ?? "",
+                      },
+                      update(cache, { data: newData }) {
+                        if (newData?.addPaymentMethod?.error) {
+                          message.error(
+                            t(
+                              `client:errors.${newData?.addPaymentMethod?.error}`
+                            ),
+                            4
+                          );
+                        }
+                      },
+                    });
+                    setisUpdated(true);
+                  }}
+                  title={t("client:warnings.cardDefault")}
+                >
+                  <Tag
+                    className={styles.clickable}
+                    onClick={() =>
+                      !staff &&
+                      user?.accountStatus === AccountAccountStatus.BANNED
+                        ? undefined
+                        : setCardId(payment.stripeId ?? "")
                     }
-                  },
-                });
-                setisUpdated(true);
-              }}
-              title={t("client:warnings.cardDefault")}
-            >
-              <Tag
-                className={styles.clickable}
-                onClick={() => setCardId(payment.stripeId ?? "")}
-              >
-                {t("client:asDefault")}
-              </Tag>
-            </Popconfirm>
+                  >
+                    {t("client:asDefault")}
+                  </Tag>
+                </Popconfirm>
+              )}
+            </>
           ) : (
             <Tag color={colors.tagRed}>{t("expiredPayment.card")}</Tag>
           )}
-          <div>
-            <Button
-              className={styles.editIcon}
-              icon={<EditOutlined />}
-              onClick={onEdit}
-            />
-            <Popconfirm
-              cancelButtonProps={{
-                className: "button-default-default",
-              }}
-              cancelText={t("cancel")}
-              okText={t("delete")}
-              onConfirm={() => {
-                if (payment.stripeId) {
-                  removePaymentMethod({
-                    variables: {
-                      paymentMethodId: payment.stripeId,
-                    },
-                    update(cache, { data: newData }) {
-                      if (newData?.detachPaymentMethod?.ok && customer) {
-                        cache.evict({
-                          id: cache.identify({
-                            ...payment,
-                          }),
-                        });
-                        cache.gc();
-                      }
-                    },
-                  });
-                }
-              }}
-              placement="left"
-              title={t("client:warnings.card")}
-            >
+          {!staff &&
+          user?.accountStatus === AccountAccountStatus.BANNED ? undefined : (
+            <div>
               <Button
-                className={styles.deleteIcon}
-                danger
-                icon={<DeleteOutlined />}
+                className={styles.editIcon}
+                icon={<EditOutlined />}
+                onClick={onEdit}
               />
-            </Popconfirm>
-          </div>
+              <Popconfirm
+                cancelButtonProps={{
+                  className: "button-default-default",
+                }}
+                cancelText={t("cancel")}
+                okText={t("delete")}
+                onConfirm={() => {
+                  if (payment.stripeId) {
+                    removePaymentMethod({
+                      variables: {
+                        paymentMethodId: payment.stripeId,
+                        userId: user?.id ?? "",
+                      },
+                      update(cache, { data: newData }) {
+                        if (newData?.detachPaymentMethod?.ok && customer) {
+                          cache.evict({
+                            id: cache.identify({
+                              ...payment,
+                            }),
+                          });
+                          cache.gc();
+                        }
+                        if (newData?.detachPaymentMethod?.error) {
+                          message.error(
+                            t(
+                              `client:errors.${newData?.detachPaymentMethod?.error}`
+                            ),
+                            4
+                          );
+                        }
+                      },
+                    });
+                  }
+                }}
+                placement="left"
+                title={t("client:warnings.card")}
+              >
+                <Button
+                  className={styles.deleteIcon}
+                  danger
+                  icon={<DeleteOutlined />}
+                />
+              </Popconfirm>
+            </div>
+          )}
         </div>
       ) : (
         <div
@@ -215,11 +243,14 @@ const SelectableCard = ({
             {t("client:defaultCard")}
             {expired && ` (${t("expiredPayment.expired")})`}
           </Tag>
-          <Button
-            className={styles.editIcon}
-            icon={<EditOutlined />}
-            onClick={onEdit}
-          />
+          {!staff &&
+          user?.accountStatus === AccountAccountStatus.BANNED ? undefined : (
+            <Button
+              className={styles.editIcon}
+              icon={<EditOutlined />}
+              onClick={onEdit}
+            />
+          )}
         </div>
       )}
       {changing && isUpdated && (

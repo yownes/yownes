@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import styles from "./Placeholder.module.css";
 
 interface PlaceholderProps {
-  cta?: { title: string; link: string };
+  cta?: { title: string; link: string; disabled?: boolean };
   claim: string;
   image?: string;
   children?: ReactNode;
@@ -19,7 +19,9 @@ const Placeholder = ({ claim, image, cta, children }: PlaceholderProps) => {
       {image && <img src={styles.image} alt="claim" />}
       {cta && (
         <Link to={cta.link}>
-          <Button type="primary">{cta.title}</Button>
+          <Button disabled={cta.disabled} type="primary">
+            {cta.title}
+          </Button>
         </Link>
       )}
       {children}

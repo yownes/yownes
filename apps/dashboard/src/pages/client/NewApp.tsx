@@ -1,14 +1,17 @@
 import React, { useCallback, useEffect } from "react";
 import { Button, Card, Col, Form, message, Typography } from "antd";
 import type { ApolloCache, FetchResult } from "@apollo/client";
-import { useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
 import { CREATE_APP } from "../../api/mutations";
+import { MY_ACCOUNT } from "../../api/queries";
 import type { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
+import type { MyAccount } from "../../api/types/MyAccount";
 import { colors } from "../../lib/colors";
-import { TextField } from "../../components/atoms";
+import { Loading, TextField } from "../../components/atoms";
 import { Errors } from "../../components/molecules";
 
 import { baseApp } from "./App";
@@ -24,6 +27,8 @@ const NewApp = () => {
     CreateApp,
     CreateAppVariables
   >(CREATE_APP);
+  const { data: accountData, loading: loadingAccount } =
+    useQuery<MyAccount>(MY_ACCOUNT);
 
   const update = useCallback(function (
     cache: ApolloCache<CreateApp>,
@@ -65,10 +70,20 @@ const NewApp = () => {
       });
     }
   }, [storeInfo, create, update]);
+
+  if (loadingAccount) {
+    return <Loading />;
+  }
+
+  if (accountData?.me?.accountStatus === AccountAccountStatus.BANNED) {
+    return <Redirect to="/profile" />;
+  }
+
   if (data?.createApp?.ok) {
     message.success(t("addNewAppSuccessful"), 4);
     return <Redirect to={`/app/${data.createApp.storeApp?.id}`} />;
   }
+
   return (
     <Col
       xs={{ span: 22, offset: 1 }}

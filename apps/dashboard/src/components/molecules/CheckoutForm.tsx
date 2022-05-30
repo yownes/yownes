@@ -138,7 +138,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
             <Col span={24}>
               <PaymentMethod
                 customer={paymentMethods?.me?.customer}
-                userId={dataAccount?.me?.id ?? ""}
+                user={dataAccount?.me}
               />
             </Col>
           </Row>

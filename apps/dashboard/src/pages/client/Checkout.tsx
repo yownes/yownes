@@ -36,11 +36,12 @@ const Checkout = () => {
     setCurrent(0);
   }
   if (
-    data?.me?.accountStatus !== AccountAccountStatus.REGISTERED &&
-    !(
-      data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
-      data.me.subscription.cancelAtPeriodEnd
-    )
+    data.me.accountStatus === AccountAccountStatus.BANNED ||
+    (data.me.accountStatus !== AccountAccountStatus.REGISTERED &&
+      !(
+        data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
+        data.me.subscription.cancelAtPeriodEnd
+      ))
   ) {
     if (current === 0) {
       return <Redirect to="/profile" />;

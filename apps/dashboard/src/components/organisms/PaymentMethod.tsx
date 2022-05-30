@@ -13,9 +13,12 @@ import type {
   AddPaymentMethodVariables,
 } from "../../api/types/AddPaymentMethod";
 import type {
+  Client_user,
   Client_user_customer,
   Client_user_customer_paymentMethods_edges_node,
 } from "../../api/types/Client";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
+import type { MyAccount_me } from "../../api/types/MyAccount";
 import type {
   MyPaymentMethods_me_customer,
   MyPaymentMethods_me_customer_paymentMethods_edges_node,
@@ -39,15 +42,15 @@ interface PaymentMethodProps {
     | null
     | undefined;
   staff?: boolean;
-  userId: string;
+  user: MyAccount_me | Client_user | null | undefined;
 }
 
 function handleCards(
   onEdit: (node: Client_user_customer_paymentMethods_edges_node) => void,
   staff: boolean,
-  userId: string,
   t: TFunction,
-  customer?: MyPaymentMethods_me_customer | Client_user_customer | null
+  customer?: MyPaymentMethods_me_customer | Client_user_customer | null,
+  user?: MyAccount_me | Client_user
 ) {
   if (customer) {
     if (customer.paymentMethods.edges.length > 0) {
@@ -60,7 +63,7 @@ function handleCards(
             onEdit={() => onEdit(node)}
             payment={node}
             staff={staff}
-            userId={userId}
+            user={user}
           />
         );
       });
@@ -74,13 +77,7 @@ function handleCards(
     } else {
       if (staff) {
         return (
-          <div className={styles.alertNoPaymentsAdmin}>
-            <Alert
-              message={t("noPaymentMethodsAdmin")}
-              showIcon
-              type="warning"
-            />
-          </div>
+          <Alert message={t("noPaymentMethodsAdmin")} showIcon type="warning" />
         );
       } else {
         return (
@@ -96,7 +93,7 @@ function handleCards(
   }
 }
 
-const PaymentMethod = ({ customer, staff, userId }: PaymentMethodProps) => {
+const PaymentMethod = ({ customer, staff, user }: PaymentMethodProps) => {
   const { t } = useTranslation(["translation", "client"]);
   const location = useLocation();
   const [isModalCreateOpen, setisModalCreateOpen] = useState(false);
@@ -113,7 +110,7 @@ const PaymentMethod = ({ customer, staff, userId }: PaymentMethodProps) => {
     AddPaymentMethodVariables
   >(ADD_PAYMENT_METHOD, {
     refetchQueries: staff
-      ? [{ query: CLIENT, variables: { id: userId } }]
+      ? [{ query: CLIENT, variables: { id: user?.id } }]
       : [{ query: MY_PAYMENT_METHODS }],
   });
 
@@ -152,39 +149,15 @@ const PaymentMethod = ({ customer, staff, userId }: PaymentMethodProps) => {
         normalize(
           connectionToNodes(customer.paymentMethods).find(
             (payment) =>
-              payment.stripeId === customer.defaultPaymentMethod.stripeId
+              payment.stripeId === customer.defaultPaymentMethod?.stripeId
           )?.card!
         )
       )) ||
     undefined;
 
   return (
-    <Row gutter={[24, 24]}>
-      <Col span={24}>
-        {card && new Date(card.exp_year, card.exp_month) < new Date() && (
-          <Row gutter={[24, 24]}>
-            {staff ? (
-              <Col>
-                <Alert
-                  className={styles.alertAdmin}
-                  message={t("expiredPayment.admin")}
-                  showIcon
-                  type="error"
-                />
-              </Col>
-            ) : (
-              <Col>
-                <Alert
-                  className={styles.alert}
-                  message={t("expiredPayment.message")}
-                  showIcon
-                  type="error"
-                />
-              </Col>
-            )}
-            <Col />
-          </Row>
-        )}
+    <>
+      {!staff && user?.accountStatus === AccountAccountStatus.BANNED ? (
         <Row gutter={[24, 24]}>
           <Col span={24}>
             <div className={styles.cards}>
@@ -194,95 +167,143 @@ const PaymentMethod = ({ customer, staff, userId }: PaymentMethodProps) => {
                   setisModalUpdateOpen(true);
                 },
                 staff ?? false,
-                userId,
                 t,
-                customer
+                customer,
+                user
               )}
             </div>
           </Col>
         </Row>
-      </Col>
-      <Col span={24}>
-        <Button
-          className={
-            !customer && location.pathname !== "/checkout"
-              ? undefined
-              : "button-default-primary"
-          }
-          disabled={!customer && location.pathname !== "/checkout"}
-          onClick={() => setisModalCreateOpen(true)}
-          type="ghost"
-        >
-          {t("client:addPaymentMethod")}
-        </Button>
-      </Col>
-      <Modal
-        centered
-        destroyOnClose
-        footer={null}
-        onCancel={handleCancelCreate}
-        title={t("client:addPaymentMethod")}
-        visible={isModalCreateOpen}
-      >
-        <CreateCreditCard
-          form={formCreate}
-          onCancel={handleCancelCreate}
-          onCreated={(pm, isDefault) => {
-            if (customer) {
-              addPayment({
-                variables: {
-                  isDefault: isDefault,
-                  paymentMethodId: pm ?? "",
-                  userId: userId,
-                },
-                update(cache, { data: newData }) {
-                  if (newData?.addPaymentMethod?.error) {
-                    message.error(
-                      t(`admin:errors.${newData?.addPaymentMethod?.error}`),
-                      4
-                    );
-                  }
-                },
-              });
-            } else {
-              message.error(t("noCustomerError"), 4);
-            }
-            setisAdded(true);
-            setisModalCreateOpen(false);
-          }}
-        />
-      </Modal>
-      <Modal
-        centered
-        destroyOnClose
-        footer={null}
-        onCancel={handleCancelUpdate}
-        title={t("client:editPaymentMethod")}
-        visible={isModalUpdateOpen}
-      >
-        {isModalUpdateOpen && (
-          <EditCreditCard
-            form={formUpdate}
+      ) : (
+        <Row gutter={[24, 24]}>
+          <Col span={24}>
+            {card && new Date(card.exp_year, card.exp_month) < new Date() && (
+              <Row gutter={[24, 24]}>
+                {staff ? (
+                  <Col>
+                    <Alert
+                      className={styles.alertAdmin}
+                      message={t("expiredPayment.admin")}
+                      showIcon
+                      type="error"
+                    />
+                  </Col>
+                ) : (
+                  <Col>
+                    <Alert
+                      className={styles.alert}
+                      message={t("expiredPayment.message")}
+                      showIcon
+                      type="error"
+                    />
+                  </Col>
+                )}
+                <Col />
+              </Row>
+            )}
+            <Row gutter={[24, 24]}>
+              <Col span={24}>
+                <div className={styles.cards}>
+                  {handleCards(
+                    (node) => {
+                      setPaymentMethod(node);
+                      setisModalUpdateOpen(true);
+                    },
+                    staff ?? false,
+                    t,
+                    customer,
+                    user ?? undefined
+                  )}
+                </div>
+              </Col>
+            </Row>
+          </Col>
+          <Col span={24}>
+            <Button
+              className={
+                !customer && location.pathname !== "/checkout"
+                  ? undefined
+                  : "button-default-primary"
+              }
+              disabled={!customer && location.pathname !== "/checkout"}
+              onClick={() => setisModalCreateOpen(true)}
+              type="ghost"
+            >
+              {t("client:addPaymentMethod")}
+            </Button>
+          </Col>
+          <Modal
+            centered
+            destroyOnClose
+            footer={null}
+            onCancel={handleCancelCreate}
+            title={t("client:addPaymentMethod")}
+            visible={isModalCreateOpen}
+          >
+            <CreateCreditCard
+              form={formCreate}
+              onCancel={handleCancelCreate}
+              onCreated={(pm, isDefault) => {
+                if (customer) {
+                  addPayment({
+                    variables: {
+                      isDefault: isDefault,
+                      paymentMethodId: pm ?? "",
+                      userId: user?.id ?? "",
+                    },
+                    update(cache, { data: newData }) {
+                      if (newData?.addPaymentMethod?.error) {
+                        message.error(
+                          t(
+                            `client:errors.${newData?.addPaymentMethod?.error}`
+                          ),
+                          4
+                        );
+                      }
+                    },
+                  });
+                } else {
+                  message.error(t("noCustomerError"), 4);
+                }
+                setisAdded(true);
+                setisModalCreateOpen(false);
+              }}
+              userId={user?.id ?? ""}
+            />
+          </Modal>
+          <Modal
+            centered
+            destroyOnClose
+            footer={null}
             onCancel={handleCancelUpdate}
-            onEdited={() => {
-              setisModalUpdateOpen(false);
-            }}
-            payment={paymentMethod!}
-            staff={staff}
-            userId={userId}
-          />
-        )}
-      </Modal>
-      {changing && (
-        <LoadingFullScreen
-          tip={
-            isAdded
-              ? t("client:addingPaymentMethod")
-              : t("client:updatingPaymentMethod")
-          }
-        />
+            title={t("client:editPaymentMethod")}
+            visible={isModalUpdateOpen}
+          >
+            {isModalUpdateOpen && (
+              <EditCreditCard
+                form={formUpdate}
+                onCancel={handleCancelUpdate}
+                onEdited={() => {
+                  setisModalUpdateOpen(false);
+                }}
+                payment={paymentMethod!}
+                staff={staff}
+                userId={user?.id ?? ""}
+              />
+            )}
+          </Modal>
+          {changing && (
+            <LoadingFullScreen
+              tip={
+                isAdded
+                  ? t("client:addingPaymentMethod")
+                  : t("client:updatingPaymentMethod")
+              }
+            />
+          )}
+        </Row>
       )}
-    </Row>
+    </>
   );
 };
 

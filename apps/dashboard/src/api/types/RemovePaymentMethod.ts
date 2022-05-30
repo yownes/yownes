@@ -19,4 +19,5 @@ export interface RemovePaymentMethod {
 
 export interface RemovePaymentMethodVariables {
   paymentMethodId: string;
+  userId: string;
 }

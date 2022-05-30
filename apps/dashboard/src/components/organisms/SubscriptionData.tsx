@@ -360,319 +360,342 @@ const SubscriptionData = () => {
               </Text>
             )}
           </Title>
-          <Row gutter={[24, 24]}>
-            {
-              // TODO: Mensaje error renovación, fecha siguiente intento
-              // y permitir intentarlo en este momento
-              data?.me?.subscription?.status ===
-                SubscriptionStatus.PAST_DUE && (
-                <Alert
-                  className={styles.renewalAlert}
-                  message={[
-                    t("client:renewalError", {
-                      date:
-                        invoices &&
-                        longDate(
-                          addDays(
-                            new Date(
-                              reverse(
-                                connectionToNodes(data.me.subscription.invoices)
-                              ).find(
-                                (inv) => inv.status === InvoiceStatus.OPEN
-                              )?.created
-                            ),
-                            7
-                          )
-                        ),
-                    }),
-                  ]}
-                  showIcon
-                  type="error"
-                />
-              )
-            }
-          </Row>
-          <Row gutter={[24, 24]}>
-            {
-              // TODO: Permitir intentar de nuevo con otro método de pago
-              data?.me?.subscription?.status ===
-                SubscriptionStatus.INCOMPLETE && (
-                <AlertWithConfirm
-                  buttonText={t("client:retryPayment")}
-                  confirmText={
-                    <Trans
-                      i18nKey={"warnings.renewalNowSubscription"}
-                      ns="client"
-                    >
-                      <strong />
-                      <p />
-                      <p />
-                    </Trans>
-                  }
-                  message={[
-                    t("client:retryIncompleteError"),
-                    t("client:retryIncompleteCheck"),
-                  ]}
-                  onConfirm={() => {
-                    payInvoice({
-                      variables: {
-                        invoiceId:
-                          (invoices &&
-                            invoices.find(
-                              (inv) =>
-                                inv.subscription?.stripeId ===
-                                data.me?.subscription?.stripeId
-                            )?.stripeId) ||
-                          "",
-                      },
-                      update(cache, { data: payData }) {
-                        if (!payData?.payInvoice?.ok) {
-                          message.error(
-                            t(
-                              `client:errors.${payData?.payInvoice?.error}`,
-                              t("error")
-                            ),
-                            4
-                          );
-                        }
-                      },
-                    });
-                    setIsPaid(true);
-                  }}
-                  style={{ marginBottom: 18 }}
-                  type="error"
-                />
-              )
-            }
-          </Row>
-          <Row gutter={[24, 24]}>
-            {data?.me?.subscription &&
-              data?.me?.subscription?.plan &&
-              (data.me.subscription.status === SubscriptionStatus.ACTIVE ||
-                data.me.subscription.status === SubscriptionStatus.INCOMPLETE ||
-                data.me.subscription.status === SubscriptionStatus.PAST_DUE ||
-                data.me.subscription.status === SubscriptionStatus.UNPAID) && (
-                <SubscriptionInfo
-                  subscription={data.me.subscription}
-                  upcoming={upcomingData?.upcominginvoice}
-                />
-              )}
-          </Row>
-          <Row gutter={[24, 24]}>
-            {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
-              data.me.subscription.cancelAtPeriodEnd && (
-                <div className={styles.paddingTop24}>
-                  <AlertWithConfirm
-                    buttonText={t("client:reSubscribe")}
-                    confirmText={
-                      <Trans
-                        i18nKey={"warnings.unCancelSubscription"}
-                        ns="client"
-                      >
-                        <strong />
-                        <p />
-                      </Trans>
-                    }
-                    message={[t("client:reSubscribeNow")]}
-                    onConfirm={() => {
-                      if (data?.me?.id) {
-                        resubscribe({
-                          variables: { userId: data.me.id },
-                        });
-                        setIsResubscribed(true);
-                      }
-                    }}
-                  />
-                </div>
-              )}
-          </Row>
-          <Row gutter={[24, 24]}>
-            {(!data?.me?.subscription ||
-              (data.me.subscription.status === SubscriptionStatus.ACTIVE &&
-                data.me.subscription.cancelAtPeriodEnd) ||
-              data.me.subscription.status === SubscriptionStatus.CANCELED ||
-              data.me.subscription.status === SubscriptionStatus.UNPAID) &&
-              (data?.me?.subscription &&
-              data.me.subscription.status === SubscriptionStatus.ACTIVE &&
-              data.me.subscription.cancelAtPeriodEnd ? (
-                <div className={styles.paddingTop24}>
-                  <AlertWithConfirm
-                    buttonText={t("client:subscribe")}
-                    confirmText={
-                      <Trans i18nKey={"warnings.newSubscription"} ns="client">
-                        <strong />
-                        <p />
-                        <p />
-                        <p />
-                        <p />
-                      </Trans>
-                    }
-                    message={[t("client:startSubscribeNow")]}
-                    onConfirm={() => history.push("/checkout")}
-                  />
-                </div>
-              ) : (
-                <AlertWithLink
-                  buttonText={t("client:subscribe")}
-                  message={
-                    first(subscriptions)?.status ===
-                    SubscriptionStatus.INCOMPLETE_EXPIRED
-                      ? [t("client:incompleteSubscribeNow")]
-                      : [t("client:subscribeNow")]
-                  }
-                  link="/checkout"
-                />
-              ))}
-          </Row>
-          <Row gutter={[24, 24]}>
-            {data?.me?.subscription?.status ===
-              SubscriptionStatus.INCOMPLETE_EXPIRED && (
-              <AlertWithLink
-                buttonText={t("client:subscribe")}
-                message={[t("client:incompleteSubscribeNow")]}
-                link="/checkout"
-              />
-            )}
-          </Row>
-          <Row gutter={[24, 24]}>
-            {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
-              data.me.subscription.cancelAtPeriodEnd === false && (
-                <Col>
-                  <div className={styles.paddingTop24}>
-                    {!expired ? (
-                      <Button
-                        className="button-default-default"
-                        onClick={() => {
-                          data?.me?.subscription?.plan &&
-                            setInterval(
-                              JSON.parse(
-                                normalize(
-                                  data?.me?.subscription?.plan.product?.prices.edges.find(
-                                    (p) =>
-                                      p?.node &&
-                                      p?.node.stripeId ===
-                                        data?.me?.subscription?.plan?.stripeId
-                                  )?.node?.recurring!
-                                )
-                              ).interval.toUpperCase()
-                            );
-                          setPlanId(data?.me?.subscription?.plan?.product?.id);
-                          setModalStep(false);
-                          setIsModalUpdateOpen(!isModalUpdateOpen);
-                        }}
-                        type="default"
-                      >
-                        {t("client:changeSubscription")}
-                      </Button>
-                    ) : (
-                      <Tooltip title={t("client:changeSubscriptionDisabled")}>
-                        <Button disabled type="default">
-                          {t("client:changeSubscription")}
-                        </Button>
-                      </Tooltip>
-                    )}
-                  </div>
-                </Col>
-              )}
-            {((data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
-              data.me.subscription.cancelAtPeriodEnd === false) ||
-              data?.me?.subscription?.status ===
-                SubscriptionStatus.INCOMPLETE ||
-              data?.me?.subscription?.status ===
-                SubscriptionStatus.PAST_DUE) && (
-              <Col>
-                <div className={styles.paddingTop24}>
-                  <Button
-                    danger
-                    onClick={() => {
-                      confirm({
-                        icon: <ExclamationCircleOutlined />,
-                        title: t("client:warnings.cancelSubscriptionTitle"),
-                        content: (
-                          <Trans
-                            i18nKey={handleWarning(
-                              appsData?.apps ? appsData?.apps?.edges.length : 0,
-                              data?.me?.subscription?.status
-                            )}
-                            ns="client"
-                            values={{
-                              date: dateTime(
+          {data?.me?.accountStatus === AccountAccountStatus.BANNED ? (
+            <Text type="secondary">{t("client:noSubscription")}</Text>
+          ) : (
+            <>
+              {
+                // TODO: Mensaje error renovación, fecha siguiente intento
+                // y permitir intentarlo en este momento
+                data?.me?.subscription?.status ===
+                  SubscriptionStatus.PAST_DUE && (
+                  <Row gutter={[24, 24]}>
+                    <Alert
+                      className={styles.renewalAlert}
+                      message={[
+                        t("client:renewalError", {
+                          date:
+                            invoices &&
+                            longDate(
+                              addDays(
                                 new Date(
-                                  data.me?.subscription?.currentPeriodEnd
-                                )
-                              ),
-                            }}
+                                  reverse(
+                                    connectionToNodes(
+                                      data.me.subscription.invoices
+                                    )
+                                  ).find(
+                                    (inv) => inv.status === InvoiceStatus.OPEN
+                                  )?.created
+                                ),
+                                7
+                              )
+                            ),
+                        }),
+                      ]}
+                      showIcon
+                      type="error"
+                    />
+                  </Row>
+                )
+              }
+              {
+                // TODO: Permitir intentar de nuevo con otro método de pago
+                data?.me?.subscription?.status ===
+                  SubscriptionStatus.INCOMPLETE && (
+                  <Row gutter={[24, 24]}>
+                    <AlertWithConfirm
+                      buttonText={t("client:retryPayment")}
+                      confirmText={
+                        <Trans
+                          i18nKey={"warnings.renewalNowSubscription"}
+                          ns="client"
+                        >
+                          <strong />
+                          <p />
+                          <p />
+                        </Trans>
+                      }
+                      message={[
+                        t("client:retryIncompleteError"),
+                        t("client:retryIncompleteCheck"),
+                      ]}
+                      onConfirm={() => {
+                        payInvoice({
+                          variables: {
+                            invoiceId:
+                              (invoices &&
+                                invoices.find(
+                                  (inv) =>
+                                    inv.subscription?.stripeId ===
+                                    data.me?.subscription?.stripeId
+                                )?.stripeId) ||
+                              "",
+                          },
+                          update(cache, { data: payData }) {
+                            if (!payData?.payInvoice?.ok) {
+                              message.error(
+                                t(
+                                  `client:errors.${payData?.payInvoice?.error}`,
+                                  t("error")
+                                ),
+                                4
+                              );
+                            }
+                          },
+                        });
+                        setIsPaid(true);
+                      }}
+                      style={{ marginBottom: 18 }}
+                      type="error"
+                    />
+                  </Row>
+                )
+              }
+              {data?.me?.subscription &&
+                data?.me?.subscription?.plan &&
+                (data.me.subscription.status === SubscriptionStatus.ACTIVE ||
+                  data.me.subscription.status ===
+                    SubscriptionStatus.INCOMPLETE ||
+                  data.me.subscription.status === SubscriptionStatus.PAST_DUE ||
+                  data.me.subscription.status ===
+                    SubscriptionStatus.UNPAID) && (
+                  <Row gutter={[24, 24]}>
+                    <SubscriptionInfo
+                      subscription={data.me.subscription}
+                      upcoming={upcomingData?.upcominginvoice}
+                    />
+                  </Row>
+                )}
+              {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
+                data.me.subscription.cancelAtPeriodEnd && (
+                  <Row gutter={[24, 24]}>
+                    <div className={styles.paddingTop24}>
+                      <AlertWithConfirm
+                        buttonText={t("client:reSubscribe")}
+                        confirmText={
+                          <Trans
+                            i18nKey={"warnings.unCancelSubscription"}
+                            ns="client"
                           >
+                            <strong />
+                            <p />
+                          </Trans>
+                        }
+                        message={[t("client:reSubscribeNow")]}
+                        onConfirm={() => {
+                          if (data?.me?.id) {
+                            resubscribe({
+                              variables: { userId: data.me.id },
+                            });
+                            setIsResubscribed(true);
+                          }
+                        }}
+                      />
+                    </div>
+                  </Row>
+                )}
+              {(!data?.me?.subscription ||
+                (data.me.subscription.status === SubscriptionStatus.ACTIVE &&
+                  data.me.subscription.cancelAtPeriodEnd) ||
+                data.me.subscription.status === SubscriptionStatus.CANCELED ||
+                data.me.subscription.status === SubscriptionStatus.UNPAID) &&
+                (data?.me?.subscription &&
+                data.me.subscription.status === SubscriptionStatus.ACTIVE &&
+                data.me.subscription.cancelAtPeriodEnd ? (
+                  <Row gutter={[24, 24]}>
+                    <div className={styles.paddingTop24}>
+                      <AlertWithConfirm
+                        buttonText={t("client:subscribe")}
+                        confirmText={
+                          <Trans
+                            i18nKey={"warnings.newSubscription"}
+                            ns="client"
+                          >
+                            <strong />
+                            <p />
+                            <p />
                             <p />
                             <p />
                           </Trans>
-                        ),
-                        cancelButtonProps: {
-                          className: "button-default-default",
-                        },
-                        cancelText: t("close"),
-                        okButtonProps: {
-                          autoFocus: false,
-                          danger: true,
-                          type: "default",
-                        },
-                        okText: t("client:cancelSubscriptionConfirm"),
-                        onOk: () => {
-                          if (data?.me?.id) {
-                            unsubscribe({
-                              variables: {
-                                userId: data?.me?.id,
-                                atPeriodEnd:
-                                  data?.me?.subscription?.status ===
-                                  SubscriptionStatus.ACTIVE
-                                    ? true
-                                    : false,
-                              },
-                              update(cache, { data: result }) {
-                                if (result?.dropOut?.ok && data.me) {
-                                  if (
-                                    data?.me?.subscription?.status !==
-                                    SubscriptionStatus.ACTIVE
-                                  ) {
-                                    cache.modify({
-                                      id: cache.identify({
-                                        ...data?.me,
-                                      }),
-                                      fields: {
-                                        accountStatus: () =>
-                                          result.dropOut?.accountStatus ||
-                                          AccountAccountStatus.REGISTERED,
-                                        subscription: () => null,
-                                      },
-                                    });
-                                  } else {
-                                    cache.modify({
-                                      id: cache.identify({
-                                        ...data?.me,
-                                      }),
-                                      fields: {
-                                        accountStatus: () =>
-                                          result.dropOut?.accountStatus ||
-                                          AccountAccountStatus.REGISTERED,
-                                      },
-                                    });
-                                  }
-                                }
-                              },
-                            });
-                            setIsUnsubscribed(true);
-                          }
-                        },
-                      });
-                    }}
-                    type="default"
-                  >
-                    {t("client:cancelSubscription")}
-                  </Button>
-                </div>
-              </Col>
-            )}
-          </Row>
+                        }
+                        message={[t("client:startSubscribeNow")]}
+                        onConfirm={() => history.push("/checkout")}
+                      />
+                    </div>
+                  </Row>
+                ) : (
+                  <Row gutter={[24, 24]}>
+                    <AlertWithLink
+                      buttonText={t("client:subscribe")}
+                      message={
+                        first(subscriptions)?.status ===
+                        SubscriptionStatus.INCOMPLETE_EXPIRED
+                          ? [t("client:incompleteSubscribeNow")]
+                          : [t("client:subscribeNow")]
+                      }
+                      link="/checkout"
+                    />
+                  </Row>
+                ))}
+              {data?.me?.subscription?.status ===
+                SubscriptionStatus.INCOMPLETE_EXPIRED && (
+                <Row gutter={[24, 24]}>
+                  <AlertWithLink
+                    buttonText={t("client:subscribe")}
+                    message={[t("client:incompleteSubscribeNow")]}
+                    link="/checkout"
+                  />
+                </Row>
+              )}
+              <Row gutter={[24, 24]}>
+                {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
+                  data.me.subscription.cancelAtPeriodEnd === false && (
+                    <Col>
+                      <div className={styles.paddingTop24}>
+                        {!expired ? (
+                          <Button
+                            className="button-default-default"
+                            onClick={() => {
+                              data?.me?.subscription?.plan &&
+                                setInterval(
+                                  JSON.parse(
+                                    normalize(
+                                      data?.me?.subscription?.plan.product?.prices.edges.find(
+                                        (p) =>
+                                          p?.node &&
+                                          p?.node.stripeId ===
+                                            data?.me?.subscription?.plan
+                                              ?.stripeId
+                                      )?.node?.recurring!
+                                    )
+                                  ).interval.toUpperCase()
+                                );
+                              setPlanId(
+                                data?.me?.subscription?.plan?.product?.id
+                              );
+                              setModalStep(false);
+                              setIsModalUpdateOpen(!isModalUpdateOpen);
+                            }}
+                            type="default"
+                          >
+                            {t("client:changeSubscription")}
+                          </Button>
+                        ) : (
+                          <Tooltip
+                            title={t("client:changeSubscriptionDisabled")}
+                          >
+                            <Button disabled type="default">
+                              {t("client:changeSubscription")}
+                            </Button>
+                          </Tooltip>
+                        )}
+                      </div>
+                    </Col>
+                  )}
+                {((data?.me?.subscription?.status ===
+                  SubscriptionStatus.ACTIVE &&
+                  data.me.subscription.cancelAtPeriodEnd === false) ||
+                  data?.me?.subscription?.status ===
+                    SubscriptionStatus.INCOMPLETE ||
+                  data?.me?.subscription?.status ===
+                    SubscriptionStatus.PAST_DUE) && (
+                  <Col>
+                    <div className={styles.paddingTop24}>
+                      <Button
+                        danger
+                        onClick={() => {
+                          confirm({
+                            icon: <ExclamationCircleOutlined />,
+                            title: t("client:warnings.cancelSubscriptionTitle"),
+                            content: (
+                              <Trans
+                                i18nKey={handleWarning(
+                                  appsData?.apps
+                                    ? appsData?.apps?.edges.length
+                                    : 0,
+                                  data?.me?.subscription?.status
+                                )}
+                                ns="client"
+                                values={{
+                                  date: dateTime(
+                                    new Date(
+                                      data.me?.subscription?.currentPeriodEnd
+                                    )
+                                  ),
+                                }}
+                              >
+                                <p />
+                                <p />
+                              </Trans>
+                            ),
+                            cancelButtonProps: {
+                              className: "button-default-default",
+                            },
+                            cancelText: t("close"),
+                            okButtonProps: {
+                              autoFocus: false,
+                              danger: true,
+                              type: "default",
+                            },
+                            okText: t("client:cancelSubscriptionConfirm"),
+                            onOk: () => {
+                              if (data?.me?.id) {
+                                unsubscribe({
+                                  variables: {
+                                    userId: data?.me?.id,
+                                    atPeriodEnd:
+                                      data?.me?.subscription?.status ===
+                                      SubscriptionStatus.ACTIVE
+                                        ? true
+                                        : false,
+                                  },
+                                  update(cache, { data: result }) {
+                                    if (result?.dropOut?.ok && data.me) {
+                                      if (
+                                        data?.me?.subscription?.status !==
+                                        SubscriptionStatus.ACTIVE
+                                      ) {
+                                        cache.modify({
+                                          id: cache.identify({
+                                            ...data?.me,
+                                          }),
+                                          fields: {
+                                            accountStatus: () =>
+                                              result.dropOut?.accountStatus ||
+                                              AccountAccountStatus.REGISTERED,
+                                            subscription: () => null,
+                                          },
+                                        });
+                                      } else {
+                                        cache.modify({
+                                          id: cache.identify({
+                                            ...data?.me,
+                                          }),
+                                          fields: {
+                                            accountStatus: () =>
+                                              result.dropOut?.accountStatus ||
+                                              AccountAccountStatus.REGISTERED,
+                                          },
+                                        });
+                                      }
+                                    }
+                                  },
+                                });
+                                setIsUnsubscribed(true);
+                              }
+                            },
+                          });
+                        }}
+                        type="default"
+                      >
+                        {t("client:cancelSubscription")}
+                      </Button>
+                    </div>
+                  </Col>
+                )}
+              </Row>
+            </>
+          )}
         </Card>
       </Col>
       <Modal

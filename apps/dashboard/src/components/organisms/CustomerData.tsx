@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { UPDATE_CUSTOMER } from "../../api/mutations";
 import { CLIENT, MY_ACCOUNT } from "../../api/queries";
 import type { Client_user } from "../../api/types/Client";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
 import type { MyAccount_me } from "../../api/types/MyAccount";
 import type {
   UpdateCustomer,
@@ -265,7 +266,13 @@ const CustomerData = ({ customer, onFinish, staff }: CustomerDataProps) => {
               </div>
             )}
             {location.pathname !== "/checkout" ? (
-              <Button htmlType="submit" type="primary">
+              <Button
+                // disabled={
+                //   customer?.accountStatus === AccountAccountStatus.BANNED
+                // }
+                htmlType="submit"
+                type="primary"
+              >
                 {t("save")}
               </Button>
             ) : (
