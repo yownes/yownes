@@ -146,27 +146,24 @@ class AddPaymentMethod(graphene.Mutation):
     class Arguments:
         is_default = graphene.Boolean(default_value=True)
         payment_method_id = graphene.ID(required=True)
-        user_id = graphene.ID()
+        user_id = graphene.ID(required=True)
 
     Output = Return
 
     @login_required
-    def mutate(self, info, is_default, payment_method_id, **kwargs):
+    def mutate(self, info, is_default, payment_method_id, user_id):
+        user_object = Node.get_node_from_global_id(info, user_id)
+        if not user_object:
+            return Return(ok=False, error=Error.NO_RECURSE.value)
+        if not info.context.user.is_staff and user_object.account_status == AccountStatus.BANNED: # banned account
+            return Return(ok=False, error=Error.BANNED_ACCOUNT.value)
         try:
             stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
             payment_method_obj = stripe.PaymentMethod.retrieve(payment_method_id)
             PaymentMethod.sync_from_stripe_data(payment_method_obj)
 
-            if info.context.user.is_staff:
-                user_id = kwargs.get('user_id', None)
-                if not user_id:
-                    return Return(ok=False, error=Error.UNKNOWN_ERROR.value)
-                user = Node.get_node_from_global_id(info, user_id)
-            else:
-                user = info.context.user
-
-            user.customer.add_payment_method(payment_method_obj, is_default)
-            user.customer.save()
+            user_object.customer.add_payment_method(payment_method_obj, is_default)
+            user_object.customer.save()
             
             return Return(ok=True)
         except Exception as e:
@@ -176,13 +173,19 @@ class AddPaymentMethod(graphene.Mutation):
 class CreatePaymentMethod(graphene.Mutation):
     class Arguments:
         payment = CreatePaymentInput(required=True)
+        user_id = graphene.ID(required=True)
 
     ok = graphene.Boolean()
     error = graphene.String()
     id = graphene.String()
 
     @login_required
-    def mutate(self, info, payment):
+    def mutate(self, info, payment, user_id):
+        user_object = Node.get_node_from_global_id(info, user_id)
+        if not user_object:
+            return CreatePaymentMethod(ok=False, error=Error.NO_RECURSE.value)
+        if not info.context.user.is_staff and user_object.account_status == AccountStatus.BANNED: # banned account
+            return CreatePaymentMethod(ok=False, error=Error.BANNED_ACCOUNT.value)
         try:
             stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
             payment_method = stripe.PaymentMethod.create(billing_details=payment.billing_details, card=payment.card, type="card")
@@ -201,11 +204,17 @@ class UpdatePaymentMethod(graphene.Mutation):
         id = graphene.ID(required=True)
         payment_method_id = graphene.ID(required=True)
         payment = PaymentInput(required=True)
+        user_id = graphene.ID(required=True)
 
     Output = Return
 
     @login_required
-    def mutate(self, info, id, payment_method_id, payment):
+    def mutate(self, info, id, payment_method_id, payment, user_id):
+        user_object = Node.get_node_from_global_id(info, user_id)
+        if not user_object:
+            return Return(ok=False, error=Error.NO_RECURSE.value)
+        if not info.context.user.is_staff and user_object.account_status == AccountStatus.BANNED: # banned account
+            return Return(ok=False, error=Error.BANNED_ACCOUNT.value)
         payment_object = Node.get_node_from_global_id(info, id)
         if not info.context.user.is_staff:
             if info.context.user.customer.id != payment_object.customer.id:
@@ -238,6 +247,8 @@ class UpdateCustomerMutation(graphene.Mutation):
         user_object = Node.get_node_from_global_id(info, user_id)
         if not user_object:
             return UpdateCustomerMutation(ok=False, error=Error.NO_RECURSE.value)
+        if not info.context.user.is_staff and user_object.account_status == AccountStatus.BANNED: # banned account
+            return UpdateCustomerMutation(ok=False, error=Error.BANNED_ACCOUNT.value)
         try:
             stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
             try:
@@ -320,11 +331,17 @@ class TakeUpUserMutation(graphene.Mutation):
 class DetachPaymentMethod(graphene.Mutation):
     class Arguments:
         payment_method_id = graphene.ID(required=True)
+        user_id = graphene.ID(required=True)
 
     Output = Return
 
     @login_required
-    def mutate(self, info, payment_method_id):
+    def mutate(self, info, payment_method_id, user_id):
+        user_object = Node.get_node_from_global_id(info, user_id)
+        if not user_object:
+            return Return(ok=False, error=Error.NO_RECURSE.value)
+        if not info.context.user.is_staff and user_object.account_status == AccountStatus.BANNED: # banned account
+            return Return(ok=False, error=Error.BANNED_ACCOUNT.value)
         try:
             stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
             payment_method_obj = stripe.PaymentMethod.retrieve(payment_method_id)

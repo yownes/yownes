@@ -101,28 +101,21 @@ class CreateStoreAppMutation(graphene.Mutation):
     @login_required
     def mutate(self, info, data):
         # if not utils._is_store_link_valid(data.api_link):
-        #     return {
-        #         "ok": False,
-        #         "error": Error.NOT_VALID_STORE.value
-        #     }
+        #     return CreateStoreAppMutation(ok=False, error=Error.NOT_VALID_STORE.value)
+        if info.context.user.account_status == AccountStatus.BANNED: # banned account
+            return CreateStoreAppMutation(ok=False, error=Error.BANNED_ACCOUNT.value)
         try:
             allowed_apps = int(json.loads(str(info.context.user.subscription.plan.product.metadata).replace("\'", "\""))["allowed_apps"])
         except:
             allowed_apps = 1
         current_apps = StoreApp.objects.filter(customer=info.context.user, is_active=True).count()
         if current_apps != 0 and current_apps >= allowed_apps:
-            return {
-                "ok": False,
-                "error": Error.NOT_AVAILABLE_APPS.value
-            }
+            return CreateStoreAppMutation(ok=False, error=Error.NOT_AVAILABLE_APPS.value)
         store_app_object = StoreApp.objects.create(name=data.get('name'))
         store_app_object.customer = info.context.user
         store_app_object.save()
         _update_store_app_custom_fields(store_app_object, info, data)
-        return {
-            "ok": True,
-            "store_app": store_app_object
-        }
+        return CreateStoreAppMutation(ok=True, store_app=store_app_object)
 
 
 class UpdateStoreAppMutation(graphene.Mutation):
@@ -134,11 +127,10 @@ class UpdateStoreAppMutation(graphene.Mutation):
 
     @login_required
     def mutate(self, info, id, data):
+        if info.context.user.account_status == AccountStatus.BANNED: # banned account
+            return Return(ok=False, error=Error.BANNED_ACCOUNT.value)
         # if not utils._is_store_link_valid(data.api_link):
-        #     return {
-        #         "ok": False,
-        #         "error": Error.NOT_VALID_STORE.value
-        #     }
+        #     return Return(ok=False, error=Error.NOT_VALID_STORE.value)
         store_app_object = Node.get_node_from_global_id(info, id)
         if not store_app_object:
             return Return(ok=False, error=Error.NO_RECURSE.value)
@@ -162,6 +154,8 @@ class DeleteAppMutation(graphene.Mutation):
             return Return(ok=False, error=Error.NO_RECURSE.value)
         if info.context.user != store_app_object.customer and not info.context.user.is_staff:
             return Return(ok=False, error=Error.NOT_YOUR_RECURSE.value)
+        if info.context.user.account_status == AccountStatus.BANNED: # banned account
+            return Return(ok=False, error=Error.BANNED_ACCOUNT.value)
         try:
             store_app_object.is_active = False
             store_app_object.save()
@@ -206,6 +200,8 @@ class CreateOrUpdatePaymentMethodAppMutation(graphene.Mutation):
             return Return(ok=False, error=Error.NO_RECURSE.value)
         if info.context.user != store_app_object.customer:
             return Return(ok=False, error=Error.NOT_YOUR_RECURSE.value)
+        if info.context.user.account_status == AccountStatus.BANNED: # banned account
+            return Return(ok=False, error=Error.BANNED_ACCOUNT.value)
         try:
             PaymentMethod.objects.update_or_create(store_app=store_app_object, defaults=data)
             return Return(ok=True)
