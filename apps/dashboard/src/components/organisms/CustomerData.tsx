@@ -267,9 +267,9 @@ const CustomerData = ({ customer, onFinish, staff }: CustomerDataProps) => {
             )}
             {location.pathname !== "/checkout" ? (
               <Button
-                // disabled={
-                //   customer?.accountStatus === AccountAccountStatus.BANNED
-                // }
+                disabled={
+                  customer?.accountStatus === AccountAccountStatus.BANNED
+                }
                 htmlType="submit"
                 type="primary"
               >

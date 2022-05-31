@@ -1,4 +1,3 @@
-export { default as AlertWithButton } from "./AlertWithButton";
 export { default as AlertWithConfirm } from "./AlertWithConfirm";
 export { default as AlertWithLink } from "./AlertWithLink";
 export { default as AppInfo } from "./AppInfo";

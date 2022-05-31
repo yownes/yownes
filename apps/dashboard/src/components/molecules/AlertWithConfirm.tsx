@@ -39,7 +39,7 @@ const AlertWithConfirm = ({
             placement="left"
             title={confirmText}
           >
-            <Button size="small" type="primary">
+            <Button size="small" type="primary" style={{ border: "none" }}>
               {buttonText}
             </Button>
           </Popconfirm>

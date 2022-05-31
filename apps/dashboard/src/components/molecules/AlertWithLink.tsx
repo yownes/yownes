@@ -23,7 +23,7 @@ const AlertWithLink = ({
       <Alert
         action={
           <Link to={link}>
-            <Button size="small" type="primary">
+            <Button size="small" type="primary" style={{ border: "none" }}>
               {buttonText}
             </Button>
           </Link>
