@@ -28,6 +28,7 @@
     "react-router": "^6.3.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.0",
+    "relative-luminance": "^2.0.1",
     "resolve": "1.15.0",
     "semver": "6.3.0",
     "snack-sdk": "^3.5.0",

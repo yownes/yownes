@@ -40,6 +40,8 @@ import {
 } from "../../api/types/globalTypes";
 import type { MyAccount } from "../../api/types/MyAccount";
 import type { UpdateApp, UpdateAppVariables } from "../../api/types/UpdateApp";
+import { getAppBuildState } from "../../lib/appBuildState";
+import { getContrastColor } from "../../lib/color-contrast";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { normalize } from "../../lib/normalize";
 import { Loading, LoadingFullScreen } from "../../components/atoms";
@@ -50,7 +52,6 @@ import {
   ColorPicker,
   TemplateSelector,
 } from "../../components/organisms";
-import { getAppBuildState } from "../../lib/appBuildState";
 
 import styles from "./App.module.css";
 
@@ -234,7 +235,7 @@ const App = () => {
         name: data.app.name,
         color: {
           color: data.app.color?.color ?? baseApp.color?.color,
-          text: data.app.color?.text ?? baseApp.color?.text,
+          text: getContrastColor(data.app.color?.text ?? baseApp.color?.text),
         },
         logo: data.app.logo,
         description: data.app.description,
@@ -586,6 +587,12 @@ const App = () => {
     </Row>
   );
 
+  const preview = (
+    <Card>
+      {data?.app?.id ? <AppPreview id={data?.app?.id} app={state} /> : null}
+    </Card>
+  );
+
   return (
     <Col lg={{ span: 24, offset: 0 }} md={{ span: 18, offset: 3 }} span={24}>
       <Row gutter={[24, 24]}>
@@ -624,13 +631,7 @@ const App = () => {
             {!lg && (
               <Col span={24} lg={8}>
                 <Row gutter={[24, 24]}>
-                  <Col span={24}>
-                    <Card>
-                      {data?.app?.id ? (
-                        <AppPreview id={data?.app?.id} app={state} />
-                      ) : null}
-                    </Card>
-                  </Col>
+                  <Col span={24}>{preview}</Col>
                 </Row>
               </Col>
             )}
@@ -677,13 +678,7 @@ const App = () => {
             <Row gutter={[24, 24]}>
               {/* <div className={styles.previewContainer}> */}
               <Col span={24}>{buttons}</Col>
-              <Col span={24}>
-                <Card>
-                  {data?.app?.id ? (
-                    <AppPreview id={data?.app?.id} app={state} />
-                  ) : null}
-                </Card>
-              </Col>
+              <Col span={24}>{preview}</Col>
               {/* </div> */}
             </Row>
           </Col>

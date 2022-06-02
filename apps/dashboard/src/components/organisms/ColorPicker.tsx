@@ -89,49 +89,6 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
             </div>
           </Row>
         </Col>
-        <Col span={24}>
-          <Text type="secondary">{t("appColorMessage")}</Text>
-        </Col>
-        <Col span={24}>
-          <Radio.Group
-            name="text"
-            value={value?.text ?? "white"}
-            onChange={(e) => {
-              onChange({
-                color: value?.color ?? defaultColors[0],
-                text: e.target.value,
-              });
-            }}
-          >
-            <Row>
-              <Radio value="white">
-                <div
-                  className={styles.textColor}
-                  style={{
-                    backgroundColor: value?.color ?? undefined,
-                    color: "white",
-                    marginBottom: 8,
-                  }}
-                >
-                  <span className={styles.textColorText}>{t("white")}</span>
-                </div>
-              </Radio>
-            </Row>
-            <Row>
-              <Radio value="black">
-                <div
-                  className={styles.textColor}
-                  style={{
-                    backgroundColor: value?.color ?? undefined,
-                    color: "black",
-                  }}
-                >
-                  <span className={styles.textColorText}>{t("black")}</span>
-                </div>
-              </Radio>
-            </Row>
-          </Radio.Group>
-        </Col>
       </Row>
     </>
   );

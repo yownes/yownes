@@ -13,15 +13,3 @@
 .customColorInput input {
   font-weight: 500;
 }
-
-.textColor {
-  border-radius: 6px;
-  min-width: 180px;
-  padding: 8px;
-  text-align: center;
-}
-
-.textColorText {
-  font-size: 12px;
-  letter-spacing: 0.5px;
-}
