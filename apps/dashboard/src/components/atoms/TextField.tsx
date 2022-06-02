@@ -6,7 +6,8 @@ import type { NamePath } from "antd/lib/form/interface";
 
 import "./TextField.css";
 
-interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextFieldProps
+  extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   autofocus?: boolean;
   children?: ReactNode;
   creditcard?: boolean;
@@ -71,7 +72,7 @@ const TextField = ({
   const required = rules?.find((r) => r.hasOwnProperty("required"));
 
   return single ? (
-    <div className="container">
+    <div className={`container ${wrapperClassName ?? undefined}`}>
       <label
         className={`pure-material-textfield-outlined ${
           small ? "pure-material-textfield-outlined--small" : ""
@@ -86,9 +87,9 @@ const TextField = ({
             maxLength={props.maxLength ?? undefined}
             minLength={props.maxLength ?? undefined}
             name={name}
+            onChange={props.onChange}
             placeholder=" "
             rows={rows}
-            value={value ?? ""}
           />
         ) : (
           <input
@@ -100,7 +101,6 @@ const TextField = ({
             defaultValue={defaultValue}
             max={max ?? undefined}
             min={handleMin(type, min)}
-            value={value ?? ""}
             {...props}
           />
         )}
@@ -131,9 +131,9 @@ const TextField = ({
               disabled={disabled}
               maxLength={props.maxLength ?? undefined}
               minLength={props.maxLength ?? undefined}
+              onChange={props.onChange}
               placeholder=" "
               rows={rows}
-              value={value}
             />
           ) : (
             <input
@@ -144,7 +144,6 @@ const TextField = ({
               defaultValue={defaultValue}
               max={max ?? undefined}
               min={handleMin(type, min)}
-              value={value}
               {...props}
             />
           )}

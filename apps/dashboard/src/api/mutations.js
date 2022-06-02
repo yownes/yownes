@@ -169,6 +169,7 @@ export const CREATE_APP = gql`
       error
       storeApp {
         id
+        description
         logo
         name
         storeLinks {

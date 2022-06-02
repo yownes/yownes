@@ -189,6 +189,7 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
 export const APP_FRAGMENT = gql`
   fragment AppBasicData on StoreAppType {
     id
+    description
     logo
     name
     isActive
@@ -329,6 +330,7 @@ export const APP = gql`
         id
       }
       logo
+      description
       builds {
         edges {
           node {

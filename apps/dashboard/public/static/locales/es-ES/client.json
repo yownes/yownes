@@ -135,6 +135,7 @@
     "UPLOADING": "Subiendo",
     "WAITING": "En espera"
   },
+  "storeDescription": "Ficha en las tiendas de aplicaciones",
   "storeLink": "Dirección de la tienda",
   "required": {
     "app": "Introduce el nombre de la app",

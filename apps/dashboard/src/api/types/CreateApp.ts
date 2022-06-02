@@ -46,6 +46,10 @@ export interface CreateApp_createApp_storeApp {
    * The ID of the object.
    */
   id: string;
+  /**
+   * Description to Stores card info
+   */
+  description: string | null;
   logo: string | null;
   name: string;
   storeLinks: CreateApp_createApp_storeApp_storeLinks | null;

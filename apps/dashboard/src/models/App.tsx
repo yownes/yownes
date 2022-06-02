@@ -7,6 +7,7 @@ export enum AccountState {
 
 export interface App {
   id: string;
+  description?: string;
   name?: string;
   storeLinks?: { ios: string; android: string };
   customer?: Client;

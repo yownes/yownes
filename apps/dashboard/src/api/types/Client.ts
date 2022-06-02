@@ -668,6 +668,10 @@ export interface Client_user_apps_edges_node {
    * The ID of the object.
    */
   id: string;
+  /**
+   * Description to Stores card info
+   */
+  description: string | null;
   logo: string | null;
   name: string;
   isActive: boolean | null;

@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Col,
+  Grid,
   message,
   Popconfirm,
   Row,
@@ -65,6 +66,7 @@ export const baseApp: StoreAppInput = {
   name: "",
   color: { color: "#0099cc", text: "white" },
   logo: null,
+  description: "",
 };
 
 function appsAreEqual(state: StoreAppInput, app?: App_app | null): boolean {
@@ -77,7 +79,8 @@ function appsAreEqual(state: StoreAppInput, app?: App_app | null): boolean {
     app.color?.text === state.color?.text &&
     app.name === state.name &&
     app.template?.id === state.template &&
-    app.logo === state.logo
+    app.logo === state.logo &&
+    app.description === state.description
   );
 }
 
@@ -179,6 +182,7 @@ function handleWarning(apps: number, status: BuildBuildStatus) {
 }
 
 const App = () => {
+  const { lg } = Grid.useBreakpoint();
   const { t } = useTranslation(["translation", "client"]);
   const history = useHistory();
   const { appId } = useParams<AppParamTypes>();
@@ -233,6 +237,7 @@ const App = () => {
           text: data.app.color?.text ?? baseApp.color?.text,
         },
         logo: data.app.logo,
+        description: data.app.description,
       });
     }
   }, [data?.app]);
@@ -309,11 +314,283 @@ const App = () => {
     return <Redirect to="/profile" />;
   }
 
+  const buttons = (
+    <Row
+      gutter={[24, 24]}
+      className={!lg ? styles.buttons : undefined}
+      justify="space-around"
+    >
+      <Col>
+        <Popconfirm
+          cancelButtonProps={{
+            className: "button-default-default",
+          }}
+          cancelText={t("cancel")}
+          disabled={appsAreEqual(state, data?.app) || updating}
+          okText={t("save")}
+          onConfirm={() => {
+            if (!state.apiLink || !state.name) {
+              message.error(t("client:saveChangesError"), 4);
+            } else {
+              const dataApp = { ...state };
+              // Don't send the image if it's not a Blob
+              // If string, means the logo is the server URL
+              if (typeof dataApp.logo === "string") {
+                delete dataApp.logo;
+              }
+              updateApp({
+                variables: {
+                  id: data?.app?.id ?? "",
+                  data: dataApp,
+                },
+                update(cache, { data: result }) {
+                  if (result?.updateApp?.ok) {
+                    cache.modify({
+                      id: cache.identify({ ...data?.app }),
+                      fields: {
+                        description() {
+                          return dataApp.description;
+                        },
+                        name() {
+                          return dataApp.name;
+                        },
+                        apiLink() {
+                          return dataApp.apiLink;
+                        },
+                        color(old) {
+                          return { ...old, ...dataApp.color };
+                        },
+                        logo() {
+                          return dataApp.logo;
+                        },
+                        template(old, { toReference }) {
+                          return toReference({
+                            __typename: "TemplateType",
+                            id: dataApp.template,
+                          });
+                        },
+                      },
+                    });
+                  } else {
+                    message.error(
+                      t(
+                        `client:errors.${result?.updateApp?.error}`,
+                        t("error")
+                      ),
+                      4
+                    );
+                  }
+                },
+              });
+            }
+          }}
+          title={
+            <Trans
+              i18nKey={handleWarning(
+                data?.app?.builds.edges.length ?? 0,
+                appBuildStatus
+              )}
+              ns="client"
+            >
+              <strong />
+              <p />
+            </Trans>
+          }
+        >
+          <Tooltip
+            title={
+              accountData?.me?.accountStatus === AccountAccountStatus.BANNED
+                ? t("client:errors.105")
+                : t("client:noChanges")
+            }
+            visible={
+              (appsAreEqual(state, data?.app) ||
+                accountData?.me?.accountStatus ===
+                  AccountAccountStatus.BANNED) &&
+              allowChanges
+            }
+          >
+            <div
+              onMouseEnter={() => {
+                setAllowUChanges(true);
+              }}
+              onMouseLeave={() => {
+                setAllowUChanges(false);
+              }}
+            >
+              <Button
+                className={
+                  !appsAreEqual(state, data?.app) &&
+                  accountData?.me?.accountStatus !== AccountAccountStatus.BANNED
+                    ? "button-default-primary"
+                    : undefined
+                }
+                disabled={
+                  appsAreEqual(state, data?.app) ||
+                  updating ||
+                  accountData?.me?.accountStatus === AccountAccountStatus.BANNED
+                }
+                loading={updating}
+                type="ghost"
+              >
+                {t("client:saveChanges")}
+              </Button>
+            </div>
+          </Tooltip>
+        </Popconfirm>
+      </Col>
+      <Col>
+        <Popconfirm
+          cancelText={t("cancel")}
+          disabled={
+            !accountData?.me?.subscription ||
+            accountData?.me?.accountStatus === AccountAccountStatus.BANNED ||
+            (appsData?.apps?.edges.length ?? 0) > allowedApps ||
+            remainingBuilds <= 0 ||
+            (appBuildStatus !== BuildBuildStatus.STALLED &&
+              appBuildStatus !== BuildBuildStatus.PUBLISHED)
+          }
+          okText={
+            data?.app?.builds.edges.length === 0 ? t("publish") : t("update")
+          }
+          title={
+            <Trans
+              i18nKey={
+                data?.app?.builds.edges.length === 0
+                  ? "warnings.publish"
+                  : "warnings.update"
+              }
+              ns="client"
+            >
+              <strong />
+              <p />
+              <p />
+              <p>{{ num: remainingBuilds }}</p>
+            </Trans>
+          }
+          onConfirm={() => {
+            data?.app?.id
+              ? generateApp({
+                  variables: { appId: data?.app?.id },
+                  update(cache, { data: result }) {
+                    if (result?.generateApp?.ok) {
+                      cache.modify({
+                        id: cache.identify({
+                          ...data.app,
+                        }),
+                        fields: {
+                          builds(existing, { toReference }) {
+                            return {
+                              edges: [
+                                ...existing.edges,
+                                {
+                                  __typename: "BuildTypeEdge",
+                                  node: toReference({
+                                    ...result.generateApp?.build,
+                                  }),
+                                },
+                              ],
+                            };
+                          },
+                        },
+                      });
+                    } else {
+                      message.error(
+                        t(
+                          `client:errors.${result?.generateApp?.error}`,
+                          t("error")
+                        ),
+                        4
+                      );
+                    }
+                  },
+                })
+              : message.error(t("error"));
+          }}
+        >
+          <Tooltip
+            title={handleTooltip(
+              allowedApps,
+              allowUpdates,
+              appBuildStatus,
+              appsData?.apps?.edges.length ?? 0,
+              appLimitExceded,
+              buildsLimit,
+              buildLimitExceded,
+              remainingBuilds,
+              accountData?.me?.subscription ? true : false,
+              t,
+              accountData?.me?.accountStatus
+            )}
+            visible={
+              (appLimitExceded &&
+                (appsData?.apps?.edges.length ?? 0) > allowedApps) ||
+              (buildLimitExceded && remainingBuilds <= 0) ||
+              (allowUpdates &&
+                appBuildStatus !== BuildBuildStatus.STALLED &&
+                appBuildStatus !== BuildBuildStatus.PUBLISHED) ||
+              (accountData?.me?.accountStatus === AccountAccountStatus.BANNED &&
+                (buildLimitExceded || allowUpdates)) ||
+              (!accountData?.me?.subscription &&
+                (buildLimitExceded || allowUpdates))
+            }
+          >
+            <div
+              onMouseEnter={() => {
+                setAllowUpdates(true);
+                setAppLimitExceded(true);
+                setBuildLimitExceded(true);
+              }}
+              onMouseLeave={() => {
+                setAllowUpdates(false);
+                setAppLimitExceded(false);
+                setBuildLimitExceded(false);
+              }}
+            >
+              <Button
+                danger={
+                  (appsData?.apps?.edges.length ?? 0) > allowedApps ||
+                  remainingBuilds <= 0 ||
+                  accountData?.me?.accountStatus ===
+                    AccountAccountStatus.BANNED ||
+                  !accountData?.me?.subscription
+                }
+                disabled={
+                  accountData?.me?.subscription !== null &&
+                  accountData?.me?.subscription &&
+                  accountData?.me?.accountStatus !==
+                    AccountAccountStatus.BANNED &&
+                  appBuildStatus !== BuildBuildStatus.STALLED &&
+                  appBuildStatus !== BuildBuildStatus.PUBLISHED &&
+                  remainingBuilds > 0
+                }
+                loading={generating}
+                type={
+                  (appsData?.apps?.edges.length ?? 0) > allowedApps ||
+                  remainingBuilds <= 0 ||
+                  accountData?.me?.accountStatus ===
+                    AccountAccountStatus.BANNED ||
+                  !accountData?.me?.subscription
+                    ? "default"
+                    : "primary"
+                }
+              >
+                {data?.app?.builds.edges.length === 0
+                  ? t("client:publishApp")
+                  : t("client:updateApp")}
+              </Button>
+            </div>
+          </Tooltip>
+        </Popconfirm>
+      </Col>
+    </Row>
+  );
+
   return (
-    <>
+    <Col lg={{ span: 24, offset: 0 }} md={{ span: 18, offset: 3 }} span={24}>
       <Row gutter={[24, 24]}>
-        <Col span={16}>
-          <Row gutter={[24, 24]}>
+        <Col span={24} lg={16}>
+          <Row gutter={[0, 24]}>
             <Col span={24}>
               {accountData?.me?.accountStatus ===
                 AccountAccountStatus.BANNED && (
@@ -329,6 +606,7 @@ const App = () => {
                   <Col />
                 </Row>
               )}
+              {!lg && buttons}
               <Card>
                 <AppInfo
                   app={data?.app ?? undefined}
@@ -343,6 +621,19 @@ const App = () => {
                 />
               </Card>
             </Col>
+            {!lg && (
+              <Col span={24} lg={8}>
+                <Row gutter={[24, 24]}>
+                  <Col span={24}>
+                    <Card>
+                      {data?.app?.id ? (
+                        <AppPreview id={data?.app?.id} app={state} />
+                      ) : null}
+                    </Card>
+                  </Col>
+                </Row>
+              </Col>
+            )}
             <Col span={24}>
               <Card>
                 <>
@@ -381,283 +672,11 @@ const App = () => {
             </Col>
           </Row>
         </Col>
-        <Col span={8}>
-          <Row gutter={[24, 24]}>
-            <div className={styles.previewContainer}>
-              <Col span={24}>
-                <Row className={styles.buttons} justify="space-around">
-                  <Col>
-                    <Popconfirm
-                      cancelButtonProps={{
-                        className: "button-default-default",
-                      }}
-                      cancelText={t("cancel")}
-                      disabled={appsAreEqual(state, data?.app) || updating}
-                      okText={t("save")}
-                      onConfirm={() => {
-                        if (!state.apiLink || !state.name) {
-                          message.error(t("client:saveChangesError"), 4);
-                        } else {
-                          const dataApp = { ...state };
-                          // Don't send the image if it's not a Blob
-                          // If string, means the logo is the server URL
-                          if (typeof dataApp.logo === "string") {
-                            delete dataApp.logo;
-                          }
-                          updateApp({
-                            variables: {
-                              id: data?.app?.id ?? "",
-                              data: dataApp,
-                            },
-                            update(cache, { data: result }) {
-                              if (result?.updateApp?.ok) {
-                                cache.modify({
-                                  id: cache.identify({ ...data?.app }),
-                                  fields: {
-                                    name() {
-                                      return dataApp.name;
-                                    },
-                                    apiLink() {
-                                      return dataApp.apiLink;
-                                    },
-                                    color(old) {
-                                      return { ...old, ...dataApp.color };
-                                    },
-                                    logo() {
-                                      return dataApp.logo;
-                                    },
-                                    template(old, { toReference }) {
-                                      return toReference({
-                                        __typename: "TemplateType",
-                                        id: dataApp.template,
-                                      });
-                                    },
-                                  },
-                                });
-                              } else {
-                                message.error(
-                                  t(
-                                    `client:errors.${result?.updateApp?.error}`,
-                                    t("error")
-                                  ),
-                                  4
-                                );
-                              }
-                            },
-                          });
-                        }
-                      }}
-                      title={
-                        <Trans
-                          i18nKey={handleWarning(
-                            data?.app?.builds.edges.length ?? 0,
-                            appBuildStatus
-                          )}
-                          ns="client"
-                        >
-                          <strong />
-                          <p />
-                        </Trans>
-                      }
-                    >
-                      <Tooltip
-                        title={
-                          accountData?.me?.accountStatus ===
-                          AccountAccountStatus.BANNED
-                            ? t("client:errors.105")
-                            : t("client:noChanges")
-                        }
-                        visible={
-                          (appsAreEqual(state, data?.app) ||
-                            accountData?.me?.accountStatus ===
-                              AccountAccountStatus.BANNED) &&
-                          allowChanges
-                        }
-                      >
-                        <div
-                          onMouseEnter={() => {
-                            setAllowUChanges(true);
-                          }}
-                          onMouseLeave={() => {
-                            setAllowUChanges(false);
-                          }}
-                        >
-                          <Button
-                            className={
-                              !appsAreEqual(state, data?.app) &&
-                              accountData?.me?.accountStatus !==
-                                AccountAccountStatus.BANNED
-                                ? "button-default-primary"
-                                : undefined
-                            }
-                            disabled={
-                              appsAreEqual(state, data?.app) ||
-                              updating ||
-                              accountData?.me?.accountStatus ===
-                                AccountAccountStatus.BANNED
-                            }
-                            loading={updating}
-                            type="ghost"
-                          >
-                            {t("client:saveChanges")}
-                          </Button>
-                        </div>
-                      </Tooltip>
-                    </Popconfirm>
-                  </Col>
-                  <Col>
-                    <Popconfirm
-                      cancelText={t("cancel")}
-                      disabled={
-                        !accountData?.me?.subscription ||
-                        accountData?.me?.accountStatus ===
-                          AccountAccountStatus.BANNED ||
-                        (appsData?.apps?.edges.length ?? 0) > allowedApps ||
-                        remainingBuilds <= 0 ||
-                        (appBuildStatus !== BuildBuildStatus.STALLED &&
-                          appBuildStatus !== BuildBuildStatus.PUBLISHED)
-                      }
-                      okText={
-                        data?.app?.builds.edges.length === 0
-                          ? t("publish")
-                          : t("update")
-                      }
-                      title={
-                        <Trans
-                          i18nKey={
-                            data?.app?.builds.edges.length === 0
-                              ? "warnings.publish"
-                              : "warnings.update"
-                          }
-                          ns="client"
-                        >
-                          <strong />
-                          <p />
-                          <p />
-                          <p>{{ num: remainingBuilds }}</p>
-                        </Trans>
-                      }
-                      onConfirm={() => {
-                        data?.app?.id
-                          ? generateApp({
-                              variables: { appId: data?.app?.id },
-                              update(cache, { data: result }) {
-                                if (result?.generateApp?.ok) {
-                                  cache.modify({
-                                    id: cache.identify({
-                                      ...data.app,
-                                    }),
-                                    fields: {
-                                      builds(existing, { toReference }) {
-                                        return {
-                                          edges: [
-                                            ...existing.edges,
-                                            {
-                                              __typename: "BuildTypeEdge",
-                                              node: toReference({
-                                                ...result.generateApp?.build,
-                                              }),
-                                            },
-                                          ],
-                                        };
-                                      },
-                                    },
-                                  });
-                                } else {
-                                  message.error(
-                                    t(
-                                      `client:errors.${result?.generateApp?.error}`,
-                                      t("error")
-                                    ),
-                                    4
-                                  );
-                                }
-                              },
-                            })
-                          : message.error(t("error"));
-                      }}
-                    >
-                      <Tooltip
-                        title={handleTooltip(
-                          allowedApps,
-                          allowUpdates,
-                          appBuildStatus,
-                          appsData?.apps?.edges.length ?? 0,
-                          appLimitExceded,
-                          buildsLimit,
-                          buildLimitExceded,
-                          remainingBuilds,
-                          accountData?.me?.subscription ? true : false,
-                          t,
-                          accountData?.me?.accountStatus
-                        )}
-                        visible={
-                          (appLimitExceded &&
-                            (appsData?.apps?.edges.length ?? 0) >
-                              allowedApps) ||
-                          (buildLimitExceded && remainingBuilds <= 0) ||
-                          (allowUpdates &&
-                            appBuildStatus !== BuildBuildStatus.STALLED &&
-                            appBuildStatus !== BuildBuildStatus.PUBLISHED) ||
-                          (accountData?.me?.accountStatus ===
-                            AccountAccountStatus.BANNED &&
-                            (buildLimitExceded || allowUpdates)) ||
-                          (!accountData?.me?.subscription &&
-                            (buildLimitExceded || allowUpdates))
-                        }
-                      >
-                        <div
-                          onMouseEnter={() => {
-                            setAllowUpdates(true);
-                            setAppLimitExceded(true);
-                            setBuildLimitExceded(true);
-                          }}
-                          onMouseLeave={() => {
-                            setAllowUpdates(false);
-                            setAppLimitExceded(false);
-                            setBuildLimitExceded(false);
-                          }}
-                        >
-                          <Button
-                            danger={
-                              (appsData?.apps?.edges.length ?? 0) >
-                                allowedApps ||
-                              remainingBuilds <= 0 ||
-                              accountData?.me?.accountStatus ===
-                                AccountAccountStatus.BANNED ||
-                              !accountData?.me?.subscription
-                            }
-                            disabled={
-                              accountData?.me?.subscription !== null &&
-                              accountData?.me?.subscription &&
-                              accountData?.me?.accountStatus !==
-                                AccountAccountStatus.BANNED &&
-                              appBuildStatus !== BuildBuildStatus.STALLED &&
-                              appBuildStatus !== BuildBuildStatus.PUBLISHED &&
-                              remainingBuilds > 0
-                            }
-                            loading={generating}
-                            type={
-                              (appsData?.apps?.edges.length ?? 0) >
-                                allowedApps ||
-                              remainingBuilds <= 0 ||
-                              accountData?.me?.accountStatus ===
-                                AccountAccountStatus.BANNED ||
-                              !accountData?.me?.subscription
-                                ? "default"
-                                : "primary"
-                            }
-                          >
-                            {data?.app?.builds.edges.length === 0
-                              ? t("client:publishApp")
-                              : t("client:updateApp")}
-                          </Button>
-                        </div>
-                      </Tooltip>
-                    </Popconfirm>
-                  </Col>
-                </Row>
-              </Col>
+        {lg && (
+          <Col span={24} lg={8}>
+            <Row gutter={[24, 24]}>
+              {/* <div className={styles.previewContainer}> */}
+              <Col span={24}>{buttons}</Col>
               <Col span={24}>
                 <Card>
                   {data?.app?.id ? (
@@ -665,9 +684,10 @@ const App = () => {
                   ) : null}
                 </Card>
               </Col>
-            </div>
-          </Row>
-        </Col>
+              {/* </div> */}
+            </Row>
+          </Col>
+        )}
         {accountData?.me?.accountStatus !== AccountAccountStatus.BANNED && (
           <Col span={24}>
             <Popconfirm
@@ -726,7 +746,7 @@ const App = () => {
         />
       )}
       {updating && <LoadingFullScreen tip={t("client:savingChanges")} />}
-    </>
+    </Col>
   );
 };
 

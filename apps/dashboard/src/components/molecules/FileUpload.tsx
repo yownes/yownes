@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import type { ReactNode, RefObject } from "react";
-import { Button, Popconfirm } from "antd";
+import { Button, Grid, Popconfirm } from "antd";
 import {
   DeleteOutlined,
   LoadingOutlined,
@@ -53,6 +53,7 @@ const ImageUpload = ({
   uploadMessage,
   confirmMessage,
 }: ImageUploadProps) => {
+  const { lg } = Grid.useBreakpoint();
   const { t } = useTranslation(["translation", "client"]);
   const [filePreview, setFilePreview] = useState<FilePreview>({
     loading: false,
@@ -167,7 +168,11 @@ const ImageUpload = ({
             title={confirmMessage ? confirmMessage : t("client:warnings.logo")}
           >
             <span className={styles.deleteButton}>
-              <Button danger icon={<DeleteOutlined />} />
+              <Button
+                size={lg ? "middle" : "small"}
+                danger
+                icon={<DeleteOutlined />}
+              />
             </span>
           </Popconfirm>
         )}

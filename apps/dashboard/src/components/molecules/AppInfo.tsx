@@ -159,7 +159,7 @@ const AppInfo = ({ app, build, data, id, onChange }: AppInfoProps) => {
             }}
             validateMessages={{ required: t("client:requiredInput") }}
           >
-            <Row gutter={[24, 0]}>
+            <Row gutter={[24, 24]}>
               <Col span={24} md={12}>
                 <TextField
                   defaultValue={app?.name}
@@ -187,6 +187,22 @@ const AppInfo = ({ app, build, data, id, onChange }: AppInfoProps) => {
                     })
                   }
                   rules={[{ required: true }]}
+                  wrapperClassName={styles.input}
+                />
+              </Col>
+              <Col span={24}>
+                <TextField
+                  defaultValue={app?.description ?? ""}
+                  label={t("client:storeDescription")}
+                  name="description"
+                  onChange={(value) =>
+                    onChange({
+                      ...data,
+                      description: value.target.value,
+                    })
+                  }
+                  rows={3}
+                  type="textarea"
                   wrapperClassName={styles.input}
                 />
               </Col>

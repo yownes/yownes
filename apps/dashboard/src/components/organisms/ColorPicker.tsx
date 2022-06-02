@@ -73,6 +73,7 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
                   })
                 }
                 rules={[{ required: true }]}
+                single
                 value={
                   value?.color?.toLocaleUpperCase() ??
                   defaultColors[0]?.toLocaleUpperCase()

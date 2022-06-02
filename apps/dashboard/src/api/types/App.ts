@@ -78,6 +78,10 @@ export interface App_app {
   apiLink: string | null;
   template: App_app_template | null;
   logo: string | null;
+  /**
+   * Description to Stores card info
+   */
+  description: string | null;
   builds: App_app_builds;
   storeLinks: App_app_storeLinks | null;
 }
