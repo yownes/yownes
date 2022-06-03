@@ -46,6 +46,7 @@ class StoreAppInput(graphene.InputObjectType):
     color = StoreAppColorInput()
     links = StoreAppLinksInput()
     api_link = graphene.String()
+    description = graphene.String()
     template = graphene.ID()
     logo = Upload()
 

@@ -91,6 +91,12 @@ class StoreApp(models.Model):
         null=True,
         help_text="Link to GraphQl API of the store",
     )
+    description = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="Description to Stores card info",
+    )
     ios_link = models.CharField(
         max_length=150,
         blank=True,
