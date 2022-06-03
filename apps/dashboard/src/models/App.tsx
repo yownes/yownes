@@ -14,7 +14,7 @@ export interface App {
   builds?: Build[];
   logo?: string;
   template?: Template;
-  color?: { color: string; text: "black" | "white" };
+  color?: { color: string; text: "#000" | "#fff" };
 }
 
 export interface AppGen extends Omit<App, "id"> {

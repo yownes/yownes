@@ -65,7 +65,7 @@ export const baseApp: StoreAppInput = {
   apiLink: "",
   template: "VGVtcGxhdGVUeXBlOjE=",
   name: "",
-  color: { color: "#0099cc", text: "white" },
+  color: { color: "#0099cc", text: "#fff" },
   logo: null,
   description: "",
 };
@@ -235,7 +235,7 @@ const App = () => {
         name: data.app.name,
         color: {
           color: data.app.color?.color ?? baseApp.color?.color,
-          text: getContrastColor(data.app.color?.text ?? baseApp.color?.text),
+          text: getContrastColor(data.app.color?.color ?? baseApp.color?.color),
         },
         logo: data.app.logo,
         description: data.app.description,

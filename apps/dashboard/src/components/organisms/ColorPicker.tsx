@@ -1,15 +1,16 @@
 import React from "react";
-import { Col, Radio, Row, Typography } from "antd";
+import { Col, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { StoreAppColorInput } from "../../api/types/globalTypes";
+import { getContrastColor } from "../../lib/color-contrast";
 import { Color, TextField } from "../atoms";
 
 import styles from "./ColorPicker.module.css";
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
-type TextColor = "white" | "black";
+type TextColor = "#000" | "#fff";
 
 type ColorInput = { color: string; text: TextColor };
 
@@ -47,7 +48,7 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
                   onClick={() =>
                     onChange({
                       color,
-                      text: (value?.text as TextColor) ?? "white",
+                      text: getContrastColor(color as TextColor),
                     })
                   }
                   pointer
@@ -69,7 +70,9 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
                 onChange={(e) =>
                   onChange({
                     color: e.target.value?.toLocaleUpperCase(),
-                    text: (value?.text as TextColor) ?? "white",
+                    text: getContrastColor(
+                      e.target.value?.toLocaleUpperCase() as TextColor
+                    ),
                   })
                 }
                 rules={[{ required: true }]}

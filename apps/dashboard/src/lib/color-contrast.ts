@@ -69,7 +69,7 @@ function hex(a: string, b: string) {
 }
 
 export function getContrastColor(color?: string | null) {
-  if (!color) return;
+  if (!color) return "#fff";
   const c1 = hex(color, "#fff");
   const c2 = hex(color, "#000");
   return c1 > c2 ? "#fff" : "#000";
