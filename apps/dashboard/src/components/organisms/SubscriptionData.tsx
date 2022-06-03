@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Col,
+  Grid,
   message,
   Modal,
   Row,
@@ -115,6 +116,7 @@ function handleWarning(apps: number, status?: SubscriptionStatus) {
 }
 
 const SubscriptionData = () => {
+  const { md } = Grid.useBreakpoint();
   const history = useHistory();
   const { t } = useTranslation(["translation", "client"]);
   const { data: appsData, loading: loadingData } = useQuery<
@@ -403,51 +405,53 @@ const SubscriptionData = () => {
                 data?.me?.subscription?.status ===
                   SubscriptionStatus.INCOMPLETE && (
                   <Row gutter={[24, 24]}>
-                    <AlertWithConfirm
-                      buttonText={t("client:retryPayment")}
-                      confirmText={
-                        <Trans
-                          i18nKey={"warnings.renewalNowSubscription"}
-                          ns="client"
-                        >
-                          <strong />
-                          <p />
-                          <p />
-                        </Trans>
-                      }
-                      message={[
-                        t("client:retryIncompleteError"),
-                        t("client:retryIncompleteCheck"),
-                      ]}
-                      onConfirm={() => {
-                        payInvoice({
-                          variables: {
-                            invoiceId:
-                              (invoices &&
-                                invoices.find(
-                                  (inv) =>
-                                    inv.subscription?.stripeId ===
-                                    data.me?.subscription?.stripeId
-                                )?.stripeId) ||
-                              "",
-                          },
-                          update(cache, { data: payData }) {
-                            if (!payData?.payInvoice?.ok) {
-                              message.error(
-                                t(
-                                  `client:errors.${payData?.payInvoice?.error}`,
-                                  t("error")
-                                ),
-                                4
-                              );
-                            }
-                          },
-                        });
-                        setIsPaid(true);
-                      }}
-                      style={{ marginBottom: 18 }}
-                      type="error"
-                    />
+                    <Col>
+                      <AlertWithConfirm
+                        buttonText={md ? t("client:retryPayment") : t("retry")}
+                        confirmText={
+                          <Trans
+                            i18nKey={"warnings.renewalNowSubscription"}
+                            ns="client"
+                          >
+                            <strong />
+                            <p />
+                            <p />
+                          </Trans>
+                        }
+                        message={[
+                          t("client:retryIncompleteError"),
+                          t("client:retryIncompleteCheck"),
+                        ]}
+                        onConfirm={() => {
+                          payInvoice({
+                            variables: {
+                              invoiceId:
+                                (invoices &&
+                                  invoices.find(
+                                    (inv) =>
+                                      inv.subscription?.stripeId ===
+                                      data.me?.subscription?.stripeId
+                                  )?.stripeId) ||
+                                "",
+                            },
+                            update(cache, { data: payData }) {
+                              if (!payData?.payInvoice?.ok) {
+                                message.error(
+                                  t(
+                                    `client:errors.${payData?.payInvoice?.error}`,
+                                    t("error")
+                                  ),
+                                  4
+                                );
+                              }
+                            },
+                          });
+                          setIsPaid(true);
+                        }}
+                        type="error"
+                      />
+                    </Col>
+                    <Col span={24} />
                   </Row>
                 )
               }
@@ -470,27 +474,29 @@ const SubscriptionData = () => {
                 data.me.subscription.cancelAtPeriodEnd && (
                   <Row gutter={[24, 24]}>
                     <div className={styles.paddingTop24}>
-                      <AlertWithConfirm
-                        buttonText={t("client:reSubscribe")}
-                        confirmText={
-                          <Trans
-                            i18nKey={"warnings.unCancelSubscription"}
-                            ns="client"
-                          >
-                            <strong />
-                            <p />
-                          </Trans>
-                        }
-                        message={[t("client:reSubscribeNow")]}
-                        onConfirm={() => {
-                          if (data?.me?.id) {
-                            resubscribe({
-                              variables: { userId: data.me.id },
-                            });
-                            setIsResubscribed(true);
+                      <Col>
+                        <AlertWithConfirm
+                          buttonText={t("client:reSubscribe")}
+                          confirmText={
+                            <Trans
+                              i18nKey={"warnings.unCancelSubscription"}
+                              ns="client"
+                            >
+                              <strong />
+                              <p />
+                            </Trans>
                           }
-                        }}
-                      />
+                          message={[t("client:reSubscribeNow")]}
+                          onConfirm={() => {
+                            if (data?.me?.id) {
+                              resubscribe({
+                                variables: { userId: data.me.id },
+                              });
+                              setIsResubscribed(true);
+                            }
+                          }}
+                        />
+                      </Col>
                     </div>
                   </Row>
                 )}
@@ -504,23 +510,25 @@ const SubscriptionData = () => {
                 data.me.subscription.cancelAtPeriodEnd ? (
                   <Row gutter={[24, 24]}>
                     <div className={styles.paddingTop24}>
-                      <AlertWithConfirm
-                        buttonText={t("client:subscribe")}
-                        confirmText={
-                          <Trans
-                            i18nKey={"warnings.newSubscription"}
-                            ns="client"
-                          >
-                            <strong />
-                            <p />
-                            <p />
-                            <p />
-                            <p />
-                          </Trans>
-                        }
-                        message={[t("client:startSubscribeNow")]}
-                        onConfirm={() => history.push("/checkout")}
-                      />
+                      <Col>
+                        <AlertWithConfirm
+                          buttonText={t("client:subscribe")}
+                          confirmText={
+                            <Trans
+                              i18nKey={"warnings.newSubscription"}
+                              ns="client"
+                            >
+                              <strong />
+                              <p />
+                              <p />
+                              <p />
+                              <p />
+                            </Trans>
+                          }
+                          message={[t("client:startSubscribeNow")]}
+                          onConfirm={() => history.push("/checkout")}
+                        />
+                      </Col>
                     </div>
                   </Row>
                 ) : (

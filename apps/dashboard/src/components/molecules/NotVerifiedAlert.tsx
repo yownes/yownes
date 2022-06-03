@@ -28,7 +28,6 @@ const NotVerifiedAlert = ({ email }: NotVerifiedAlertProps) => {
   return (
     <>
       <AlertWithConfirm
-        big
         buttonText={t("client:validate.resendEmail")}
         confirmText={
           <Trans i18nKey={"validate.resendEmailWarning"} ns="client">

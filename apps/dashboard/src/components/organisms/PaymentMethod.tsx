@@ -198,7 +198,7 @@ const PaymentMethod = ({ customer, staff, user }: PaymentMethodProps) => {
                     />
                   </Col>
                 )}
-                <Col />
+                <Col span={24} />
               </Row>
             )}
             <Row gutter={[24, 24]}>

@@ -212,7 +212,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
             </Col>
             <Col span={24}>
               <Row justify="end">
-                {paymentMethodId && !expired ? (
+                {paymentMethodId && expired ? (
                   <Button
                     onClick={() => {
                       if (dataAccount?.me?.id) {
