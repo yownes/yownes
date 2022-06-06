@@ -169,6 +169,7 @@
     "121": "Error al intentar realizar el pago pendiente",
     "122": "Error al intentar realizar el pago",
     "123": "Error al intentar actualizar los datos",
+    "124": "Suscripción incompleta",
     "201": "Introduce la url de una tienda válida",
     "202": "Introduce la url de una plantilla válida"
   },
@@ -198,6 +199,7 @@
   "bannedAccountMessage": "Tu cuenta ha sido baneada",
   "notSubscribedAccount": "Suscríbete para poder publicar la App",
   "noChanges": "No hay ningún cambio",
+  "incompleteSubscription": "Suscripción incompleta",
   "appLimitInfo": "Añadidas {{napps}} / {{allowed}}",
   "appsLimitExceded": "Límite de aplicaciones alcanzado ({{limit}})",
   "buildsLimitExceded": "Límite de actualizaciones alcanzado ({{limit}})",

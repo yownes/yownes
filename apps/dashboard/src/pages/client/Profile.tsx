@@ -45,12 +45,16 @@ function handleTooltip(allowedApps: number, t: TFunction, me?: MyAccount_me) {
   if (me?.accountStatus === AccountAccountStatus.BANNED) {
     return t("client:errors.105");
   } else {
-    if (me?.subscription) {
-      return t("client:appsLimitExceded", {
-        limit: allowedApps,
-      });
+    if (me?.subscription?.status === SubscriptionStatus.INCOMPLETE) {
+      return t("client:incompleteSubscription");
     } else {
-      return t("client:subscribeAppClaim");
+      if (me?.subscription) {
+        return t("client:appsLimitExceded", {
+          limit: allowedApps,
+        });
+      } else {
+        return t("client:subscribeAppClaim");
+      }
     }
   }
 }
@@ -212,6 +216,8 @@ const Profile = () => {
                         : history.push("/app/new"),
                     disabled:
                       data?.me?.accountStatus === AccountAccountStatus.BANNED ||
+                      data?.me?.subscription?.status ===
+                        SubscriptionStatus.INCOMPLETE ||
                       (appsData?.apps?.edges.length ?? 0) >= allowedApps,
                     label: t("client:addNewApp"),
                     buttonClassName: "button-default-primary",
@@ -220,6 +226,8 @@ const Profile = () => {
                     title: handleTooltip(allowedApps, t, data?.me ?? undefined),
                     visible:
                       data?.me?.accountStatus === AccountAccountStatus.BANNED ||
+                      data?.me?.subscription?.status ===
+                        SubscriptionStatus.INCOMPLETE ||
                       (appsData?.apps?.edges.length ?? 0) >= allowedApps ||
                       (!data?.me?.subscription &&
                         (appsData?.apps?.edges.length ?? 0) >= 1),
@@ -234,7 +242,9 @@ const Profile = () => {
                   title: t("client:addNewApp"),
                   link: "/app/new",
                   disabled:
-                    data?.me?.accountStatus === AccountAccountStatus.BANNED
+                    data?.me?.accountStatus === AccountAccountStatus.BANNED ||
+                    data?.me?.subscription?.status ===
+                      SubscriptionStatus.INCOMPLETE
                       ? true
                       : false,
                 }}

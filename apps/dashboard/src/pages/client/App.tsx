@@ -33,7 +33,7 @@ import type {
   GenerateApp,
   GenerateAppVariables,
 } from "../../api/types/GenerateApp";
-import type { StoreAppInput } from "../../api/types/globalTypes";
+import { StoreAppInput, SubscriptionStatus } from "../../api/types/globalTypes";
 import {
   AccountAccountStatus,
   BuildBuildStatus,
@@ -137,32 +137,37 @@ function handleTooltip(
   remainingBuilds: number,
   subscription: boolean,
   t: TFunction,
-  status?: AccountAccountStatus
+  accountStatus?: AccountAccountStatus,
+  subscriptionStatus?: SubscriptionStatus
 ) {
-  if (status === AccountAccountStatus.BANNED) {
+  if (accountStatus === AccountAccountStatus.BANNED) {
     return t("client:bannedAccount");
   } else {
-    if (!subscription) {
-      return t("client:notSubscribedAccount");
+    if (subscriptionStatus === SubscriptionStatus.INCOMPLETE) {
+      return t("client:incompleteSubscription");
     } else {
-      if (appLimitExceded && apps > allowedApps) {
-        return t("client:appsLimitExceded", {
-          limit: allowedApps,
-        });
+      if (!subscription) {
+        return t("client:notSubscribedAccount");
       } else {
-        if (buildLimitExceded && remainingBuilds <= 0) {
-          return t("client:buildsLimitExceded", {
-            limit: buildsLimit,
+        if (appLimitExceded && apps > allowedApps) {
+          return t("client:appsLimitExceded", {
+            limit: allowedApps,
           });
         } else {
-          if (
-            allowUpdates &&
-            appBuildStatus !== BuildBuildStatus.STALLED &&
-            appBuildStatus !== BuildBuildStatus.PUBLISHED
-          ) {
-            return t("client:updateInProgress");
+          if (buildLimitExceded && remainingBuilds <= 0) {
+            return t("client:buildsLimitExceded", {
+              limit: buildsLimit,
+            });
           } else {
-            return undefined;
+            if (
+              allowUpdates &&
+              appBuildStatus !== BuildBuildStatus.STALLED &&
+              appBuildStatus !== BuildBuildStatus.PUBLISHED
+            ) {
+              return t("client:updateInProgress");
+            } else {
+              return undefined;
+            }
           }
         }
       }
@@ -446,6 +451,8 @@ const App = () => {
           disabled={
             !accountData?.me?.subscription ||
             accountData?.me?.accountStatus === AccountAccountStatus.BANNED ||
+            accountData?.me?.subscription.status ===
+              SubscriptionStatus.INCOMPLETE ||
             (appsData?.apps?.edges.length ?? 0) > allowedApps ||
             remainingBuilds <= 0 ||
             (appBuildStatus !== BuildBuildStatus.STALLED &&
@@ -521,7 +528,8 @@ const App = () => {
               remainingBuilds,
               accountData?.me?.subscription ? true : false,
               t,
-              accountData?.me?.accountStatus
+              accountData?.me?.accountStatus,
+              accountData?.me?.subscription?.status
             )}
             visible={
               (appLimitExceded &&
@@ -531,6 +539,9 @@ const App = () => {
                 appBuildStatus !== BuildBuildStatus.STALLED &&
                 appBuildStatus !== BuildBuildStatus.PUBLISHED) ||
               (accountData?.me?.accountStatus === AccountAccountStatus.BANNED &&
+                (buildLimitExceded || allowUpdates)) ||
+              (accountData?.me?.subscription?.status ===
+                SubscriptionStatus.INCOMPLETE &&
                 (buildLimitExceded || allowUpdates)) ||
               (!accountData?.me?.subscription &&
                 (buildLimitExceded || allowUpdates))
@@ -571,6 +582,8 @@ const App = () => {
                   remainingBuilds <= 0 ||
                   accountData?.me?.accountStatus ===
                     AccountAccountStatus.BANNED ||
+                  accountData?.me?.subscription?.status ===
+                    SubscriptionStatus.INCOMPLETE ||
                   !accountData?.me?.subscription
                     ? "default"
                     : "primary"
