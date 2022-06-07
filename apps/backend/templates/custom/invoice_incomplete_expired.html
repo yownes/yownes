@@ -326,30 +326,51 @@
                     cellpadding="0"
                     cellspacing="0"
                     role="presentation"
-                    style="vertical-align: top"
                     width="100%"
                   >
                     <tbody>
                       <tr>
                         <td
-                          align="center"
                           style="
-                            font-size: 0px;
-                            padding: 10px 25px;
-                            word-break: break-word;
+                            background-color: #ff8181;
+                            border-radius: 20px;
+                            vertical-align: top;
+                            padding: 10px;
                           "
                         >
-                          <div
-                            style="
-                              font-family: Ubuntu;
-                              font-size: 20px;
-                              line-height: 1;
-                              text-align: center;
-                              color: #000000;
-                            "
+                          <table
+                            border="0"
+                            cellpadding="0"
+                            cellspacing="0"
+                            role="presentation"
+                            style=""
+                            width="100%"
                           >
-                            Tu factura se ha emitido
-                          </div>
+                            <tbody>
+                              <tr>
+                                <td
+                                  align="center"
+                                  style="
+                                    font-size: 0px;
+                                    padding: 10px 25px;
+                                    word-break: break-word;
+                                  "
+                                >
+                                  <div
+                                    style="
+                                      font-family: Ubuntu Mono;
+                                      font-size: 36px;
+                                      line-height: 1;
+                                      text-align: center;
+                                      color: #232323;
+                                    "
+                                  >
+                                    Tu suscripción ha caducado
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </td>
                       </tr>
                     </tbody>
@@ -421,7 +442,8 @@
                               color: #000000;
                             "
                           >
-                            Puedes verla en el panel de usuario de Yownes
+                            No se completó el pago inicial en las primeras 23
+                            horas. Puedes iniciar una nueva suscripción
                             accediendo al siguiente enlace:
                             <mj-text
                               align="center"
@@ -430,11 +452,9 @@
                               font-family="Ubuntu"
                               padding-top="0"
                               ><a
-                                href="{{"
-                                link
-                                }}
+                                href={{ domain }}/{{ link }}
                                 style="color: #328f5e; text-decoration: none"
-                                >Facturación</a
+                                >Suscripción</a
                               ></mj-text
                             >
                           </div>

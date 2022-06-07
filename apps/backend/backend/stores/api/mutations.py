@@ -104,6 +104,9 @@ class CreateStoreAppMutation(graphene.Mutation):
         #     return CreateStoreAppMutation(ok=False, error=Error.NOT_VALID_STORE.value)
         if info.context.user.account_status == AccountStatus.BANNED: # banned account
             return CreateStoreAppMutation(ok=False, error=Error.BANNED_ACCOUNT.value)
+        if info.context.user.subscription: # has subscription
+            if info.context.user.subscription.status.lower() == "incomplete": # incomplete subscription
+                return CreateStoreAppMutation(ok=False, error=Error.INCOMPLETE_SUBSCRIPTION.value)
         try:
             allowed_apps = int(json.loads(str(info.context.user.subscription.plan.product.metadata).replace("\'", "\""))["allowed_apps"])
         except:
@@ -129,6 +132,9 @@ class UpdateStoreAppMutation(graphene.Mutation):
     def mutate(self, info, id, data):
         if info.context.user.account_status == AccountStatus.BANNED: # banned account
             return Return(ok=False, error=Error.BANNED_ACCOUNT.value)
+        if info.context.user.subscription: # has subscription
+            if info.context.user.subscription.status.lower() == "incomplete": # incomplete subscription
+                return UpdateStoreAppMutation(ok=False, error=Error.INCOMPLETE_SUBSCRIPTION.value)
         # if not utils._is_store_link_valid(data.api_link):
         #     return Return(ok=False, error=Error.NOT_VALID_STORE.value)
         store_app_object = Node.get_node_from_global_id(info, id)

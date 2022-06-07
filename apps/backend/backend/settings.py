@@ -212,7 +212,7 @@ GRAPHQL_AUTH = {
     "ACTIVATION_PATH_ON_EMAIL": "#/activate",
     "PASSWORD_RESET_PATH_ON_EMAIL": "#/auth/password-reset",
     "EMAIL_TEMPLATE_VARIABLES": {
-        "frontend_domain": "https://app.yownes.com"
+        "frontend_domain": os.environ.get("FRONTEND_DOMAIN", "https://app.yownes.com")
     },
     "USER_NODE_FILTER_FIELDS": {
         "email": [
