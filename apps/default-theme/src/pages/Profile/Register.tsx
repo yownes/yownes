@@ -2,6 +2,7 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { ScrollView } from "react-native-gesture-handler";
 import { useRegister } from "@yownes/api";
+import { useAuth } from "@yownes/core";
 
 import { Box, Button, Text } from "../../components/atoms";
 import { FormFields, InputWithErrors } from "../../components/molecules";
@@ -25,6 +26,7 @@ const intialState: RegisterState = {
 };
 
 const Register = ({ navigation }: RegisterProps) => {
+  const Auth = useAuth();
   const { control, handleSubmit } = useForm<RegisterState>({
     defaultValues: intialState,
   });
@@ -41,6 +43,7 @@ const Register = ({ navigation }: RegisterProps) => {
       },
     }).then(({ data }) => {
       if (data?.accountRegister?.id) {
+        Auth.login(data.accountRegister);
         navigation.navigate("Profile");
       }
     });
