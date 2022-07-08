@@ -30,7 +30,7 @@ const Register = ({ navigation }: RegisterProps) => {
   const { control, handleSubmit } = useForm<RegisterState>({
     defaultValues: intialState,
   });
-  const [register, { error }] = useRegister();
+  const [register, { error, loading }] = useRegister();
   function onSubmit(state: RegisterState) {
     register({
       variables: {
@@ -91,6 +91,8 @@ const Register = ({ navigation }: RegisterProps) => {
             ]}
           />
           <Button
+            disabled={loading}
+            isLoading={loading}
             marginTop="l"
             label="Registrarme"
             onPress={handleSubmit(onSubmit)}
@@ -99,6 +101,7 @@ const Register = ({ navigation }: RegisterProps) => {
             marginTop="l"
             backgroundColor="background"
             color="dark"
+            disabled={loading}
             label="Iniciar Sesión"
             onPress={() => {
               navigation.navigate("Login");

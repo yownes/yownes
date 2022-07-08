@@ -18,7 +18,12 @@ const Categories = () => {
     }
   }, [search, queryProducts]);
   if (loading) {
-    return <Loading />;
+    return (
+      <>
+        <SearchHeader value={search} onChange={() => {}} />
+        <Loading />
+      </>
+    );
   }
   return (
     <>

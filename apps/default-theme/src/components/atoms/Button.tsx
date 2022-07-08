@@ -41,6 +41,11 @@ const Button = ({
       borderRadius={5}
       justifyContent="center"
       backgroundColor={backgroundColor}
+      onPress={() => {
+        if (!isLoading) {
+          props.onPress;
+        }
+      }}
       {...props}
     >
       <Text

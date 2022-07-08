@@ -11,11 +11,11 @@ import Payments from "../../components/organisms/Payments";
 
 const Profile = ({ navigation }: ProfileProps) => {
   const { customer, logout: authLogout } = useAuth();
-  const [logout] = useLogout();
+  const [logout, { loading: logingout }] = useLogout();
 
   const handleLogout = useCallback(() => {
     logout().then(({ data }) => {
-      if (data?.accountLogout?.status) {
+      if (!data?.accountLogout?.status) {
         authLogout();
       }
     });
@@ -76,6 +76,7 @@ const Profile = ({ navigation }: ProfileProps) => {
           onPress={handleLogout}
           backgroundColor="transparent"
           color="dark"
+          isLoading={logingout}
         />
       </Box>
     </ScrollView>

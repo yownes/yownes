@@ -87,6 +87,7 @@ const Login = ({ navigation }: LoginProps) => {
             label="Iniciar sesión"
             onPress={handleSubmit(onSubmit)}
             disabled={loading}
+            isLoading={loading}
           />
           <Button
             marginTop="l"
