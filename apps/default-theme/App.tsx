@@ -1,5 +1,6 @@
 import "react-native-gesture-handler";
 import React from "react";
+import { RootSiblingParent } from "react-native-root-siblings";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { ThemeProvider } from "@shopify/restyle";
@@ -11,7 +12,6 @@ import Root from "./src/navigation/Root";
 import theme from "./src/lib/theme";
 
 const uri = `${Constants.manifest?.extra?.apiUrl}/module/yownes/graphql`;
-// console.log(uri);
 
 const App = () => {
   return (
@@ -26,7 +26,9 @@ const App = () => {
               }}
             >
               <NavigationContainer>
-                <Root />
+                <RootSiblingParent>
+                  <Root />
+                </RootSiblingParent>
               </NavigationContainer>
             </PaymentsProvider>
           </AuthProvider>

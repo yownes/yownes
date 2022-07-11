@@ -23,8 +23,8 @@ module.exports = () => {
     resolver: {
       ...config.resolver,
       nodeModulesPaths: [
-        path.resolve(projectRoot, "node_modules"),
         path.resolve(workspaceRoot, "node_modules"),
+        path.resolve(projectRoot, "node_modules"),
       ],
       sourceExts: [...config.resolver.sourceExts, "cjs"], // @apollo/client >3.5
     },

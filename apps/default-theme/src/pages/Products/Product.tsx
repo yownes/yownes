@@ -1,7 +1,8 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, Image, Pressable, ScrollView } from "react-native";
+import { Alert, Dimensions, Image, Pressable, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Toast from "react-native-root-toast";
 import { SharedElement } from "react-navigation-shared-element";
 import {
   BottomSheetBackdrop,
@@ -32,7 +33,7 @@ const Product = ({ route, navigation }: ProductProps) => {
   const { isAuthenticated } = useAuth();
   const ref = useRef<BottomSheetModal>(null);
   const { data } = useGetProduct(id);
-  const [addToCart] = useAddToCart();
+  const [addToCart, { loading, error }] = useAddToCart();
   const [addToFavourite] = useAddToFavourite(id, data);
   const [removeFavourite] = useRemoveFavourite(id, data);
   const [qty, setQty] = useState(1);
@@ -177,17 +178,19 @@ const Product = ({ route, navigation }: ProductProps) => {
             ))}
           </Box>
         )}
-        <Box
-          padding="l"
-          paddingTop="m"
-          backgroundColor="white"
-          marginBottom="m"
-        >
-          <Text variant="header4" paddingBottom="l">
-            Descripción
-          </Text>
-          <HtmlText color="greyscale4">{data?.product?.description}</HtmlText>
-        </Box>
+        {data?.product?.description ? (
+          <Box
+            padding="l"
+            paddingTop="m"
+            backgroundColor="white"
+            marginBottom="m"
+          >
+            <Text variant="header4" paddingBottom="l">
+              Descripción
+            </Text>
+            <HtmlText color="greyscale4">{data?.product?.description}</HtmlText>
+          </Box>
+        ) : null}
         <Box padding="l" paddingTop="m" flexDirection="row">
           <Button
             label="Tallas"
@@ -200,6 +203,8 @@ const Product = ({ route, navigation }: ProductProps) => {
           />
           <Button
             label="Añadir a la cesta"
+            disabled={loading}
+            isLoading={loading}
             onPress={() => {
               const opts = Object.entries(options).map(([optionId, value]) => ({
                 id: optionId,
@@ -212,6 +217,20 @@ const Product = ({ route, navigation }: ProductProps) => {
                   quantity: qty,
                   options: opts,
                 },
+              }).then(() => {
+                if (error) {
+                  Alert.alert("Error", error.message, [
+                    { text: "Cerrar", style: "cancel" },
+                  ]);
+                } else {
+                  Toast.show("¡Añadido al carrito!", {
+                    backgroundColor: "#fff",
+                    duration: Toast.durations.SHORT,
+                    opacity: 1,
+                    position: -80,
+                    textColor: "#000",
+                  });
+                }
               });
             }}
             flex={1}
