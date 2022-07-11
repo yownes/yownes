@@ -31,9 +31,21 @@ const CartStack = createStackNavigator<CartStackParamList>();
 const CartNavigation = () => {
   return (
     <CartStack.Navigator>
-      <CartStack.Screen name="Cart" component={Cart} />
-      <CartStack.Screen name="Checkout" component={Checkout} />
-      <CartStack.Screen name="PaymentConfirmed" component={PaymentConfirmed} />
+      <CartStack.Screen
+        name="Cart"
+        component={Cart}
+        options={{ title: "Carrito" }}
+      />
+      <CartStack.Screen
+        name="Checkout"
+        component={Checkout}
+        options={{ title: "Confirmar pedido" }}
+      />
+      <CartStack.Screen
+        name="PaymentConfirmed"
+        component={PaymentConfirmed}
+        options={{ title: "Pago realizado" }}
+      />
     </CartStack.Navigator>
   );
 };

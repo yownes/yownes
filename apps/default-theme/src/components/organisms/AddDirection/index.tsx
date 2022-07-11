@@ -55,7 +55,7 @@ const AddDirection = ({ address, onSuccess }: AddDirectionProps) => {
   );
   useEffect(() => {
     navigation.setOptions({
-      title: address ? "Editar Dirección" : "Añadir Dirección",
+      title: address ? "Editar dirección" : "Añadir dirección",
       headerRight: () => (
         <NativeButton
           onPress={handleSubmit(onSubmit)}

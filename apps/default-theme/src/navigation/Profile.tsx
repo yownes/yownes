@@ -60,11 +60,16 @@ const ProfileNavigation = () => {
         screenOptions={{ presentation: "modal" }}
         detachInactiveScreens={false}
       >
-        <ProfileStack.Screen name="Profile" component={Profile} />
+        <ProfileStack.Screen
+          name="Profile"
+          component={Profile}
+          options={{ title: "Perfil" }}
+        />
         <ProfileStack.Screen name="AddDirection" component={AddDirection} />
         <ProfileStack.Screen
           name="AddPaymentMethod"
           component={AddPaymentMethod}
+          options={{ title: "Añadir método de pago" }}
         />
         <ProfileStack.Screen
           name="PaymentMethod"
@@ -81,9 +86,21 @@ const ProfileNavigation = () => {
             return [`card.${pm.id}`];
           }}
         />
-        <ProfileStack.Screen name="Orders" component={Orders} />
-        <ProfileStack.Screen name="Order" component={Order} />
-        <ProfileStack.Screen name="Favourites" component={Favourites} />
+        <ProfileStack.Screen
+          name="Orders"
+          component={Orders}
+          options={{ title: "Pedidos" }}
+        />
+        <ProfileStack.Screen
+          name="Order"
+          component={Order}
+          options={{ title: "Detalles del pedido" }}
+        />
+        <ProfileStack.Screen
+          name="Favourites"
+          component={Favourites}
+          options={{ title: "Favoritos" }}
+        />
       </ProfileStack.Navigator>
     );
   } else {

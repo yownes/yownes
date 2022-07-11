@@ -19,7 +19,11 @@ const HomeNavigator = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen name="HomeScreen" component={Home} />
-      <HomeStack.Screen name="About" component={About} />
+      <HomeStack.Screen
+        name="About"
+        component={About}
+        options={{ title: "Sobre nosotros" }}
+      />
     </HomeStack.Navigator>
   );
 };
