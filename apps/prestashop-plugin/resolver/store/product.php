@@ -25,8 +25,8 @@ class ResolverStoreProduct extends Resolver
     {
         $product = $this->model_store_product->getProduct($args['id']);
 
-        $price = Product::convertAndFormatPrice($product->getPriceWithoutReduct(true, null));
-        $special = Product::convertAndFormatPrice($product->getPrice(false, null, 6));
+        $price = Product::convertAndFormatPrice($product->getPriceWithoutReduct());
+        $special = Product::convertAndFormatPrice($product->getPrice());
 
         $images = Product::getCover($args['id']);
         if (!empty($images['id_image'])) {
