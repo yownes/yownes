@@ -28,6 +28,19 @@ const Confirm = ({ children, title, onConfirm, onReject }: ConfirmProps) => {
         ref={ref}
         snapPoints={snapPoints}
         backdropComponent={BottomSheetBackdrop}
+        style={{
+          // for Android top shadow
+          backgroundColor: "white",
+          borderRadius: 24,
+          shadowColor: "#000000",
+          shadowOffset: {
+            width: 0,
+            height: 8,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 24,
+          elevation: 10,
+        }}
       >
         <Box padding="l">
           <Text variant="header" textAlign="center" marginBottom="xl">

@@ -12,7 +12,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import { Box, Input, Text } from "../atoms";
 
@@ -60,16 +60,30 @@ const Select = ({
           modalRef.current?.present();
         }}
       >
-        <Input
-          value={selected ? formatSelectedValue(selected) : placeholder}
-          pointerEvents="none"
-        />
+        <View pointerEvents="none">
+          <Input
+            value={selected ? formatSelectedValue(selected) : placeholder}
+          />
+        </View>
       </TouchableOpacity>
       <BottomSheetModal
         index={0}
         ref={modalRef}
         snapPoints={snapPoints}
         backdropComponent={BottomSheetBackdrop}
+        style={{
+          // for Android top shadow
+          backgroundColor: "white",
+          borderRadius: 24,
+          shadowColor: "#000000",
+          shadowOffset: {
+            width: 0,
+            height: 8,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 24,
+          elevation: 10,
+        }}
       >
         <BottomSheetScrollView>
           <Box padding="l">

@@ -11,6 +11,8 @@ import filterNulls from "../../lib/filterNulls";
 
 import Directions from "./Directions";
 
+const snapPoints = ["70%", "100%"];
+
 const ShippingSelect = () => {
   const ref = useRef<BottomSheetModal>(null);
   const [change, setChange] = useState<"SHIPPING" | "PAYMENT">();
@@ -76,9 +78,22 @@ const ShippingSelect = () => {
         </Box>
       </Card>
       <BottomSheetModal
-        snapPoints={[300]}
+        snapPoints={snapPoints}
         ref={ref}
         backdropComponent={BottomSheetBackdrop}
+        style={{
+          // for Android top shadow
+          backgroundColor: "white",
+          borderRadius: 24,
+          shadowColor: "#000000",
+          shadowOffset: {
+            width: 0,
+            height: 8,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 24,
+          elevation: 10,
+        }}
       >
         <Box padding="l">
           <Directions

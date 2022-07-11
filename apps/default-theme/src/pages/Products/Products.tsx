@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
+import { StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
@@ -25,6 +26,22 @@ import Facet from "./Components/Facet";
 import Order from "./Components/Order";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
+const styles = StyleSheet.create({
+  modal: {
+    // for Android top shadow
+    backgroundColor: "white",
+    borderRadius: 24,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 24,
+    elevation: 10,
+  },
+});
 
 const Products = ({ route }: ProductsProps) => {
   const category = route.params?.category;
@@ -112,6 +129,7 @@ const Products = ({ route }: ProductsProps) => {
         index={0}
         snapPoints={snapPoints}
         backdropComponent={BottomSheetBackdrop}
+        style={styles.modal}
       >
         <Box padding="m">
           {data?.productsList?.facets?.map((facet) => (
@@ -128,6 +146,7 @@ const Products = ({ route }: ProductsProps) => {
         index={0}
         snapPoints={snapPoints}
         backdropComponent={BottomSheetBackdrop}
+        style={styles.modal}
       >
         <Box padding="m">
           <Order

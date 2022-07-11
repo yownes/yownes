@@ -107,6 +107,19 @@ const CardSelect = ({ cards, onCancel }: CardSelectProps) => {
         snapPoints={["70%"]}
         ref={ref}
         backdropComponent={BottomSheetBackdrop}
+        style={{
+          // for Android top shadow
+          backgroundColor: "white",
+          borderRadius: 24,
+          shadowColor: "#000000",
+          shadowOffset: {
+            width: 0,
+            height: 8,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 24,
+          elevation: 10,
+        }}
       >
         <Box padding="l">
           <Payments
