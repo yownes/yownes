@@ -17,7 +17,12 @@ const HomeStack = createStackNavigator<HomeStackParamList>();
 
 const HomeNavigator = () => {
   return (
-    <HomeStack.Navigator>
+    <HomeStack.Navigator
+      screenOptions={{
+        headerTitleAlign: "center",
+        headerTitleStyle: { textTransform: "uppercase" },
+      }}
+    >
       <HomeStack.Screen name="HomeScreen" component={Home} />
       <HomeStack.Screen
         name="About"

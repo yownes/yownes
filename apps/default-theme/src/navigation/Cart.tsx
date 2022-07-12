@@ -30,7 +30,12 @@ const CartStack = createStackNavigator<CartStackParamList>();
 
 const CartNavigation = () => {
   return (
-    <CartStack.Navigator>
+    <CartStack.Navigator
+      screenOptions={{
+        headerTitleAlign: "center",
+        headerTitleStyle: { textTransform: "uppercase" },
+      }}
+    >
       <CartStack.Screen
         name="Cart"
         component={Cart}

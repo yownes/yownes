@@ -26,6 +26,8 @@ export type ImagesProps = StackScreenProps<ProductStackParamList, "Images">;
 const ProductNavigator = () => (
   <ProductStack.Navigator
     screenOptions={{
+      headerTitleAlign: "center",
+      headerTitleStyle: { textTransform: "uppercase" },
       presentation: "modal",
     }}
     detachInactiveScreens={false}

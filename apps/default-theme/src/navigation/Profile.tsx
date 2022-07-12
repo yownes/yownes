@@ -57,7 +57,11 @@ const ProfileNavigation = () => {
     return (
       <ProfileStack.Navigator
         initialRouteName="Profile"
-        screenOptions={{ presentation: "modal" }}
+        screenOptions={{
+          presentation: "modal",
+          headerTitleAlign: "center",
+          headerTitleStyle: { textTransform: "uppercase" },
+        }}
         detachInactiveScreens={false}
       >
         <ProfileStack.Screen

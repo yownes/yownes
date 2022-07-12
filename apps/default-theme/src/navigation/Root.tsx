@@ -72,6 +72,7 @@ const Root = () => {
               <HomeOutlined size={size} color="dark" />
             );
           },
+          title: "Inicio",
         }}
       />
       <Tab.Screen
@@ -119,7 +120,12 @@ const Root = () => {
 
 const App = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTitleAlign: "center",
+        headerTitleStyle: { textTransform: "uppercase" },
+      }}
+    >
       <Stack.Screen
         name="App"
         options={{ headerShown: false }}
@@ -134,7 +140,7 @@ const App = () => {
         name="Products"
         component={ProductsPage}
         options={({ route }) => ({
-          title: route.params.category?.name ?? "Productos",
+          title: route.params.category?.name ?? "",
         })}
       />
     </Stack.Navigator>
