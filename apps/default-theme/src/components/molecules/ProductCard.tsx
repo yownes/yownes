@@ -49,9 +49,34 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <Box padding="m" width={width / 2 - theme.spacing.l - theme.spacing.s}>
           <Text variant="header3">{manufacturer}</Text>
           <Text marginVertical="m">{name}</Text>
-          <Box flexDirection="row">
-            <Tag>{price}</Tag>
-            {special !== null && <Text>{special}</Text>}
+          <Box flexDirection="row" paddingVertical="l">
+            {special ? (
+              <>
+                <Tag>{special}</Tag>
+                <Box justifyContent="flex-end">
+                  <Text lineHeight={24} paddingHorizontal="m" variant="through">
+                    {price}
+                  </Text>
+                </Box>
+                <Box justifyContent="flex-end">
+                  <Text color="danger" lineHeight={24} variant="small">
+                    -
+                    {price &&
+                      Math.round(
+                        100 -
+                          (parseFloat(special.slice(0, -2).replace(",", ".")) /
+                            parseFloat(
+                              price.slice(0, -2).replace(",", ".") ?? "0"
+                            )) *
+                            100
+                      )}
+                    %
+                  </Text>
+                </Box>
+              </>
+            ) : (
+              <Tag>{price}</Tag>
+            )}
           </Box>
         </Box>
       </Box>

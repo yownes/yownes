@@ -101,7 +101,37 @@ const Product = ({ route, navigation }: ProductProps) => {
           </Text>
           <HtmlText>{data?.product?.shortDescription}</HtmlText>
           <Box flexDirection="row" paddingVertical="l">
-            <Tag>{data?.product?.price}</Tag>
+            {data?.product?.special ? (
+              <>
+                <Tag>{data.product.special}</Tag>
+                <Box justifyContent="flex-end">
+                  <Text lineHeight={24} paddingHorizontal="m" variant="through">
+                    {data?.product?.price}
+                  </Text>
+                </Box>
+                <Box justifyContent="flex-end">
+                  <Text color="danger" lineHeight={24} variant="small">
+                    -
+                    {data.product.price &&
+                      Math.round(
+                        100 -
+                          (parseFloat(
+                            data.product.special.slice(0, -2).replace(",", ".")
+                          ) /
+                            parseFloat(
+                              data?.product?.price
+                                .slice(0, -2)
+                                .replace(",", ".") ?? "0"
+                            )) *
+                            100
+                      )}
+                    %
+                  </Text>
+                </Box>
+              </>
+            ) : (
+              <Tag>{data?.product?.price}</Tag>
+            )}
           </Box>
           <Box flexDirection="row" justifyContent="space-between">
             <Quantity
@@ -123,9 +153,9 @@ const Product = ({ route, navigation }: ProductProps) => {
               }}
             >
               {data?.product?.inWishlist ? (
-                <Favourite />
+                <Favourite color="yellow" />
               ) : (
-                <FavouriteOutlined />
+                <FavouriteOutlined color="greyscale3" />
               )}
             </TouchableOpacity>
           </Box>
@@ -202,7 +232,7 @@ const Product = ({ route, navigation }: ProductProps) => {
             marginRight="l"
           />
           <Button
-            label="Añadir a la cesta"
+            label="Añadir al carrito"
             disabled={loading}
             isLoading={loading}
             onPress={() => {

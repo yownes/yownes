@@ -11,6 +11,7 @@ const palette = {
   greyscale5: "#dddddd",
   greyscale6: "#262626",
   transparent: "transparent",
+  yellow: "#f8c133",
 };
 
 const theme = createTheme({
@@ -27,6 +28,7 @@ const theme = createTheme({
     greyscale4: palette.greyscale4,
     greyscale5: palette.greyscale5,
     transparent: palette.transparent,
+    yellow: palette.yellow,
   },
   spacing: {
     s: 2,
@@ -64,11 +66,18 @@ const theme = createTheme({
     buttonLabel: {
       fontSize: 14,
       lineHeight: 24,
+      fontWeight: "bold",
       textTransform: "uppercase",
     },
     small: {
       fontSize: 10,
       color: "dark",
+    },
+    through: {
+      fontSize: 10,
+      color: "dark",
+      textDecorationLine: "line-through",
+      textDecorationStyle: "solid",
     },
   },
   cardVariants: {

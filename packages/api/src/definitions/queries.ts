@@ -146,6 +146,7 @@ export const PRODUCT = gql`
       stock
       inWishlist
       manufacturer
+      onSale
       attributes {
         name
         options
@@ -199,7 +200,6 @@ export const FAVOURITES = gql`
   query Favourites {
     wishlist {
       ...BasicProduct
-      inWishlist
     }
   }
   ${PRODUCT_FRAGMENT}

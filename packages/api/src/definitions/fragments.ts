@@ -8,6 +8,8 @@ export const PRODUCT_FRAGMENT = gql`
     special
     image
     manufacturer
+    inWishlist
+    onSale
   }
 `;
 
