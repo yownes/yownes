@@ -44,17 +44,25 @@ const CheckoutContent = ({ navigation }: CheckoutProps) => {
               finishCheckout={finishCheckout}
             />
           </Box>
-          {paymentMethod && (
-            <Button
-              marginTop="m"
-              isLoading={loading}
-              disabled={loading}
-              onPress={handlePayment}
-              label="Confirmar Compra"
-            />
-          )}
         </Box>
       </ScrollView>
+      <Box
+        backgroundColor="white"
+        shadowColor="black"
+        shadowOpacity={0.2}
+        shadowOffset={{ width: 0, height: 5 }}
+        shadowRadius={15}
+        elevation={5}
+      >
+        <Button
+          label={`Pagar (${cart?.total?.value})`}
+          isLoading={loading}
+          disabled={loading || (paymentMethod ? false : true)}
+          onPress={handlePayment}
+          marginHorizontal="l"
+          marginVertical="m"
+        />
+      </Box>
     </BottomSheetModalProvider>
   );
 };

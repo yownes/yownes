@@ -57,7 +57,7 @@ const Payments = ({ onSelect }: PaymentsProps) => {
           })
         }
         marginTop="l"
-        label="Añadir nuevo"
+        label="Añadir"
       />
     </Box>
   );

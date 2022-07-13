@@ -115,7 +115,7 @@ const Row = ({ product }: RowProps) => {
                   <Text style={{ flexShrink: 1 }}>{product.product?.name}</Text>
                 </Box>
                 <Box>
-                  <Tag>{product.product?.price}</Tag>
+                  <Tag>{product.total}</Tag>
                 </Box>
               </Box>
               <Box

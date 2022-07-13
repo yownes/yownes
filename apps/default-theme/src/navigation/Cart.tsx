@@ -44,7 +44,7 @@ const CartNavigation = () => {
       <CartStack.Screen
         name="Checkout"
         component={Checkout}
-        options={{ title: "Confirmar pedido" }}
+        options={{ title: "Confirmar compra" }}
       />
       <CartStack.Screen
         name="PaymentConfirmed"

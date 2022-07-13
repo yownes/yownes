@@ -54,13 +54,13 @@ const Cart = ({ navigation }: CartProps) => {
   return isEmpty ? (
     <CartPlaceholder loading={loading} onRefresh={refetch} />
   ) : (
-    <Box padding="m" flex={1} justifyContent="space-between">
+    <Box flex={1} justifyContent="space-between">
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={refetch} />
         }
       >
-        <Box>
+        <Box padding="m">
           {data?.cart?.products?.map((prod) => (
             <Box paddingBottom="m" key={prod?.key}>
               {prod && <Row product={prod} />}
@@ -94,11 +94,21 @@ const Cart = ({ navigation }: CartProps) => {
           </Card>
         </Box>
       </ScrollView>
-      <Button
-        onPress={toCheckout}
-        margin="l"
-        label={`Confirmar compra (${data?.cart?.total?.value})`}
-      />
+      <Box
+        backgroundColor="white"
+        shadowColor="black"
+        shadowOpacity={0.2}
+        shadowOffset={{ width: 0, height: 5 }}
+        shadowRadius={15}
+        elevation={5}
+      >
+        <Button
+          onPress={toCheckout}
+          marginHorizontal="l"
+          marginVertical="m"
+          label={`Confirmar compra (${data?.cart?.total?.value})`}
+        />
+      </Box>
     </Box>
   );
 };

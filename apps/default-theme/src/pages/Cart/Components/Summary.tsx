@@ -76,11 +76,11 @@ const Summary = ({ cart }: SummaryProps) => {
             >
               <Box flexDirection="row">
                 <Text>{voucher?.name}</Text>
-                {voucher?.code && <Text> - {voucher.code}</Text>}
+                {voucher?.code ? <Text> - {voucher.code}</Text> : null}
               </Box>
               <Box>
                 <Text>{voucher?.reduction}</Text>
-                {voucher?.code && (
+                {voucher?.code ? (
                   <TouchableOpacity
                     onPress={() => {
                       removeDiscount({ variables: { id: voucher.id } });
@@ -90,7 +90,7 @@ const Summary = ({ cart }: SummaryProps) => {
                       Eliminar
                     </Text>
                   </TouchableOpacity>
-                )}
+                ) : null}
               </Box>
             </Box>
           ))}

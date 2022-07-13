@@ -40,7 +40,7 @@ const Button = ({
       padding="m"
       borderRadius={5}
       justifyContent="center"
-      backgroundColor={backgroundColor}
+      backgroundColor={props.disabled ? "greyscale5" : backgroundColor}
       onPress={() => {
         if (!isLoading) {
           props.onPress;
@@ -50,7 +50,7 @@ const Button = ({
     >
       <Text
         variant="buttonLabel"
-        color={color}
+        color={props.disabled ? "greyscale4" : color}
         marginRight={isLoading ? "s" : undefined}
       >
         {label}

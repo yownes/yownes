@@ -53,7 +53,7 @@ const Directions = ({ title, onSelect }: DirectionsProps) => {
           })
         }
         marginTop="l"
-        label="Añadir nueva"
+        label="Añadir"
       />
     </Box>
   );
