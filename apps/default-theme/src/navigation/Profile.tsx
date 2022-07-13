@@ -93,7 +93,7 @@ const ProfileNavigation = () => {
         <ProfileStack.Screen
           name="Orders"
           component={Orders}
-          options={{ title: "Pedidos" }}
+          options={{ title: "Lista de pedidos" }}
         />
         <ProfileStack.Screen
           name="Order"

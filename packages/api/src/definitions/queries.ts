@@ -240,6 +240,7 @@ export const ORDERS = gql`
       date
       state
       total
+      quantity
     }
   }
 `;
@@ -252,6 +253,7 @@ export const ORDER = gql`
       date
       state
       total
+      quantity
       shippingAddress {
         ...AddressFragment
       }

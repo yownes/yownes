@@ -11,12 +11,26 @@ const Order = ({ order }: OrderProps) => {
   return (
     <Card padding="m">
       <Box justifyContent="space-between" flexDirection="row">
-        <Text>Referencia: {order.reference}</Text>
-        <Text>{order.state}</Text>
+        <Text variant="body">Referencia: {order.reference}</Text>
+        <Text variant="header3">
+          {!order.state || order.state === "" ? "Desconocido" : order.state}
+        </Text>
       </Box>
-      <Box justifyContent="space-between" marginTop="l" flexDirection="row">
-        <Text>{order.date}</Text>
-        <Tag>{order.total}</Tag>
+      <Box
+        alignItems="center"
+        justifyContent="space-between"
+        marginTop="l"
+        flexDirection="row"
+      >
+        <Text color="greyscale4" variant="body">
+          {order.date}
+        </Text>
+        <Box alignItems="center" flexDirection="row">
+          <Text color="greyscale4" paddingHorizontal="l" variant="body">
+            Productos: {order?.quantity}
+          </Text>
+          <Tag fixedWidth>{order.total}</Tag>
+        </Box>
       </Box>
     </Card>
   );

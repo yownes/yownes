@@ -17,7 +17,12 @@ const Order = ({ route }: OrderProps) => {
         </Card>
         <Card padding="m" marginBottom="m">
           <Text>Fecha: {data?.order?.date}</Text>
-          <Text marginVertical="s">Estado: {data?.order?.state}</Text>
+          <Text marginVertical="s">
+            Estado:{" "}
+            {!data?.order?.state || data?.order?.state === ""
+              ? "Desconocido"
+              : data?.order?.state}
+          </Text>
           <Text>Transportista: {data?.order?.shippingMethod?.name}</Text>
         </Card>
         <Card padding="m" marginBottom="m">
