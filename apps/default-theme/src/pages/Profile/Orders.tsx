@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Pressable } from "react-native";
+import { FlatList, Pressable, RefreshControl } from "react-native";
 import { useGetOrders } from "@yownes/api";
 
 import { Box, Text } from "../../components/atoms";
@@ -19,7 +19,7 @@ const OrdersPlaceholder = () => (
 );
 
 const Orders = ({ navigation }: OrdersProps) => {
-  const { data } = useGetOrders();
+  const { data, loading, refetch } = useGetOrders();
   const theme = useTheme();
   const orders = data?.orders?.filter(filterNulls);
   return (
@@ -44,6 +44,9 @@ const Orders = ({ navigation }: OrdersProps) => {
           </Box>
         </Pressable>
       )}
+      refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={refetch} />
+      }
     />
   );
 };
