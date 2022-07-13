@@ -23,7 +23,11 @@ const HomeNavigator = () => {
         headerTitleStyle: { textTransform: "uppercase" },
       }}
     >
-      <HomeStack.Screen name="HomeScreen" component={Home} />
+      <HomeStack.Screen
+        name="HomeScreen"
+        options={{ headerShown: false }}
+        component={Home}
+      />
       <HomeStack.Screen
         name="About"
         component={About}
