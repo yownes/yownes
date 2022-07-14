@@ -157,6 +157,7 @@ export const PRODUCT = gql`
         values {
           id
           name
+          selected
         }
       }
     }

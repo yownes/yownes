@@ -192,9 +192,12 @@ const Product = ({ route, navigation }: ProductProps) => {
                       <Box
                         marginRight="l"
                         backgroundColor={
-                          option?.name && options[option.name] === value?.id
-                            ? "greyscale5"
-                            : "greyscale2"
+                          (value.selected &&
+                            option?.name &&
+                            options[option.name] === undefined) ||
+                          (option?.name && options[option.name] === value?.id)
+                            ? "primary"
+                            : "greyscale5"
                         }
                         borderRadius={15}
                         padding="m"
