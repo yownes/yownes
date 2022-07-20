@@ -73,7 +73,17 @@ const theme = createTheme({
       fontSize: 10,
       color: "dark",
     },
-    through: {
+    smallAlert: {
+      fontSize: 10,
+      color: "danger",
+    },
+    throughBody: {
+      fontSize: 12,
+      color: "greyscale3",
+      textDecorationLine: "line-through",
+      textDecorationStyle: "solid",
+    },
+    throughSmall: {
       fontSize: 10,
       color: "dark",
       textDecorationLine: "line-through",

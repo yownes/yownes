@@ -50,7 +50,7 @@ const Button = ({
     >
       <Text
         variant="buttonLabel"
-        color={props.disabled ? "greyscale4" : color}
+        color={props.disabled ? "greyscale3" : color}
         marginRight={isLoading ? "s" : undefined}
       >
         {label}

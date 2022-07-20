@@ -54,7 +54,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <>
                 <Tag>{special}</Tag>
                 <Box justifyContent="flex-end">
-                  <Text lineHeight={24} paddingHorizontal="m" variant="through">
+                  <Text
+                    lineHeight={24}
+                    paddingHorizontal="m"
+                    variant="throughSmall"
+                  >
                     {price}
                   </Text>
                 </Box>
