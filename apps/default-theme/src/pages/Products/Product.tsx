@@ -214,6 +214,13 @@ const Product = ({ route, navigation }: ProductProps) => {
                         ],
                       },
                     });
+                    Toast.show("¡Eliminado de Favoritos!", {
+                      backgroundColor: "#fff",
+                      duration: Toast.durations.SHORT,
+                      opacity: 1,
+                      position: -80,
+                      textColor: "#000",
+                    });
                   } else {
                     addToFavourite({
                       optimisticResponse: {
@@ -225,6 +232,13 @@ const Product = ({ route, navigation }: ProductProps) => {
                           },
                         ],
                       },
+                    });
+                    Toast.show("¡Añadido a Favoritos!", {
+                      backgroundColor: "#fff",
+                      duration: Toast.durations.SHORT,
+                      opacity: 1,
+                      position: -80,
+                      textColor: "#000",
                     });
                   }
                 } else {
