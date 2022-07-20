@@ -199,9 +199,29 @@ const Product = ({ route, navigation }: ProductProps) => {
               onPress={() => {
                 if (isAuthenticated) {
                   if (data?.product?.inWishlist) {
-                    removeFavourite();
+                    removeFavourite({
+                      optimisticResponse: {
+                        removeWishlist: [
+                          {
+                            __typename: "Product",
+                            id: id,
+                            inWishlist: data?.product?.inWishlist,
+                          },
+                        ],
+                      },
+                    });
                   } else {
-                    addToFavourite();
+                    addToFavourite({
+                      optimisticResponse: {
+                        addToWishlist: [
+                          {
+                            __typename: "Product",
+                            id: id,
+                            inWishlist: !data?.product?.inWishlist,
+                          },
+                        ],
+                      },
+                    });
                   }
                 } else {
                   ref.current?.present();
@@ -286,10 +306,8 @@ const Product = ({ route, navigation }: ProductProps) => {
                               : "throughBody"
                           }
                         >
-                          {/* <Text variant={stockCombination === 0 && "through"}> */}
                           {value?.name}
                         </Text>
-                        {stockCombination < 1 && <Text>deshabilitar</Text>}
                       </Box>
                     </TouchableOpacity>
                   ))}
