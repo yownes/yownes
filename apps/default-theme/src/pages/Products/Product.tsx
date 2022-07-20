@@ -17,9 +17,21 @@ import {
 } from "@yownes/api";
 import { useAuth } from "@yownes/core";
 
-import { Box, Button, Tag, Text, HtmlText } from "../../components/atoms";
+import {
+  Box,
+  Button,
+  Tag,
+  Text,
+  HtmlText,
+  Loading,
+} from "../../components/atoms";
 import { Favourite, FavouriteOutlined } from "../../components/icons";
 import { Quantity } from "../../components/molecules";
+import {
+  getPriceCombination,
+  getStockCombination,
+  isInCombinations,
+} from "../../lib/product";
 import { useTheme } from "../../lib/theme";
 import type { ProductProps } from "../../navigation/Product";
 
@@ -30,9 +42,14 @@ const Product = ({ route, navigation }: ProductProps) => {
   const { index, id } = route.params;
 
   const [opacity, setOpacity] = useState(1);
+  const [stockCombination, setStockCombination] = useState(0);
   const { isAuthenticated } = useAuth();
   const ref = useRef<BottomSheetModal>(null);
-  const { data } = useGetProduct(id);
+  const {
+    data,
+    loading: productLoading,
+    error: productError,
+  } = useGetProduct(id);
   const [addToCart, { loading, error }] = useAddToCart();
   const [addToFavourite] = useAddToFavourite(id, data);
   const [removeFavourite] = useRemoveFavourite(id, data);
@@ -47,6 +64,29 @@ const Product = ({ route, navigation }: ProductProps) => {
       });
     }
   }, [data, navigation]);
+  useEffect(() => {
+    if (data?.product?.options?.attributes) {
+      data.product.options.attributes.map((option) => {
+        option?.values?.map((value) => {
+          const { name } = option;
+          if (name && value.selected) {
+            setOptions((attrs) => ({
+              ...attrs,
+              [name]: value?.id,
+            }));
+          }
+        });
+      });
+    }
+  }, [data?.product?.options?.attributes]);
+  useEffect(() => {
+    if (data?.product?.options?.combinations) {
+      setStockCombination(
+        getStockCombination(options, data.product.options.combinations)
+      );
+      setQty(1);
+    }
+  }, [options, data?.product?.options?.combinations]);
   useFocusEffect(() => {
     if (navigation.isFocused()) {
       setOpacity(1);
@@ -60,6 +100,11 @@ const Product = ({ route, navigation }: ProductProps) => {
       (str: string | null | undefined) => str !== null && str !== undefined
     )
     .map((img) => img as string);
+
+  if (productLoading) {
+    return <Loading />;
+  }
+
   return (
     <BottomSheetModalProvider>
       <ScrollView>
@@ -105,7 +150,11 @@ const Product = ({ route, navigation }: ProductProps) => {
               <>
                 <Tag>{data.product.special}</Tag>
                 <Box justifyContent="flex-end">
-                  <Text lineHeight={24} paddingHorizontal="m" variant="through">
+                  <Text
+                    lineHeight={24}
+                    paddingHorizontal="m"
+                    variant="throughSmall"
+                  >
                     {data?.product?.price}
                   </Text>
                 </Box>
@@ -130,14 +179,21 @@ const Product = ({ route, navigation }: ProductProps) => {
                 </Box>
               </>
             ) : (
-              <Tag>{data?.product?.price}</Tag>
+              <Tag>
+                {getPriceCombination(
+                  data?.product?.price,
+                  data?.product?.tax,
+                  options,
+                  data?.product?.options?.combinations
+                )}
+              </Tag>
             )}
           </Box>
           <Box flexDirection="row" justifyContent="space-between">
             <Quantity
               qty={qty}
               onChange={setQty}
-              limit={data?.product?.stock ?? 0}
+              limit={stockCombination ?? -1}
             />
             <TouchableOpacity
               onPress={() => {
@@ -160,9 +216,9 @@ const Product = ({ route, navigation }: ProductProps) => {
             </TouchableOpacity>
           </Box>
         </Box>
-        {(data?.product?.options?.length ?? 0) > 0 && (
+        {(data?.product?.options?.attributes?.length ?? 0) > 0 && (
           <Box paddingBottom="l" backgroundColor="white" marginBottom="m">
-            {data?.product?.options?.map((option) => (
+            {data?.product?.options?.attributes?.map((option) => (
               <Box key={option?.name}>
                 <Text
                   variant="header4"
@@ -181,7 +237,15 @@ const Product = ({ route, navigation }: ProductProps) => {
                       key={value?.id}
                       onPress={() => {
                         const { name } = option;
-                        if (name) {
+                        if (
+                          name &&
+                          isInCombinations(
+                            option.name,
+                            value?.id,
+                            options,
+                            data?.product?.options?.combinations
+                          )
+                        ) {
                           setOptions((attrs) => ({
                             ...attrs,
                             [name]: value?.id,
@@ -192,17 +256,40 @@ const Product = ({ route, navigation }: ProductProps) => {
                       <Box
                         marginRight="l"
                         backgroundColor={
-                          (value.selected &&
-                            option?.name &&
-                            options[option.name] === undefined) ||
-                          (option?.name && options[option.name] === value?.id)
-                            ? "primary"
-                            : "greyscale5"
+                          isInCombinations(
+                            option.name,
+                            value?.id,
+                            options,
+                            data?.product?.options?.combinations
+                          )
+                            ? (value.selected &&
+                                option?.name &&
+                                options[option.name] === undefined) ||
+                              (option?.name &&
+                                options[option.name] === value?.id)
+                              ? "primary"
+                              : "greyscale5"
+                            : "greyscale2"
                         }
                         borderRadius={15}
                         padding="m"
                       >
-                        <Text>{value?.name}</Text>
+                        <Text
+                          variant={
+                            isInCombinations(
+                              option.name,
+                              value?.id,
+                              options,
+                              data?.product?.options?.combinations
+                            )
+                              ? "body"
+                              : "throughBody"
+                          }
+                        >
+                          {/* <Text variant={stockCombination === 0 && "through"}> */}
+                          {value?.name}
+                        </Text>
+                        {stockCombination < 1 && <Text>deshabilitar</Text>}
                       </Box>
                     </TouchableOpacity>
                   ))}

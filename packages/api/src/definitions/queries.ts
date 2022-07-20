@@ -142,6 +142,7 @@ export const PRODUCT = gql`
       shortDescription
       description
       price
+      tax
       special
       stock
       inWishlist
@@ -152,12 +153,20 @@ export const PRODUCT = gql`
         options
       }
       options {
-        name
-        type
-        values {
-          id
+        attributes {
           name
-          selected
+          type
+          values {
+            id
+            name
+            selected
+          }
+        }
+        combinations {
+          id
+          quantity
+          price
+          lowStockAlert
         }
       }
     }
