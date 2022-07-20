@@ -26,9 +26,17 @@ function getCombination(
 
 export function getStockCombination(
   options: Record<string, string | null | undefined>,
-  combinations: Combination[]
+  combinations: Combination[],
+  stock: number | undefined
 ) {
-  return getCombination(options, combinations)?.quantity ?? -1;
+  if (combinations.length > 0) {
+    // Product with combinations
+    return getCombination(options, combinations)?.quantity ?? -1;
+  } else {
+    // Simple producto
+    console.log("simple prod", combinations, options);
+    return stock ?? 0;
+  }
 }
 
 export function getPriceCombination(
@@ -59,32 +67,41 @@ export function isInCombinations(
   options: Record<string, string | null | undefined>,
   combinations: Combination[]
 ) {
-  const comb = [
-    ...new Set(
-      combinations
-        .map((c) => {
-          return c.id.includes(id) && c.quantity > 0 ? c.id : [];
-        })
-        .reduce((a, b) => {
-          return a.concat(b);
-        })
-    ),
-  ].filter((c) => c !== id);
-  let opts: (string | null | undefined)[] = [];
-  Object.entries(options).forEach(([key, value]) => {
-    if (key !== name) {
-      opts = [...opts, value];
-    }
-  });
-  let op = undefined;
   let isIn = false;
-  opts.map((o) => {
-    if (o) {
-      op = comb.includes(o);
-      if (op) {
-        isIn = true;
+  if (Object.entries(options).length > 1) {
+    // Some attributes
+    const comb = [
+      ...new Set(
+        combinations
+          .map((c) => {
+            return c.id.includes(id) && c.quantity > 0 ? c.id : [];
+          })
+          .reduce((a, b) => {
+            return a.concat(b);
+          })
+      ),
+    ].filter((c) => c !== id);
+    let opts: (string | null | undefined)[] = [];
+    let op = undefined;
+    Object.entries(options).forEach(([key, value]) => {
+      if (key !== name) {
+        opts = [...opts, value];
       }
-    }
-  });
+    });
+    opts.map((o) => {
+      if (o) {
+        op = comb.includes(o);
+        if (op) {
+          isIn = true;
+        }
+      }
+    });
+  } else {
+    // Only one attribute
+    const comb = combinations.filter(
+      (c) => c.id.includes(id) && c.quantity > 0
+    );
+    isIn = comb.length > 0 ? true : false;
+  }
   return isIn;
 }

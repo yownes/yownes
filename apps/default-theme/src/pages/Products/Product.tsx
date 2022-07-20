@@ -82,7 +82,11 @@ const Product = ({ route, navigation }: ProductProps) => {
   useEffect(() => {
     if (data?.product?.options?.combinations) {
       setStockCombination(
-        getStockCombination(options, data.product.options.combinations)
+        getStockCombination(
+          options,
+          data.product.options.combinations,
+          data.product.stock
+        )
       );
       setQty(1);
     }
@@ -257,15 +261,7 @@ const Product = ({ route, navigation }: ProductProps) => {
                       key={value?.id}
                       onPress={() => {
                         const { name } = option;
-                        if (
-                          name &&
-                          isInCombinations(
-                            option.name,
-                            value?.id,
-                            options,
-                            data?.product?.options?.combinations
-                          )
-                        ) {
+                        if (name) {
                           setOptions((attrs) => ({
                             ...attrs,
                             [name]: value?.id,
@@ -289,9 +285,25 @@ const Product = ({ route, navigation }: ProductProps) => {
                                 options[option.name] === value?.id)
                               ? "primary"
                               : "greyscale5"
+                            : (value.selected &&
+                                option?.name &&
+                                options[option.name] === undefined) ||
+                              (option?.name &&
+                                options[option.name] === value?.id)
+                            ? "primary"
                             : "greyscale2"
                         }
                         borderRadius={15}
+                        opacity={
+                          !isInCombinations(
+                            option.name,
+                            value?.id,
+                            options,
+                            data?.product?.options?.combinations
+                          )
+                            ? 0.8
+                            : 1
+                        }
                         padding="m"
                       >
                         <Text
@@ -329,52 +341,50 @@ const Product = ({ route, navigation }: ProductProps) => {
             <HtmlText color="greyscale4">{data?.product?.description}</HtmlText>
           </Box>
         ) : null}
-        <Box padding="l" paddingTop="m" flexDirection="row">
-          <Button
-            label="Tallas"
-            onPress={() => {
-              // TODO: Sizes screen sizes
-              return;
-            }}
-            flex={1}
-            marginRight="l"
-          />
-          <Button
-            label="Añadir al carrito"
-            disabled={loading}
-            isLoading={loading}
-            onPress={() => {
-              const opts = Object.entries(options).map(([optionId, value]) => ({
-                id: optionId,
-                value: value as string,
-              }));
-
-              addToCart({
-                variables: {
-                  id: route.params.id,
-                  quantity: qty,
-                  options: opts,
-                },
-              }).then(() => {
-                if (error) {
-                  Alert.alert("Error", error.message, [
-                    { text: "Cerrar", style: "cancel" },
-                  ]);
-                } else {
-                  Toast.show("¡Añadido al carrito!", {
-                    backgroundColor: "#fff",
-                    duration: Toast.durations.SHORT,
-                    opacity: 1,
-                    position: -80,
-                    textColor: "#000",
-                  });
-                }
-              });
-            }}
-            flex={1}
-          />
-        </Box>
       </ScrollView>
+      <Box
+        backgroundColor="white"
+        shadowColor="black"
+        shadowOpacity={0.2}
+        shadowOffset={{ width: 0, height: 5 }}
+        shadowRadius={15}
+        elevation={5}
+      >
+        <Button
+          label="Añadir al carrito"
+          disabled={loading || stockCombination < 1}
+          isLoading={loading}
+          onPress={() => {
+            const opts = Object.entries(options).map(([optionId, value]) => ({
+              id: optionId,
+              value: value as string,
+            }));
+            addToCart({
+              variables: {
+                id: route.params.id,
+                quantity: qty,
+                options: opts,
+              },
+            }).then(() => {
+              if (error) {
+                Alert.alert("Error", error.message, [
+                  { text: "Cerrar", style: "cancel" },
+                ]);
+              } else {
+                Toast.show("¡Añadido al carrito!", {
+                  backgroundColor: "#fff",
+                  duration: Toast.durations.SHORT,
+                  opacity: 1,
+                  position: -80,
+                  textColor: "#000",
+                });
+              }
+            });
+          }}
+          marginHorizontal="l"
+          marginVertical="m"
+        />
+      </Box>
       <BottomSheetModal
         index={0}
         ref={ref}
