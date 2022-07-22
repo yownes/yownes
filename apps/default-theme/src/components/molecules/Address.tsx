@@ -21,16 +21,24 @@ const Address = ({ address }: AddressProps) => {
     >
       <Stamp color="greyscale4" size={30} />
       <Box marginLeft="m">
-        <Text color="greyscale4" marginBottom="l">
+        <Text marginBottom="m" variant="address">
           {address.firstName} {address.lastName}
         </Text>
-        <Text color="greyscale4" marginBottom="m">
+        <Text marginBottom="m" variant="address">
           {address.address1}
         </Text>
-        <Text color="greyscale4" marginBottom="m" style={{ minHeight: 17 }}>
-          {address.address2}
+        {address.address2 ? (
+          <Text marginBottom="m" style={{ minHeight: 17 }} variant="address">
+            {address.address2}
+          </Text>
+        ) : null}
+        <Text marginBottom="m" variant="address">
+          {address.zipcode} {address.city}
+          {" ("}
+          {address.zone?.name}
+          {") "}
         </Text>
-        <Text color="greyscale4">{address.city}</Text>
+        <Text variant="address">{address.country?.name}</Text>
       </Box>
     </Card>
   );

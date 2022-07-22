@@ -1,4 +1,4 @@
-import type { ElementType } from "react";
+import type { ElementType, ReactNode } from "react";
 import type { Control, FieldError, Path } from "react-hook-form";
 import type { KeyboardTypeOptions } from "react-native";
 import React from "react";
@@ -22,9 +22,10 @@ export interface FieldType<T> {
 interface FormFieldsProps<T> {
   control: Control<T>;
   fields: FieldType<T>[];
+  separator?: ReactNode;
 }
 
-function FormFields<T>({ fields, control }: FormFieldsProps<T>) {
+function FormFields<T>({ control, fields, separator }: FormFieldsProps<T>) {
   return (
     <>
       {fields.map(({ key, List, required, keyboardType, name, props }) => (
@@ -44,6 +45,7 @@ function FormFields<T>({ fields, control }: FormFieldsProps<T>) {
                   {Boolean(error?.message) && (
                     <Text color="danger">{error?.message}</Text>
                   )}
+                  {separator ?? null}
                 </>
               ) : (
                 <InputWithErrors
@@ -56,6 +58,7 @@ function FormFields<T>({ fields, control }: FormFieldsProps<T>) {
                   }
                   value={(field.value as string) ?? undefined}
                   error={error?.message}
+                  separator={separator}
                 />
               );
             }}
