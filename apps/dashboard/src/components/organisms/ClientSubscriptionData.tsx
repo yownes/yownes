@@ -93,10 +93,8 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
   }, [client]);
   useEffect(() => {
     setSubscriptions(
-      reverse(
-        connectionToNodes(subscriptionsData?.subscriptions).filter(
-          (sub) => sub.stripeId !== client?.subscription?.stripeId
-        )
+      connectionToNodes(subscriptionsData?.subscriptions).filter(
+        (sub) => sub.stripeId !== client?.subscription?.stripeId
       )
     );
   }, [client, subscriptionsData]);
@@ -191,39 +189,42 @@ const ClientSubscriptionData = ({ client }: ClientSubscriptionDataProps) => {
             }
             extra={actions}
           />
-          <Row gutter={[24, 24]}>
-            {
-              // TODO: Mensaje error renovación, fecha siguiente intento
-              // y permitir intentarlo en este momento
-              pastDue && (
-                <Alert
-                  className={styles.renewalAlert}
-                  message={[
-                    t("admin:renewalClientError", {
-                      date:
-                        invoices &&
-                        longDate(
-                          addDays(
-                            new Date(
-                              reverse(
-                                connectionToNodes(
-                                  client?.subscription?.invoices
-                                )
-                              ).find(
-                                (inv) => inv.status === InvoiceStatus.OPEN
-                              )?.created
-                            ),
-                            7
-                          )
-                        ),
-                    }),
-                  ]}
-                  showIcon
-                  type="error"
-                />
-              )
-            }
-          </Row>
+          {
+            // TODO: Mensaje error renovación, fecha siguiente intento
+            // y permitir intentarlo en este momento
+            pastDue && (
+              <Row gutter={[24, 24]}>
+                <Col>
+                  <Alert
+                    className={styles.renewalAlert}
+                    message={[
+                      t("admin:renewalClientError", {
+                        date:
+                          invoices &&
+                          longDate(
+                            addDays(
+                              new Date(
+                                reverse(
+                                  connectionToNodes(
+                                    client?.subscription?.invoices
+                                  )
+                                ).find(
+                                  (inv) => inv.status === InvoiceStatus.OPEN
+                                )?.created
+                              ),
+                              7
+                            )
+                          ),
+                      }),
+                    ]}
+                    showIcon
+                    type="error"
+                  />
+                </Col>
+                <Col />
+              </Row>
+            )
+          }
           <Row gutter={[24, 24]}>
             {client?.subscription &&
               client?.subscription?.plan &&

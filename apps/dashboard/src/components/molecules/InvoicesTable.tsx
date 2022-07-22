@@ -91,7 +91,6 @@ const InvoicesTable = ({ invoices }: InovicesTableProps) => {
               <InvoiceInfo invoice={record} staff={data?.me?.isStaff} />
             </div>
           ),
-
           expandedRowKeys: expandedRow,
           onExpand: (expanded, record) =>
             expanded ? setExpandedRow([record.created]) : setExpandedRow([]),

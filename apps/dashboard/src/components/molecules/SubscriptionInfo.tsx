@@ -228,7 +228,7 @@ const SubscriptionInfo = ({
                   })}
                 </Tooltip>
               ) : (
-                <Text>{t("nextInvoiceEmpty")}</Text>
+                t("nextInvoiceEmpty")
               )}
             </div>
           ),

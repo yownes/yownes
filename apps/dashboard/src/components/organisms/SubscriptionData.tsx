@@ -372,31 +372,34 @@ const SubscriptionData = () => {
                 data?.me?.subscription?.status ===
                   SubscriptionStatus.PAST_DUE && (
                   <Row gutter={[24, 24]}>
-                    <Alert
-                      className={styles.renewalAlert}
-                      message={[
-                        t("client:renewalError", {
-                          date:
-                            invoices &&
-                            longDate(
-                              addDays(
-                                new Date(
-                                  reverse(
-                                    connectionToNodes(
-                                      data.me.subscription.invoices
-                                    )
-                                  ).find(
-                                    (inv) => inv.status === InvoiceStatus.OPEN
-                                  )?.created
-                                ),
-                                7
-                              )
-                            ),
-                        }),
-                      ]}
-                      showIcon
-                      type="error"
-                    />
+                    <Col>
+                      <Alert
+                        className={styles.renewalAlert}
+                        message={[
+                          t("client:renewalError", {
+                            date:
+                              invoices &&
+                              longDate(
+                                addDays(
+                                  new Date(
+                                    reverse(
+                                      connectionToNodes(
+                                        data.me.subscription.invoices
+                                      )
+                                    ).find(
+                                      (inv) => inv.status === InvoiceStatus.OPEN
+                                    )?.created
+                                  ),
+                                  7
+                                )
+                              ),
+                          }),
+                        ]}
+                        showIcon
+                        type="error"
+                      />
+                    </Col>
+                    <Col />
                   </Row>
                 )
               }
