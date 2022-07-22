@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList, Pressable, RefreshControl } from "react-native";
 import { useGetOrders } from "@yownes/api";
 
-import { Box, Text } from "../../components/atoms";
+import { Box, Loading, Text } from "../../components/atoms";
 import { Order } from "../../components/molecules";
 import NoOrdersImage from "../../components/images/NoOrders";
 import type { OrdersProps } from "../../navigation/Profile";
@@ -22,6 +22,11 @@ const Orders = ({ navigation }: OrdersProps) => {
   const { data, loading, refetch } = useGetOrders();
   const theme = useTheme();
   const orders = data?.orders?.filter(filterNulls);
+
+  if (loading && !data) {
+    return <Loading />;
+  }
+
   return (
     <FlatList
       data={orders}

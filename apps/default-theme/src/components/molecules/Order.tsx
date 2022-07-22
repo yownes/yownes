@@ -13,7 +13,11 @@ const Order = ({ order }: OrderProps) => {
       <Box justifyContent="space-between" flexDirection="row">
         <Text variant="body">Referencia: {order.reference}</Text>
         <Text variant="header3">
-          {!order.state || order.state === "" ? "Desconocido" : order.state}
+          {!order.state || order.state === ""
+            ? "Desconocido"
+            : order.state.length > 24
+            ? `${order.state.substring(0, 24)}...`
+            : order.state}
         </Text>
       </Box>
       <Box

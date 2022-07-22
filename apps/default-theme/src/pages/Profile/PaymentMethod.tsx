@@ -95,7 +95,7 @@ const PaymentMethod = ({ route, navigation }: PaymentMethodProps) => {
               </SharedElement>
               <Animated.View style={buttonStyle}>
                 <Confirm
-                  title="¿Realmete deseas eliminar esta tarjeta?"
+                  title="¿Realmente deseas eliminar esta tarjeta?"
                   onConfirm={() => {
                     deletePaymentMethod({
                       variables: {

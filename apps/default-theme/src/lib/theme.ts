@@ -34,13 +34,17 @@ const theme = createTheme({
     s: 2,
     m: 10,
     l: 20,
-    xl: 40,
+    xl: 30,
   },
   breakpoints: {
     phone: 0,
     tablet: 768,
   },
   textVariants: {
+    address: {
+      color: "greyscale4",
+      fontSize: 12,
+    },
     header: {
       fontWeight: "bold",
       fontSize: 22,
@@ -63,6 +67,11 @@ const theme = createTheme({
       fontSize: 12,
       color: "dark",
     },
+    bold: {
+      color: "greyscale4",
+      fontSize: 12,
+      fontWeight: "bold",
+    },
     buttonLabel: {
       fontSize: 14,
       lineHeight: 24,
@@ -76,6 +85,10 @@ const theme = createTheme({
     smallAlert: {
       fontSize: 10,
       color: "danger",
+    },
+    subtotal: {
+      color: "greyscale4",
+      fontSize: 12,
     },
     throughBody: {
       fontSize: 12,
@@ -95,6 +108,7 @@ const theme = createTheme({
       // We can define defaults for the variant here.
       // This will be applied after the defaults passed to createVariant and before the variant defined below.
       backgroundColor: "white",
+      borderRadius: 5,
     },
     regular: {
       // We can refer to other values in the theme here, and use responsive props

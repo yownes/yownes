@@ -74,14 +74,14 @@ const Cart = ({ navigation }: CartProps) => {
               onChangeText={setCode}
             />
             {dataDiscount?.addDiscount?.errors?.map((err) => (
-              <Text key={err} color="danger" marginTop="s">
+              <Text key={err} marginTop="m" variant="smallAlert">
                 {err}
               </Text>
             ))}
             <Button
               label="Aplicar código promocional"
               backgroundColor="greyscale5"
-              color="dark"
+              color={dataLoading ? "greyscale3" : "dark"}
               marginTop="m"
               isLoading={dataLoading}
               disabled={dataLoading}

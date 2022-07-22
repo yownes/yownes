@@ -51,7 +51,7 @@ const Login = ({ navigation }: LoginProps) => {
         <Box>
           <LoginImage />
           <Text variant="header3" textAlign="center" paddingBottom="xl">
-            Inicio sesión
+            Inicio de sesión
           </Text>
           {error && <Text color="danger">{error.message}</Text>}
           <FormFields

@@ -1,9 +1,13 @@
 import React from "react";
 
-import Text from "./Text";
+import { Box, Text } from "../atoms";
 
 const Loading = () => {
-  return <Text>Loading...</Text>;
+  return (
+    <Box justifyContent="center" height="100%">
+      <Text textAlign="center">Cargando...</Text>
+    </Box>
+  );
 };
 
 export default Loading;

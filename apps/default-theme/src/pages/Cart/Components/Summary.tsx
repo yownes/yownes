@@ -1,16 +1,17 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import type { Cart_cart } from "@yownes/api";
 import { useRemoveDiscount } from "@yownes/api";
 
 import { Box, Card, Text } from "../../../components/atoms";
+import theme from "../../../lib/theme";
 
 interface SummaryProps {
   cart?: Cart_cart;
 }
 
 const Summary = ({ cart }: SummaryProps) => {
-  const [removeDiscount] = useRemoveDiscount();
+  const [removeDiscount, { loading }] = useRemoveDiscount();
   if (!cart) {
     return null;
   }
@@ -20,8 +21,8 @@ const Summary = ({ cart }: SummaryProps) => {
         Resumen del pedido
       </Text>
       <Box flexDirection="row" justifyContent="space-between" paddingBottom="m">
-        <Text>Cantidad</Text>
-        <Text>{cart.products?.length}</Text>
+        <Text variant="subtotal">Cantidad</Text>
+        <Text variant="subtotal">{cart.products?.length}</Text>
       </Box>
       {cart.subtotals?.products && (
         <Box
@@ -29,8 +30,8 @@ const Summary = ({ cart }: SummaryProps) => {
           justifyContent="space-between"
           paddingBottom="m"
         >
-          <Text>{cart.subtotals.products.label}</Text>
-          <Text>{cart.subtotals?.products.value}</Text>
+          <Text variant="subtotal">{cart.subtotals.products.label}</Text>
+          <Text variant="subtotal">{cart.subtotals?.products.value}</Text>
         </Box>
       )}
       {cart.subtotals?.discounts && (
@@ -39,8 +40,8 @@ const Summary = ({ cart }: SummaryProps) => {
           justifyContent="space-between"
           paddingBottom="m"
         >
-          <Text>{cart.subtotals.discounts.label}</Text>
-          <Text>{cart.subtotals?.discounts.value}</Text>
+          <Text variant="subtotal">{cart.subtotals.discounts.label}</Text>
+          <Text variant="subtotal">{cart.subtotals?.discounts.value}</Text>
         </Box>
       )}
       {cart.subtotals?.shipping && (
@@ -49,15 +50,14 @@ const Summary = ({ cart }: SummaryProps) => {
           justifyContent="space-between"
           paddingBottom="m"
         >
-          <Text>{cart.subtotals?.shipping.label}</Text>
-          <Text>{cart.subtotals?.shipping.value}</Text>
+          <Text variant="subtotal">{cart.subtotals?.shipping.label}</Text>
+          <Text variant="subtotal">{cart.subtotals?.shipping.value}</Text>
         </Box>
       )}
       <Box flexDirection="row" justifyContent="space-between">
-        <Text variant="header3">{cart.total?.label}</Text>
-        <Text variant="header3">{cart.total?.value}</Text>
+        <Text variant="bold">{cart.total?.label}</Text>
+        <Text variant="bold">{cart.total?.value}</Text>
       </Box>
-
       {cart.vouchers?.allowed && Boolean(cart.vouchers?.added?.length) && (
         <Box
           marginTop="l"
@@ -75,20 +75,32 @@ const Summary = ({ cart }: SummaryProps) => {
               }
             >
               <Box flexDirection="row">
-                <Text>{voucher?.name}</Text>
-                {voucher?.code ? <Text> - {voucher.code}</Text> : null}
+                <Text variant="subtotal">{voucher?.name}</Text>
+                {voucher?.code ? (
+                  <Text variant="subtotal"> - {voucher.code}</Text>
+                ) : null}
               </Box>
-              <Box>
-                <Text>{voucher?.reduction}</Text>
+              <Box alignItems="flex-end">
+                <Text backgroundColor="danger" variant="subtotal">
+                  {voucher?.reduction}
+                </Text>
                 {voucher?.code ? (
                   <TouchableOpacity
                     onPress={() => {
                       removeDiscount({ variables: { id: voucher.id } });
                     }}
                   >
-                    <Text color="danger" paddingVertical="s">
-                      Eliminar
-                    </Text>
+                    <Box alignItems="flex-end" flexDirection="row">
+                      {loading && (
+                        <ActivityIndicator
+                          color={theme.colors.primary}
+                          style={{ marginRight: 10 }}
+                        />
+                      )}
+                      <Text color="danger" fontSize={12} paddingVertical="s">
+                        Eliminar
+                      </Text>
+                    </Box>
                   </TouchableOpacity>
                 ) : null}
               </Box>
